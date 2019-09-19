@@ -30,6 +30,7 @@ public class GameFrame extends JFrame implements WindowListener
 		setFocusable(true);
 		requestFocus();    // the window has now has focus, so receives key events
 		readyForTermination();		
+		readyForFullScreen();
 	}  
 	
 
@@ -75,8 +76,20 @@ public class GameFrame extends JFrame implements WindowListener
 						((keyCode == KeyEvent.VK_C) && e.isControlDown()) ) {
 					renderTh.stopGame();
 				}
+			}
+		});
+	}  // end of readyForTermination()
+	
+	
+	public void readyForFullScreen() {
+		
+		addKeyListener( new KeyAdapter() {
+			public void keyPressed(KeyEvent e)
+			{ 
+				int keyCode = e.getKeyCode();
+				
 				// listen for f to go on full screen or normal sized window
-				else if (keyCode == KeyEvent.VK_F) {
+				if (keyCode == KeyEvent.VK_F) {
 					if(!fullScreen) {
 						fullScreen = true;				
 						setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -88,8 +101,7 @@ public class GameFrame extends JFrame implements WindowListener
 				}
 			}
 		});
-	}  // end of readyForTermination()
-
+	}
 
 
 // ----------------- window listener methods -------------
