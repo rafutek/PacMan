@@ -1,4 +1,4 @@
-package rendering;
+package view;
 
 
 import javax.swing.*;

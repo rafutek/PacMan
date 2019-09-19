@@ -5,8 +5,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.text.DecimalFormat;
 
-import rendering.GamePanel;
-import rendering.StatusBarPanel;
+import view.GamePanel;
+import view.StatusBarPanel;
 
 public class RenderThread extends Thread{
 	
