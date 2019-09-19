@@ -1,37 +1,35 @@
 package rendering;
 
 
-
-
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.text.DecimalFormat;
 
-//import com.sun.j3d.utils.timer.J3DTimer;
 
 
 public class GamePanel extends JPanel implements Runnable
 {
 
 	private static final long serialVersionUID = 1L;
-	private static final int PWIDTH = 500;   // size of panel
-	private static final int PHEIGHT = 400; 
-
-	// private static long MAX_STATS_INTERVAL = 1000000000L;
-	private static long MAX_STATS_INTERVAL = 1000L;
+	
+	// size of panel
+	private static final int PWIDTH = 450;   
+	private static final int PHEIGHT = 650; 
+	
 	// record stats every 1 second (roughly)
+	private static long MAX_STATS_INTERVAL = 1000L;
 
-	private static final int NO_DELAYS_PER_YIELD = 16;
 	/* Number of frames with a delay of 0 ms before the animation thread yields
-  to other running threads. */
+  	to other running threads. */
+	private static final int NO_DELAYS_PER_YIELD = 16;
 
-	private static int MAX_FRAME_SKIPS = 5;   // was 2;
 	// no. of frames that can be skipped in any one animation loop
 	// i.e the games state is updated but not rendered
+	private static int MAX_FRAME_SKIPS = 5; 
 
-	private static int NUM_FPS = 10;
 	// number of FPS values stored to get an average
+	private static int NUM_FPS = 10;
 
 
 	// used for gathering statistics
@@ -53,26 +51,19 @@ public class GamePanel extends JPanel implements Runnable
 
 
 	private DecimalFormat df = new DecimalFormat("0.##");  // 2 dp
-	private DecimalFormat timedf = new DecimalFormat("0.####");  // 4 dp
-
-
 	private Thread animator;           // the thread that performs the animation
 	private volatile boolean running = false;   // used to stop the animation thread
 	private volatile boolean isPaused = false;
 
-	private int period;                // period between drawing in _ms_
+	private int period; // period between drawing in _ms_
 
-
-	private GameFrame wcTop;
-	private Worm fred;       // the worm
-	private Obstacles obs;   // the obstacles
 
 
 	// used at game termination
 	private volatile boolean gameOver = false;
 	private int score = 0;
-	private Font font;
-	private FontMetrics metrics;
+	//private Font font;
+	//private FontMetrics metrics;
 
 	// off screen rendering
 	private Graphics dbg; 
@@ -80,12 +71,11 @@ public class GamePanel extends JPanel implements Runnable
 
 
 
-	public GamePanel(GameFrame wc, int period)
+	public GamePanel(int period)
 	{
-		wcTop = wc;
 		this.period = period;
 
-		setBackground(Color.white);
+		//setBackground(Color.white);
 		setPreferredSize( new Dimension(PWIDTH, PHEIGHT));
 
 		setFocusable(true);
@@ -93,19 +83,22 @@ public class GamePanel extends JPanel implements Runnable
 		readyForTermination();
 
 		// create game components
-		obs = new Obstacles(wcTop);
-		fred = new Worm(PWIDTH, PHEIGHT, obs);
+//		obs = new Obstacles(wcTop);
+//		fred = new Worm(PWIDTH, PHEIGHT, obs);
 
 		addMouseListener( new MouseAdapter() {
 			public void mousePressed(MouseEvent e)
-			{ testPress(e.getX(), e.getY()); }
+			{
+				//testPress(e.getX(), e.getY()); 
+			}
+			
 		});
 
-		// set up message font
-		font = new Font("SansSerif", Font.BOLD, 24);
-		metrics = this.getFontMetrics(font);
+//		// set up message font
+//		font = new Font("SansSerif", Font.BOLD, 24);
+//		metrics = this.getFontMetrics(font);
 
-		// initialise timing elements
+		// initialize timing elements
 		fpsStore = new double[NUM_FPS];
 		upsStore = new double[NUM_FPS];
 		for (int i=0; i < NUM_FPS; i++) {
@@ -143,7 +136,7 @@ public class GamePanel extends JPanel implements Runnable
 
 
 	private void startGame()
-	// initialise and start the thread 
+	// initialize and start the thread 
 	{ 
 		if (animator == null || !running) {
 			animator = new Thread(this);
@@ -173,22 +166,6 @@ public class GamePanel extends JPanel implements Runnable
 	// ----------------------------------------------
 
 
-	private void testPress(int x, int y)
-	// is (x,y) near the head or should an obstacle be added?
-	{
-		if (!isPaused && !gameOver) {
-			if (fred.nearHead(x,y)) {   // was mouse press near the head?
-				gameOver = true;
-				score =  (40 - timeSpentInGame) + (40 - obs.getNumObstacles());    
-				// hack together a score
-			}
-			else {   // add an obstacle if possible
-				if (!fred.touchedAt(x,y))   // was the worm's body untouched?
-					obs.add(x,y);
-			}
-		}
-	}  // end of testPress()
-
 
 	public void run()
 	/* The frames of the animation are drawn inside the while loop. */
@@ -197,8 +174,6 @@ public class GamePanel extends JPanel implements Runnable
 		int overSleepTime = 0;
 		int noDelays = 0;
 		int excess = 0;
-		Graphics g;
-
 		gameStartTime = System.currentTimeMillis();
 		prevStatsTime = gameStartTime;
 		beforeTime = gameStartTime;
@@ -234,8 +209,8 @@ public class GamePanel extends JPanel implements Runnable
 			beforeTime = System.currentTimeMillis();
 
 			/* If frame animation is taking too long, update the game state
-      without rendering it, to get the updates/sec nearer to
-      the required FPS. */
+		      without rendering it, to get the updates/sec nearer to
+		      the required FPS. */
 			int skips = 0;
 			while((excess > period) && (skips < MAX_FRAME_SKIPS)) {
 				excess -= period;
@@ -253,8 +228,10 @@ public class GamePanel extends JPanel implements Runnable
 
 
 	private void gameUpdate() 
-	{ if (!isPaused && !gameOver)
-		fred.move();
+	{ 
+		if (!isPaused && !gameOver) {
+					//fred.move();
+		}
 	}  // end of gameUpdate()
 
 
@@ -270,23 +247,11 @@ public class GamePanel extends JPanel implements Runnable
 				dbg = dbImage.getGraphics();
 		}
 
-		// clear the background
-		dbg.setColor(Color.white);
-		dbg.fillRect (0, 0, PWIDTH, PHEIGHT);
 
-		dbg.setColor(Color.blue);
-		dbg.setFont(font);
-
-		// report frame count & average FPS and UPS at top left
-		// dbg.drawString("Frame Count " + frameCount, 10, 25);
-		dbg.drawString("Average FPS/UPS: " + df.format(averageFPS) + ", " +
-				df.format(averageUPS), 20, 25);  // was (10,55)
-
-		dbg.setColor(Color.black);
 
 		// draw game elements: the obstacles and the worm
-		obs.draw(dbg);
-		fred.draw(dbg);
+//		obs.draw(dbg);
+//		fred.draw(dbg);
 
 		if (gameOver)
 			gameOverMessage(dbg);
@@ -297,11 +262,12 @@ public class GamePanel extends JPanel implements Runnable
 	// center the game-over message in the panel
 	{
 		String msg = "Game Over. Your Score: " + score;
-		int x = (PWIDTH - metrics.stringWidth(msg))/2; 
-		int y = (PHEIGHT - metrics.getHeight())/2;
-		g.setColor(Color.red);
-		g.setFont(font);
-		g.drawString(msg, x, y);
+		System.out.println(msg);
+//		int x = (PWIDTH - metrics.stringWidth(msg))/2; 
+//		int y = (PHEIGHT - metrics.getHeight())/2;
+//		g.setColor(Color.red);
+//		g.setFont(font);
+//		g.drawString(msg, x, y);
 	}  // end of gameOverMessage()
 
 
@@ -345,13 +311,9 @@ public class GamePanel extends JPanel implements Runnable
 		if (statsInterval >= MAX_STATS_INTERVAL) {     // record stats every MAX_STATS_INTERVAL
 			long timeNow = System.currentTimeMillis();
 			timeSpentInGame = (int) ((timeNow - gameStartTime)/1000L);  // ms --> secs
-			wcTop.setTimeSpent( timeSpentInGame );
 
 			long realElapsedTime = timeNow - prevStatsTime;   // time since last stats collection
 			totalElapsedTime += realElapsedTime;
-
-			double timingError = 
-					((double)(realElapsedTime - statsInterval) / statsInterval) * 100.0;
 
 			totalFramesSkipped += framesSkipped;
 
@@ -383,15 +345,7 @@ public class GamePanel extends JPanel implements Runnable
 				averageFPS = totalFPS/NUM_FPS;
 				averageUPS = totalUPS/NUM_FPS;
 			}
-			/*
-   System.out.println(timedf.format( (double) statsInterval/1000L) + " " + 
-                 timedf.format((double) realElapsedTime/1000L) + "s " + 
-			        df.format(timingError) + "% " + 
-                 frameCount + "c " +
-                 framesSkipped + "/" + totalFramesSkipped + " skip; " +
-                 df.format(actualFPS) + " " + df.format(averageFPS) + " afps; " + 
-                 df.format(actualUPS) + " " + df.format(averageUPS) + " aups" );
-			 */
+
 			framesSkipped = 0;
 			prevStatsTime = timeNow;
 			statsInterval = 0L;   // reset
@@ -405,7 +359,6 @@ public class GamePanel extends JPanel implements Runnable
 		System.out.println("Average FPS: " + df.format(averageFPS));
 		System.out.println("Average UPS: " + df.format(averageUPS));
 		System.out.println("Time Spent: " + timeSpentInGame + " secs");
-		System.out.println("Boxes used: " + obs.getNumObstacles());
 	}  // end of printStats()
 
 }  // end of WormPanel class
