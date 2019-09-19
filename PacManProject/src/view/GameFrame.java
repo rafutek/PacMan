@@ -14,6 +14,13 @@ public class GameFrame extends JFrame implements WindowListener
 
 	private static final long serialVersionUID = 1L;
 	
+	private int windowWidth = 450;   
+	private int windowHeight = 550; 
+	private int statusBarHeight = 50;
+	
+	GamePanel gamePanel;
+	StatusBarPanel statusBarPanel;
+	
 	private boolean fullScreen = false;
 	private RenderThread renderTh;
 
@@ -31,6 +38,7 @@ public class GameFrame extends JFrame implements WindowListener
 		requestFocus();    // the window has now has focus, so receives key events
 		readyForTermination();		
 		readyForFullScreen();
+		readyForResize();
 	}  
 	
 
@@ -42,10 +50,10 @@ public class GameFrame extends JFrame implements WindowListener
 	{
 		Container c = getContentPane();    // default BorderLayout used
 	
-		GamePanel gamePanel = new GamePanel();
+		gamePanel = new GamePanel(new Dimension(windowWidth, windowHeight-statusBarHeight));
 		c.add(gamePanel, "Center");
 		
-		StatusBarPanel statusBarPanel = new StatusBarPanel();
+		statusBarPanel = new StatusBarPanel(new Dimension(windowWidth, statusBarHeight));
 		c.add(statusBarPanel, "South");
 	
 		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
@@ -100,6 +108,27 @@ public class GameFrame extends JFrame implements WindowListener
 					}
 				}
 			}
+		});
+	}
+	
+	public void readyForResize() {
+		addComponentListener(new ComponentAdapter() {
+
+		    @Override
+		    public void componentResized(ComponentEvent e) {
+		    	GraphicsConfiguration gc = getGraphicsConfiguration( );
+		    	Rectangle screenRect = gc.getBounds( ); // screen dimensions
+		    	Toolkit tk = Toolkit.getDefaultToolkit( );
+		    	Insets desktopInsets = tk.getScreenInsets(gc);
+		    	Insets frameInsets = getInsets( );// only works after pack( )
+		    	
+		    	System.out.println("\n"+screenRect.width+" "+screenRect.height);
+		    	System.out.println(gamePanel.getWidth()+" "+(gamePanel.getHeight()+desktopInsets.top+desktopInsets.bottom+frameInsets.top+frameInsets.bottom+50));
+		    	
+//		        setSize(new Dimension(preferredWidth, getHeight()));
+//		        super.componentResized(e);
+		    }
+
 		});
 	}
 

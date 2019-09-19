@@ -10,9 +10,9 @@ public class StatusBarPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	public StatusBarPanel() {
+	public StatusBarPanel(Dimension dim) {
 		setBackground(Color.black);
-		setPreferredSize( new Dimension(0, 50)); // 0 so the window is not resized in abscissas
+		setPreferredSize(dim);
 	}
 
 }
