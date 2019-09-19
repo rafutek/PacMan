@@ -69,7 +69,6 @@ private void readyForTermination()
 		public void keyPressed(KeyEvent e)
 		{ 
 			int keyCode = e.getKeyCode();
-			System.out.println("key");
 			if ((keyCode == KeyEvent.VK_ESCAPE) || (keyCode == KeyEvent.VK_Q) ||
 					(keyCode == KeyEvent.VK_END) ||
 					((keyCode == KeyEvent.VK_C) && e.isControlDown()) ) {
