@@ -15,7 +15,7 @@ public class GamePanel extends JPanel implements Runnable
 	
 	// size of panel
 	private static final int PWIDTH = 450;   
-	private static final int PHEIGHT = 650; 
+	private static final int PHEIGHT = 500; 
 	
 	// record stats every 1 second (roughly)
 	private static long MAX_STATS_INTERVAL = 1000L;

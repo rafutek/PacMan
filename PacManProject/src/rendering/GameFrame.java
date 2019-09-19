@@ -34,6 +34,9 @@ private void makeGUI(int period)
 
 	gamePanel = new GamePanel(period);
 	c.add(gamePanel, "Center");
+	
+	StatusBarPanel statusBarPanel = new StatusBarPanel();
+	c.add(statusBarPanel, "South");
 
 //	JPanel ctrls = new JPanel();   // a row of textfields
 //	ctrls.setLayout( new BoxLayout(ctrls, BoxLayout.X_AXIS));
