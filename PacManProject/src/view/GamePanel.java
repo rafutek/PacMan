@@ -14,7 +14,7 @@ public class GamePanel extends JPanel {
 	public GamePanel(Dimension dim)
 	{
 
-		//setBackground(Color.white);
+		setBackground(Color.blue);
 		setPreferredSize(dim);
 
 		// create game components

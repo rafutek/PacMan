@@ -188,7 +188,7 @@ public class RenderThread extends Thread{
 
 	private void gameRender()
 	{
-		if (dbImage == null && gamePanel.getWidth() > 0 && gamePanel.getHeight() > 0 ){
+		if (gamePanel.getWidth() > 0 && gamePanel.getHeight() > 0 ){
 			dbImage = gamePanel.createImage(gamePanel.getWidth(), gamePanel.getHeight());
 			if (dbImage == null) {
 				System.out.println("dbImage is null");
