@@ -17,9 +17,11 @@ public class GameFrame extends JFrame implements WindowListener
 	private int windowWidth = 450;   
 	private int windowHeight = 550; 
 	private int statusBarHeight = 50;
+
 	
 	GamePanel gamePanel;
 	StatusBarPanel statusBarPanel;
+	JPanel leftPanel, rightPanel;
 	
 	private boolean fullScreen = false;
 	private RenderThread renderTh;
@@ -49,12 +51,23 @@ public class GameFrame extends JFrame implements WindowListener
 	private void makeGUI(int period)
 	{
 		Container c = getContentPane();    // default BorderLayout used
+		
 	
 		gamePanel = new GamePanel(new Dimension(windowWidth, windowHeight-statusBarHeight));
 		c.add(gamePanel, "Center");
 		
 		statusBarPanel = new StatusBarPanel(new Dimension(windowWidth, statusBarHeight));
 		c.add(statusBarPanel, "South");
+		
+		leftPanel = new JPanel();
+		leftPanel.setBackground(Color.CYAN);
+		leftPanel.setPreferredSize(new Dimension(10, windowHeight));
+		c.add(leftPanel,"West");
+		
+		rightPanel = new JPanel();
+		rightPanel.setBackground(Color.darkGray);
+		rightPanel.setPreferredSize(new Dimension(10, windowHeight));
+		c.add(rightPanel,"East");
 	
 		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
 		
