@@ -10,9 +10,8 @@ public class StatusBarPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	public StatusBarPanel(Dimension dim) {
+	public StatusBarPanel() {
 		setBackground(Color.black);
-		setPreferredSize(dim);
 	}
 
 }
