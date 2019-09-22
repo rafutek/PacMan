@@ -52,7 +52,7 @@ public class RenderThread extends Thread{
 	private DecimalFormat df = new DecimalFormat("0.##");  // 2 dp
 
 	private volatile boolean running = false;   // used to stop the animation thread
-	private volatile boolean isPaused = false;
+	private boolean isPaused = false;
 
 	private int period; // period between drawing in _ms_
 
@@ -69,7 +69,7 @@ public class RenderThread extends Thread{
 	private Image dbImage = null;
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
-		setName("Render thread");
+		setName("Render");
 		
 		this.gamePanel = gamePanel;
 		this.statusBarPanel = statusBarPanel;
@@ -87,7 +87,7 @@ public class RenderThread extends Thread{
 	public void run()
 	/* The frames of the animation are drawn inside the while loop. */
 	{
-		System.out.println("Start "+getName());
+		System.out.println("Start thread "+getName());
 
 		long beforeTime, afterTime, timeDiff, sleepTime;
 		int overSleepTime = 0;
@@ -140,7 +140,7 @@ public class RenderThread extends Thread{
 
 			storeStats();
 		}
-		System.out.println("Stop "+getName());	
+		System.out.println("Stop thread "+getName());	
 
 		printStats();
 		System.exit(0);   // so window disappears

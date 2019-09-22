@@ -3,41 +3,41 @@ package view;
 
 import javax.swing.*;
 
+import threads.LayoutManagerThread;
 import threads.RenderThread;
 
 import java.awt.*;
 import java.awt.event.*;
 
 
-public class GameFrame extends JFrame implements WindowListener
+public class GameFrame extends JFrame implements WindowListener,WindowFocusListener, WindowStateListener
 {
 
 	private static final long serialVersionUID = 1L;
 	
+	private final int period;
+	
 	private int windowWidth = 450;   
 	private int windowHeight = 550; 
 	
-	GridBagLayout gridbag;
-	GamePanel gamePanel;
-	StatusBarPanel statusBarPanel;
-	JPanel leftPanel, rightPanel;
+	private GridBagLayout gridbag;
+	private GamePanel gamePanel;
+	private StatusBarPanel statusBarPanel;
+	private JPanel leftPanel, rightPanel;
 	
-	private double gamePanelScale;
-	private double gamePanelWeightX = 1;
-	private double gamePanelWeightY;
-	private double statusBarPanelWeightX ;
-	private double statusBarPanelWeightY;
-	private double leftPanelWeightX;
-	private double rightPanelWeightX;
 	
 	private boolean fullScreen = false;
 	private RenderThread renderTh;
+	private LayoutManagerThread layoutTh;
 
 	public GameFrame(int period)
 	{ 
 		super("PacMan");
-		makeGUI(period);
+		this.period = period;
+		
+		makeGUI();
 		addWindowListener(this);
+		addWindowStateListener(this);
 
 		pack();
 		setResizable(true);
@@ -48,16 +48,39 @@ public class GameFrame extends JFrame implements WindowListener
 		readyForTermination();		
 		readyForFullScreen();
 		readyForResize();
-		
-		gamePanelScale = getPanelScale(gamePanel);
 	}  
+	
+	
+	public synchronized GridBagLayout getGridbag() {
+		return gridbag;
+	}
+
+
+	public synchronized GamePanel getGamePanel() {
+		return gamePanel;
+	}
+
+
+	public synchronized StatusBarPanel getStatusBarPanel() {
+		return statusBarPanel;
+	}
+
+
+	public synchronized JPanel getLeftPanel() {
+		return leftPanel;
+	}
+
+
+	public synchronized JPanel getRightPanel() {
+		return rightPanel;
+	}
 	
 
 	/**
 	 * Create game and status bar panels, and the rendering thread
 	 * @param period
 	 */
-	private void makeGUI(int period)
+	private void makeGUI()
 	{
 		gridbag = new GridBagLayout();
 		setLayout(gridbag);
@@ -71,8 +94,7 @@ public class GameFrame extends JFrame implements WindowListener
 		rightPanel = new JPanel();
 		rightPanel.setBackground(Color.darkGray);	
 		
-		setPanelsWeights(gamePanelWeightX);
-		setAllPanelsLayout();
+
 		
 		add(gamePanel);
 		add(statusBarPanel);
@@ -80,11 +102,8 @@ public class GameFrame extends JFrame implements WindowListener
 		add(rightPanel);
 
 		setPreferredSize(new Dimension(windowWidth, windowHeight)); // set window size
-	
-		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
 		
 	} 
-	
 	
 	
 	/**
@@ -94,7 +113,11 @@ public class GameFrame extends JFrame implements WindowListener
 	public void addNotify()
 	{ 
 		super.addNotify();   // creates the peer
-		renderTh.startGame();    // start the thread
+		layoutTh = new LayoutManagerThread(this);
+		layoutTh.startLayoutManager();
+
+		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
+		renderTh.startGame();    // start the threads
 	}
 	
 	private void readyForTermination()
@@ -110,6 +133,7 @@ public class GameFrame extends JFrame implements WindowListener
 						(keyCode == KeyEvent.VK_END) ||
 						((keyCode == KeyEvent.VK_C) && e.isControlDown()) ) {
 					renderTh.stopGame();
+					layoutTh.stopLayoutManager();
 				}
 			}
 		});
@@ -133,6 +157,7 @@ public class GameFrame extends JFrame implements WindowListener
 						fullScreen = false;
 						setExtendedState(JFrame.NORMAL);
 					}
+					//adaptPanels();
 				}
 			}
 		});
@@ -143,81 +168,54 @@ public class GameFrame extends JFrame implements WindowListener
 
 		    @Override
 		    public void componentResized(ComponentEvent e) {
-		    	   	
-		    	//adapt all the weights si that the game panel scale is the same 
-		    	gamePanelWeightX = (gamePanelScale*getHeight()*gamePanelWeightY)/(double)getWidth();
-				setPanelsWeights(gamePanelWeightX);
-				setAllPanelsLayout();
-		  
+		    	//adaptPanels();
 		    }
 		});
 	}
 	
-	/**
-	 * Set all panels weights depending on the game panel x weight
-	 * @param gamePanelWeightX
-	 */
-	private void setPanelsWeights(double gamePanelWeightX) {
-		this.gamePanelWeightX = gamePanelWeightX;
-		gamePanelWeightY = 0.9;
-		statusBarPanelWeightX = gamePanelWeightX;
-		statusBarPanelWeightY = 1 - gamePanelWeightY;
-		leftPanelWeightX = 1 - gamePanelWeightX;
-		rightPanelWeightX = leftPanelWeightX;
-	}
 
-	/**
-	 * Set or change the panel layout with some parameters
-	 * @param panel
-	 * @param gridx
-	 * @param gridy
-	 * @param gridheight
-	 * @param weightx
-	 * @param weighty
-	 */
-	private void setPanelLayout(JPanel panel, int gridx, int gridy, int gridheight, double weightx, double weighty) {
-		GridBagConstraints layoutConstraints = new GridBagConstraints();		
-		layoutConstraints.gridx = gridx; //position in the grid
-		layoutConstraints.gridy = gridy;
-		layoutConstraints.gridheight = gridheight;
-		layoutConstraints.fill = GridBagConstraints.BOTH; //resized horizontally and vertically
-		layoutConstraints.weightx = weightx; //percent of x taken
-		layoutConstraints.weighty = weighty;
-		gridbag.setConstraints(panel, layoutConstraints);
-	}
-	
-	private double getPanelScale(JPanel panel) {
-		return panel.getWidth()/(double)panel.getHeight();
-	}
-	
-	private void setAllPanelsLayout() {
-		setPanelLayout(gamePanel, 1, 0, 1, gamePanelWeightX, gamePanelWeightY);
-		setPanelLayout(statusBarPanel, 1, 1, 1, statusBarPanelWeightX, statusBarPanelWeightY);
-		setPanelLayout(leftPanel, 0, 0, 2, leftPanelWeightX, 1);
-		setPanelLayout(rightPanel, 2, 0, 2, rightPanelWeightX, 1);
-	}
 
 // ----------------- window listener methods -------------
 
 	public void windowActivated(WindowEvent e) 
-	{ renderTh.resumeGame();  }
+	{ 
+		renderTh.resumeGame();  
+		layoutTh.resumeLayoutManager();
+	}
 	
 	public void windowDeactivated(WindowEvent e) 
-	{  renderTh.pauseGame();  }
+	{  
+		renderTh.pauseGame();  
+		layoutTh.pauseLayoutManager();
+	}
 	
 	
 	public void windowDeiconified(WindowEvent e) 
-	{  renderTh.resumeGame();  }
+	{  
+		renderTh.resumeGame();  
+		layoutTh.resumeLayoutManager();
+	}
 	
 	public void windowIconified(WindowEvent e) 
-	{  renderTh.pauseGame(); }
+	{  
+		renderTh.pauseGame(); 
+		layoutTh.pauseLayoutManager();
+	}
 	
 	
 	public void windowClosing(WindowEvent e)
-	{  renderTh.stopGame();  }
+	{  
+		renderTh.stopGame();  
+		layoutTh.stopLayoutManager();
+	}
 	
 	public void windowClosed(WindowEvent e) {}
 	public void windowOpened(WindowEvent e) {}
+	
+	public void windowStateChanged(WindowEvent e) {}
+	
+	public void windowGainedFocus(WindowEvent e) {}
+	public void windowLostFocus(WindowEvent e) {}
 
 
 
