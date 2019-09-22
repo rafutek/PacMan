@@ -17,8 +17,8 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 	
 	private final int period;
 	
-	private int windowWidth = 450;   
-	private int windowHeight = 550; 
+	private int windowWidth = 500;   
+	private int windowHeight = 700; 
 	
 	private GridBagLayout gridbag;
 	private GamePanel gamePanel;
@@ -47,7 +47,6 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 		requestFocus();    // the window has now has focus, so receives key events
 		readyForTermination();		
 		readyForFullScreen();
-		readyForResize();
 	}  
 	
 	
@@ -117,7 +116,7 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 		layoutTh.startLayoutManager();
 
 		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
-		renderTh.startGame();    // start the threads
+		renderTh.startRendering();    // start the threads
 	}
 	
 	private void readyForTermination()
@@ -132,7 +131,7 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 				if ((keyCode == KeyEvent.VK_ESCAPE) || (keyCode == KeyEvent.VK_Q) ||
 						(keyCode == KeyEvent.VK_END) ||
 						((keyCode == KeyEvent.VK_C) && e.isControlDown()) ) {
-					renderTh.stopGame();
+					renderTh.stopRendering();
 					layoutTh.stopLayoutManager();
 				}
 			}
@@ -157,19 +156,8 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 						fullScreen = false;
 						setExtendedState(JFrame.NORMAL);
 					}
-					//adaptPanels();
 				}
 			}
-		});
-	}
-	
-	public void readyForResize() {
-		addComponentListener(new ComponentAdapter() {
-
-		    @Override
-		    public void componentResized(ComponentEvent e) {
-		    	//adaptPanels();
-		    }
 		});
 	}
 	
@@ -179,33 +167,33 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 
 	public void windowActivated(WindowEvent e) 
 	{ 
-		renderTh.resumeGame();  
+		renderTh.resumeRendering();  
 		layoutTh.resumeLayoutManager();
 	}
 	
 	public void windowDeactivated(WindowEvent e) 
 	{  
-		renderTh.pauseGame();  
+		renderTh.pauseRendering();  
 		layoutTh.pauseLayoutManager();
 	}
 	
 	
 	public void windowDeiconified(WindowEvent e) 
 	{  
-		renderTh.resumeGame();  
+		renderTh.resumeRendering();  
 		layoutTh.resumeLayoutManager();
 	}
 	
 	public void windowIconified(WindowEvent e) 
 	{  
-		renderTh.pauseGame(); 
+		renderTh.pauseRendering(); 
 		layoutTh.pauseLayoutManager();
 	}
 	
 	
 	public void windowClosing(WindowEvent e)
 	{  
-		renderTh.stopGame();  
+		renderTh.stopRendering();  
 		layoutTh.stopLayoutManager();
 	}
 	

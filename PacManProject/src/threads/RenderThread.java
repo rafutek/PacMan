@@ -150,7 +150,7 @@ public class RenderThread extends Thread{
 	/**
 	 * Start the thread 
 	 */
-	public synchronized void startGame()
+	public synchronized void startRendering()
 	{ 
 		if (!running) {
 			this.start();
@@ -162,17 +162,17 @@ public class RenderThread extends Thread{
 	// called by the JFrame's window listener methods
 
 
-	public void resumeGame()
+	public void resumeRendering()
 	// called when the JFrame is activated / deiconified
 	{  isPaused = false;  } 
 
 
-	public void pauseGame()
+	public void pauseRendering()
 	// called when the JFrame is deactivated / iconified
 	{ isPaused = true;   } 
 
 
-	public void stopGame() 
+	public void stopRendering() 
 	// called when the JFrame is closing
 	{  running = false;   }
 
