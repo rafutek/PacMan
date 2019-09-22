@@ -16,12 +16,19 @@ public class GameFrame extends JFrame implements WindowListener
 	
 	private int windowWidth = 450;   
 	private int windowHeight = 550; 
-	private int statusBarHeight = 50;
-
 	
+	GridBagLayout gridbag;
 	GamePanel gamePanel;
 	StatusBarPanel statusBarPanel;
 	JPanel leftPanel, rightPanel;
+	
+	private double gamePanelScale;
+	private double gamePanelWeightX = 1;
+	private double gamePanelWeightY;
+	private double statusBarPanelWeightX ;
+	private double statusBarPanelWeightY;
+	private double leftPanelWeightX;
+	private double rightPanelWeightX;
 	
 	private boolean fullScreen = false;
 	private RenderThread renderTh;
@@ -30,7 +37,7 @@ public class GameFrame extends JFrame implements WindowListener
 	{ 
 		super("PacMan");
 		makeGUI(period);
-		addWindowListener( this );
+		addWindowListener(this);
 
 		pack();
 		setResizable(true);
@@ -41,6 +48,8 @@ public class GameFrame extends JFrame implements WindowListener
 		readyForTermination();		
 		readyForFullScreen();
 		readyForResize();
+		
+		gamePanelScale = getPanelScale(gamePanel);
 	}  
 	
 
@@ -50,28 +59,33 @@ public class GameFrame extends JFrame implements WindowListener
 	 */
 	private void makeGUI(int period)
 	{
-		Container c = getContentPane();    // default BorderLayout used
+		gridbag = new GridBagLayout();
+		setLayout(gridbag);
 		
-	
-		gamePanel = new GamePanel(new Dimension(windowWidth, windowHeight-statusBarHeight));
-		c.add(gamePanel, "Center");
-		
-		statusBarPanel = new StatusBarPanel(new Dimension(windowWidth, statusBarHeight));
-		c.add(statusBarPanel, "South");
+		gamePanel = new GamePanel();
+		statusBarPanel = new StatusBarPanel();
 		
 		leftPanel = new JPanel();
 		leftPanel.setBackground(Color.CYAN);
-		leftPanel.setPreferredSize(new Dimension(10, windowHeight));
-		c.add(leftPanel,"West");
 		
 		rightPanel = new JPanel();
-		rightPanel.setBackground(Color.darkGray);
-		rightPanel.setPreferredSize(new Dimension(10, windowHeight));
-		c.add(rightPanel,"East");
+		rightPanel.setBackground(Color.darkGray);	
+		
+		setPanelsWeights(gamePanelWeightX);
+		setAllPanelsLayout();
+		
+		add(gamePanel);
+		add(statusBarPanel);
+		add(leftPanel);
+		add(rightPanel);
+
+		setPreferredSize(new Dimension(windowWidth, windowHeight)); // set window size
 	
 		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
 		
-	}  // end of makeGUI()
+	} 
+	
+	
 	
 	/**
 	 * Called when the window listener is added to the window.
@@ -99,7 +113,7 @@ public class GameFrame extends JFrame implements WindowListener
 				}
 			}
 		});
-	}  // end of readyForTermination()
+	} 
 	
 	
 	public void readyForFullScreen() {
@@ -129,22 +143,59 @@ public class GameFrame extends JFrame implements WindowListener
 
 		    @Override
 		    public void componentResized(ComponentEvent e) {
-		    	GraphicsConfiguration gc = getGraphicsConfiguration( );
-		    	Rectangle screenRect = gc.getBounds( ); // screen dimensions
-		    	Toolkit tk = Toolkit.getDefaultToolkit( );
-		    	Insets desktopInsets = tk.getScreenInsets(gc);
-		    	Insets frameInsets = getInsets( );// only works after pack( )
-		    	
-		    	System.out.println("\n"+screenRect.width+" "+screenRect.height);
-		    	System.out.println(gamePanel.getWidth()+" "+(gamePanel.getHeight()+desktopInsets.top+desktopInsets.bottom+frameInsets.top+frameInsets.bottom+50));
-		    	
-//		        setSize(new Dimension(preferredWidth, getHeight()));
-//		        super.componentResized(e);
+		    	   	
+		    	//adapt all the weights si that the game panel scale is the same 
+		    	gamePanelWeightX = (gamePanelScale*getHeight()*gamePanelWeightY)/(double)getWidth();
+				setPanelsWeights(gamePanelWeightX);
+				setAllPanelsLayout();
+		  
 		    }
-
 		});
 	}
+	
+	/**
+	 * Set all panels weights depending on the game panel x weight
+	 * @param gamePanelWeightX
+	 */
+	private void setPanelsWeights(double gamePanelWeightX) {
+		this.gamePanelWeightX = gamePanelWeightX;
+		gamePanelWeightY = 0.9;
+		statusBarPanelWeightX = gamePanelWeightX;
+		statusBarPanelWeightY = 1 - gamePanelWeightY;
+		leftPanelWeightX = 1 - gamePanelWeightX;
+		rightPanelWeightX = leftPanelWeightX;
+	}
 
+	/**
+	 * Set or change the panel layout with some parameters
+	 * @param panel
+	 * @param gridx
+	 * @param gridy
+	 * @param gridheight
+	 * @param weightx
+	 * @param weighty
+	 */
+	private void setPanelLayout(JPanel panel, int gridx, int gridy, int gridheight, double weightx, double weighty) {
+		GridBagConstraints layoutConstraints = new GridBagConstraints();		
+		layoutConstraints.gridx = gridx; //position in the grid
+		layoutConstraints.gridy = gridy;
+		layoutConstraints.gridheight = gridheight;
+		layoutConstraints.fill = GridBagConstraints.BOTH; //resized horizontally and vertically
+		layoutConstraints.weightx = weightx; //percent of x taken
+		layoutConstraints.weighty = weighty;
+		gridbag.setConstraints(panel, layoutConstraints);
+	}
+	
+	private double getPanelScale(JPanel panel) {
+		return panel.getWidth()/(double)panel.getHeight();
+	}
+	
+	private void setAllPanelsLayout() {
+		setPanelLayout(gamePanel, 1, 0, 1, gamePanelWeightX, gamePanelWeightY);
+		setPanelLayout(statusBarPanel, 1, 1, 1, statusBarPanelWeightX, statusBarPanelWeightY);
+		setPanelLayout(leftPanel, 0, 0, 2, leftPanelWeightX, 1);
+		setPanelLayout(rightPanel, 2, 0, 2, rightPanelWeightX, 1);
+	}
 
 // ----------------- window listener methods -------------
 

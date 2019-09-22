@@ -11,11 +11,10 @@ public class GamePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 
-	public GamePanel(Dimension dim)
+	public GamePanel()
 	{
 
 		setBackground(Color.blue);
-		setPreferredSize(dim);
 
 		// create game components
 //		obs = new Obstacles(wcTop);
