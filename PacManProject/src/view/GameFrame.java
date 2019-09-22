@@ -17,7 +17,7 @@ public class GameFrame extends JFrame implements WindowListener
 	private int windowWidth = 450;   
 	private int windowHeight = 550; 
 
-	
+	GridBagLayout gridbag;
 	GamePanel gamePanel;
 	StatusBarPanel statusBarPanel;
 	JPanel leftPanel, rightPanel;
@@ -49,53 +49,34 @@ public class GameFrame extends JFrame implements WindowListener
 	 */
 	private void makeGUI(int period)
 	{
-		setLayout(new GridBagLayout());
-		GridBagConstraints layoutConstraints = new GridBagConstraints();		
+		gridbag = new GridBagLayout();
+		setLayout(gridbag);
 		
-	
 		gamePanel = new GamePanel();
-		layoutConstraints.gridx = 1; //position in the grid
-		layoutConstraints.gridy = 0;
-		layoutConstraints.fill = GridBagConstraints.BOTH; //resized horizontally and vertically
-		layoutConstraints.weightx = 0.9; //percent of x taken
-		layoutConstraints.weighty = 0.9;
-		add(gamePanel, layoutConstraints);
+		setPanelLayout(gamePanel, 1, 0, 1, 0.9, 0.9);
+		add(gamePanel);
 		
 		statusBarPanel = new StatusBarPanel();
-		layoutConstraints.gridx = 1;
-		layoutConstraints.gridy = 1;
-		layoutConstraints.fill = GridBagConstraints.BOTH;
-		layoutConstraints.weightx = 0.9;
-		layoutConstraints.weighty = 0.1;
-		add(statusBarPanel, layoutConstraints);
+		setPanelLayout(statusBarPanel, 1, 1, 1, 0.9, 0.1);
+		add(statusBarPanel);
 		
 		leftPanel = new JPanel();
 		leftPanel.setBackground(Color.CYAN);
-		layoutConstraints.gridx = 0;
-		layoutConstraints.gridy = 0;
-		layoutConstraints.gridheight = 2; //number of cases in the grid taken by the panel, in height
-		layoutConstraints.fill = GridBagConstraints.BOTH;
-		layoutConstraints.weightx = 0.1;
-		layoutConstraints.weighty = 1;
-		add(leftPanel, layoutConstraints);
+		setPanelLayout(leftPanel, 0, 0, 2, 0.1, 1);
+		add(leftPanel);
 		
 		rightPanel = new JPanel();
-		rightPanel.setBackground(Color.darkGray);
-		
-		layoutConstraints.gridx = 2; 
-		layoutConstraints.gridy = 0;	
-		layoutConstraints.gridheight = 2; 
-		layoutConstraints.fill = GridBagConstraints.BOTH; 
-		layoutConstraints.weightx = 0.1; 
-		layoutConstraints.weighty = 1;
-		add(rightPanel, layoutConstraints);
-		
+		rightPanel.setBackground(Color.darkGray);		
+		setPanelLayout(rightPanel, 2, 0, 2, 0.1, 1);
+		add(rightPanel);
+
 		setPreferredSize(new Dimension(windowWidth, windowHeight)); // set window size
-		
 	
 		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
 		
-	}  // end of makeGUI()
+	} 
+	
+	
 	
 	/**
 	 * Called when the window listener is added to the window.
@@ -162,13 +143,31 @@ public class GameFrame extends JFrame implements WindowListener
 		    	System.out.println("\n"+screenRect.width+" "+screenRect.height);
 		    	System.out.println(gamePanel.getWidth()+" "+(gamePanel.getHeight()+desktopInsets.top+desktopInsets.bottom+frameInsets.top+frameInsets.bottom+50));
 		    	
-//		        setSize(new Dimension(preferredWidth, getHeight()));
-//		        super.componentResized(e);
-		    }
+		    	if(gamePanel.getWidth() > 900) {
+		    		System.out.println("ok");
 
+		    		setPanelLayout(gamePanel, 1, 0, 1, 0.5, 0.9);
+		    		setPanelLayout(statusBarPanel, 1, 1, 1, 0.5, 0.1);
+		    		setPanelLayout(leftPanel, 0, 0, 2, 0.5, 1);
+		    		setPanelLayout(rightPanel, 2, 0, 2, 0.5, 1);
+					
+		    	}
+		    }
 		});
 	}
+	
 
+
+	private void setPanelLayout(JPanel panel, int gridx, int gridy, int gridheight, double weightx, double weighty) {
+		GridBagConstraints layoutConstraints = new GridBagConstraints();		
+		layoutConstraints.gridx = gridx; //position in the grid
+		layoutConstraints.gridy = gridy;
+		layoutConstraints.gridheight = gridheight;
+		layoutConstraints.fill = GridBagConstraints.BOTH; //resized horizontally and vertically
+		layoutConstraints.weightx = weightx; //percent of x taken
+		layoutConstraints.weighty = weighty;
+		gridbag.setConstraints(panel, layoutConstraints);
+	}
 
 // ----------------- window listener methods -------------
 

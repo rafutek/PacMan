@@ -1,8 +1,6 @@
 package view;
 
 import java.awt.Color;
-import java.awt.Dimension;
-
 import javax.swing.JPanel;
 
 public class StatusBarPanel extends JPanel {
