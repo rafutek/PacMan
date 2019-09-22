@@ -106,8 +106,8 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 	
 	
 	/**
-	 * Called when the window listener is added to the window.
-	 * This method launch the render thread
+	 * Called when the window components are packed.
+	 * This method launch the render and layout manager threads
 	 */
 	public void addNotify()
 	{ 

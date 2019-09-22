@@ -97,7 +97,7 @@ public class LayoutManagerThread extends Thread {
 		gamePanelWeightY = 0.9;
 		statusBarPanelWeightX = gamePanelWeightX;
 		statusBarPanelWeightY = 1 - gamePanelWeightY;
-		leftPanelWeightX = 1 - gamePanelWeightX;
+		leftPanelWeightX = (1 - gamePanelWeightX)/2.;
 		rightPanelWeightX = leftPanelWeightX;
 	}
 
