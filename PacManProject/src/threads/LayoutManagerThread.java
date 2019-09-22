@@ -15,7 +15,7 @@ public class LayoutManagerThread extends Thread {
 	private GameFrame window;
 	
 	private Double gamePanelScale = null;
-	private double gamePanelWeightX = 1;
+	private double gamePanelWeightX = 1; //initial weight (percentage) of game panel width in the window
 	private double gamePanelWeightY;
 	private double statusBarPanelWeightX ;
 	private double statusBarPanelWeightY;
@@ -27,7 +27,7 @@ public class LayoutManagerThread extends Thread {
 	{
 		setName("Layout Manager");
 		this.window = window;
-		setPanelsWeights(1);
+		setPanelsWeights(gamePanelWeightX);
 		setAllPanelsLayout();
 	}
 	
@@ -50,6 +50,7 @@ public class LayoutManagerThread extends Thread {
 			else {
 				if(!paused) {
 					adaptPanels();
+					System.out.println(getPanelScale(window.getGamePanel()));
 				}				
 			}
 		}
@@ -64,7 +65,7 @@ public class LayoutManagerThread extends Thread {
 		if (!running) {
 			this.start();
 		}
-	} // end of startLayoutManager()
+	}
 	
 	
 	// ------------- LayoutManager life cycle methods ------------
@@ -145,7 +146,7 @@ public class LayoutManagerThread extends Thread {
 	 */
 	private void adaptPanels() {
 		synchronized(window) {
-	    	gamePanelWeightX = (gamePanelScale*window.getHeight()*gamePanelWeightY)/(double)window.getWidth();
+	    	gamePanelWeightX = (gamePanelScale*(double)window.getHeight()*gamePanelWeightY)/(double)window.getWidth();
 			setPanelsWeights(gamePanelWeightX);
 			setAllPanelsLayout();			
 		}
