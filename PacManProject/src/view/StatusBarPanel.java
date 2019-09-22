@@ -1,8 +1,6 @@
-package rendering;
+package view;
 
 import java.awt.Color;
-import java.awt.Dimension;
-
 import javax.swing.JPanel;
 
 public class StatusBarPanel extends JPanel {
@@ -12,7 +10,6 @@ public class StatusBarPanel extends JPanel {
 	
 	public StatusBarPanel() {
 		setBackground(Color.black);
-		setPreferredSize( new Dimension(0, 50)); // 0 so the window is not resized in abscissas
 	}
 
 }

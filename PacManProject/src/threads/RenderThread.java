@@ -5,8 +5,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.text.DecimalFormat;
 
-import rendering.GamePanel;
-import rendering.StatusBarPanel;
+import view.GamePanel;
+import view.StatusBarPanel;
 
 public class RenderThread extends Thread{
 	
@@ -52,7 +52,7 @@ public class RenderThread extends Thread{
 	private DecimalFormat df = new DecimalFormat("0.##");  // 2 dp
 
 	private volatile boolean running = false;   // used to stop the animation thread
-	private volatile boolean isPaused = false;
+	private boolean isPaused = false;
 
 	private int period; // period between drawing in _ms_
 
@@ -69,7 +69,7 @@ public class RenderThread extends Thread{
 	private Image dbImage = null;
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
-		setName("Render thread");
+		setName("Render");
 		
 		this.gamePanel = gamePanel;
 		this.statusBarPanel = statusBarPanel;
@@ -87,7 +87,7 @@ public class RenderThread extends Thread{
 	public void run()
 	/* The frames of the animation are drawn inside the while loop. */
 	{
-		System.out.println("Start "+getName());
+		System.out.println("Start thread "+getName());
 
 		long beforeTime, afterTime, timeDiff, sleepTime;
 		int overSleepTime = 0;
@@ -140,7 +140,7 @@ public class RenderThread extends Thread{
 
 			storeStats();
 		}
-		System.out.println("Stop "+getName());	
+		System.out.println("Stop thread "+getName());	
 
 		printStats();
 		System.exit(0);   // so window disappears
@@ -150,7 +150,7 @@ public class RenderThread extends Thread{
 	/**
 	 * Start the thread 
 	 */
-	public synchronized void startGame()
+	public synchronized void startRendering()
 	{ 
 		if (!running) {
 			this.start();
@@ -162,17 +162,17 @@ public class RenderThread extends Thread{
 	// called by the JFrame's window listener methods
 
 
-	public void resumeGame()
+	public void resumeRendering()
 	// called when the JFrame is activated / deiconified
 	{  isPaused = false;  } 
 
 
-	public void pauseGame()
+	public void pauseRendering()
 	// called when the JFrame is deactivated / iconified
 	{ isPaused = true;   } 
 
 
-	public void stopGame() 
+	public void stopRendering() 
 	// called when the JFrame is closing
 	{  running = false;   }
 
@@ -188,10 +188,10 @@ public class RenderThread extends Thread{
 
 	private void gameRender()
 	{
-		if (dbImage == null){
-			dbImage = gamePanel.createImage(GamePanel.getPwidth(), GamePanel.getPheight());
+		if (gamePanel.getWidth() > 0 && gamePanel.getHeight() > 0 ){
+			//dbImage = gamePanel.createImage(gamePanel.getWidth(), gamePanel.getHeight());
 			if (dbImage == null) {
-				System.out.println("dbImage is null");
+				//System.out.println("dbImage is null");
 				return;
 			}
 			else
