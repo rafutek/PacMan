@@ -6,7 +6,7 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
-import resources.Tiles;
+import resources.Maze;
 import view.GamePanel;
 import view.StatusBarPanel;
 
@@ -71,7 +71,7 @@ public class RenderThread extends Thread{
 	private Image dbImage = null;
 	
 	//maze
-	private Tiles tiles;
+	private Maze maze;
 	private boolean drawnOnce = false;
 	private int currentGamePanelWidth, currentGamePanelHeight;
 	private int lastGamePanelWidth = 0, lastGamePanelHeight = 0;
@@ -94,7 +94,7 @@ public class RenderThread extends Thread{
 		
 		//create maze image
 		try {
-			tiles = new Tiles();
+			maze = new Maze();
 		} catch (IOException e) {e.printStackTrace();}
 		
 	}
@@ -207,7 +207,7 @@ public class RenderThread extends Thread{
 					(!drawnOnce || lastGamePanelWidth != currentGamePanelWidth || lastGamePanelHeight != currentGamePanelHeight)) 
 			{
 				System.out.println("resize maze");
-				tiles.resizeMazeImg(currentGamePanelWidth, currentGamePanelHeight);
+				maze.resizeMazeImg(currentGamePanelWidth, currentGamePanelHeight);
 				lastGamePanelWidth = currentGamePanelWidth;
 				lastGamePanelHeight = currentGamePanelHeight;
 				if(!drawnOnce) {
@@ -233,7 +233,7 @@ public class RenderThread extends Thread{
 
 
 		// draw game elements
-		tiles.draw(dbg); //draw maze (background)
+		maze.draw(dbg); //draw maze (background)
 		
 
 		if (gameOver)
