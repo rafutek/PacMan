@@ -3,7 +3,6 @@ package threads;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
@@ -72,8 +71,10 @@ public class RenderThread extends Thread{
 	private Image dbImage = null;
 	
 	//maze
-	Tiles tiles;
-	BufferedImage mazeResized;
+	private Tiles tiles;
+	private boolean drawnOnce = false;
+	private int currentGamePanelWidth, currentGamePanelHeight;
+	private int lastGamePanelWidth = 0, lastGamePanelHeight = 0;
 	
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
@@ -195,8 +196,23 @@ public class RenderThread extends Thread{
 	private void gameUpdate() 
 	{ 
 		if (!isPaused && !gameOver) {
-			if(gamePanel.getWidth() > 0 && gamePanel.getHeight() > 0) {
-				tiles.resizeMazeImg(gamePanel.getWidth(), gamePanel.getHeight());
+			currentGamePanelWidth = gamePanel.getWidth();
+			currentGamePanelHeight = gamePanel.getHeight();
+			
+			if(lastGamePanelWidth <= 0 && lastGamePanelHeight <=0) {
+				lastGamePanelWidth = currentGamePanelWidth;
+				lastGamePanelHeight = currentGamePanelHeight;
+			}
+			else if(currentGamePanelWidth > 0 && currentGamePanelHeight > 0 && 
+					(!drawnOnce || lastGamePanelWidth != currentGamePanelWidth || lastGamePanelHeight != currentGamePanelHeight)) 
+			{
+				System.out.println("resize maze");
+				tiles.resizeMazeImg(currentGamePanelWidth, currentGamePanelHeight);
+				lastGamePanelWidth = currentGamePanelWidth;
+				lastGamePanelHeight = currentGamePanelHeight;
+				if(!drawnOnce) {
+					drawnOnce = true;
+				}
 			}
 	
 		}
@@ -205,8 +221,8 @@ public class RenderThread extends Thread{
 
 	private void gameRender()
 	{
-		if (gamePanel.getWidth() > 0 && gamePanel.getHeight() > 0 ){
-			dbImage = gamePanel.createImage(gamePanel.getWidth(), gamePanel.getHeight());
+		if (currentGamePanelWidth > 0 && currentGamePanelHeight > 0 ){
+			dbImage = gamePanel.createImage(currentGamePanelWidth, currentGamePanelHeight);
 			if (dbImage == null) {
 				System.out.println("dbImage is null");
 				return;

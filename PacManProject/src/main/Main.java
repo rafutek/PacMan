@@ -4,7 +4,7 @@ import view.GameFrame;
 
 public class Main {
 	
-	private static int DEFAULT_FPS = 50;
+	private static int DEFAULT_FPS = 80;
 
 	public static void main(String[] args) {
 

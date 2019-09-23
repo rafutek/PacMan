@@ -202,10 +202,26 @@ public class Tiles {
 				}
 			}
 		}
-		copyMazeImg = new BufferedImage(originalMazeImg.getWidth(), originalMazeImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
-	    Graphics bGr = copyMazeImg.createGraphics();
-	    bGr.drawImage(originalMazeImg, 0, 0, null);
-	    bGr.dispose();		
+		copyMazeImg = copy(originalMazeImg);	
+	}
+	
+	
+	/**
+	 * Return a copy of the parameter image.
+	 * @param original
+	 * @return
+	 */
+	private BufferedImage copy(BufferedImage original) {
+		if(original == null) {
+			System.out.println("The image you want to copy is null !");
+			return null;
+		}
+		
+		BufferedImage copy = new BufferedImage(original.getWidth(null), original.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+	    Graphics bGr = copy.createGraphics();
+	    bGr.drawImage(original, 0, 0, null);
+	    bGr.dispose();			
+		return copy;
 	}
 	
 	/**
@@ -213,14 +229,7 @@ public class Tiles {
 	 * @return the maze image
 	 */
 	public BufferedImage getMazeImg() {
-		if(originalMazeImg == null) {
-			System.out.println("You must create the maze image before getting it !");
-		}
-		copyMazeImg = new BufferedImage(originalMazeImg.getWidth(), originalMazeImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
-	    Graphics bGr = copyMazeImg.createGraphics();
-	    bGr.drawImage(originalMazeImg, 0, 0, null);
-	    bGr.dispose();	
-		return copyMazeImg;
+		return copy(originalMazeImg);
 	}
 	
 	/**
