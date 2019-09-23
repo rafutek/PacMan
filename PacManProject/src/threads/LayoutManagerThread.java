@@ -45,12 +45,10 @@ public class LayoutManagerThread extends Thread {
 				synchronized(window) {
 					gamePanelScale = getPanelScale(window.getGamePanel());
 				}
-				System.out.println(gamePanelScale);
 			}
 			else {
 				if(!paused) {
 					adaptPanels();
-					System.out.println(getPanelScale(window.getGamePanel()));
 				}				
 			}
 		}
