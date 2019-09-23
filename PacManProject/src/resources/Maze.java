@@ -109,7 +109,6 @@ public class Maze {
 						
 						// -> black tile instead
 						number = Tiles.NB_TILES_X * Tiles.NB_TILES_Y; 
-						row_nb++;
 					}
 					if(mazeLineImg == null) {
 						mazeLineImg = tiles.getTileNumber(number); // first tile
@@ -117,6 +116,7 @@ public class Maze {
 					else {
 						mazeLineImg = joinToRight(mazeLineImg, tiles.getTileNumber(number)); // create a line of the maze
 					}
+					row_nb++;
 				}
 				if(c == 10) { //end of line
 					if(mazeLineImg != null && originalMazeImg == null) {
@@ -135,6 +135,14 @@ public class Maze {
 			}
 		}
 		copyMazeImg = tiles.copy(originalMazeImg);	
+	}
+	
+	/**
+	 * Method that computes the position of each sprite in the maze image. 
+	 */
+	private void computeSpritesPositions() {
+		//energizers
+		//originalMazeImg
 	}
 	
 	
