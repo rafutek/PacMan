@@ -5,6 +5,11 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import sprites.Energizers;
+import sprites.Position;
 
 public class Maze {
 	
@@ -12,6 +17,11 @@ public class Maze {
 	private Tiles tiles;
 	private BufferedImage originalMazeImg = null;
 	private BufferedImage copyMazeImg;
+	
+	//sprites 
+	private List<Position> energizersMazeFilePositions = new ArrayList<Position>();
+	private List<Position> energizersMazeImagePositions = new ArrayList<Position>();
+	private Energizers energizers = new Energizers();
 	
 	/**
 	 * Constructor that creates the maze image and sprites thanks to a text file.
@@ -67,19 +77,21 @@ public class Maze {
 		BufferedImage mazeLineImg = null;
 		@SuppressWarnings("resource")
 		FileReader fr = new FileReader(rsc.getMazePath(mazeFilename));
-		int i = 0; 
+		int c = 0; 
 		int weight = 0;
 		int number = 0;
+		int row_nb = 0;
+		int line_nb = 0;
 		boolean first_nb_read = false;
 		
-		while ((i=fr.read()) != -1) { //end of file
+		while ((c=fr.read()) != -1) { //end of file
 
-			if(i >= 48 && i <= 57) { // integer
+			if(c >= 48 && c <= 57) { // integer
 				if(!first_nb_read) {
 					first_nb_read = true;
 				}
-				i -= 48;
-				number = number*weight + i;
+				c -= 48;
+				number = number*weight + c;
 				weight += 10;
 			}
 			else {
@@ -87,14 +99,17 @@ public class Maze {
 				if(first_nb_read) {
 					if(number == 0 || number == 15) {
 						// 0: no tile with that number
-						// 15: energizer
 						
 						
+						if(number == 15) { // 15: energizer
+							energizersMazeFilePositions.add(new Position(row_nb, line_nb));
+						}
 						
 						
 						
 						// -> black tile instead
 						number = Tiles.NB_TILES_X * Tiles.NB_TILES_Y; 
+						row_nb++;
 					}
 					if(mazeLineImg == null) {
 						mazeLineImg = tiles.getTileNumber(number); // first tile
@@ -103,7 +118,7 @@ public class Maze {
 						mazeLineImg = joinToRight(mazeLineImg, tiles.getTileNumber(number)); // create a line of the maze
 					}
 				}
-				if(i == 10) { //end of line
+				if(c == 10) { //end of line
 					if(mazeLineImg != null && originalMazeImg == null) {
 						originalMazeImg = mazeLineImg;
 					}
@@ -114,6 +129,8 @@ public class Maze {
 						mazeLineImg.flush(); //release memory allocated by a line of images of the maze
 					}
 					mazeLineImg = null;
+					line_nb++; //increase line nb
+					row_nb = 0; //reset row number for next line
 				}
 			}
 		}
@@ -155,8 +172,9 @@ public class Maze {
 	
 	public static void main(String[] args) throws IOException {
 		Maze maze = new Maze();
-		maze.resizeMazeImg(1000, 600);
-		Tiles.displayImg(maze.getMazeImg());
+		
+//		maze.resizeMazeImg(1000, 600);
+//		Tiles.displayImg(maze.getMazeImg());
 		
 	}
 

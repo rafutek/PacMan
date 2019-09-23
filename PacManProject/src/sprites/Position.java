@@ -10,4 +10,12 @@ public class Position {
 		this.x.set(x);
 		this.y.set(y);
 	}
+	
+	public int getX() {
+		return x.get();
+	}
+	
+	public int getY() {
+		return y.get();
+	}
 }
