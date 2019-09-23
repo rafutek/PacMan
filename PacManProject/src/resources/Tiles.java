@@ -1,7 +1,9 @@
 package resources;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -114,10 +116,99 @@ public class Tiles {
 	}
 	
 	
+	private BufferedImage joinToRight(BufferedImage img1, BufferedImage img2) {
+		if(img1.getHeight() != img2.getHeight()) {
+			System.out.println("The images to join side by side don't have the same height !");
+			return null;
+		}
+		int width = img1.getWidth() + img2.getWidth();
+		int height = img1.getHeight();
+		BufferedImage newImage = new BufferedImage(width, height,BufferedImage.TYPE_INT_ARGB);
+		Graphics g = newImage.createGraphics();
+		g.drawImage(img1, 0, 0, null);
+		g.drawImage(img2, img1.getWidth(), 0, null);
+		g.dispose();
+		return newImage;
+	}	
+	
+	private BufferedImage joinBelow(BufferedImage img1, BufferedImage img2) {
+		if(img1.getWidth() != img2.getWidth()) {
+			System.out.println("The images to join on top of each other don't have the same width !");
+			return null;
+		}
+		int width = img1.getWidth();
+		int height = img1.getHeight() + img2.getHeight();
+		BufferedImage newImage = new BufferedImage(width, height,BufferedImage.TYPE_INT_ARGB);
+		Graphics g = newImage.createGraphics();
+		g.drawImage(img1, 0, 0, null);
+		g.drawImage(img2, 0, img1.getHeight(), null);
+		g.dispose();
+		return newImage;
+	}
+	
+	private void createMazeFromText(String mazeFilename) throws IOException {
+		BufferedImage mazeLineImg = null;
+		BufferedImage mazeImg = null;
+		FileReader fr = new FileReader(rsc.getMazePath(mazeFilename));
+		int i = 0; 
+		int weight = 0;
+		int number = 0;
+		boolean first_nb_read = false;
+		while ((i=fr.read()) != -1) { //end of file
+
+			if(i >= 48 && i <= 57) { // integer
+				if(!first_nb_read) {
+					first_nb_read = true;
+				}
+				i -= 48;
+				number = number*weight + i;
+				weight += 10;
+			}
+			else {
+				weight = 0;
+				if(first_nb_read) {
+					if(number == 0) {
+						number = NB_TILES_X*NB_TILES_Y; //there is no tile with number 0, so black tile instead
+					}
+					System.out.print(number+" ");
+					if(mazeLineImg == null) {
+						mazeLineImg = getTileNumber(number); // first tile
+					}
+					else {
+						mazeLineImg = joinToRight(mazeLineImg, getTileNumber(number)); // create a line of the maze
+					}
+				}
+				if(i == 10) { //end of line
+					System.out.println();
+					if(mazeLineImg != null && mazeImg == null) {
+						mazeImg = mazeLineImg;
+					}
+					else if(mazeLineImg != null && mazeImg != null){
+						mazeImg = joinBelow(mazeImg, mazeLineImg);
+					}
+					if(mazeLineImg != null) {
+						mazeLineImg.flush(); //release memory allocated by a line of images of the maze
+					}
+					mazeLineImg = null;
+				}
+			}
+		}
+		displayImg(mazeImg);
+	}
+	
+
+	
+	//-------------------------------------------------------
+	
 	
 	public static void main(String[] args) throws IOException {
 		Tiles tiles = new Tiles();
-		tiles.displayImg(tiles.getTileNumber(9));
+//		BufferedImage img1 = tiles.getTileNumber(1);
+//		BufferedImage img2 = tiles.getTileNumber(17);
+//		tiles.displayImg(tiles.joinToRight(img1, img2));
+//		tiles.displayImg(tiles.joinBelow(img1, img2));
+		tiles.createMazeFromText("maze.txt");
+		
 	}
 
 }
