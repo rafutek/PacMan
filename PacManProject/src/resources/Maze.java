@@ -13,6 +13,10 @@ public class Maze {
 	private BufferedImage originalMazeImg = null;
 	private BufferedImage copyMazeImg;
 	
+	/**
+	 * Constructor that creates the maze image and sprites thanks to a text file.
+	 * @throws IOException
+	 */
 	public Maze() throws IOException {
 		tiles = new Tiles();
 		createMazeFromText("maze.txt");
@@ -144,7 +148,7 @@ public class Maze {
 	public static void main(String[] args) throws IOException {
 		Maze maze = new Maze();
 		maze.resizeMazeImg(1000, 600);
-		maze.getTiles().displayImg(maze.getMazeImg());
+		Tiles.displayImg(maze.getMazeImg());
 		
 	}
 

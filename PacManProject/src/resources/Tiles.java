@@ -27,8 +27,7 @@ public class Tiles {
 	
 
 	/**
-	 * Constructor that reads the tiles image, fill the list of tiles extracting them,
-	 * and create the maze from the maze.txt file containing the number and position of tiles.
+	 * Constructor that reads the tiles image, fill the list of tiles extracting them.
 	 * @throws IOException
 	 */
 	public Tiles() throws IOException {
@@ -110,7 +109,11 @@ public class Tiles {
 	 * Display the image in a JFrame.
 	 * @param img
 	 */
-	public void displayImg(BufferedImage img) {
+	public static void displayImg(BufferedImage img) {
+		if(img == null) {
+			System.out.println("Cannot display a null image !");
+			return;
+		}
         JFrame frame=new JFrame();
         frame.setSize(img.getWidth(),img.getHeight());
         JLabel lbl=new JLabel();
@@ -151,7 +154,7 @@ public class Tiles {
 	
 	public static void main(String[] args) throws IOException {
 		Tiles tiles = new Tiles();
-		tiles.displayImg(tiles.getTileNumber(17));		
+		Tiles.displayImg(tiles.getTileNumber(17));		
 	}
 
 }
