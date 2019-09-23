@@ -3,8 +3,11 @@ package threads;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.text.DecimalFormat;
 
+import resources.Tiles;
 import view.GamePanel;
 import view.StatusBarPanel;
 
@@ -68,6 +71,11 @@ public class RenderThread extends Thread{
 	private Graphics dbg; 
 	private Image dbImage = null;
 	
+	//maze
+	Tiles tiles;
+	BufferedImage mazeResized;
+	
+	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
 		setName("Render");
 		
@@ -82,6 +90,12 @@ public class RenderThread extends Thread{
 			fpsStore[i] = 0.0;
 			upsStore[i] = 0.0;
 		}
+		
+		//create maze image
+		try {
+			tiles = new Tiles();
+		} catch (IOException e) {e.printStackTrace();}
+		
 	}
 	
 	public void run()
@@ -181,17 +195,20 @@ public class RenderThread extends Thread{
 	private void gameUpdate() 
 	{ 
 		if (!isPaused && !gameOver) {
-					//fred.move();
+			if(gamePanel.getWidth() > 0 && gamePanel.getHeight() > 0) {
+				tiles.resizeMazeImg(gamePanel.getWidth(), gamePanel.getHeight());
+			}
+	
 		}
-	}  // end of gameUpdate()
+	}
 
 
 	private void gameRender()
 	{
 		if (gamePanel.getWidth() > 0 && gamePanel.getHeight() > 0 ){
-			//dbImage = gamePanel.createImage(gamePanel.getWidth(), gamePanel.getHeight());
+			dbImage = gamePanel.createImage(gamePanel.getWidth(), gamePanel.getHeight());
 			if (dbImage == null) {
-				//System.out.println("dbImage is null");
+				System.out.println("dbImage is null");
 				return;
 			}
 			else
@@ -199,14 +216,13 @@ public class RenderThread extends Thread{
 		}
 
 
-
-		// draw game elements: the obstacles and the worm
-//		obs.draw(dbg);
-//		fred.draw(dbg);
+		// draw game elements
+		tiles.draw(dbg); //draw maze (background)
+		
 
 		if (gameOver)
 			gameOverMessage(dbg);
-	}  // end of gameRender()
+	}  
 
 
 	private void gameOverMessage(Graphics g)

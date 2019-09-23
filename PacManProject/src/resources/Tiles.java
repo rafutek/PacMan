@@ -1,6 +1,7 @@
 package resources;
 
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileReader;
@@ -26,12 +27,17 @@ public class Tiles {
 	
 	private ArrayList<List<BufferedImage>> tilesImages = new ArrayList<List<BufferedImage>>(); //create list for x
 	
-	private BufferedImage mazeImg = null;
-	
-	
+	private BufferedImage originalMazeImg = null;
+	private BufferedImage copyMazeImg;
+	/**
+	 * Constructor that reads the tiles image, fill the list of tiles extracting them,
+	 * and create the maze from the maze.txt file containing the number and position of tiles.
+	 * @throws IOException
+	 */
 	public Tiles() throws IOException {
 		tilesImg = ImageIO.read(new File(rsc.getImagePath("pacmanTilesSheet.png")));
 		fillTilesList();
+		createMazeFromText("maze.txt");
 	}
 	
 	
@@ -183,11 +189,11 @@ public class Tiles {
 					}
 				}
 				if(i == 10) { //end of line
-					if(mazeLineImg != null && mazeImg == null) {
-						mazeImg = mazeLineImg;
+					if(mazeLineImg != null && originalMazeImg == null) {
+						originalMazeImg = mazeLineImg;
 					}
-					else if(mazeLineImg != null && mazeImg != null){
-						mazeImg = joinBelow(mazeImg, mazeLineImg);
+					else if(mazeLineImg != null && originalMazeImg != null){
+						originalMazeImg = joinBelow(originalMazeImg, mazeLineImg);
 					}
 					if(mazeLineImg != null) {
 						mazeLineImg.flush(); //release memory allocated by a line of images of the maze
@@ -196,6 +202,10 @@ public class Tiles {
 				}
 			}
 		}
+		copyMazeImg = new BufferedImage(originalMazeImg.getWidth(), originalMazeImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
+	    Graphics bGr = copyMazeImg.createGraphics();
+	    bGr.drawImage(originalMazeImg, 0, 0, null);
+	    bGr.dispose();		
 	}
 	
 	/**
@@ -203,12 +213,36 @@ public class Tiles {
 	 * @return the maze image
 	 */
 	public BufferedImage getMazeImg() {
-		if(mazeImg == null) {
+		if(originalMazeImg == null) {
 			System.out.println("You must create the maze image before getting it !");
 		}
-		return mazeImg;
+		copyMazeImg = new BufferedImage(originalMazeImg.getWidth(), originalMazeImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
+	    Graphics bGr = copyMazeImg.createGraphics();
+	    bGr.drawImage(originalMazeImg, 0, 0, null);
+	    bGr.dispose();	
+		return copyMazeImg;
 	}
 	
+	/**
+	 * Resize the maze image, if not null, with dimension parameters
+	 * @param width
+	 * @param height
+	 */
+	public void resizeMazeImg(int width, int height) {
+		if(originalMazeImg != null) {
+			Image img = originalMazeImg.getScaledInstance(width,height,Image.SCALE_SMOOTH);
+			copyMazeImg = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+		    Graphics bGr = copyMazeImg.createGraphics();
+		    bGr.drawImage(img, 0, 0, null);
+		    bGr.dispose();			
+		}
+	}
+	
+	public void draw(Graphics g) {
+		if(g != null && copyMazeImg != null) {
+			g.drawImage(copyMazeImg,0,0, null);
+		}
+	}
 
 	
 	//-------------------------------------------------------
@@ -220,7 +254,7 @@ public class Tiles {
 //		BufferedImage img2 = tiles.getTileNumber(17);
 //		tiles.displayImg(tiles.joinToRight(img1, img2));
 //		tiles.displayImg(tiles.joinBelow(img1, img2));
-		tiles.createMazeFromText("maze.txt");
+		tiles.resizeMazeImg(1000, 600);
 		tiles.displayImg(tiles.getMazeImg());
 		
 	}
