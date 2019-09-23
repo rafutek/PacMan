@@ -30,6 +30,7 @@ public class Maze {
 	public Maze() throws IOException {
 		tiles = new Tiles();
 		createMazeFromText("maze.txt");
+		computeSpritesPositions();
 	}
 	
 	
@@ -141,8 +142,17 @@ public class Maze {
 	 * Method that computes the position of each sprite in the maze image. 
 	 */
 	private void computeSpritesPositions() {
+		int tileWidth = originalMazeImg.getWidth()/Tiles.NB_TILES_X;
+		int tileHeight = originalMazeImg.getHeight()/Tiles.NB_TILES_Y;
+	
+		int pixelX, pixelY;
+		
 		//energizers
-		//originalMazeImg
+		for (Position position : energizersMazeFilePositions) {
+			pixelX = (position.getX() * tileWidth) + tileWidth/2;
+			pixelY = (position.getY() * tileHeight) + tileHeight/2;
+			energizersMazeImagePositions.add(new Position(pixelX, pixelY));
+		}
 	}
 	
 	
@@ -180,7 +190,7 @@ public class Maze {
 	
 	public static void main(String[] args) throws IOException {
 		Maze maze = new Maze();
-		
+
 //		maze.resizeMazeImg(1000, 600);
 //		Tiles.displayImg(maze.getMazeImg());
 		
