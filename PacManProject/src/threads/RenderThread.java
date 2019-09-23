@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 
 import resources.Maze;
+import sprites.Energizers;
 import view.GamePanel;
 import view.StatusBarPanel;
 
@@ -76,6 +77,7 @@ public class RenderThread extends Thread{
 	private int currentGamePanelWidth, currentGamePanelHeight;
 	private int lastGamePanelWidth = 0, lastGamePanelHeight = 0;
 	
+
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
 		setName("Render");
@@ -92,10 +94,12 @@ public class RenderThread extends Thread{
 			upsStore[i] = 0.0;
 		}
 		
-		//create maze image
+		//create maze image and sprites from the maze file
 		try {
 			maze = new Maze();
 		} catch (IOException e) {e.printStackTrace();}
+		
+		
 		
 	}
 	

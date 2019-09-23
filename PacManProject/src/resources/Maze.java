@@ -33,9 +33,6 @@ public class Maze {
 		createMazeFromText("maze.txt");
 		computeSpritesPositions();
 		fillSpritesPositions();
-		for (Energizer e : energizers.getEnergizers()) {
-			System.out.println(e.getPosition().getX()+" "+e.getPosition().getY());
-		}
 	}
 	
 	
@@ -158,6 +155,10 @@ public class Maze {
 			pixelY = (position.getY() * tileHeight) + tileHeight/2;
 			energizersMazeImagePositions.add(new Position(pixelX, pixelY));
 		}
+		energizersMazeFilePositions.clear();
+		
+		//...
+		
 	}
 	
 	private void fillSpritesPositions() {
@@ -165,6 +166,9 @@ public class Maze {
 		for (Position position : energizersMazeImagePositions) {
 			energizers.add(new Energizer(position, tiles));
 		}
+		energizersMazeImagePositions.clear();
+		
+		//...
 	}
 	
 	
@@ -183,12 +187,36 @@ public class Maze {
 	 */
 	public void resizeMazeImg(int width, int height) {
 		if(originalMazeImg != null) {
+			//resize maze into a copy
 			Image img = originalMazeImg.getScaledInstance(width,height,Image.SCALE_SMOOTH);
 			copyMazeImg = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 		    Graphics bGr = copyMazeImg.createGraphics();
 		    bGr.drawImage(img, 0, 0, null);
-		    bGr.dispose();			
+		    bGr.dispose();		
+		    
+		    //reposition the sprites in the maze
+		    repositionSpritesInMaze(width, height);
+		    for (Energizer e : energizers.getEnergizers()) {
+		    	System.out.println(e.getCurrentPosition().getX()+" "+e.getCurrentPosition().getY());
+		    }
 		}
+	}
+	
+	/**
+	 * Reposition the sprites in the maze of different size.
+	 * @param width the new maze width
+	 * @param height the new maze height
+	 */
+	private void repositionSpritesInMaze(int width, int height) {
+		
+		//energizers
+		for (Energizer e : energizers.getEnergizers()) {
+			int newX = (width * e.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+			int newY = (height * e.getMazePosition().getY()) / originalMazeImg.getHeight();
+			e.setCurrentPosition(new Position(newX, newY));
+		}
+		
+		//...
 	}
 	
 	public void draw(Graphics g) {
@@ -202,8 +230,7 @@ public class Maze {
 	
 	public static void main(String[] args) throws IOException {
 		Maze maze = new Maze();
-		
-//		maze.resizeMazeImg(1000, 600);
+		maze.resizeMazeImg(500, 600);
 //		Tiles.displayImg(maze.getMazeImg());
 		
 	}
