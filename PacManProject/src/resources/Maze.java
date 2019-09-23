@@ -85,8 +85,16 @@ public class Maze {
 			else {
 				weight = 0;
 				if(first_nb_read) {
-					if(number == 0) {
-						number = Tiles.NB_TILES_X * Tiles.NB_TILES_Y; //there is no tile with number 0, so black tile instead
+					if(number == 0 || number == 15) {
+						// 0: no tile with that number
+						// 15: energizer
+						
+						
+						
+						
+						
+						// -> black tile instead
+						number = Tiles.NB_TILES_X * Tiles.NB_TILES_Y; 
 					}
 					if(mazeLineImg == null) {
 						mazeLineImg = tiles.getTileNumber(number); // first tile

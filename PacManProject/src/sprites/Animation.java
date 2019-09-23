@@ -18,6 +18,11 @@ public class Animation {
 	List<Integer> tilesNumbers;
 	List<BufferedImage> animationTiles = new ArrayList<BufferedImage>();
 	
+	/**
+	 * Constructor that store the tiles, and fill an image buffer with the list of tiles wanted.
+	 * @param tiles
+	 * @param tilesNumbers the tiles wanted in the images buffer.
+	 */
 	public Animation(Tiles tiles, List<Integer> tilesNumbers) {
 		this.tiles = tiles;
 		setListTilesNumbers(tilesNumbers);
@@ -43,6 +48,9 @@ public class Animation {
 	
 	private void fillAnimationBuffer() {
 		for (Integer integer : tilesNumbers) {
+			if(integer == 0) {
+				integer = Tiles.NB_TILES_X * Tiles.NB_TILES_Y; //replace by a black tile
+			}
 			BufferedImage tile = tiles.getTileNumber(integer);
 			animationTiles.add(tile);
 		}

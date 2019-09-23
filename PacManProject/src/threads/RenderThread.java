@@ -115,7 +115,7 @@ public class RenderThread extends Thread{
 		running = true;
 
 		while(running) {
-			gameUpdate(); 
+			gameUpdate(); // game state is updated
 			gameRender();   // render the game to a buffer
 			paintScreen();  // draw the buffer on-screen
 
