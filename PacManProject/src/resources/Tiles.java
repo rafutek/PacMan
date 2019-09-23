@@ -26,15 +26,13 @@ public class Tiles {
 	
 	private ArrayList<List<BufferedImage>> tilesImages = new ArrayList<List<BufferedImage>>(); //create list for x
 	
+	private BufferedImage mazeImg = null;
+	
 	
 	public Tiles() throws IOException {
 		tilesImg = ImageIO.read(new File(rsc.getImagePath("pacmanTilesSheet.png")));
 		fillTilesList();
 	}
-	
-//	private BufferedImage getTilesImage() {
-//		return tilesImg;
-//	}
 	
 	
 	/**
@@ -146,14 +144,21 @@ public class Tiles {
 		return newImage;
 	}
 	
+	/**
+	 * Create the maze from a text file, associating each number of the file to a certain tile, 
+	 * and combining the tiles to create the final map.
+	 * @param mazeFilename
+	 * @throws IOException
+	 */
 	private void createMazeFromText(String mazeFilename) throws IOException {
 		BufferedImage mazeLineImg = null;
-		BufferedImage mazeImg = null;
+		@SuppressWarnings("resource")
 		FileReader fr = new FileReader(rsc.getMazePath(mazeFilename));
 		int i = 0; 
 		int weight = 0;
 		int number = 0;
 		boolean first_nb_read = false;
+		
 		while ((i=fr.read()) != -1) { //end of file
 
 			if(i >= 48 && i <= 57) { // integer
@@ -170,7 +175,6 @@ public class Tiles {
 					if(number == 0) {
 						number = NB_TILES_X*NB_TILES_Y; //there is no tile with number 0, so black tile instead
 					}
-					System.out.print(number+" ");
 					if(mazeLineImg == null) {
 						mazeLineImg = getTileNumber(number); // first tile
 					}
@@ -179,7 +183,6 @@ public class Tiles {
 					}
 				}
 				if(i == 10) { //end of line
-					System.out.println();
 					if(mazeLineImg != null && mazeImg == null) {
 						mazeImg = mazeLineImg;
 					}
@@ -193,7 +196,17 @@ public class Tiles {
 				}
 			}
 		}
-		displayImg(mazeImg);
+	}
+	
+	/**
+	 * Get the maze image, created or not.
+	 * @return the maze image
+	 */
+	public BufferedImage getMazeImg() {
+		if(mazeImg == null) {
+			System.out.println("You must create the maze image before getting it !");
+		}
+		return mazeImg;
 	}
 	
 
@@ -208,6 +221,7 @@ public class Tiles {
 //		tiles.displayImg(tiles.joinToRight(img1, img2));
 //		tiles.displayImg(tiles.joinBelow(img1, img2));
 		tiles.createMazeFromText("maze.txt");
+		tiles.displayImg(tiles.getMazeImg());
 		
 	}
 
