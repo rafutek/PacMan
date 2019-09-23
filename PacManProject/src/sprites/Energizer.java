@@ -10,8 +10,8 @@ public class Energizer extends Sprite{
 	
 	private List<Integer> tilesNumbers = new ArrayList<Integer>();	
 	
-	public Energizer(int initial_x, int initial_y, Tiles tiles) {
-		super(initial_x, initial_y, tiles);
+	public Energizer(Position start_position, Tiles tiles) {
+		super(start_position, tiles);
 		
 		tilesNumbers.add(13);
 		tilesNumbers.add(14);
@@ -19,7 +19,5 @@ public class Energizer extends Sprite{
 		
 		setImagesBuffer(tilesNumbers);
 	}
-
-
 	
 }

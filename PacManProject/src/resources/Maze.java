@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import sprites.Energizer;
 import sprites.Energizers;
 import sprites.Position;
 
@@ -31,6 +32,10 @@ public class Maze {
 		tiles = new Tiles();
 		createMazeFromText("maze.txt");
 		computeSpritesPositions();
+		fillSpritesPositions();
+		for (Energizer e : energizers.getEnergizers()) {
+			System.out.println(e.getPosition().getX()+" "+e.getPosition().getY());
+		}
 	}
 	
 	
@@ -155,6 +160,13 @@ public class Maze {
 		}
 	}
 	
+	private void fillSpritesPositions() {
+		//energizers
+		for (Position position : energizersMazeImagePositions) {
+			energizers.add(new Energizer(position, tiles));
+		}
+	}
+	
 	
 	/**
 	 * Get the maze image, created or not.
@@ -190,7 +202,7 @@ public class Maze {
 	
 	public static void main(String[] args) throws IOException {
 		Maze maze = new Maze();
-
+		
 //		maze.resizeMazeImg(1000, 600);
 //		Tiles.displayImg(maze.getMazeImg());
 		
