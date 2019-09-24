@@ -39,7 +39,7 @@ public abstract class Sprite {
 	/**
 	 * Some sprites need to join some tiles to create a single image (like pacman)
 	 */
-	public abstract void createFullSpriteImages();
+	protected abstract void createFullSpriteImages();
 	
 	
 	/**
@@ -76,9 +76,24 @@ public abstract class Sprite {
 		this.animationOrder = animationOrder;
 	}
 	
+	protected abstract void createAnimationOrderList();
+	
+	/**
+	 * Update the animation order buffer. More precisely takes the first item of the list and
+	 * place it at the end, so that the draw method always draw the first but different full image of the sprite.
+	 */
+	public void update() {
+		animationOrder.add(animationOrder.remove(0));
+	}
+	
+	/**
+	 * Draw an image of the full images list. The number of the image to draw is 
+	 * given by the first index of the animation order list.
+	 * The full image is drawn at the current position, with the current size wanted.
+	 * @param g is the graphics where to draw the sprite.
+	 */
 	public void draw(Graphics g) {
-		// always draw the first image of the current image buffer
-		g.drawImage(spriteFullImages.getSpriteImages().get(0), 
+		g.drawImage(spriteFullImages.getSpriteImages().get(animationOrder.get(0)), 
 				currentPosition.getX(), currentPosition.getY(), currentSize.width, currentSize.height, null);
 	}
 }

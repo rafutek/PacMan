@@ -24,6 +24,13 @@ public class Energizers {
 		energizers.remove(nb);
 	}
 	
+	public void update() {
+		int i = 0;
+		for (Energizer energizer : energizers) {
+			energizer.update();
+		}
+	}
+	
 	public void draw(Graphics g) {
 		for (Energizer energizer : energizers) {
 			energizer.draw(g);

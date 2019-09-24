@@ -132,6 +132,7 @@ public class LayoutManagerThread extends Thread {
 	
 	public void setAllPanelsLayout() {
 		synchronized(window) {
+			System.out.println("set panels layout");
 			setPanelLayout(window.getGamePanel(), 1, 0, 1, gamePanelWeightX, gamePanelWeightY);
 			setPanelLayout(window.getStatusBarPanel(), 1, 1, 1, statusBarPanelWeightX, statusBarPanelWeightY);
 			setPanelLayout(window.getLeftPanel(), 0, 0, 2, leftPanelWeightX, 1);
@@ -142,11 +143,19 @@ public class LayoutManagerThread extends Thread {
 	/**
 	 * Adapt all the weights so that the game panel scale is the same 
 	 */
-	private void adaptPanels() {
+	public void adaptPanels() {
 		synchronized(window) {
-	    	gamePanelWeightX = (gamePanelScale*(double)window.getHeight()*gamePanelWeightY)/(double)window.getWidth();
-			setPanelsWeights(gamePanelWeightX);
-			setAllPanelsLayout();			
+			
+			double gamePanelCurrentScale = getPanelScale(window.getGamePanel());
+			
+			if( gamePanelCurrentScale < gamePanelScale - 0.1 || gamePanelCurrentScale > gamePanelScale + 0.1) {
+				
+				System.out.println(gamePanelScale+" "+gamePanelCurrentScale);
+		    	gamePanelWeightX = (gamePanelScale*(double)window.getHeight()*gamePanelWeightY)/(double)window.getWidth();
+				setPanelsWeights(gamePanelWeightX);
+				setAllPanelsLayout();					
+			}
+		
 		}
 	}
 }

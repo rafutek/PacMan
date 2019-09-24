@@ -1,6 +1,7 @@
 package sprites;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class Energizer extends Sprite{
 		
 		setImagesBuffer(tilesNumbers);
 		createFullSpriteImages();
-		setAnimationOrder(tilesNumbers);
+		createAnimationOrderList();
 	}
 
 	@Override
@@ -27,7 +28,27 @@ public class Energizer extends Sprite{
 		spriteFullImages = spriteImages.copyObject(); // no need to create full images for energizer
 		setOriginalSize(); // an energizer full image is a tile so ok
 	}
+	
+	@Override
+	protected void createAnimationOrderList() {
+		List<Integer> animationOrder = new ArrayList<Integer>();
+		for (int i = 0; i < tilesNumbers.size(); i++) {
+			animationOrder.add(i); // the images of the animation are the first, the second, etc.. 
+									// of the full images list
+		}
+		setAnimationOrder(animationOrder);
+	}
 
+
+	//-------------------------------------------------------
+	
+	
+	public static void main(String[] args) throws IOException {
+		Energizer e = new Energizer(new Position(0, 0), new Tiles());
+		System.out.println(e.animationOrder);
+		e.update();
+		System.out.println(e.animationOrder);
+	}
 
 	
 }
