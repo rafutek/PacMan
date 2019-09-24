@@ -18,6 +18,15 @@ public class Energizer extends Sprite{
 		tilesNumbers.add(15);
 		
 		setImagesBuffer(tilesNumbers);
+		createFullSpriteImages();
+		setAnimationOrder(tilesNumbers);
 	}
+
+	@Override
+	public void createFullSpriteImages() {
+		spriteFullImages = spriteImages; // no need to create full images for energizer
+	}
+
+
 	
 }

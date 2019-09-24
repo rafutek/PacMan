@@ -9,24 +9,24 @@ import resources.Tiles;
 
 /**
  * Class that creates a buffer of images from a set of tiles. 
- * These images has to be read by the render thread to create an animation.
+ * These images are all the tiles needed to draw a sprite.
  *
  */
-public class Animation {
+public class SpriteImages {
 	
 	Tiles tiles;
 	List<Integer> tilesNumbers;
-	List<BufferedImage> animationTiles = new ArrayList<BufferedImage>();
+	List<BufferedImage> spriteImagesTiles = new ArrayList<BufferedImage>();
 	
 	/**
 	 * Constructor that store the tiles, and fill an image buffer with the list of tiles wanted.
 	 * @param tiles
 	 * @param tilesNumbers the tiles wanted in the images buffer.
 	 */
-	public Animation(Tiles tiles, List<Integer> tilesNumbers) {
+	public SpriteImages(Tiles tiles, List<Integer> tilesNumbers) {
 		this.tiles = tiles;
 		setListTilesNumbers(tilesNumbers);
-		fillAnimationBuffer();
+		fillSpriteImagesBuffer();
 	}
 	
 	private void setListTilesNumbers(List<Integer> tilesNumbers) {
@@ -46,18 +46,18 @@ public class Animation {
 		}
 	}
 	
-	private void fillAnimationBuffer() {
+	private void fillSpriteImagesBuffer() {
 		for (Integer integer : tilesNumbers) {
 			if(integer == 0) {
 				integer = Tiles.NB_TILES_X * Tiles.NB_TILES_Y; //replace by a black tile
 			}
 			BufferedImage tile = tiles.getTileNumber(integer);
-			animationTiles.add(tile);
+			spriteImagesTiles.add(tile);
 		}
 	}
 	
-	public List<BufferedImage> getAnimationBuffer(){
-		return animationTiles;
+	public List<BufferedImage> getSpriteImages(){
+		return spriteImagesTiles;
 	}
 	
 	//-------------------------------------------------------
@@ -68,8 +68,8 @@ public class Animation {
 			tilesWanted.add(i);
 		}
 		
-		Animation animation = new Animation(new Tiles(), tilesWanted);
-		for (BufferedImage bufferedImage : animation.getAnimationBuffer()) {
+		SpriteImages spriteImages = new SpriteImages(new Tiles(), tilesWanted);
+		for (BufferedImage bufferedImage : spriteImages.getSpriteImages()) {
 			Tiles.displayImg(bufferedImage);
 			try {
 				Thread.sleep(2000);

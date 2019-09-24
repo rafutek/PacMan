@@ -1,5 +1,6 @@
 package sprites;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,5 +22,11 @@ public class Energizers {
 	
 	public void removeEnergizerNb(int nb) {
 		energizers.remove(nb);
+	}
+	
+	public void draw(Graphics g) {
+		for (Energizer energizer : energizers) {
+			energizer.draw(g);
+		}
 	}
 }

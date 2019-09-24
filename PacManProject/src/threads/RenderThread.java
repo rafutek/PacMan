@@ -77,7 +77,8 @@ public class RenderThread extends Thread{
 	private int currentGamePanelWidth, currentGamePanelHeight;
 	private int lastGamePanelWidth = 0, lastGamePanelHeight = 0;
 	
-
+	//sprites
+	private Energizers energizers;
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
 		setName("Render");
@@ -99,7 +100,8 @@ public class RenderThread extends Thread{
 			maze = new Maze();
 		} catch (IOException e) {e.printStackTrace();}
 		
-		
+		//get sprites
+		energizers = maze.getEnergizers();
 		
 	}
 	
@@ -107,7 +109,7 @@ public class RenderThread extends Thread{
 	/* The frames of the animation are drawn inside the while loop. */
 	{
 		System.out.println("Start thread "+getName());
-
+		
 		long beforeTime, afterTime, timeDiff, sleepTime;
 		int overSleepTime = 0;
 		int noDelays = 0;
@@ -174,7 +176,7 @@ public class RenderThread extends Thread{
 		if (!running) {
 			this.start();
 		}
-	} // end of startGame()
+	} 
 	
 	
 	// ------------- game life cycle methods ------------
@@ -200,6 +202,8 @@ public class RenderThread extends Thread{
 	private void gameUpdate() 
 	{ 
 		if (!isPaused && !gameOver) {
+			
+			// resize all elements if panel size changed
 			currentGamePanelWidth = gamePanel.getWidth();
 			currentGamePanelHeight = gamePanel.getHeight();
 			
@@ -217,15 +221,14 @@ public class RenderThread extends Thread{
 				if(!drawnOnce) {
 					drawnOnce = true;
 				}
-			}
-	
+			}	
 		}
 	}
 
 
 	private void gameRender()
 	{
-		if (currentGamePanelWidth > 0 && currentGamePanelHeight > 0 ){
+		if (currentGamePanelWidth > 0 && currentGamePanelHeight > 0 && drawnOnce){
 			dbImage = gamePanel.createImage(currentGamePanelWidth, currentGamePanelHeight);
 			if (dbImage == null) {
 				System.out.println("dbImage is null");
@@ -233,15 +236,19 @@ public class RenderThread extends Thread{
 			}
 			else
 				dbg = dbImage.getGraphics();
-		}
-
-
-		// draw game elements
-		maze.draw(dbg); //draw maze (background)
 		
+	
+	
+			// draw game elements
+			maze.draw(dbg); //draw maze (background)
+			
 
-		if (gameOver)
-			gameOverMessage(dbg);
+			energizers.draw(dbg); //draw all the energizers at their respective position
+	
+			if (gameOver)
+				gameOverMessage(dbg);
+		
+		}
 	}  
 
 

@@ -20,6 +20,7 @@ public class Maze {
 	private BufferedImage copyMazeImg;
 	
 	//sprites 
+	private int nb_rows, nb_lines;
 	private List<Position> energizersMazeFilePositions = new ArrayList<Position>();
 	private List<Position> energizersMazeImagePositions = new ArrayList<Position>();
 	private Energizers energizers = new Energizers();
@@ -133,10 +134,12 @@ public class Maze {
 					}
 					mazeLineImg = null;
 					line_nb++; //increase line nb
+					nb_rows = row_nb;
 					row_nb = 0; //reset row number for next line
 				}
 			}
 		}
+		nb_lines = line_nb;
 		copyMazeImg = tiles.copy(originalMazeImg);	
 	}
 	
@@ -144,15 +147,12 @@ public class Maze {
 	 * Method that computes the position of each sprite in the maze image. 
 	 */
 	private void computeSpritesPositions() {
-		int tileWidth = originalMazeImg.getWidth()/Tiles.NB_TILES_X;
-		int tileHeight = originalMazeImg.getHeight()/Tiles.NB_TILES_Y;
-	
 		int pixelX, pixelY;
 		
 		//energizers
 		for (Position position : energizersMazeFilePositions) {
-			pixelX = (position.getX() * tileWidth) + tileWidth/2;
-			pixelY = (position.getY() * tileHeight) + tileHeight/2;
+			pixelX = (position.getX() * getMazeImg().getWidth()) / nb_rows;
+			pixelY = (position.getY() *getMazeImg().getHeight()) / nb_lines;
 			energizersMazeImagePositions.add(new Position(pixelX, pixelY));
 		}
 		energizersMazeFilePositions.clear();
@@ -218,6 +218,12 @@ public class Maze {
 		
 		//...
 	}
+	
+	public Energizers getEnergizers() {
+		return energizers;
+	}
+	
+	
 	
 	public void draw(Graphics g) {
 		if(g != null && copyMazeImg != null) {
