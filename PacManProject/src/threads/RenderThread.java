@@ -3,8 +3,11 @@ package threads;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.IOException;
 import java.text.DecimalFormat;
 
+import resources.Maze;
+import sprites.Energizers;
 import view.GamePanel;
 import view.StatusBarPanel;
 
@@ -68,6 +71,15 @@ public class RenderThread extends Thread{
 	private Graphics dbg; 
 	private Image dbImage = null;
 	
+	//maze
+	private Maze maze;
+	private boolean drawnOnce = false;
+	private int currentGamePanelWidth, currentGamePanelHeight;
+	private int lastGamePanelWidth = 0, lastGamePanelHeight = 0;
+	
+	//sprites
+	private Energizers energizers;
+	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
 		setName("Render");
 		
@@ -82,13 +94,22 @@ public class RenderThread extends Thread{
 			fpsStore[i] = 0.0;
 			upsStore[i] = 0.0;
 		}
+		
+		//create maze image and sprites from the maze file
+		try {
+			maze = new Maze();
+		} catch (IOException e) {e.printStackTrace();}
+		
+		//get sprites
+		energizers = maze.getEnergizers();
+		
 	}
 	
 	public void run()
 	/* The frames of the animation are drawn inside the while loop. */
 	{
 		System.out.println("Start thread "+getName());
-
+		
 		long beforeTime, afterTime, timeDiff, sleepTime;
 		int overSleepTime = 0;
 		int noDelays = 0;
@@ -100,7 +121,7 @@ public class RenderThread extends Thread{
 		running = true;
 
 		while(running) {
-			gameUpdate(); 
+			gameUpdate(); // game state is updated
 			gameRender();   // render the game to a buffer
 			paintScreen();  // draw the buffer on-screen
 
@@ -155,7 +176,7 @@ public class RenderThread extends Thread{
 		if (!running) {
 			this.start();
 		}
-	} // end of startGame()
+	} 
 	
 	
 	// ------------- game life cycle methods ------------
@@ -181,32 +202,53 @@ public class RenderThread extends Thread{
 	private void gameUpdate() 
 	{ 
 		if (!isPaused && !gameOver) {
-					//fred.move();
+			
+			// resize all elements if panel size changed
+			currentGamePanelWidth = gamePanel.getWidth();
+			currentGamePanelHeight = gamePanel.getHeight();
+			
+			if(lastGamePanelWidth <= 0 && lastGamePanelHeight <=0) {
+				lastGamePanelWidth = currentGamePanelWidth;
+				lastGamePanelHeight = currentGamePanelHeight;
+			}
+			else if(currentGamePanelWidth > 0 && currentGamePanelHeight > 0 && 
+					(!drawnOnce || lastGamePanelWidth != currentGamePanelWidth || lastGamePanelHeight != currentGamePanelHeight)) 
+			{
+				maze.resizeMazeAndSprites(currentGamePanelWidth, currentGamePanelHeight);
+				lastGamePanelWidth = currentGamePanelWidth;
+				lastGamePanelHeight = currentGamePanelHeight;
+				if(!drawnOnce) {
+					drawnOnce = true;
+				}
+			}	
 		}
-	}  // end of gameUpdate()
+	}
 
 
 	private void gameRender()
 	{
-		if (gamePanel.getWidth() > 0 && gamePanel.getHeight() > 0 ){
-			//dbImage = gamePanel.createImage(gamePanel.getWidth(), gamePanel.getHeight());
+		if (currentGamePanelWidth > 0 && currentGamePanelHeight > 0 && drawnOnce){
+			dbImage = gamePanel.createImage(currentGamePanelWidth, currentGamePanelHeight);
 			if (dbImage == null) {
-				//System.out.println("dbImage is null");
+				System.out.println("dbImage is null");
 				return;
 			}
 			else
 				dbg = dbImage.getGraphics();
+		
+	
+	
+			// draw game elements
+			maze.draw(dbg); //draw maze (background)
+			
+
+			energizers.draw(dbg); //draw all the energizers at their respective position
+	
+			if (gameOver)
+				gameOverMessage(dbg);
+		
 		}
-
-
-
-		// draw game elements: the obstacles and the worm
-//		obs.draw(dbg);
-//		fred.draw(dbg);
-
-		if (gameOver)
-			gameOverMessage(dbg);
-	}  // end of gameRender()
+	}  
 
 
 	private void gameOverMessage(Graphics g)
