@@ -214,8 +214,7 @@ public class RenderThread extends Thread{
 			else if(currentGamePanelWidth > 0 && currentGamePanelHeight > 0 && 
 					(!drawnOnce || lastGamePanelWidth != currentGamePanelWidth || lastGamePanelHeight != currentGamePanelHeight)) 
 			{
-				System.out.println("resize maze");
-				maze.resizeMazeImg(currentGamePanelWidth, currentGamePanelHeight);
+				maze.resizeMazeAndSprites(currentGamePanelWidth, currentGamePanelHeight);
 				lastGamePanelWidth = currentGamePanelWidth;
 				lastGamePanelHeight = currentGamePanelHeight;
 				if(!drawnOnce) {

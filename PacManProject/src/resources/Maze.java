@@ -185,7 +185,7 @@ public class Maze {
 	 * @param width
 	 * @param height
 	 */
-	public void resizeMazeImg(int width, int height) {
+	public void resizeMazeAndSprites(int width, int height) {
 		if(originalMazeImg != null) {
 			//resize maze into a copy
 			Image img = originalMazeImg.getScaledInstance(width,height,Image.SCALE_SMOOTH);
@@ -196,9 +196,6 @@ public class Maze {
 		    
 		    //reposition the sprites in the maze
 		    repositionSpritesInMaze(width, height);
-		    for (Energizer e : energizers.getEnergizers()) {
-		    	System.out.println(e.getCurrentPosition().getX()+" "+e.getCurrentPosition().getY());
-		    }
 		}
 	}
 	
@@ -236,7 +233,7 @@ public class Maze {
 	
 	public static void main(String[] args) throws IOException {
 		Maze maze = new Maze();
-		maze.resizeMazeImg(500, 600);
+		maze.resizeMazeAndSprites(500, 600);
 //		Tiles.displayImg(maze.getMazeImg());
 		
 	}
