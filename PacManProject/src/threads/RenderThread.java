@@ -220,7 +220,10 @@ public class RenderThread extends Thread{
 				if(!drawnOnce) {
 					drawnOnce = true;
 				}
-			}	
+			}
+			
+			//update sprites
+			energizers.update();
 		}
 	}
 
