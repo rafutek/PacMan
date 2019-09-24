@@ -2,7 +2,6 @@ package resources;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.FileReader;
 import java.io.IOException;
@@ -141,7 +140,7 @@ public class Maze {
 			}
 		}
 		nb_lines = line_nb;
-		copyMazeImg = tiles.copy(originalMazeImg);	
+		copyMazeImg = Tiles.copy(originalMazeImg);	
 	}
 	
 	/**
@@ -178,7 +177,7 @@ public class Maze {
 	 * @return the maze image
 	 */
 	public BufferedImage getMazeImg() {
-		return tiles.copy(originalMazeImg);
+		return Tiles.copy(originalMazeImg);
 	}
 	
 	/**
@@ -189,11 +188,7 @@ public class Maze {
 	public void resizeMazeAndSprites(int width, int height) {
 		if(originalMazeImg != null) {
 			//resize maze into a copy
-			Image img = originalMazeImg.getScaledInstance(width,height,Image.SCALE_SMOOTH);
-			copyMazeImg = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-		    Graphics bGr = copyMazeImg.createGraphics();
-		    bGr.drawImage(img, 0, 0, null);
-		    bGr.dispose();		
+			copyMazeImg = Tiles.resize(originalMazeImg, new Dimension(width,height));
 		    
 		    //reposition and resize the sprites in the resized maze
 		    repositionSpritesInMaze(width, height);
@@ -223,7 +218,7 @@ public class Maze {
 		for (Energizer e : energizers.getEnergizers()) {
 			int newWidth = (width * e.getOriginalSize().width) / originalMazeImg.getWidth() ;
 			int newHeight = (height * e.getOriginalSize().height) / originalMazeImg.getHeight();
-			e.resizeCurrentImages(new Dimension(newWidth, newHeight));
+			e.setCurrentSize(new Dimension(newWidth, newHeight));
 		}
 		
 		//...
@@ -246,7 +241,7 @@ public class Maze {
 	
 	public static void main(String[] args) throws IOException {
 		Maze maze = new Maze();
-		//maze.resizeMazeAndSprites(500, 600);
+		maze.resizeMazeAndSprites(500, 600);
 //		Tiles.displayImg(maze.getMazeImg());
 		
 	}

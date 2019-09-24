@@ -24,8 +24,7 @@ public class Energizer extends Sprite{
 
 	@Override
 	public void createFullSpriteImages() {
-		spriteOriginalFullImages = spriteImages.copyObject(); // no need to create full images for energizer
-		spriteCurrentFullImages = spriteOriginalFullImages.copyObject();
+		spriteFullImages = spriteImages.copyObject(); // no need to create full images for energizer
 		setOriginalSize(); // an energizer full image is a tile so ok
 	}
 

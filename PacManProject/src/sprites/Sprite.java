@@ -2,7 +2,6 @@ package sprites;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 import resources.Tiles;
@@ -11,7 +10,7 @@ public abstract class Sprite {
 
 	private Position mazePosition, currentPosition;
 	private Dimension originalSize, currentSize;
-	protected SpriteImages spriteImages, spriteOriginalFullImages, spriteCurrentFullImages;
+	protected SpriteImages spriteImages, spriteFullImages;
 	private Tiles tiles;
 	protected List<Integer> animationOrder;
 	
@@ -49,8 +48,8 @@ public abstract class Sprite {
 	 */
 	protected void setOriginalSize() {
 		// the original size of the sprite is the dimension of one of its full images
-		originalSize = new Dimension(spriteOriginalFullImages.getSpriteImages().get(0).getWidth(), 
-									spriteOriginalFullImages.getSpriteImages().get(0).getHeight());
+		originalSize = new Dimension(spriteFullImages.getSpriteImages().get(0).getWidth(), 
+									spriteFullImages.getSpriteImages().get(0).getHeight());
 	}
 	
 	
@@ -66,11 +65,8 @@ public abstract class Sprite {
 	 * Set the current size of the sprite.
 	 * @param newDimension
 	 */
-	public void resizeCurrentImages(Dimension newDimension) {
+	public void setCurrentSize(Dimension newDimension) {
 		currentSize = newDimension;
-		for (BufferedImage image : spriteCurrentFullImages.getSpriteImages()) {
-			image = Tiles.resize(image, currentSize);
-		}
 	}
 	
 	/**
@@ -81,8 +77,8 @@ public abstract class Sprite {
 	}
 	
 	public void draw(Graphics g) {
-		// always draw the first image of the buffer
-		g.drawImage(spriteOriginalFullImages.getSpriteImages().get(0), 
-				currentPosition.getX(), currentPosition.getY(), null);
+		// always draw the first image of the current image buffer
+		g.drawImage(spriteFullImages.getSpriteImages().get(0), 
+				currentPosition.getX(), currentPosition.getY(), currentSize.width, currentSize.height, null);
 	}
 }
