@@ -1,5 +1,6 @@
 package resources;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -194,8 +195,9 @@ public class Maze {
 		    bGr.drawImage(img, 0, 0, null);
 		    bGr.dispose();		
 		    
-		    //reposition the sprites in the maze
+		    //reposition and resize the sprites in the resized maze
 		    repositionSpritesInMaze(width, height);
+		    resizeSpritesInMaze(width, height);
 		}
 	}
 	
@@ -211,6 +213,17 @@ public class Maze {
 			int newX = (width * e.getMazePosition().getX()) / originalMazeImg.getWidth() ;
 			int newY = (height * e.getMazePosition().getY()) / originalMazeImg.getHeight();
 			e.setCurrentPosition(new Position(newX, newY));
+		}
+		
+		//...
+	}
+	
+	private void resizeSpritesInMaze(int width, int height) {
+		//energizers
+		for (Energizer e : energizers.getEnergizers()) {
+			int newWidth = (width * e.getOriginalSize().width) / originalMazeImg.getWidth() ;
+			int newHeight = (height * e.getOriginalSize().height) / originalMazeImg.getHeight();
+			e.setCurrentSize(new Dimension(newWidth, newHeight));
 		}
 		
 		//...
@@ -233,7 +246,7 @@ public class Maze {
 	
 	public static void main(String[] args) throws IOException {
 		Maze maze = new Maze();
-		maze.resizeMazeAndSprites(500, 600);
+		//maze.resizeMazeAndSprites(500, 600);
 //		Tiles.displayImg(maze.getMazeImg());
 		
 	}

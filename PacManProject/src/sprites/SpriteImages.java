@@ -14,8 +14,6 @@ import resources.Tiles;
  */
 public class SpriteImages {
 	
-	Tiles tiles;
-	List<Integer> tilesNumbers;
 	List<BufferedImage> spriteImagesTiles = new ArrayList<BufferedImage>();
 	
 	/**
@@ -24,40 +22,58 @@ public class SpriteImages {
 	 * @param tilesNumbers the tiles wanted in the images buffer.
 	 */
 	public SpriteImages(Tiles tiles, List<Integer> tilesNumbers) {
-		this.tiles = tiles;
-		setListTilesNumbers(tilesNumbers);
-		fillSpriteImagesBuffer();
+		fillSpriteImagesBuffer(tiles,tilesNumbers);
 	}
 	
-	private void setListTilesNumbers(List<Integer> tilesNumbers) {
+	private boolean verifyListTilesNumbers(List<Integer> tilesNumbers) {
 		if(tilesNumbers == null) {
 			System.out.println("The list of tiles numbers is null !");
+			return false;
 		}
 		else if(tilesNumbers.isEmpty()) {
 			System.out.println("The list of tiles numbers is empty !");
+			return false;
 		}
-		this.tilesNumbers = tilesNumbers;
+		return true;
 	}
 	
 	
-	public void printTilesNumbers() {
-		for (Integer integer : tilesNumbers) {
-			System.out.println(integer);
+	private void fillSpriteImagesBuffer(Tiles tiles, List<Integer> tilesNumbers) {
+		if(tiles != null && verifyListTilesNumbers(tilesNumbers)) {
+			for (Integer integer : tilesNumbers) {
+				if(integer == 0) {
+					integer = Tiles.NB_TILES_X * Tiles.NB_TILES_Y; //replace by a black tile
+				}
+				BufferedImage tile = tiles.getTileNumber(integer);
+				spriteImagesTiles.add(tile);
+			}			
 		}
 	}
 	
-	private void fillSpriteImagesBuffer() {
-		for (Integer integer : tilesNumbers) {
-			if(integer == 0) {
-				integer = Tiles.NB_TILES_X * Tiles.NB_TILES_Y; //replace by a black tile
-			}
-			BufferedImage tile = tiles.getTileNumber(integer);
-			spriteImagesTiles.add(tile);
-		}
-	}
-	
+	/**
+	 * Get the sprite images.
+	 * @return the sprite images.
+	 */
 	public List<BufferedImage> getSpriteImages(){
 		return spriteImagesTiles;
+	}
+	
+	/**
+	 * Get a copy of the sprite images.
+	 * @return a copy.
+	 */
+	public List<BufferedImage> copySpriteImages(){
+		List<BufferedImage> copy = new ArrayList<BufferedImage>();
+		for (BufferedImage image : spriteImagesTiles) {
+			copy.add(image);
+		}
+		return copy;
+	}
+	
+	public SpriteImages copyObject() {
+		SpriteImages obj = new SpriteImages(null, null);
+		obj.spriteImagesTiles = copySpriteImages();
+		return obj;
 	}
 	
 	//-------------------------------------------------------
