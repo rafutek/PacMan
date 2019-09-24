@@ -17,7 +17,7 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 	
 	private final int period;
 	
-	private int windowWidth = 500;   
+	private int windowWidth = 700;   
 	private int windowHeight = 700; 
 	
 	private GridBagLayout gridbag;
