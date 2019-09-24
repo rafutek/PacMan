@@ -14,7 +14,7 @@ import resources.Tiles;
  */
 public class SpriteImages {
 	
-	List<BufferedImage> spriteImagesTiles = new ArrayList<BufferedImage>();
+	private List<BufferedImage> spriteImagesTiles = new ArrayList<BufferedImage>();
 	
 	/**
 	 * Constructor that store the tiles, and fill an image buffer with the list of tiles wanted.

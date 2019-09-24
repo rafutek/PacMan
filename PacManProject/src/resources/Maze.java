@@ -223,7 +223,7 @@ public class Maze {
 		for (Energizer e : energizers.getEnergizers()) {
 			int newWidth = (width * e.getOriginalSize().width) / originalMazeImg.getWidth() ;
 			int newHeight = (height * e.getOriginalSize().height) / originalMazeImg.getHeight();
-			e.setCurrentSize(new Dimension(newWidth, newHeight));
+			e.resizeCurrentImages(new Dimension(newWidth, newHeight));
 		}
 		
 		//...

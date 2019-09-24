@@ -2,6 +2,7 @@ package sprites;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import resources.Tiles;
@@ -65,8 +66,11 @@ public abstract class Sprite {
 	 * Set the current size of the sprite.
 	 * @param newDimension
 	 */
-	public void setCurrentSize(Dimension newDimension) {
+	public void resizeCurrentImages(Dimension newDimension) {
 		currentSize = newDimension;
+		for (BufferedImage image : spriteCurrentFullImages.getSpriteImages()) {
+			image = Tiles.resize(image, currentSize);
+		}
 	}
 	
 	/**

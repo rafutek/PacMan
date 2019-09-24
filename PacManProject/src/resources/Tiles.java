@@ -1,6 +1,8 @@
 package resources;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -131,7 +133,7 @@ public class Tiles {
 	 * @param original
 	 * @return
 	 */
-	public BufferedImage copy(BufferedImage original) {
+	public static BufferedImage copy(BufferedImage original) {
 		if(original == null) {
 			System.out.println("The image you want to copy is null !");
 			return null;
@@ -144,8 +146,36 @@ public class Tiles {
 		return copy;
 	}
 	
+	/**
+	 * Cast an image into a buffered image.
+	 * @param img
+	 * @return the associated buffered image
+	 */
+	public static BufferedImage cast(Image img) {
+		BufferedImage buffImg = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+	    Graphics bGr = buffImg.createGraphics();
+	    bGr.drawImage(img, 0, 0, null);
+	    bGr.dispose();	
+	    
+		return buffImg;
+	}
 
-	
+	/**
+	 * Resize the original image to its new dimension.
+	 * @param original
+	 * @param newDim
+	 * @return the image resized
+	 */
+	public static BufferedImage resize(BufferedImage original, Dimension newDim) {
+		
+		if(original == null) {
+			System.out.println("Cannot resize a null image !");
+			return null;
+		}
+		
+		Image img = original.getScaledInstance(newDim.width,newDim.height,Image.SCALE_SMOOTH);
+		return cast(img);
+	}
 
 
 	
