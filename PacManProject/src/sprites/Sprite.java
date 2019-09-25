@@ -2,12 +2,14 @@ package sprites;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.List;
 
 import resources.Tiles;
 
 public abstract class Sprite {
 
+	protected List<Integer> tilesNumbers = new ArrayList<Integer>();	
 	private Position mazePosition, currentPosition;
 	private Dimension originalSize, currentSize;
 	protected SpriteImages spriteImages, spriteFullImages;

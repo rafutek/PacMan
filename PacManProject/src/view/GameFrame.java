@@ -17,7 +17,7 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 	
 	private final int period;
 	
-	private int windowWidth = 700;   
+	private int windowWidth = 620;   
 	private int windowHeight = 700; 
 	
 	private GridBagLayout gridbag;
@@ -113,10 +113,10 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 	{ 
 		super.addNotify();   // creates the peer
 		layoutTh = new LayoutManagerThread(this);
-		layoutTh.startLayoutManager();
-
 		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
-		renderTh.startRendering();    // start the threads
+		
+		layoutTh.startThread();
+		renderTh.startThread();
 	}
 	
 	private void readyForTermination()
@@ -131,8 +131,8 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 				if ((keyCode == KeyEvent.VK_ESCAPE) || (keyCode == KeyEvent.VK_Q) ||
 						(keyCode == KeyEvent.VK_END) ||
 						((keyCode == KeyEvent.VK_C) && e.isControlDown()) ) {
-					renderTh.stopRendering();
-					layoutTh.stopLayoutManager();
+					renderTh.stopThread();
+					layoutTh.stopThread();
 				}
 			}
 		});
@@ -167,34 +167,34 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 
 	public void windowActivated(WindowEvent e) 
 	{ 
-		renderTh.resumeRendering();  
-		layoutTh.resumeLayoutManager();
+		renderTh.resumeThread();
+		layoutTh.resumeThread();
 	}
 	
 	public void windowDeactivated(WindowEvent e) 
 	{  
-		renderTh.pauseRendering();  
-		layoutTh.pauseLayoutManager();
+		renderTh.pauseThread();
+		layoutTh.pauseThread();
 	}
 	
 	
 	public void windowDeiconified(WindowEvent e) 
 	{  
-		renderTh.resumeRendering();  
-		layoutTh.resumeLayoutManager();
+		renderTh.resumeThread(); 
+		layoutTh.resumeThread();
 	}
 	
 	public void windowIconified(WindowEvent e) 
 	{  
-		renderTh.pauseRendering(); 
-		layoutTh.pauseLayoutManager();
+		renderTh.pauseThread();
+		layoutTh.pauseThread();
 	}
 	
 	
 	public void windowClosing(WindowEvent e)
 	{  
-		renderTh.stopRendering();  
-		layoutTh.stopLayoutManager();
+		renderTh.stopThread(); 
+		layoutTh.stopThread();
 	}
 	
 	public void windowClosed(WindowEvent e) {}

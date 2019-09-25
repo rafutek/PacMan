@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sprites.Energizer;
-import sprites.Energizers;
+import sprites.PacDot;
 import sprites.Position;
+import sprites.Sprite;
+import sprites.Sprites;
 
 public class Maze {
 	
@@ -21,15 +23,20 @@ public class Maze {
 	
 	//sprites 
 	private int nb_rows, nb_lines;
+	private List<Position> pacDotsMazeFilePositions = new ArrayList<Position>();
+	private List<Position> pacDotsMazeImagePositions = new ArrayList<Position>();
+	
 	private List<Position> energizersMazeFilePositions = new ArrayList<Position>();
 	private List<Position> energizersMazeImagePositions = new ArrayList<Position>();
-	private Energizers energizers = new Energizers();
+	private Sprites energizers = new Sprites();
+	private Sprites pacDots = new Sprites();
 	
 	/**
 	 * Constructor that creates the maze image and sprites thanks to a text file.
 	 * @throws IOException
 	 */
 	public Maze() throws IOException {
+		System.out.println("Create maze");
 		tiles = new Tiles();
 		createMazeFromText("maze.txt");
 		computeSpritesPositions();
@@ -101,17 +108,20 @@ public class Maze {
 			else {
 				weight = 0;
 				if(first_nb_read) {
-					if(number == 0 || number == 15) {
+					if(number == 0 || number == 15 || number == 13) {
 						// 0: no tile with that number
+
+						if(number == 13) { // 13: pac-dot
+							pacDotsMazeFilePositions.add(new Position(row_nb, line_nb));
+						}
 						
-						
-						if(number == 15) { // 15: energizer
+						else if(number == 15) { // 15: energizer
 							energizersMazeFilePositions.add(new Position(row_nb, line_nb));
 						}
 						
 						
 						
-						// -> black tile instead
+						// -> black tile instead, the sprites will be displayed by the render thread
 						number = Tiles.NB_TILES_X * Tiles.NB_TILES_Y; 
 					}
 					if(mazeLineImg == null) {
@@ -149,6 +159,14 @@ public class Maze {
 	private void computeSpritesPositions() {
 		int pixelX, pixelY;
 		
+		//pac-dots
+		for (Position position : pacDotsMazeFilePositions) {
+			pixelX = (position.getX() * getMazeImg().getWidth()) / nb_rows;
+			pixelY = (position.getY() *getMazeImg().getHeight()) / nb_lines;
+			pacDotsMazeImagePositions.add(new Position(pixelX, pixelY));
+		}
+		pacDotsMazeFilePositions.clear();		
+		
 		//energizers
 		for (Position position : energizersMazeFilePositions) {
 			pixelX = (position.getX() * getMazeImg().getWidth()) / nb_rows;
@@ -162,6 +180,13 @@ public class Maze {
 	}
 	
 	private void fillSpritesPositions() {
+		
+		//pac-dots
+		for (Position position : pacDotsMazeImagePositions) {
+			pacDots.add(new PacDot(position, tiles));
+		}
+		pacDotsMazeImagePositions.clear();
+		
 		//energizers
 		for (Position position : energizersMazeImagePositions) {
 			energizers.add(new Energizer(position, tiles));
@@ -203,8 +228,15 @@ public class Maze {
 	 */
 	private void repositionSpritesInMaze(int width, int height) {
 		
+		//pac-dots
+		for (Sprite pacdot : pacDots.getSprites()) {
+			int newX = (width * pacdot.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+			int newY = (height * pacdot.getMazePosition().getY()) / originalMazeImg.getHeight();
+			pacdot.setCurrentPosition(new Position(newX, newY));
+		}
+		
 		//energizers
-		for (Energizer e : energizers.getEnergizers()) {
+		for (Sprite e : energizers.getSprites()) {
 			int newX = (width * e.getMazePosition().getX()) / originalMazeImg.getWidth() ;
 			int newY = (height * e.getMazePosition().getY()) / originalMazeImg.getHeight();
 			e.setCurrentPosition(new Position(newX, newY));
@@ -214,8 +246,16 @@ public class Maze {
 	}
 	
 	private void resizeSpritesInMaze(int width, int height) {
+		
+		//pac-dots
+		for (Sprite pacdot : pacDots.getSprites()) {
+			int newWidth = (width * pacdot.getOriginalSize().width) / originalMazeImg.getWidth() ;
+			int newHeight = (height * pacdot.getOriginalSize().height) / originalMazeImg.getHeight();
+			pacdot.setCurrentSize(new Dimension(newWidth, newHeight));
+		}
+		
 		//energizers
-		for (Energizer e : energizers.getEnergizers()) {
+		for (Sprite e : energizers.getSprites()) {
 			int newWidth = (width * e.getOriginalSize().width) / originalMazeImg.getWidth() ;
 			int newHeight = (height * e.getOriginalSize().height) / originalMazeImg.getHeight();
 			e.setCurrentSize(new Dimension(newWidth, newHeight));
@@ -224,10 +264,13 @@ public class Maze {
 		//...
 	}
 	
-	public Energizers getEnergizers() {
+	public Sprites getEnergizers() {
 		return energizers;
 	}
 	
+	public Sprites getPacDots() {
+		return pacDots;
+	}
 	
 	
 	public void draw(Graphics g) {

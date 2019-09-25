@@ -33,6 +33,7 @@ public class Tiles {
 	 * @throws IOException
 	 */
 	public Tiles() throws IOException {
+		System.out.println("Create tiles");
 		tilesImg = ImageIO.read(new File(rsc.getImagePath("pacmanTilesSheet.png")));
 		fillTilesList();
 	}
