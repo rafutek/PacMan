@@ -2,11 +2,21 @@ package sprites;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import resources.Tiles;
 
 public class PacMan extends Sprite {
-
+	
+	List<Integer> noMovementAnimation = new ArrayList<Integer>();
+	List<Integer> goLeftAnimation = new ArrayList<Integer>();
+	List<Integer> goRightAnimation = new ArrayList<Integer>();
+	List<Integer> goUpAnimation = new ArrayList<Integer>();
+	List<Integer> goDownAnimation = new ArrayList<Integer>();
+	List<Integer> DeathAnimation = new ArrayList<Integer>();
+	
+	
 	public PacMan(Position start_position, Tiles tiles) {
 		super(start_position, tiles);
 
@@ -21,9 +31,12 @@ public class PacMan extends Sprite {
 		setImagesArray(tilesNumbers); // fill an image array with these tiles
 		createFullSpriteImages();
 		setOriginalSize();
-		createAnimationOrderList();
+		createAnimationOrderLists();
 	}
 
+	/**
+	 * Join the tiles and resize the combined image to create the pac-man full images.
+	 */
 	@Override
 	protected void createFullSpriteImages() {
 
@@ -57,9 +70,23 @@ public class PacMan extends Sprite {
 		}		
 	}
 
+	/*
+	 * Pac-man has multiple animations, like the no-moving one, the going-to-left one, the dying one, etc..
+	 * So this method creates all the lists of animation, and set the animationOrder main list as one of them.
+	 */
 	@Override
 	protected void createAnimationOrderList() {
+		animationOrder = noMovementAnimation;
+	}
+	
+	private void createAnimationOrderLists() {
+		createNoMovementAnimation();
 		
+		createAnimationOrderList();
+	}
+	
+	private void createNoMovementAnimation() {
+		noMovementAnimation.add(8); // no movement animation contains only the full pac-man index image
 	}
 	
 	//-------------------------------------------------------
