@@ -107,6 +107,36 @@ public class Tiles {
 		
 	}
 	
+	public static BufferedImage joinToRight(BufferedImage img1, BufferedImage img2) {
+		if(img1.getHeight() != img2.getHeight()) {
+			System.out.println("The images to join side by side don't have the same height !");
+			return null;
+		}
+		int width = img1.getWidth() + img2.getWidth();
+		int height = img1.getHeight();
+		BufferedImage newImage = new BufferedImage(width, height,BufferedImage.TYPE_INT_ARGB);
+		Graphics g = newImage.createGraphics();
+		g.drawImage(img1, 0, 0, null);
+		g.drawImage(img2, img1.getWidth(), 0, null);
+		g.dispose();
+		return newImage;
+	}	
+	
+	public static BufferedImage joinBelow(BufferedImage img1, BufferedImage img2) {
+		if(img1.getWidth() != img2.getWidth()) {
+			System.out.println("The images to join on top of each other don't have the same width !");
+			return null;
+		}
+		int width = img1.getWidth();
+		int height = img1.getHeight() + img2.getHeight();
+		BufferedImage newImage = new BufferedImage(width, height,BufferedImage.TYPE_INT_ARGB);
+		Graphics g = newImage.createGraphics();
+		g.drawImage(img1, 0, 0, null);
+		g.drawImage(img2, 0, img1.getHeight(), null);
+		g.dispose();
+		return newImage;
+	}
+	
 	
 	/**
 	 * Display the image in a JFrame.

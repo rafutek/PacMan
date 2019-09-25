@@ -22,8 +22,21 @@ public class SpriteImages {
 	 * @param tilesNumbers the tiles wanted in the images buffer.
 	 */
 	public SpriteImages(Tiles tiles, List<Integer> tilesNumbers) {
-		fillSpriteImagesBuffer(tiles,tilesNumbers);
+		fillSpriteImagesArray(tiles,tilesNumbers);
 	}
+	/**
+	 * Constructor that only declare a list of images.
+	 */
+	public SpriteImages() {}
+	
+	/**
+	 * Add the image to the list of sprite images.
+	 * @param img
+	 */
+	public void add(BufferedImage img) {
+		spriteImagesTiles.add(img);
+	}
+	
 	
 	private boolean verifyListTilesNumbers(List<Integer> tilesNumbers) {
 		if(tilesNumbers == null) {
@@ -38,7 +51,7 @@ public class SpriteImages {
 	}
 	
 	
-	private void fillSpriteImagesBuffer(Tiles tiles, List<Integer> tilesNumbers) {
+	private void fillSpriteImagesArray(Tiles tiles, List<Integer> tilesNumbers) {
 		if(tiles != null && verifyListTilesNumbers(tilesNumbers)) {
 			for (Integer integer : tilesNumbers) {
 				if(integer == 0) {

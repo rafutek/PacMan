@@ -14,7 +14,7 @@ public class PacDot extends Sprite {
 		
 		tilesNumbers.add(13);
 		
-		setImagesBuffer(tilesNumbers);
+		setImagesArray(tilesNumbers);
 		createFullSpriteImages();
 		createAnimationOrderList();
 
