@@ -1,15 +1,15 @@
 package threads;
 
-public class TimerThread extends ThreadPerso{
+public abstract class TimerThread extends ThreadPerso{
 	
-	private final int NB_LOOP = 100; //for 1 sec timer
-	private int countLoop = 0;
-	private int nb_sec = 0;
+	private int counterWaits = 0;
+	private int nb_waits_max;
 
 	
-	public TimerThread() {
+	public TimerThread(int wait_time, int nb_waits) {
 		super("Timer");
-		setWaitTime(10); 
+		setWaitTime(wait_time); 
+		setNbWaitsMax(nb_waits);
 	}
 
 	@Override
@@ -20,11 +20,10 @@ public class TimerThread extends ThreadPerso{
 
 	@Override
 	public void doThat() {
-		countLoop++;
-		if(countLoop == NB_LOOP) {
-			countLoop = 0;
-			nb_sec++;
-			System.out.println(nb_sec);
+		counterWaits++;
+		if(counterWaits >= nb_waits_max) {
+			counterWaits = 0;
+			finallyDoThat();
 		}
 	}
 	
@@ -33,32 +32,19 @@ public class TimerThread extends ThreadPerso{
 		// nothing to do at stop
 	}
 	
-	//-------------------------------------------------------
-	
-	
-	private static final int WAIT_DELAY = 5000;
-	private static final int JOIN_DELAY = 100;
-	
-	public static void main(String args[]) throws InterruptedException {
-		
-		TimerThread timer = new TimerThread();
-		
-		timer.start();
-		
-		Thread.sleep(WAIT_DELAY);
-		
-		synchronized(timer) {
-			timer.pauseThread();
-			timer.wait(2000);
-			timer.resumeThread();
-		}
-		Thread.sleep(WAIT_DELAY);
-		
-		timer.stopThread();
-		timer.join(JOIN_DELAY);
-		if(timer.isAlive()) {
-			timer.interrupt();
-		}
+	/**
+	 * Set the number of wait until the action defined in finallyDoThat() is called
+	 * @param nb_wait_times
+	 */
+	public void setNbWaitsMax(int nb_wait_times) {
+		nb_waits_max = nb_wait_times;
 	}
+	
+	/**
+	 * Method called when the timer waited the number of waits.
+	 */
+	public abstract void finallyDoThat();
+	
+
 
 }
