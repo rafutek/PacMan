@@ -30,13 +30,13 @@ public class LayoutManagerThread extends ThreadPerso {
 	
 
 	@Override
-	public void doThatAtStart() {
+	protected void doThatAtStart() {
 		// nothing to do at start
 	}
 
 
 	@Override
-	public void doThat() {
+	protected void doThat() {
 		if(gamePanelScale == null) {
 			synchronized(window) {
 				gamePanelScale = getPanelScale(window.getGamePanel()); // get the original panel scale
@@ -49,7 +49,7 @@ public class LayoutManagerThread extends ThreadPerso {
 
 
 	@Override
-	public void doThatAtStop() {
+	protected void doThatAtStop() {
 		// nothing to do at stop
 	}
 

@@ -13,13 +13,13 @@ public abstract class TimerThread extends ThreadPerso{
 	}
 
 	@Override
-	public void doThatAtStart() {
+	protected void doThatAtStart() {
 		// nothing to do at start
 	}
 
 
 	@Override
-	public void doThat() {
+	protected void doThat() {
 		counterWaits++;
 		if(counterWaits >= nb_waits_max) {
 			counterWaits = 0;
@@ -28,7 +28,7 @@ public abstract class TimerThread extends ThreadPerso{
 	}
 	
 	@Override
-	public void doThatAtStop() {
+	protected void doThatAtStop() {
 		// nothing to do at stop
 	}
 	
@@ -43,7 +43,7 @@ public abstract class TimerThread extends ThreadPerso{
 	/**
 	 * Method called when the timer waited the number of waits.
 	 */
-	public abstract void finallyDoThat();
+	protected abstract void finallyDoThat();
 	
 
 

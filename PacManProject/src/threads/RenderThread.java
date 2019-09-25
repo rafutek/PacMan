@@ -88,6 +88,9 @@ public class RenderThread extends ThreadPerso{
 	private Sprites energizers;
 	private Sprites pacDots;
 	
+	//animation
+	private AnimationThread animationTh;
+	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
 		super("Render");
 		
@@ -111,11 +114,13 @@ public class RenderThread extends ThreadPerso{
 		//get sprites
 		energizers = maze.getEnergizers();
 		pacDots = maze.getPacDots();
+		
+		animationTh = new AnimationThread(energizers);
 	}
 	
 
 	@Override
-	public void doThatAtStart() {
+	protected void doThatAtStart() {
 		overSleepTime = 0;
 		noDelays = 0;
 		excess = 0;
@@ -126,7 +131,7 @@ public class RenderThread extends ThreadPerso{
 
 
 	@Override
-	public void doThat() {
+	protected void doThat() {
 		gameUpdate(); // game state is updated
 		gameRender();   // render the game to a buffer
 		paintScreen();  // draw the buffer on-screen
@@ -169,105 +174,49 @@ public class RenderThread extends ThreadPerso{
 	}
 	
 	@Override
-	public void doThatAtStop() {
+	protected void doThatAtStop() {
 		printStats();
 		System.exit(0);   // so window disappears	
 	}
 	
-//	public void run()
-//	/* The frames of the animation are drawn inside the while loop. */
-//	{
-//		System.out.println("Start thread "+getName());
-//		
-//		long beforeTime, afterTime, timeDiff, sleepTime;
-//		int overSleepTime = 0;
-//		int noDelays = 0;
-//		int excess = 0;
-//		gameStartTime = System.currentTimeMillis();
-//		prevStatsTime = gameStartTime;
-//		beforeTime = gameStartTime;
-//
-//		running = true;
-//
-//		while(running) {
-//			gameUpdate(); // game state is updated
-//			gameRender();   // render the game to a buffer
-//			paintScreen();  // draw the buffer on-screen
-//
-//			afterTime = System.currentTimeMillis();
-//			timeDiff = afterTime - beforeTime;
-//			sleepTime = (period - timeDiff) - overSleepTime;  
-//
-//			if (sleepTime > 0) {   // some time left in this cycle
-//				try {
-//					Thread.sleep(sleepTime);  // already in ms
-//				}
-//				catch(InterruptedException ex){}
-//				overSleepTime = (int)((System.currentTimeMillis() - afterTime) - sleepTime);
-//			}
-//			else {    // sleepTime <= 0; the frame took longer than the period
-//				excess -= sleepTime;  // store excess time value
-//				overSleepTime = 0;
-//
-//				if (++noDelays >= NO_DELAYS_PER_YIELD) {
-//					Thread.yield();   // give another thread a chance to run
-//					noDelays = 0;
-//				}
-//			}
-//
-//			beforeTime = System.currentTimeMillis();
-//
-//			/* If frame animation is taking too long, update the game state
-//		      without rendering it, to get the updates/sec nearer to
-//		      the required FPS. */
-//			int skips = 0;
-//			while((excess > period) && (skips < MAX_FRAME_SKIPS)) {
-//				excess -= period;
-//				gameUpdate();    // update state but don't render
-//				skips++;
-//			}
-//			framesSkipped += skips;
-//
-//			storeStats();
-//		}
-//		System.out.println("Stop thread "+getName());	
-//
-//		printStats();
-//		System.exit(0);   // so window disappears
-//	} // end of run()
-//
-//	
-//	/**
-//	 * Start the thread 
-//	 */
-//	public synchronized void startRendering()
-//	{ 
-//		if (!running) {
-//			this.start();
-//		}
-//	} 
-//	
-//	
-//	// ------------- game life cycle methods ------------
-//	// called by the JFrame's window listener methods
-//
-//
-//	public void resumeRendering()
-//	// called when the JFrame is activated / deiconified
-//	{  isPaused = false;  } 
-//
-//
-//	public void pauseRendering()
-//	// called when the JFrame is deactivated / iconified
-//	{ isPaused = true;   } 
-//
-//
-//	public void stopRendering() 
-//	// called when the JFrame is closing
-//	{  running = false;   }
-
-	// ----------------------------------------------
 	
+	/**
+	 * Method that starts the thread.
+	 */
+	public void startThread() {
+		if(!running) {
+			start();
+			animationTh.startThread();
+		}
+	}
+	
+	
+	/**
+	 * Stop doing the actions defined in doThat() method.
+	 */
+	public synchronized void pauseThread() {
+		paused = true;
+		animationTh.pauseThread();
+	}
+	
+	/**
+	 * Start again or continue doing the actions defined in doThat() method.
+	 */
+	public synchronized void resumeThread() {
+		paused = false;
+		animationTh.resumeThread();
+	}
+	
+	/**
+	 * Stop the thread.
+	 */
+	public void stopThread() {
+		running = false;
+		animationTh.stopThread();
+	}
+	
+	
+
 	private void gameUpdate() 
 	{ 
 		if (!gameOver) {
@@ -293,8 +242,8 @@ public class RenderThread extends ThreadPerso{
 			
 			//update sprites position (like fantom positions)
 			//the image of the sprite to display is changed by the animation thread
-			pacDots.update();
-			energizers.update();
+//			pacDots.update();
+//			energizers.update();
 			
 		}
 	}
