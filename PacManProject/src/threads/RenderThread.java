@@ -11,12 +11,8 @@ import sprites.Sprites;
 import view.GamePanel;
 import view.StatusBarPanel;
 
-public class RenderThread extends Thread{
+public class RenderThread extends ThreadPerso{
 	
-	
-	// window panels to render content into
-	private GamePanel gamePanel;
-	private StatusBarPanel statusBarPanel;
 
 	
 	// record stats every 1 second (roughly)
@@ -54,11 +50,16 @@ public class RenderThread extends Thread{
 
 	private DecimalFormat df = new DecimalFormat("0.##");  // 2 dp
 
-	private volatile boolean running = false;   // used to stop the animation thread
-	private boolean isPaused = false;
+//	private volatile boolean running = false;   // used to stop the animation thread
+//	private boolean isPaused = false;
 
 	private int period; // period between drawing in _ms_
 
+	// used in thread
+	private long beforeTime, afterTime, timeDiff, sleepTime;
+	private int overSleepTime;
+	private int noDelays;
+	private int excess;
 
 
 	// used at game termination
@@ -71,6 +72,12 @@ public class RenderThread extends Thread{
 	private Graphics dbg; 
 	private Image dbImage = null;
 	
+	
+	// window panels to render content into
+	private GamePanel gamePanel;
+	private StatusBarPanel statusBarPanel;
+
+	
 	//maze
 	private Maze maze;
 	private boolean drawnOnce = false;
@@ -82,7 +89,7 @@ public class RenderThread extends Thread{
 	private Sprites pacDots;
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
-		setName("Render");
+		super("Render");
 		
 		this.gamePanel = gamePanel;
 		this.statusBarPanel = statusBarPanel;
@@ -106,103 +113,164 @@ public class RenderThread extends Thread{
 		pacDots = maze.getPacDots();
 	}
 	
-	public void run()
-	/* The frames of the animation are drawn inside the while loop. */
-	{
-		System.out.println("Start thread "+getName());
-		
-		long beforeTime, afterTime, timeDiff, sleepTime;
-		int overSleepTime = 0;
-		int noDelays = 0;
-		int excess = 0;
+
+	@Override
+	public void doThatAtStart() {
+		overSleepTime = 0;
+		noDelays = 0;
+		excess = 0;
 		gameStartTime = System.currentTimeMillis();
 		prevStatsTime = gameStartTime;
 		beforeTime = gameStartTime;
+	}
 
-		running = true;
 
-		while(running) {
-			gameUpdate(); // game state is updated
-			gameRender();   // render the game to a buffer
-			paintScreen();  // draw the buffer on-screen
+	@Override
+	public void doThat() {
+		gameUpdate(); // game state is updated
+		gameRender();   // render the game to a buffer
+		paintScreen();  // draw the buffer on-screen
 
-			afterTime = System.currentTimeMillis();
-			timeDiff = afterTime - beforeTime;
-			sleepTime = (period - timeDiff) - overSleepTime;  
+		afterTime = System.currentTimeMillis();
+		timeDiff = afterTime - beforeTime;
+		sleepTime = (period - timeDiff) - overSleepTime;  
 
-			if (sleepTime > 0) {   // some time left in this cycle
-				try {
-					Thread.sleep(sleepTime);  // already in ms
-				}
-				catch(InterruptedException ex){}
-				overSleepTime = (int)((System.currentTimeMillis() - afterTime) - sleepTime);
+		if (sleepTime > 0) {   // some time left in this cycle
+			try {
+				Thread.sleep(sleepTime);  // already in ms
 			}
-			else {    // sleepTime <= 0; the frame took longer than the period
-				excess -= sleepTime;  // store excess time value
-				overSleepTime = 0;
-
-				if (++noDelays >= NO_DELAYS_PER_YIELD) {
-					Thread.yield();   // give another thread a chance to run
-					noDelays = 0;
-				}
-			}
-
-			beforeTime = System.currentTimeMillis();
-
-			/* If frame animation is taking too long, update the game state
-		      without rendering it, to get the updates/sec nearer to
-		      the required FPS. */
-			int skips = 0;
-			while((excess > period) && (skips < MAX_FRAME_SKIPS)) {
-				excess -= period;
-				gameUpdate();    // update state but don't render
-				skips++;
-			}
-			framesSkipped += skips;
-
-			storeStats();
+			catch(InterruptedException ex){}
+			overSleepTime = (int)((System.currentTimeMillis() - afterTime) - sleepTime);
 		}
-		System.out.println("Stop thread "+getName());	
+		else {    // sleepTime <= 0; the frame took longer than the period
+			excess -= sleepTime;  // store excess time value
+			overSleepTime = 0;
 
+			if (++noDelays >= NO_DELAYS_PER_YIELD) {
+				Thread.yield();   // give another thread a chance to run
+				noDelays = 0;
+			}
+		}
+
+		beforeTime = System.currentTimeMillis();
+
+		/* If frame animation is taking too long, update the game state
+	      without rendering it, to get the updates/sec nearer to
+	      the required FPS. */
+		int skips = 0;
+		while((excess > period) && (skips < MAX_FRAME_SKIPS)) {
+			excess -= period;
+			gameUpdate();    // update state but don't render
+			skips++;
+		}
+		framesSkipped += skips;
+
+		storeStats();
+	}
+	
+	@Override
+	public void doThatAtStop() {
 		printStats();
-		System.exit(0);   // so window disappears
-	} // end of run()
-
+		System.exit(0);   // so window disappears	
+	}
 	
-	/**
-	 * Start the thread 
-	 */
-	public synchronized void startRendering()
-	{ 
-		if (!running) {
-			this.start();
-		}
-	} 
-	
-	
-	// ------------- game life cycle methods ------------
-	// called by the JFrame's window listener methods
-
-
-	public void resumeRendering()
-	// called when the JFrame is activated / deiconified
-	{  isPaused = false;  } 
-
-
-	public void pauseRendering()
-	// called when the JFrame is deactivated / iconified
-	{ isPaused = true;   } 
-
-
-	public void stopRendering() 
-	// called when the JFrame is closing
-	{  running = false;   }
+//	public void run()
+//	/* The frames of the animation are drawn inside the while loop. */
+//	{
+//		System.out.println("Start thread "+getName());
+//		
+//		long beforeTime, afterTime, timeDiff, sleepTime;
+//		int overSleepTime = 0;
+//		int noDelays = 0;
+//		int excess = 0;
+//		gameStartTime = System.currentTimeMillis();
+//		prevStatsTime = gameStartTime;
+//		beforeTime = gameStartTime;
+//
+//		running = true;
+//
+//		while(running) {
+//			gameUpdate(); // game state is updated
+//			gameRender();   // render the game to a buffer
+//			paintScreen();  // draw the buffer on-screen
+//
+//			afterTime = System.currentTimeMillis();
+//			timeDiff = afterTime - beforeTime;
+//			sleepTime = (period - timeDiff) - overSleepTime;  
+//
+//			if (sleepTime > 0) {   // some time left in this cycle
+//				try {
+//					Thread.sleep(sleepTime);  // already in ms
+//				}
+//				catch(InterruptedException ex){}
+//				overSleepTime = (int)((System.currentTimeMillis() - afterTime) - sleepTime);
+//			}
+//			else {    // sleepTime <= 0; the frame took longer than the period
+//				excess -= sleepTime;  // store excess time value
+//				overSleepTime = 0;
+//
+//				if (++noDelays >= NO_DELAYS_PER_YIELD) {
+//					Thread.yield();   // give another thread a chance to run
+//					noDelays = 0;
+//				}
+//			}
+//
+//			beforeTime = System.currentTimeMillis();
+//
+//			/* If frame animation is taking too long, update the game state
+//		      without rendering it, to get the updates/sec nearer to
+//		      the required FPS. */
+//			int skips = 0;
+//			while((excess > period) && (skips < MAX_FRAME_SKIPS)) {
+//				excess -= period;
+//				gameUpdate();    // update state but don't render
+//				skips++;
+//			}
+//			framesSkipped += skips;
+//
+//			storeStats();
+//		}
+//		System.out.println("Stop thread "+getName());	
+//
+//		printStats();
+//		System.exit(0);   // so window disappears
+//	} // end of run()
+//
+//	
+//	/**
+//	 * Start the thread 
+//	 */
+//	public synchronized void startRendering()
+//	{ 
+//		if (!running) {
+//			this.start();
+//		}
+//	} 
+//	
+//	
+//	// ------------- game life cycle methods ------------
+//	// called by the JFrame's window listener methods
+//
+//
+//	public void resumeRendering()
+//	// called when the JFrame is activated / deiconified
+//	{  isPaused = false;  } 
+//
+//
+//	public void pauseRendering()
+//	// called when the JFrame is deactivated / iconified
+//	{ isPaused = true;   } 
+//
+//
+//	public void stopRendering() 
+//	// called when the JFrame is closing
+//	{  running = false;   }
 
 	// ----------------------------------------------
 	
 	private void gameUpdate() 
 	{ 
-		if (!isPaused && !gameOver) {
+		if (!gameOver) {
 			
 			// resize all elements if panel size changed
 			currentGamePanelWidth = gamePanel.getWidth();
@@ -223,7 +291,8 @@ public class RenderThread extends Thread{
 				}
 			}
 			
-			//update sprites
+			//update sprites position (like fantom positions)
+			//the image of the sprite to display is changed by the animation thread
 			pacDots.update();
 			energizers.update();
 			
@@ -363,4 +432,8 @@ public class RenderThread extends Thread{
 		System.out.println("Average UPS: " + df.format(averageUPS));
 		System.out.println("Time Spent: " + timeSpentInGame + " secs");
 	}  // end of printStats()
+
+
+
+
 }

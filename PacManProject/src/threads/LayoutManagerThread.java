@@ -6,11 +6,8 @@ import view.GameFrame;
 
 
 
-public class LayoutManagerThread extends Thread {
+public class LayoutManagerThread extends ThreadPerso {
 
-	private volatile boolean running = false;
-	private boolean paused = false;
-	private final int SLEEP_TIME = 10;
 	
 	private GameFrame window;
 	
@@ -25,66 +22,37 @@ public class LayoutManagerThread extends Thread {
 	
 	public LayoutManagerThread( GameFrame window) 
 	{
-		setName("Layout Manager");
+		super("Layout Manager");
 		this.window = window;
 		setPanelsWeights(gamePanelWeightX);
 		setAllPanelsLayout();
 	}
 	
-	
-	public void run() {
-		System.out.println("Start thread "+getName());
-		running = true;
-				
-		while(running) {
-			try {
-				Thread.sleep(SLEEP_TIME);
-			} catch (InterruptedException e) {}
-			
-			if(gamePanelScale == null) {
-				synchronized(window) {
-					gamePanelScale = getPanelScale(window.getGamePanel());
-				}
-			}
-			else {
-				if(!paused) {
-					adaptPanels();
-				}				
-			}
-		}
-		System.out.println("Stop thread "+getName());
+
+	@Override
+	public void doThatAtStart() {
+		// nothing to do at start
 	}
-	
-	/**
-	 * Start the thread 
-	 */
-	public void startLayoutManager()
-	{ 
-		if (!running) {
-			this.start();
+
+
+	@Override
+	public void doThat() {
+		if(gamePanelScale == null) {
+			synchronized(window) {
+				gamePanelScale = getPanelScale(window.getGamePanel()); // get the original panel scale
+			}
+		}else {
+			adaptPanels(); // adapt the panels in the window to maintain the game panel scale
 		}
+		
 	}
-	
-	
-	// ------------- LayoutManager life cycle methods ------------
-	// called by the JFrame's window listener methods
 
 
-	public void resumeLayoutManager()
-	// called when the JFrame is activated / deiconified
-	{  paused = false;  } 
+	@Override
+	public void doThatAtStop() {
+		// nothing to do at stop
+	}
 
-
-	public void pauseLayoutManager()
-	// called when the JFrame is deactivated / iconified
-	{ paused = true;   } 
-
-
-	public void stopLayoutManager() 
-	// called when the JFrame is closing
-	{  running = false;   }
-
-	// ----------------------------------------------
 	
 	/**
 	 * Set all panels weights depending on the game panel x weight
@@ -158,4 +126,6 @@ public class LayoutManagerThread extends Thread {
 		
 		}
 	}
+
+
 }
