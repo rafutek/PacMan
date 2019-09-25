@@ -76,17 +76,23 @@ public class PacMan extends Sprite {
 	 */
 	@Override
 	protected void createAnimationOrderList() {
-		animationOrder = noMovementAnimation;
+		animationOrder = goLeftAnimation;
 	}
 	
 	private void createAnimationOrderLists() {
 		createNoMovementAnimation();
+		createGoLeftAnimation();
 		
 		createAnimationOrderList();
 	}
 	
 	private void createNoMovementAnimation() {
 		noMovementAnimation.add(8); // no movement animation contains only the full pac-man index image
+	}
+	
+	private void createGoLeftAnimation() {
+		goLeftAnimation.add(0);
+		goLeftAnimation.add(2); // two images for moving animations		
 	}
 	
 	//-------------------------------------------------------

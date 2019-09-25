@@ -120,7 +120,7 @@ public class RenderThread extends ThreadPerso{
 		pacDots = maze.getPacDots();
 		pacMan = maze.getPacMan();
 		
-		animationTh = new AnimationThread(energizers);
+		animationTh = new AnimationThread(energizers, pacMan);
 	}
 	
 

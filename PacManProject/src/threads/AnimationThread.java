@@ -1,5 +1,6 @@
 package threads;
 
+import sprites.Sprite;
 import sprites.Sprites;
 
 public class AnimationThread extends TimerThread {
@@ -8,17 +9,19 @@ public class AnimationThread extends TimerThread {
 	private static final int NB_WAITS = 40;
 	
 	private Sprites energizers;
+	private Sprite pacMan;
 	
 	/**
 	 * Thread that will update the sprites' images order, 
 	 * thus the render thread will display another image so it will create the animation.
 	 * @param energizers
 	 */
-	public AnimationThread(Sprites energizers) {
+	public AnimationThread(Sprites energizers, Sprite pacMan) {
 		super(WAIT_TIME, NB_WAITS);
 		setName("Animation");
 		
 		this.energizers = energizers;
+		this.pacMan = pacMan;
 	}
 
 	@Override
@@ -26,6 +29,7 @@ public class AnimationThread extends TimerThread {
 		
 		// change the image of the animated sprites to display
 		energizers.update();
+		pacMan.update();
 	}
 	
 	
