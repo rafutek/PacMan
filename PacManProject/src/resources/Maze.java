@@ -36,9 +36,8 @@ public class Maze {
 	 * @throws IOException
 	 */
 	public Maze() throws IOException {
-		System.out.println("Create maze");
 		tiles = new Tiles();
-		createMazeFromText("maze.txt");
+		createMazeAndSpritesFromText("maze.txt");
 		computeSpritesPositions();
 		fillSpritesPositions();
 	}
@@ -84,7 +83,8 @@ public class Maze {
 	 * @param mazeFilename
 	 * @throws IOException
 	 */
-	private void createMazeFromText(String mazeFilename) throws IOException {
+	private void createMazeAndSpritesFromText(String mazeFilename) throws IOException {
+		System.out.println("Create maze and sprites from text file");
 		BufferedImage mazeLineImg = null;
 		@SuppressWarnings("resource")
 		FileReader fr = new FileReader(rsc.getMazePath(mazeFilename));

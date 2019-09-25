@@ -177,8 +177,8 @@ public class RenderThread extends ThreadPerso{
 	
 	@Override
 	protected void doThatAtStop() {
+		System.out.println("Stop "+getName()+" and program");		
 		printStats();
-		System.out.println("Stop rendering thread and program");
 		System.exit(0);   // so window disappears	
 	}
 	
