@@ -9,7 +9,6 @@ import resources.Tiles;
 
 public class Energizer extends Sprite{
 	
-	private List<Integer> tilesNumbers = new ArrayList<Integer>();	
 	
 	public Energizer(Position start_position, Tiles tiles) {
 		super(start_position, tiles);

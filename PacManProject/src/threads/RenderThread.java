@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 
 import resources.Maze;
-import sprites.Energizers;
+import sprites.Sprites;
 import view.GamePanel;
 import view.StatusBarPanel;
 
@@ -78,7 +78,8 @@ public class RenderThread extends Thread{
 	private int lastGamePanelWidth = 0, lastGamePanelHeight = 0;
 	
 	//sprites
-	private Energizers energizers;
+	private Sprites energizers;
+	private Sprites pacDots;
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
 		setName("Render");
@@ -102,7 +103,7 @@ public class RenderThread extends Thread{
 		
 		//get sprites
 		energizers = maze.getEnergizers();
-		
+		pacDots = maze.getPacDots();
 	}
 	
 	public void run()
@@ -223,29 +224,35 @@ public class RenderThread extends Thread{
 			}
 			
 			//update sprites
+			pacDots.update();
 			energizers.update();
+			
 		}
 	}
 
 
 	private void gameRender()
 	{
-		if (currentGamePanelWidth > 0 && currentGamePanelHeight > 0 && drawnOnce){
+		if (drawnOnce){
 			dbImage = gamePanel.createImage(currentGamePanelWidth, currentGamePanelHeight);
 			if (dbImage == null) {
 				System.out.println("dbImage is null");
 				return;
 			}
-			else
+			else {
 				dbg = dbImage.getGraphics();
+			}
 		
-	
-	
 			// draw game elements
 			maze.draw(dbg); //draw maze (background)
 			
-
-			energizers.draw(dbg); //draw all the energizers at their respective position
+			
+			//draw all the sprites at their respective position, 
+			//with their respective dimension
+			pacDots.draw(dbg); 
+			energizers.draw(dbg); 
+			
+			
 	
 			if (gameOver)
 				gameOverMessage(dbg);
