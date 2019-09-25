@@ -36,6 +36,7 @@ public class Maze {
 	 * @throws IOException
 	 */
 	public Maze() throws IOException {
+		System.out.println("Create maze");
 		tiles = new Tiles();
 		createMazeFromText("maze.txt");
 		computeSpritesPositions();

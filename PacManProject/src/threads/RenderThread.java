@@ -94,6 +94,8 @@ public class RenderThread extends ThreadPerso{
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
 		super("Render");
 		
+		System.out.println("Create render thread");
+		
 		this.gamePanel = gamePanel;
 		this.statusBarPanel = statusBarPanel;
 		
@@ -176,6 +178,7 @@ public class RenderThread extends ThreadPerso{
 	@Override
 	protected void doThatAtStop() {
 		printStats();
+		System.out.println("Stop rendering thread and program");
 		System.exit(0);   // so window disappears	
 	}
 	

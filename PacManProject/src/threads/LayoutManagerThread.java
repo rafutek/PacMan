@@ -23,6 +23,8 @@ public class LayoutManagerThread extends ThreadPerso {
 	public LayoutManagerThread( GameFrame window) 
 	{
 		super("Layout Manager");
+		
+		System.out.println("Create layout manager thread");
 		this.window = window;
 		setPanelsWeights(gamePanelWeightX);
 		setAllPanelsLayout();

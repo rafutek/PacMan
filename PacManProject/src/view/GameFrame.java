@@ -113,10 +113,10 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 	{ 
 		super.addNotify();   // creates the peer
 		layoutTh = new LayoutManagerThread(this);
-		layoutTh.startThread();
-
 		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
-		renderTh.startThread();    // start the threads
+		
+		layoutTh.startThread();
+		renderTh.startThread();
 	}
 	
 	private void readyForTermination()

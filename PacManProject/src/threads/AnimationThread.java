@@ -5,7 +5,7 @@ import sprites.Sprites;
 public class AnimationThread extends TimerThread {
 
 	private static final int WAIT_TIME = 10;
-	private static final int NB_WAITS = 50;
+	private static final int NB_WAITS = 40;
 	
 	private Sprites energizers;
 	
@@ -23,6 +23,8 @@ public class AnimationThread extends TimerThread {
 
 	@Override
 	public void finallyDoThat() {
+		
+		// change the image of the animated sprites to display
 		energizers.update();
 	}
 	
