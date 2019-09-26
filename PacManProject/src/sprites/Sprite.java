@@ -17,11 +17,23 @@ public abstract class Sprite {
 	protected Tiles tiles;
 	protected List<Integer> animationOrder;
 	
+	
 	public Sprite(Position start_position, Tiles tiles) {
 		mazePosition = start_position;
 		currentPosition = mazePosition;
 		this.tiles = tiles;
+		
+		chooseTilesNumbers();
+		setImagesArray(tilesNumbers); // fill an image array with these tiles
+		createFullSpriteImages();
+		setOriginalSize();
+		createAnimationOrderList();
 	}
+	
+	/**
+	 * Choose the tiles to add to the image array.
+	 */
+	public abstract void chooseTilesNumbers();
 	
 	public void setImagesArray(List<Integer> tilesNumbers) {
 		spriteImages = new SpriteImages(tiles, tilesNumbers);
