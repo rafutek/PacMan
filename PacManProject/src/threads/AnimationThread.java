@@ -6,7 +6,7 @@ import sprites.Sprites;
 public class AnimationThread extends TimerThread {
 
 	private static final int WAIT_TIME = 10;
-	private static final int NB_WAITS = 40;
+	private static final int NB_WAITS = 20;
 	
 	private Sprites energizers;
 	private Sprite pacMan;

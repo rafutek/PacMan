@@ -14,7 +14,7 @@ public class PacMan extends Sprite {
 	List<Integer> goRightAnimation = new ArrayList<Integer>();
 	List<Integer> goUpAnimation = new ArrayList<Integer>();
 	List<Integer> goDownAnimation = new ArrayList<Integer>();
-	List<Integer> DeathAnimation = new ArrayList<Integer>();
+	List<Integer> deathAnimation = new ArrayList<Integer>();
 	
 	
 	public PacMan(Position start_position, Tiles tiles) {
@@ -70,21 +70,29 @@ public class PacMan extends Sprite {
 		}		
 	}
 
+	
+	
+	private void createAnimationOrderLists() {
+		createNoMovementAnimation();
+		createGoLeftAnimation();
+		createGoRightAnimation();
+		createGoUpAnimation();
+		createGoDownAnimation();
+		createDeathAnimation();
+		
+		createAnimationOrderList();
+	}
+	
+	
 	/*
 	 * Pac-man has multiple animations, like the no-moving one, the going-to-left one, the dying one, etc..
 	 * So this method creates all the lists of animation, and set the animationOrder main list as one of them.
 	 */
 	@Override
 	protected void createAnimationOrderList() {
-		animationOrder = goLeftAnimation;
+		animationOrder = goUpAnimation;
 	}
-	
-	private void createAnimationOrderLists() {
-		createNoMovementAnimation();
-		createGoLeftAnimation();
-		
-		createAnimationOrderList();
-	}
+
 	
 	private void createNoMovementAnimation() {
 		noMovementAnimation.add(8); // no movement animation contains only the full pac-man index image
@@ -94,6 +102,29 @@ public class PacMan extends Sprite {
 		goLeftAnimation.add(0);
 		goLeftAnimation.add(2); // two images for moving animations		
 	}
+	
+	private void createGoRightAnimation() {
+		goRightAnimation.add(4);
+		goRightAnimation.add(6);
+	}
+	
+	private void createGoUpAnimation() {
+		goUpAnimation.add(1);
+		goUpAnimation.add(3);
+	}
+
+	private void createGoDownAnimation() {
+		goDownAnimation.add(5);
+		goDownAnimation.add(7);
+	}
+	
+	private void createDeathAnimation() {
+		for (int i = 8; i < 20; i++) {
+			deathAnimation.add(i);
+		}
+		
+		
+	}	
 	
 	//-------------------------------------------------------
 	
