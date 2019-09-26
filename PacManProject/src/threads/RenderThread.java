@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 
 import resources.Maze;
+import sprites.Sprite;
 import sprites.Sprites;
 import view.GamePanel;
 import view.StatusBarPanel;
@@ -87,6 +88,7 @@ public class RenderThread extends ThreadPerso{
 	//sprites
 	private Sprites energizers;
 	private Sprites pacDots;
+	private Sprite pacMan;
 	
 	//animation
 	private AnimationThread animationTh;
@@ -116,8 +118,9 @@ public class RenderThread extends ThreadPerso{
 		//get sprites
 		energizers = maze.getEnergizers();
 		pacDots = maze.getPacDots();
+		pacMan = maze.getPacMan();
 		
-		animationTh = new AnimationThread(energizers);
+		animationTh = new AnimationThread(energizers, pacMan);
 	}
 	
 
@@ -177,8 +180,8 @@ public class RenderThread extends ThreadPerso{
 	
 	@Override
 	protected void doThatAtStop() {
+		System.out.println("Stop "+getName()+" and program");		
 		printStats();
-		System.out.println("Stop rendering thread and program");
 		System.exit(0);   // so window disappears	
 	}
 	
@@ -272,6 +275,8 @@ public class RenderThread extends ThreadPerso{
 			//with their respective dimension
 			pacDots.draw(dbg); 
 			energizers.draw(dbg); 
+			
+			pacMan.draw(dbg);
 			
 			
 	

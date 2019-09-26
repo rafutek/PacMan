@@ -17,7 +17,7 @@ public class Energizer extends Sprite{
 		tilesNumbers.add(14);
 		tilesNumbers.add(15);
 		
-		setImagesBuffer(tilesNumbers);
+		setImagesArray(tilesNumbers);
 		createFullSpriteImages();
 		createAnimationOrderList();
 	}

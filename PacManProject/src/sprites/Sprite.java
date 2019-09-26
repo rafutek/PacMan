@@ -2,6 +2,7 @@ package sprites;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public abstract class Sprite {
 	private Position mazePosition, currentPosition;
 	private Dimension originalSize, currentSize;
 	protected SpriteImages spriteImages, spriteFullImages;
-	private Tiles tiles;
+	protected Tiles tiles;
 	protected List<Integer> animationOrder;
 	
 	public Sprite(Position start_position, Tiles tiles) {
@@ -22,7 +23,7 @@ public abstract class Sprite {
 		this.tiles = tiles;
 	}
 	
-	public void setImagesBuffer(List<Integer> tilesNumbers) {
+	public void setImagesArray(List<Integer> tilesNumbers) {
 		spriteImages = new SpriteImages(tiles, tilesNumbers);
 	}
 	
@@ -42,6 +43,24 @@ public abstract class Sprite {
 	 * Some sprites need to join some tiles to create a single image (like pacman)
 	 */
 	protected abstract void createFullSpriteImages();
+	
+	/**
+	 * Takes four images in parameter and return the combined image, with the dimension of one.
+	 * The images must have the same dimension.
+	 * @param cornerTopLeft
+	 * @param cornerTopRight
+	 * @param cornerBottomLeft
+	 * @param cornerBottomRight
+	 * @return the combined image
+	 */
+	protected BufferedImage createFullSpriteImage(BufferedImage cornerTopLeft, BufferedImage cornerTopRight,
+			BufferedImage cornerBottomLeft, BufferedImage cornerBottomRight) {
+		
+		BufferedImage imgTop = Tiles.joinToRight(cornerTopLeft, cornerTopRight);
+		BufferedImage imgBottom = Tiles.joinToRight(cornerBottomLeft, cornerBottomRight);
+		BufferedImage fullBigImg = Tiles.joinBelow(imgTop, imgBottom);
+		return Tiles.resize(fullBigImg, new Dimension(cornerTopLeft.getWidth(), cornerTopLeft.getHeight()));
+	}
 	
 	
 	/**

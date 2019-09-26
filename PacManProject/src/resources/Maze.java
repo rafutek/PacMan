@@ -10,6 +10,7 @@ import java.util.List;
 
 import sprites.Energizer;
 import sprites.PacDot;
+import sprites.PacMan;
 import sprites.Position;
 import sprites.Sprite;
 import sprites.Sprites;
@@ -28,17 +29,23 @@ public class Maze {
 	
 	private List<Position> energizersMazeFilePositions = new ArrayList<Position>();
 	private List<Position> energizersMazeImagePositions = new ArrayList<Position>();
+	
+	private Position pacManMazeFilePosition;
+	private Position pacManMazeImagePosition;
+	
+	
 	private Sprites energizers = new Sprites();
 	private Sprites pacDots = new Sprites();
+	private Sprite pacMan;
+	
 	
 	/**
 	 * Constructor that creates the maze image and sprites thanks to a text file.
 	 * @throws IOException
 	 */
 	public Maze() throws IOException {
-		System.out.println("Create maze");
 		tiles = new Tiles();
-		createMazeFromText("maze.txt");
+		createMazeAndSpritesFromText("maze.txt");
 		computeSpritesPositions();
 		fillSpritesPositions();
 	}
@@ -48,43 +55,15 @@ public class Maze {
 		return tiles;
 	}
 	
-	private BufferedImage joinToRight(BufferedImage img1, BufferedImage img2) {
-		if(img1.getHeight() != img2.getHeight()) {
-			System.out.println("The images to join side by side don't have the same height !");
-			return null;
-		}
-		int width = img1.getWidth() + img2.getWidth();
-		int height = img1.getHeight();
-		BufferedImage newImage = new BufferedImage(width, height,BufferedImage.TYPE_INT_ARGB);
-		Graphics g = newImage.createGraphics();
-		g.drawImage(img1, 0, 0, null);
-		g.drawImage(img2, img1.getWidth(), 0, null);
-		g.dispose();
-		return newImage;
-	}	
-	
-	private BufferedImage joinBelow(BufferedImage img1, BufferedImage img2) {
-		if(img1.getWidth() != img2.getWidth()) {
-			System.out.println("The images to join on top of each other don't have the same width !");
-			return null;
-		}
-		int width = img1.getWidth();
-		int height = img1.getHeight() + img2.getHeight();
-		BufferedImage newImage = new BufferedImage(width, height,BufferedImage.TYPE_INT_ARGB);
-		Graphics g = newImage.createGraphics();
-		g.drawImage(img1, 0, 0, null);
-		g.drawImage(img2, 0, img1.getHeight(), null);
-		g.dispose();
-		return newImage;
-	}
-	
+
 	/**
 	 * Create the maze from a text file, associating each number of the file to a certain tile, 
 	 * and combining the tiles to create the final map.
 	 * @param mazeFilename
 	 * @throws IOException
 	 */
-	private void createMazeFromText(String mazeFilename) throws IOException {
+	private void createMazeAndSpritesFromText(String mazeFilename) throws IOException {
+		System.out.println("Create maze and sprites from text file");
 		BufferedImage mazeLineImg = null;
 		@SuppressWarnings("resource")
 		FileReader fr = new FileReader(rsc.getMazePath(mazeFilename));
@@ -108,18 +87,20 @@ public class Maze {
 			else {
 				weight = 0;
 				if(first_nb_read) {
-					if(number == 0 || number == 15 || number == 13) {
+					if(number == 0 || number == 15 || number == 13 || number == 97) {
 						// 0: no tile with that number
 
-						if(number == 13) { // 13: pac-dot
+						if(number == 13) { // pac-dot
 							pacDotsMazeFilePositions.add(new Position(row_nb, line_nb));
 						}
 						
-						else if(number == 15) { // 15: energizer
+						else if(number == 15) { // energizer
 							energizersMazeFilePositions.add(new Position(row_nb, line_nb));
 						}
 						
-						
+						else if(number == 97) { // pac-man
+							pacManMazeFilePosition = new Position(row_nb, line_nb); // only one pac-man
+						}						
 						
 						// -> black tile instead, the sprites will be displayed by the render thread
 						number = Tiles.NB_TILES_X * Tiles.NB_TILES_Y; 
@@ -128,7 +109,7 @@ public class Maze {
 						mazeLineImg = tiles.getTileNumber(number); // first tile
 					}
 					else {
-						mazeLineImg = joinToRight(mazeLineImg, tiles.getTileNumber(number)); // create a line of the maze
+						mazeLineImg = Tiles.joinToRight(mazeLineImg, tiles.getTileNumber(number)); // create a line of the maze
 					}
 					row_nb++;
 				}
@@ -137,7 +118,7 @@ public class Maze {
 						originalMazeImg = mazeLineImg;
 					}
 					else if(mazeLineImg != null && originalMazeImg != null){
-						originalMazeImg = joinBelow(originalMazeImg, mazeLineImg);
+						originalMazeImg = Tiles.joinBelow(originalMazeImg, mazeLineImg);
 					}
 					if(mazeLineImg != null) {
 						mazeLineImg.flush(); //release memory allocated by a line of images of the maze
@@ -175,6 +156,12 @@ public class Maze {
 		}
 		energizersMazeFilePositions.clear();
 		
+		//pac-man
+		int tile_width = getMazeImg().getWidth() / nb_rows;
+		pixelX = (pacManMazeFilePosition.getX() * getMazeImg().getWidth()) / nb_rows;
+		pixelY = (pacManMazeFilePosition.getY() *getMazeImg().getHeight()) / nb_lines;
+		pacManMazeImagePosition = new Position(pixelX+(tile_width/2), pixelY); 
+		
 		//...
 		
 	}
@@ -192,6 +179,9 @@ public class Maze {
 			energizers.add(new Energizer(position, tiles));
 		}
 		energizersMazeImagePositions.clear();
+		
+		//pac-man
+		pacMan = new PacMan(pacManMazeImagePosition, tiles);
 		
 		//...
 	}
@@ -228,38 +218,52 @@ public class Maze {
 	 */
 	private void repositionSpritesInMaze(int width, int height) {
 		
+		int newX, newY;
+		
 		//pac-dots
 		for (Sprite pacdot : pacDots.getSprites()) {
-			int newX = (width * pacdot.getMazePosition().getX()) / originalMazeImg.getWidth() ;
-			int newY = (height * pacdot.getMazePosition().getY()) / originalMazeImg.getHeight();
+			newX = (width * pacdot.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+			newY = (height * pacdot.getMazePosition().getY()) / originalMazeImg.getHeight();
 			pacdot.setCurrentPosition(new Position(newX, newY));
 		}
 		
 		//energizers
 		for (Sprite e : energizers.getSprites()) {
-			int newX = (width * e.getMazePosition().getX()) / originalMazeImg.getWidth() ;
-			int newY = (height * e.getMazePosition().getY()) / originalMazeImg.getHeight();
+			newX = (width * e.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+			newY = (height * e.getMazePosition().getY()) / originalMazeImg.getHeight();
 			e.setCurrentPosition(new Position(newX, newY));
 		}
+		
+		//pac-man
+		newX = (width * pacMan.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+		newY = (height * pacMan.getMazePosition().getY()) / originalMazeImg.getHeight();
+		pacMan.setCurrentPosition(new Position(newX, newY));
 		
 		//...
 	}
 	
 	private void resizeSpritesInMaze(int width, int height) {
 		
+		int newWidth, newHeight;
+		
 		//pac-dots
 		for (Sprite pacdot : pacDots.getSprites()) {
-			int newWidth = (width * pacdot.getOriginalSize().width) / originalMazeImg.getWidth() ;
-			int newHeight = (height * pacdot.getOriginalSize().height) / originalMazeImg.getHeight();
+			newWidth = (width * pacdot.getOriginalSize().width) / originalMazeImg.getWidth() ;
+			newHeight = (height * pacdot.getOriginalSize().height) / originalMazeImg.getHeight();
 			pacdot.setCurrentSize(new Dimension(newWidth, newHeight));
 		}
 		
 		//energizers
 		for (Sprite e : energizers.getSprites()) {
-			int newWidth = (width * e.getOriginalSize().width) / originalMazeImg.getWidth() ;
-			int newHeight = (height * e.getOriginalSize().height) / originalMazeImg.getHeight();
+			newWidth = (width * e.getOriginalSize().width) / originalMazeImg.getWidth() ;
+			newHeight = (height * e.getOriginalSize().height) / originalMazeImg.getHeight();
 			e.setCurrentSize(new Dimension(newWidth, newHeight));
 		}
+		
+		//pac-man
+		newWidth = (width * pacMan.getOriginalSize().width) / originalMazeImg.getWidth() ;
+		newHeight = (height * pacMan.getOriginalSize().height) / originalMazeImg.getHeight();
+		pacMan.setCurrentSize(new Dimension(newWidth, newHeight));
 		
 		//...
 	}
@@ -270,6 +274,10 @@ public class Maze {
 	
 	public Sprites getPacDots() {
 		return pacDots;
+	}
+	
+	public Sprite getPacMan() {
+		return pacMan;
 	}
 	
 	
