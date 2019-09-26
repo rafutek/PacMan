@@ -46,7 +46,7 @@ public class Energizer extends Sprite{
 	public static void main(String[] args) throws IOException {
 		Energizer e = new Energizer(new Position(0, 0), new Tiles());
 		System.out.println(e.animationOrder);
-		e.update();
+		e.updateImg();
 		System.out.println(e.animationOrder);
 	}
 

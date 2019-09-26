@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sprites.Energizer;
+import sprites.MovingSprite;
 import sprites.PacDot;
 import sprites.PacMan;
 import sprites.Position;
@@ -39,7 +40,7 @@ public class Maze {
 	
 	private Sprites energizers = new Sprites();
 	private Sprites pacDots = new Sprites();
-	private Sprite pacMan;
+	private MovingSprite pacMan;
 	
 	
 	/**
@@ -312,7 +313,7 @@ public class Maze {
 		return pacDots;
 	}
 	
-	public Sprite getPacMan() {
+	public MovingSprite getPacMan() {
 		return pacMan;
 	}
 	

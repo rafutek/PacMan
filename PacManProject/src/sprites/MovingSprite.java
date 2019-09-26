@@ -14,6 +14,14 @@ public abstract class MovingSprite extends Sprite{
 	protected List<Integer> goDownAnimation;
 	protected List<Integer> deathAnimation;
 	protected List<List<Integer>> mazeValues;
+	
+	/**
+	 *  A moving sprite has different states.
+	 */
+	private enum State { STOP, LEFT, RIGHT, UP, DOWN, DEATH } 
+	protected State state = State.STOP;
+	
+	protected int speed = 1;
 
 	/**
 	 * A moving sprite has some extra behavior, as he moves he needs to know where he can go.
@@ -57,6 +65,21 @@ public abstract class MovingSprite extends Sprite{
 	protected abstract void createDeathAnimation();
 	protected abstract void chooseInitialAnimation();
 	
-	
+	public void updatePos() {
+		if(state != State.STOP || state != State.DEATH) {
+			if(state == State.LEFT) {
+				currentPosition.setX(currentPosition.getX()-speed);
+			}
+			else if(state == State.RIGHT) {
+				currentPosition.setX(currentPosition.getX()+speed);
+			}
+			else if(state == State.UP) {
+				currentPosition.setY(currentPosition.getY()-speed);
+			}
+			else if(state == State.DOWN) {
+				currentPosition.setY(currentPosition.getY()+speed);
+			}
+		}
+	}
 
 }

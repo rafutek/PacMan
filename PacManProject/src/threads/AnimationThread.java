@@ -29,7 +29,7 @@ public class AnimationThread extends TimerThread {
 		
 		// change the image of the animated sprites to display
 		energizers.update();
-		pacMan.update();
+		pacMan.updateImg();
 	}
 	
 	

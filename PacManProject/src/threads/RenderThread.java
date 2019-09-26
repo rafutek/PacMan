@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 
 import resources.Maze;
+import sprites.MovingSprite;
 import sprites.Sprite;
 import sprites.Sprites;
 import view.GamePanel;
@@ -88,7 +89,7 @@ public class RenderThread extends ThreadPerso{
 	//sprites
 	private Sprites energizers;
 	private Sprites pacDots;
-	private Sprite pacMan;
+	private MovingSprite pacMan;
 	
 	//animation
 	private AnimationThread animationTh;
@@ -248,8 +249,7 @@ public class RenderThread extends ThreadPerso{
 			
 			//update sprites position (like fantom positions)
 			//the image of the sprite to display is changed by the animation thread
-//			pacDots.update();
-//			energizers.update();
+			pacMan.updatePos();
 			
 		}
 	}
