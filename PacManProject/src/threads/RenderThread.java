@@ -8,7 +8,6 @@ import java.text.DecimalFormat;
 
 import resources.Maze;
 import sprites.MovingSprite;
-import sprites.Sprite;
 import sprites.Sprites;
 import view.GamePanel;
 import view.StatusBarPanel;
