@@ -119,7 +119,7 @@ public class PacMan extends Sprite {
 	}
 	
 	private void createDeathAnimation() {
-		for (int i = 8; i < 20; i++) {
+		for (int i = 8; i < 20; i++) { // lot of images for death animation
 			deathAnimation.add(i);
 		}
 		
