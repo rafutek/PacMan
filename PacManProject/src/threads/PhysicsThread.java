@@ -40,26 +40,41 @@ public class PhysicsThread extends ThreadPerso {
 		pacManWantedState = pacMan.getWantedState();
 		if(pacManWantedState != MovingSpriteState.STOP) {
 			
-			Position currentMatrixPos = mazeToMatrixPosition(pacMan.getCurrentPosition());
+			// we need to use a little bit changed position 
+			// so that pac-man can go a little bit farther in the maze
+			int adaptedCurrentPosX;
+			int adaptedCurrentPosY;
+			Position currentMatrixPos; // the position of the sprite in the matrix
+			int wantedBoxValue = -1; // the next box value where pac-man wants to go
 			
-			int wantedBoxValue = -1;
 			if(pacManWantedState == MovingSpriteState.LEFT) {
-				// check the box value where pac-man wants to go
+				adaptedCurrentPosX = pacMan.getCurrentPosition().getX() + pacMan.getCurrentSize().width/2;
+				adaptedCurrentPosY = pacMan.getCurrentPosition().getY();
+				currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
 				wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
 			}
 			else if(pacManWantedState == MovingSpriteState.RIGHT) {
+				adaptedCurrentPosX = pacMan.getCurrentPosition().getX() - pacMan.getCurrentSize().width/2;
+				adaptedCurrentPosY = pacMan.getCurrentPosition().getY();
+				currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
 				wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
 			}
 			else if(pacManWantedState == MovingSpriteState.UP) {
+				adaptedCurrentPosX = pacMan.getCurrentPosition().getX();
+				adaptedCurrentPosY = pacMan.getCurrentPosition().getY() + pacMan.getCurrentSize().height/2;
+				currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
 				wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
 			}
 			else if(pacManWantedState == MovingSpriteState.DOWN) {
+				adaptedCurrentPosX = pacMan.getCurrentPosition().getX();
+				adaptedCurrentPosY = pacMan.getCurrentPosition().getY() - pacMan.getCurrentSize().height/2;
+				currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
 				wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 			}
 			
-			System.out.println(wantedBoxValue);
-			if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13) {
-				pacMan.setState(pacManWantedState); // if pac-man can go to that state
+			System.out.println("wanted box value: "+wantedBoxValue);
+			if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13 || wantedBoxValue == 15) {
+				pacMan.setState(pacManWantedState); // pac-man can be in that state
 			}else {
 				pacMan.setState(MovingSpriteState.STOP);
 			}
