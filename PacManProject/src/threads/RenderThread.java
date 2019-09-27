@@ -1,5 +1,6 @@
 package threads;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -247,7 +248,8 @@ public class RenderThread extends ThreadPerso{
 			else if(currentGamePanelWidth > 0 && currentGamePanelHeight > 0 && 
 					(!drawnOnce || lastGamePanelWidth != currentGamePanelWidth || lastGamePanelHeight != currentGamePanelHeight)) 
 			{
-				maze.resizeMazeAndSprites(currentGamePanelWidth, currentGamePanelHeight);
+				maze.resizeMazeAndSprites(drawnOnce, new Dimension(lastGamePanelWidth, lastGamePanelHeight),
+												new Dimension(currentGamePanelWidth, currentGamePanelHeight));
 				lastGamePanelWidth = currentGamePanelWidth;
 				lastGamePanelHeight = currentGamePanelHeight;
 				if(!drawnOnce) {

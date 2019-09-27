@@ -245,69 +245,80 @@ public class Maze {
 	 * @param width
 	 * @param height
 	 */
-	public void resizeMazeAndSprites(int width, int height) {
+	public void resizeMazeAndSprites(boolean drawnOnce, Dimension lastDim, Dimension newDim) {
 		if(originalMazeImg != null) {
 			//resize maze into a copy
-			copyMazeImg = Tiles.resize(originalMazeImg, new Dimension(width,height));
+			copyMazeImg = Tiles.resize(originalMazeImg, newDim);
 		    
 		    //reposition and resize the sprites in the resized maze
-		    repositionSpritesInMaze(width, height);
-		    resizeSpritesInMaze(width, height);
+		    repositionSpritesInMaze(drawnOnce, lastDim, newDim);
+		    resizeSpritesInMaze(newDim);
 		}
 	}
 	
 	/**
-	 * Reposition the sprites in the maze of different size.
-	 * @param width the new maze width
-	 * @param height the new maze height
+	 * Reposition the sprites in the maze (game panel) of different size.
+	 * The moving sprites are first repositioned thanks to the original maze image,
+	 * but once drawn the last dimension of the game panel is used. Indeed we need the
+	 * last game panel dimension to reposition the last current position of the moving sprites 
+	 * in a new game panel.
+	 * @param drawnOnce
+	 * @param lastDim
+	 * @param newDim
 	 */
-	private void repositionSpritesInMaze(int width, int height) {
+	private void repositionSpritesInMaze(boolean drawnOnce, Dimension lastDim, Dimension newDim) {
 		
 		int newX, newY;
 		
 		//pac-dots
 		for (Sprite pacdot : pacDots.getSprites()) {
-			newX = (width * pacdot.getMazePosition().getX()) / originalMazeImg.getWidth() ;
-			newY = (height * pacdot.getMazePosition().getY()) / originalMazeImg.getHeight();
+			newX = (newDim.width * pacdot.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+			newY = (newDim.height * pacdot.getMazePosition().getY()) / originalMazeImg.getHeight();
 			pacdot.setCurrentPosition(new Position(newX, newY));
 		}
 		
 		//energizers
 		for (Sprite e : energizers.getSprites()) {
-			newX = (width * e.getMazePosition().getX()) / originalMazeImg.getWidth() ;
-			newY = (height * e.getMazePosition().getY()) / originalMazeImg.getHeight();
+			newX = (newDim.width * e.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+			newY = (newDim.height * e.getMazePosition().getY()) / originalMazeImg.getHeight();
 			e.setCurrentPosition(new Position(newX, newY));
 		}
 		
 		//pac-man
-		newX = (width * pacMan.getMazePosition().getX()) / originalMazeImg.getWidth() ;
-		newY = (height * pacMan.getMazePosition().getY()) / originalMazeImg.getHeight();
+		if(!drawnOnce) {
+			newX = (newDim.width * pacMan.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+			newY = (newDim.height * pacMan.getMazePosition().getY()) / originalMazeImg.getHeight();			
+		}else {
+			newX = (int)Math.round((newDim.width * pacMan.getCurrentPosition().getX()) / (double)lastDim.width) ;
+			newY = (int)Math.round((newDim.height * pacMan.getCurrentPosition().getY()) / (double)lastDim.height);				
+		}
+
 		pacMan.setCurrentPosition(new Position(newX, newY));
 		
 		//...
 	}
 	
-	private void resizeSpritesInMaze(int width, int height) {
+	private void resizeSpritesInMaze(Dimension newDim) {
 		
 		int newWidth, newHeight;
 		
 		//pac-dots
 		for (Sprite pacdot : pacDots.getSprites()) {
-			newWidth = (width * pacdot.getOriginalSize().width) / originalMazeImg.getWidth() ;
-			newHeight = (height * pacdot.getOriginalSize().height) / originalMazeImg.getHeight();
+			newWidth = (newDim.width * pacdot.getOriginalSize().width) / originalMazeImg.getWidth() ;
+			newHeight = (newDim.height * pacdot.getOriginalSize().height) / originalMazeImg.getHeight();
 			pacdot.setCurrentSize(new Dimension(newWidth, newHeight));
 		}
 		
 		//energizers
 		for (Sprite e : energizers.getSprites()) {
-			newWidth = (width * e.getOriginalSize().width) / originalMazeImg.getWidth() ;
-			newHeight = (height * e.getOriginalSize().height) / originalMazeImg.getHeight();
+			newWidth = (newDim.width * e.getOriginalSize().width) / originalMazeImg.getWidth() ;
+			newHeight = (newDim.height * e.getOriginalSize().height) / originalMazeImg.getHeight();
 			e.setCurrentSize(new Dimension(newWidth, newHeight));
 		}
 		
 		//pac-man
-		newWidth = (width * pacMan.getOriginalSize().width) / originalMazeImg.getWidth() ;
-		newHeight = (height * pacMan.getOriginalSize().height) / originalMazeImg.getHeight();
+		newWidth = (newDim.width * pacMan.getOriginalSize().width) / originalMazeImg.getWidth() ;
+		newHeight = (newDim.height * pacMan.getOriginalSize().height) / originalMazeImg.getHeight();
 		pacMan.setCurrentSize(new Dimension(newWidth, newHeight));
 		
 		//...
