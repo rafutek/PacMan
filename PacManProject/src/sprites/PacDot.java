@@ -11,15 +11,13 @@ public class PacDot extends Sprite {
 
 	public PacDot(Position start_position, Tiles tiles) {
 		super(start_position, tiles);
-		
-		tilesNumbers.add(13);
-		
-		setImagesArray(tilesNumbers);
-		createFullSpriteImages();
-		createAnimationOrderList();
-
 	}
 
+	@Override
+	public void chooseTilesNumbers() {
+		tilesNumbers.add(13);
+	}
+	
 	@Override
 	protected void createFullSpriteImages() {
 		spriteFullImages = spriteImages.copyObject(); // no need to create full images for pac-dots
@@ -34,5 +32,7 @@ public class PacDot extends Sprite {
 		}
 		setAnimationOrder(animationOrder);
 	}
+
+
 
 }

@@ -12,16 +12,17 @@ public class Energizer extends Sprite{
 	
 	public Energizer(Position start_position, Tiles tiles) {
 		super(start_position, tiles);
-		
+	}
+
+	
+	@Override
+	public void chooseTilesNumbers() {
 		tilesNumbers.add(13);
 		tilesNumbers.add(14);
 		tilesNumbers.add(15);
-		
-		setImagesArray(tilesNumbers);
-		createFullSpriteImages();
-		createAnimationOrderList();
 	}
 
+	
 	@Override
 	public void createFullSpriteImages() {
 		spriteFullImages = spriteImages.copyObject(); // no need to create full images for energizer
@@ -45,9 +46,9 @@ public class Energizer extends Sprite{
 	public static void main(String[] args) throws IOException {
 		Energizer e = new Energizer(new Position(0, 0), new Tiles());
 		System.out.println(e.animationOrder);
-		e.update();
+		e.updateImg();
 		System.out.println(e.animationOrder);
 	}
 
-	
+
 }

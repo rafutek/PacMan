@@ -16,15 +16,6 @@ public class GamePanel extends JPanel {
 
 		setBackground(Color.blue);
 
-		// create game components
-//		obs = new Obstacles(wcTop);
-//		fred = new Worm(PWIDTH, PHEIGHT, obs);
-
-
-
-//		// set up message font
-//		font = new Font("SansSerif", Font.BOLD, 24);
-//		metrics = this.getFontMetrics(font);
 
 	}
 

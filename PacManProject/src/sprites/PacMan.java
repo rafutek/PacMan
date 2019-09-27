@@ -2,36 +2,26 @@ package sprites;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import resources.Tiles;
 
-public class PacMan extends Sprite {
-	
-	List<Integer> noMovementAnimation = new ArrayList<Integer>();
-	List<Integer> goLeftAnimation = new ArrayList<Integer>();
-	List<Integer> goRightAnimation = new ArrayList<Integer>();
-	List<Integer> goUpAnimation = new ArrayList<Integer>();
-	List<Integer> goDownAnimation = new ArrayList<Integer>();
-	List<Integer> deathAnimation = new ArrayList<Integer>();
+public class PacMan extends MovingSprite {
 	
 	
 	public PacMan(Position start_position, Tiles tiles) {
-		super(start_position, tiles);
-
+		super(start_position, tiles, null);
+	}
+	
+	@Override
+	public void chooseTilesNumbers() {
 		// add all pac-man tiles
 		for (int i = 97; i < 169; i++) { 
 			tilesNumbers.add(i); 
 		}
 		for (int i = 177; i < 185; i++) { 
 			tilesNumbers.add(i);
-		}		
-		
-		setImagesArray(tilesNumbers); // fill an image array with these tiles
-		createFullSpriteImages();
-		setOriginalSize();
-		createAnimationOrderLists();
+		}	
 	}
 
 	/**
@@ -69,63 +59,49 @@ public class PacMan extends Sprite {
 			}
 		}		
 	}
+	
 
-	
-	
-	private void createAnimationOrderLists() {
-		createNoMovementAnimation();
-		createGoLeftAnimation();
-		createGoRightAnimation();
-		createGoUpAnimation();
-		createGoDownAnimation();
-		createDeathAnimation();
-		
-		createAnimationOrderList();
-	}
-	
-	
-	/*
-	 * Pac-man has multiple animations, like the no-moving one, the going-to-left one, the dying one, etc..
-	 * So this method creates all the lists of animation, and set the animationOrder main list as one of them.
-	 */
 	@Override
-	protected void createAnimationOrderList() {
-		animationOrder = goUpAnimation;
-	}
-
-	
-	private void createNoMovementAnimation() {
+	protected void createNoMovementAnimation() {
 		noMovementAnimation.add(8); // no movement animation contains only the full pac-man index image
 	}
 	
-	private void createGoLeftAnimation() {
+	@Override
+	protected void createGoLeftAnimation() {
 		goLeftAnimation.add(0);
-		goLeftAnimation.add(2); // two images for moving animations		
+		goLeftAnimation.add(2); // two images for moving animations	
 	}
-	
-	private void createGoRightAnimation() {
+
+	@Override
+	protected void createGoRightAnimation() {
 		goRightAnimation.add(4);
 		goRightAnimation.add(6);
 	}
-	
-	private void createGoUpAnimation() {
+
+	@Override
+	protected void createGoUpAnimation() {
 		goUpAnimation.add(1);
 		goUpAnimation.add(3);
 	}
 
-	private void createGoDownAnimation() {
+	@Override
+	protected void createGoDownAnimation() {
 		goDownAnimation.add(5);
 		goDownAnimation.add(7);
 	}
-	
-	private void createDeathAnimation() {
+
+	@Override
+	protected void createDeathAnimation() {
 		for (int i = 8; i < 20; i++) { // lot of images for death animation
 			deathAnimation.add(i);
 		}
-		
-		
-	}	
-	
+	}
+
+	@Override
+	protected void chooseInitialAnimation() {
+		animationOrder = noMovementAnimation;
+	}
+
 	//-------------------------------------------------------
 	
 	
@@ -143,5 +119,4 @@ public class PacMan extends Sprite {
 //		Thread.sleep(1000);
 //		Tiles.displayImg(pac.spriteImages.getSpriteImages().get(pac.spriteImages.getSpriteImages().size()-1));
 	}
-
 }

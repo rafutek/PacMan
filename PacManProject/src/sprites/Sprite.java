@@ -11,17 +11,29 @@ import resources.Tiles;
 public abstract class Sprite {
 
 	protected List<Integer> tilesNumbers = new ArrayList<Integer>();	
-	private Position mazePosition, currentPosition;
-	private Dimension originalSize, currentSize;
+	protected Position mazePosition, currentPosition;
+	protected Dimension originalSize, currentSize;
 	protected SpriteImages spriteImages, spriteFullImages;
 	protected Tiles tiles;
 	protected List<Integer> animationOrder;
+	
 	
 	public Sprite(Position start_position, Tiles tiles) {
 		mazePosition = start_position;
 		currentPosition = mazePosition;
 		this.tiles = tiles;
+		
+		chooseTilesNumbers();
+		setImagesArray(tilesNumbers); // fill an image array with these tiles
+		createFullSpriteImages();
+		setOriginalSize();
+		createAnimationOrderList();
 	}
+	
+	/**
+	 * Choose the tiles to add to the image array.
+	 */
+	public abstract void chooseTilesNumbers();
 	
 	public void setImagesArray(List<Integer> tilesNumbers) {
 		spriteImages = new SpriteImages(tiles, tilesNumbers);
@@ -91,6 +103,14 @@ public abstract class Sprite {
 	}
 	
 	/**
+	 * Get the current size of the sprite.
+	 * @return its current dimension.
+	 */
+	public Dimension getCurrentSize() {
+		return currentSize;
+	}
+	
+	/**
 	 * Sets the list of numbers that represents the order of images for animation
 	 */
 	public void setAnimationOrder(List<Integer> animationOrder) {
@@ -103,7 +123,7 @@ public abstract class Sprite {
 	 * Update the animation order buffer. More precisely takes the first item of the list and
 	 * place it at the end, so that the draw method always draw the first but different full image of the sprite.
 	 */
-	public void update() {
+	public void updateImg() {
 		animationOrder.add(animationOrder.remove(0));
 	}
 	

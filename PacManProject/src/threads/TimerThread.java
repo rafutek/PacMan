@@ -20,12 +20,18 @@ public abstract class TimerThread extends ThreadPerso{
 
 	@Override
 	protected void doThat() {
+		doThatWhileWaiting();
 		counterWaits++;
 		if(counterWaits >= nb_waits_max) {
 			counterWaits = 0;
 			finallyDoThat();
 		}
 	}
+	
+	/**
+	 * Do that more often.
+	 */
+	protected abstract void doThatWhileWaiting();
 	
 	@Override
 	protected void doThatAtStop() {
