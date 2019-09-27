@@ -27,7 +27,7 @@ public class Sprites {
 	
 	public void update() {
 		for (Sprite sprite : sprites) {
-			sprite.update();
+			sprite.updateImg();
 		}
 	}
 	

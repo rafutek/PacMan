@@ -1,5 +1,6 @@
 package threads;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -7,7 +8,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 
 import resources.Maze;
-import sprites.Sprite;
+import sprites.MovingSprite;
 import sprites.Sprites;
 import view.GamePanel;
 import view.StatusBarPanel;
@@ -88,10 +89,14 @@ public class RenderThread extends ThreadPerso{
 	//sprites
 	private Sprites energizers;
 	private Sprites pacDots;
-	private Sprite pacMan;
+	private MovingSprite pacMan;
 	
 	//animation
 	private AnimationThread animationTh;
+	
+	//physics
+	private PhysicsThread physicsTh;
+	
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
 		super("Render");
@@ -121,6 +126,7 @@ public class RenderThread extends ThreadPerso{
 		pacMan = maze.getPacMan();
 		
 		animationTh = new AnimationThread(energizers, pacMan);
+		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan);
 	}
 	
 
@@ -191,8 +197,9 @@ public class RenderThread extends ThreadPerso{
 	 */
 	public void startThread() {
 		if(!running) {
-			start();
+			this.start();
 			animationTh.startThread();
+			physicsTh.startThread();
 		}
 	}
 	
@@ -203,6 +210,7 @@ public class RenderThread extends ThreadPerso{
 	public synchronized void pauseThread() {
 		paused = true;
 		animationTh.pauseThread();
+		physicsTh.pauseThread();
 	}
 	
 	/**
@@ -211,6 +219,7 @@ public class RenderThread extends ThreadPerso{
 	public synchronized void resumeThread() {
 		paused = false;
 		animationTh.resumeThread();
+		physicsTh.resumeThread();
 	}
 	
 	/**
@@ -219,6 +228,7 @@ public class RenderThread extends ThreadPerso{
 	public void stopThread() {
 		running = false;
 		animationTh.stopThread();
+		physicsTh.stopThread();
 	}
 	
 	
@@ -238,7 +248,8 @@ public class RenderThread extends ThreadPerso{
 			else if(currentGamePanelWidth > 0 && currentGamePanelHeight > 0 && 
 					(!drawnOnce || lastGamePanelWidth != currentGamePanelWidth || lastGamePanelHeight != currentGamePanelHeight)) 
 			{
-				maze.resizeMazeAndSprites(currentGamePanelWidth, currentGamePanelHeight);
+				maze.resizeMazeAndSprites(drawnOnce, new Dimension(lastGamePanelWidth, lastGamePanelHeight),
+												new Dimension(currentGamePanelWidth, currentGamePanelHeight));
 				lastGamePanelWidth = currentGamePanelWidth;
 				lastGamePanelHeight = currentGamePanelHeight;
 				if(!drawnOnce) {
@@ -248,8 +259,7 @@ public class RenderThread extends ThreadPerso{
 			
 			//update sprites position (like fantom positions)
 			//the image of the sprite to display is changed by the animation thread
-//			pacDots.update();
-//			energizers.update();
+			pacMan.updatePos();
 			
 		}
 	}
@@ -300,6 +310,13 @@ public class RenderThread extends ThreadPerso{
 	}  // end of gameOverMessage()
 
 
+	
+	
+	public MovingSprite getPacMan() {
+		return pacMan;
+	}
+	
+	
 	private void paintScreen()
 	// use active rendering to put the buffered image on-screen
 	{ 
