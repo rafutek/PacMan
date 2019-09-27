@@ -40,8 +40,29 @@ public class PhysicsThread extends ThreadPerso {
 		pacManWantedState = pacMan.getWantedState();
 		if(pacManWantedState != MovingSpriteState.STOP) {
 			
-			pacMan.setState(pacManWantedState); // must change of course
+			Position currentMatrixPos = mazeToMatrixPosition(pacMan.getCurrentPosition());
 			
+			int wantedBoxValue = -1;
+			if(pacManWantedState == MovingSpriteState.LEFT) {
+				// check the box value where pac-man wants to go
+				wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
+			}
+			else if(pacManWantedState == MovingSpriteState.RIGHT) {
+				wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
+			}
+			else if(pacManWantedState == MovingSpriteState.UP) {
+				wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
+			}
+			else if(pacManWantedState == MovingSpriteState.DOWN) {
+				wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
+			}
+			
+			System.out.println(wantedBoxValue);
+			if(wantedBoxValue == 13) {
+				pacMan.setState(pacManWantedState); // if pac-man can go to that state
+			}else {
+				pacMan.setState(MovingSpriteState.STOP);
+			}
 		}
 
 	}
@@ -55,8 +76,8 @@ public class PhysicsThread extends ThreadPerso {
 	 * @return the position in the maze numbers matrix.
 	 */
 	private Position mazeToMatrixPosition(Position gamePanelPos) {
-		int matPosX = (gamePanelPos.getX() * mazeValues.get(0).size()) / gamePanel.getWidth();
-		int matPosY = (gamePanelPos.getY() * mazeValues.size()) / gamePanel.getHeight();
+		int matPosX = (int)Math.round((gamePanelPos.getX() * mazeValues.get(0).size()) / (double)gamePanel.getWidth());
+		int matPosY = (int)Math.round((gamePanelPos.getY() * mazeValues.size()) / (double)gamePanel.getHeight());
 		return new Position(matPosX, matPosY);
 	}
 

@@ -33,6 +33,9 @@ public class AnimationThread extends TimerThread {
 	protected void doThatWhileWaiting() {
 		pacManCurrentState = pacMan.getState();
 		if(pacManCurrentState != pacManLastState) { // have to change the animation list to the new state
+			if(pacManCurrentState == MovingSpriteState.STOP) {
+				pacMan.setNoMovementAnimation();
+			}
 			if(pacManCurrentState == MovingSpriteState.LEFT) {
 				pacMan.setGoLeftAnimation();
 			}
@@ -48,7 +51,7 @@ public class AnimationThread extends TimerThread {
 			else if(pacManCurrentState == MovingSpriteState.DEATH) {
 				pacMan.setDeathAnimation();
 			}
-			
+			pacManLastState = pacManCurrentState;
 		}
 		
 	}

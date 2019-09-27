@@ -202,9 +202,9 @@ public class Maze {
 		energizersMazeFilePositions.clear();
 		
 		//pac-man
-		int tile_width = getMazeImg().getWidth() / mazeValues.get(0).size();
 		pixelX = (pacManMazeFilePosition.getX() * getMazeImg().getWidth()) / mazeValues.get(0).size();
 		pixelY = (pacManMazeFilePosition.getY() *getMazeImg().getHeight()) / mazeValues.size();
+		int tile_width = getMazeImg().getWidth() / mazeValues.get(0).size();
 		pacManMazeImagePosition = new Position(pixelX+(tile_width/2), pixelY); 
 		
 		//...
