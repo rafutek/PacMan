@@ -47,6 +47,7 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 		requestFocus();    // the window has now has focus, so receives key events
 		readyForTermination();		
 		readyForFullScreen();
+		readyForArrowsEvents();
 	}  
 	
 	
@@ -139,7 +140,7 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 	} 
 	
 	
-	public void readyForFullScreen() {
+	private void readyForFullScreen() {
 		
 		addKeyListener( new KeyAdapter() {
 			public void keyPressed(KeyEvent e)
@@ -161,6 +162,30 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 		});
 	}
 	
+	private void readyForArrowsEvents() {
+		addKeyListener( new KeyAdapter() {
+			public void keyPressed(KeyEvent e)
+			{ 
+				int keyCode = e.getKeyCode();
+				
+				// listen for arrows events
+				if (keyCode == KeyEvent.VK_LEFT) {
+					renderTh.getPacMan().wantToGoLeft();
+				}
+				else if(keyCode == KeyEvent.VK_RIGHT){
+					renderTh.getPacMan().wantToGoRight();
+				}
+				else if(keyCode == KeyEvent.VK_UP){
+					renderTh.getPacMan().wantToGoUp();
+				}
+				else if(keyCode == KeyEvent.VK_DOWN){
+					renderTh.getPacMan().wantToGoDown();
+				}
+				
+			}
+		});
+	
+	}
 
 
 // ----------------- window listener methods -------------
@@ -204,7 +229,6 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 	
 	public void windowGainedFocus(WindowEvent e) {}
 	public void windowLostFocus(WindowEvent e) {}
-
 
 
 } 

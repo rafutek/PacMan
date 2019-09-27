@@ -17,8 +17,9 @@ public abstract class MovingSprite extends Sprite{
 	
 
 	protected MovingSpriteState state = MovingSpriteState.STOP;
-	
+	protected MovingSpriteState wantedState = state;
 	protected int speed = 1;
+	
 
 	/**
 	 * A moving sprite has some extra behavior, as he moves he needs to know where he can go.
@@ -63,7 +64,7 @@ public abstract class MovingSprite extends Sprite{
 	protected abstract void chooseInitialAnimation();
 	
 	public void updatePos() {
-		if(state != MovingSpriteState.STOP || state != MovingSpriteState.DEATH) {
+		if(state != MovingSpriteState.STOP && state != MovingSpriteState.DEATH) {
 			if(state == MovingSpriteState.LEFT) {
 				currentPosition.setX(currentPosition.getX()-speed);
 			}
@@ -78,5 +79,48 @@ public abstract class MovingSprite extends Sprite{
 			}
 		}
 	}
-
+	
+	public MovingSpriteState getState() {
+		return state;
+	}
+	
+	public void setState(MovingSpriteState state) {
+		this.state = state;
+	}
+	
+	public void wantToGoLeft() {
+		wantedState = MovingSpriteState.LEFT;
+	}
+	public void wantToGoRight() {
+		wantedState = MovingSpriteState.RIGHT;
+	}
+	public void wantToGoUp() {
+		wantedState = MovingSpriteState.UP;
+	}
+	public void wantToGoDown() {
+		wantedState = MovingSpriteState.DOWN;
+	}
+	
+	public MovingSpriteState getWantedState() {
+		return wantedState;
+	}
+	
+	public void setNoMovementAnimation() {
+		setAnimationOrder(noMovementAnimation);
+	}
+	public void setGoLeftAnimation() {
+		setAnimationOrder(goLeftAnimation);
+	}
+	public void setGoRightAnimation() {
+		setAnimationOrder(goRightAnimation);
+	}
+	public void setGoUpAnimation() {
+		setAnimationOrder(goUpAnimation);
+	}
+	public void setGoDownAnimation() {
+		setAnimationOrder(goDownAnimation);
+	}
+	public void setDeathAnimation() {
+		setAnimationOrder(deathAnimation);
+	}
 }

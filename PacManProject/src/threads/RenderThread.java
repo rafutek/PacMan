@@ -93,6 +93,10 @@ public class RenderThread extends ThreadPerso{
 	//animation
 	private AnimationThread animationTh;
 	
+	//physics
+	private PhysicsThread physicsTh;
+	
+	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
 		super("Render");
 		
@@ -121,6 +125,7 @@ public class RenderThread extends ThreadPerso{
 		pacMan = maze.getPacMan();
 		
 		animationTh = new AnimationThread(energizers, pacMan);
+		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan);
 	}
 	
 
@@ -191,8 +196,9 @@ public class RenderThread extends ThreadPerso{
 	 */
 	public void startThread() {
 		if(!running) {
-			start();
+			this.start();
 			animationTh.startThread();
+			physicsTh.startThread();
 		}
 	}
 	
@@ -203,6 +209,7 @@ public class RenderThread extends ThreadPerso{
 	public synchronized void pauseThread() {
 		paused = true;
 		animationTh.pauseThread();
+		physicsTh.pauseThread();
 	}
 	
 	/**
@@ -211,6 +218,7 @@ public class RenderThread extends ThreadPerso{
 	public synchronized void resumeThread() {
 		paused = false;
 		animationTh.resumeThread();
+		physicsTh.resumeThread();
 	}
 	
 	/**
@@ -219,6 +227,7 @@ public class RenderThread extends ThreadPerso{
 	public void stopThread() {
 		running = false;
 		animationTh.stopThread();
+		physicsTh.stopThread();
 	}
 	
 	
@@ -299,6 +308,13 @@ public class RenderThread extends ThreadPerso{
 	}  // end of gameOverMessage()
 
 
+	
+	
+	public MovingSprite getPacMan() {
+		return pacMan;
+	}
+	
+	
 	private void paintScreen()
 	// use active rendering to put the buffered image on-screen
 	{ 

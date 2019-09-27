@@ -120,6 +120,14 @@ public class Maze {
 	}
 	
 	/**
+	 * Get the 2D matrix of numbers of maze file.
+	 * @return
+	 */
+	public List<List<Integer>> getMazeValues(){
+		return mazeValues;
+	}
+	
+	/**
 	 * Go throught the maze values to create the maze image and the sprites with their position.
 	 */
 	private void createMazeAndSprites() {

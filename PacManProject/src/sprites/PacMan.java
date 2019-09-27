@@ -99,7 +99,7 @@ public class PacMan extends MovingSprite {
 
 	@Override
 	protected void chooseInitialAnimation() {
-		animationOrder = goUpAnimation;
+		animationOrder = noMovementAnimation;
 	}
 
 	//-------------------------------------------------------
