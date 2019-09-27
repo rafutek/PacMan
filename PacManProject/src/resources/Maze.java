@@ -73,27 +73,28 @@ public class Maze {
 		FileReader fr = new FileReader(rsc.getMazePath(mazeFilename));
 		
 		int c = 0; 
-		int weight = 0;
+		int weight = 1;
 		int number = 0;
 		int line_nb = 0;
 		boolean new_line_for_nb = true;
 		
 		while ((c=fr.read()) != -1) { //end of file
 
-			if(c >= 48 && c <= 57) { // integer
+			if(c >= 48 && c <= 57) { // ascii integer
 				if(new_line_for_nb) {
 					mazeValues.add(new ArrayList<Integer>()); // add the first line for number
 					new_line_for_nb = false;
 				}
-				c -= 48;
+				c -= 48; // ascii to int
 				number = number*weight + c;
-				weight += 10;
+				weight = 10;
 			}
 			else { // must be a coma after the number, so add the number to the list
-				weight = 0;
+				weight = 1;
 				mazeValues.get(line_nb).add(number); // add the number to the line
+				number = 0;
 				
-				if(c == 10) { //end of line
+				if(c == 10) { //ascii end of line
 					line_nb++; //increase line nb
 					new_line_for_nb = true;
 				}
@@ -108,11 +109,14 @@ public class Maze {
 		for (List<Integer> mazeLine : mazeValues) {
 			for (Integer integer : mazeLine) {
 				System.out.print(integer);
-				if(integer > 9) {
+				if(integer > 99) {
 					System.out.print(" ");
 				}
-				else {
+				else if(integer > 9) {
 					System.out.print("  ");
+				}
+				else {
+					System.out.print("   ");
 				}
 			}
 			System.out.println();
@@ -183,6 +187,7 @@ public class Maze {
 	 * Method that computes the position of each sprite in the maze image. 
 	 */
 	private void computeSpritesPositions() {
+		System.out.println("Compute sprites position");
 		int pixelX, pixelY;
 		
 		//pac-dots
@@ -212,6 +217,7 @@ public class Maze {
 	}
 	
 	private void createSprites() {
+		System.out.println("Create sprites");
 		
 		//pac-dots
 		for (Position position : pacDotsMazeImagePositions) {
