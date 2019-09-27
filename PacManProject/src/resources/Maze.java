@@ -52,7 +52,7 @@ public class Maze {
 		chargeMazeValues("maze.txt");
 		createMazeAndSprites();
 		computeSpritesPositions();
-		fillSpritesPositions();
+		createSprites();
 	}
 	
 	
@@ -211,7 +211,7 @@ public class Maze {
 		
 	}
 	
-	private void fillSpritesPositions() {
+	private void createSprites() {
 		
 		//pac-dots
 		for (Position position : pacDotsMazeImagePositions) {
@@ -298,6 +298,10 @@ public class Maze {
 		//...
 	}
 	
+	/**
+	 * Resize the sprites in order to draw them with a size adapted to the new dimension.
+	 * @param newDim
+	 */
 	private void resizeSpritesInMaze(Dimension newDim) {
 		
 		int newWidth, newHeight;

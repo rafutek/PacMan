@@ -58,7 +58,7 @@ public class PhysicsThread extends ThreadPerso {
 			}
 			
 			System.out.println(wantedBoxValue);
-			if(wantedBoxValue == 13) {
+			if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13) {
 				pacMan.setState(pacManWantedState); // if pac-man can go to that state
 			}else {
 				pacMan.setState(MovingSpriteState.STOP);

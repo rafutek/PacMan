@@ -103,6 +103,14 @@ public abstract class Sprite {
 	}
 	
 	/**
+	 * Get the current size of the sprite.
+	 * @return its current dimension.
+	 */
+	public Dimension getCurrentSize() {
+		return currentSize;
+	}
+	
+	/**
 	 * Sets the list of numbers that represents the order of images for animation
 	 */
 	public void setAnimationOrder(List<Integer> animationOrder) {
