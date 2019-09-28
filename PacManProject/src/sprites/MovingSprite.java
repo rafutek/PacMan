@@ -16,7 +16,7 @@ public abstract class MovingSprite extends Sprite{
 	protected List<List<Integer>> mazeValues;
 	
 
-	protected MovingSpriteState state = MovingSpriteState.STOP;
+	protected MovingSpriteState state = MovingSpriteState.STOP; // initially stopped
 	protected MovingSpriteState wantedState = state;
 	protected int speed = 1;
 	

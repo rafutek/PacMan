@@ -2,7 +2,6 @@ package threads;
 
 import sprites.MovingSprite;
 import sprites.MovingSpriteState;
-import sprites.Sprite;
 import sprites.Sprites;
 
 public class AnimationThread extends TimerThread {
@@ -11,26 +10,35 @@ public class AnimationThread extends TimerThread {
 	private static final int NB_WAITS = 20;
 	
 	private Sprites energizers;
-	private MovingSprite pacMan;
 	
+	private MovingSprite pacMan;
 	private MovingSpriteState pacManLastState, pacManCurrentState;
+
+	private MovingSprite blinky;
+	private MovingSpriteState blinkyLastState, blinkyCurrentState;
 	
 	/**
 	 * Thread that will update the sprites' images order, 
 	 * thus the render thread will display another image so it will create the animation.
 	 * @param energizers
 	 */
-	public AnimationThread(Sprites energizers, MovingSprite pacMan) {
+	public AnimationThread(Sprites energizers, MovingSprite pacMan, MovingSprite blinky) {
 		super(WAIT_TIME, NB_WAITS);
 		setName("Animation");
 		
 		this.energizers = energizers;
+		
 		this.pacMan = pacMan;
 		pacManLastState = pacMan.getState();
+		
+		this.blinky = blinky;
+		blinkyLastState = blinky.getState();
 	}
 
 	@Override
 	protected void doThatWhileWaiting() {
+		
+		//pac-man
 		pacManCurrentState = pacMan.getState();
 		if(pacManCurrentState != pacManLastState) { // have to change the animation list to the new state
 			if(pacManCurrentState == MovingSpriteState.STOP) {
@@ -54,6 +62,32 @@ public class AnimationThread extends TimerThread {
 			pacManLastState = pacManCurrentState;
 		}
 		
+		//blinky
+		blinkyCurrentState = blinky.getState();
+		if(blinkyCurrentState != blinkyLastState) { // have to change the animation list to the new state
+			if(blinkyCurrentState == MovingSpriteState.STOP) {
+				blinky.setNoMovementAnimation();
+			}
+			if(blinkyCurrentState == MovingSpriteState.LEFT) {
+				blinky.setGoLeftAnimation();
+			}
+			else if(blinkyCurrentState == MovingSpriteState.RIGHT) {
+				blinky.setGoRightAnimation();
+			}
+			else if(blinkyCurrentState == MovingSpriteState.UP) {
+				blinky.setGoUpAnimation();
+			}
+			else if(blinkyCurrentState == MovingSpriteState.DOWN) {
+				blinky.setGoDownAnimation();
+			}
+			else if(blinkyCurrentState == MovingSpriteState.DEATH) {
+				blinky.setDeathAnimation();
+			}
+			blinkyLastState = blinkyCurrentState;
+		}		
+		
+		//...
+		
 	}
 	
 	@Override
@@ -62,37 +96,7 @@ public class AnimationThread extends TimerThread {
 		// change the image of the animated sprites to display
 		energizers.update();
 		pacMan.updateImg();
+		blinky.updateImg();
 	}
 
-	
-	
-	
-//	//-------------------------------------------------------
-//	
-//	
-//	public static void main(String args[]) throws InterruptedException {
-//		
-//		int WAIT_DELAY = 5000;
-//		int JOIN_DELAY = 100;
-//		
-//		AnimationThread anim = new AnimationThread(null);
-//		
-//		anim.start();
-//		
-//		Thread.sleep(WAIT_DELAY);
-//		
-//		synchronized(anim) {
-//			anim.pauseThread();
-//			anim.wait(2000);
-//			anim.resumeThread();
-//		}
-//		Thread.sleep(WAIT_DELAY);
-//		
-//		anim.stopThread();
-//		anim.join(JOIN_DELAY);
-//		if(anim.isAlive()) {
-//			anim.interrupt();
-//		}
-//	}
-	
 }
