@@ -12,11 +12,6 @@ public abstract class TimerThread extends ThreadPerso{
 		setNbWaitsMax(nb_waits);
 	}
 
-	@Override
-	protected void doThatAtStart() {
-		// nothing to do at start
-	}
-
 
 	@Override
 	protected void doThat() {
@@ -42,7 +37,7 @@ public abstract class TimerThread extends ThreadPerso{
 	 * Set the number of wait until the action defined in finallyDoThat() is called
 	 * @param nb_wait_times
 	 */
-	public void setNbWaitsMax(int nb_wait_times) {
+	public synchronized void setNbWaitsMax(int nb_wait_times) {
 		nb_waits_max = nb_wait_times;
 	}
 	

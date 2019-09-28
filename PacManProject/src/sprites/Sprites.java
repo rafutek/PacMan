@@ -25,7 +25,7 @@ public class Sprites {
 		sprites.remove(nb);
 	}
 	
-	public void update() {
+	public void updateImg() {
 		for (Sprite sprite : sprites) {
 			sprite.updateImg();
 		}

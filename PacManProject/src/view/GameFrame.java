@@ -200,12 +200,16 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 					if(!gamePaused) {
 						System.out.println("Game paused");
 						gamePaused = true;
-						renderTh.pauseThread();
+						synchronized (renderTh) {
+							renderTh.pauseThread();
+						}
 					}
 					else if(gamePaused) {
 						System.out.println("Game resumed");
 						gamePaused = false;
-						renderTh.resumeThread();
+						synchronized (renderTh) {
+							renderTh.resumeThread();
+						}
 					}
 				}
 			}

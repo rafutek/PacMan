@@ -92,11 +92,13 @@ public class RenderThread extends ThreadPerso{
 	private MovingSprite pacMan;
 	private MovingSprite blinky;
 	
-	//animation
+	//animations
 	private AnimationThread animationTh;
+	private StartResumeAnimationThread startResumeAnimationTh;
 	
 	//physics
 	private PhysicsThread physicsTh;
+	
 	
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
@@ -198,10 +200,8 @@ public class RenderThread extends ThreadPerso{
 	 * Method that starts the thread.
 	 */
 	public void startThread() {
-		if(!running) {
+		if(!running) {			
 			this.start();
-			animationTh.startThread();
-			physicsTh.startThread();
 		}
 	}
 	
@@ -220,8 +220,25 @@ public class RenderThread extends ThreadPerso{
 	 */
 	public synchronized void resumeThread() {
 		paused = false;
-		animationTh.resumeThread();
-		physicsTh.resumeThread();
+		startResumeAnimationTh = new StartResumeAnimationThread(maze.getTiles(), gamePanel);
+		startResumeAnimationTh.startThread();
+		do {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {}
+		}while(startResumeAnimationTh.isRunning());
+		
+		if(!animationTh.isRunning()) {
+			animationTh.startThread();
+		}else {
+			animationTh.resumeThread();
+		}
+		
+		if(!physicsTh.isRunning()) {
+			physicsTh.startThread();
+		}else {
+			physicsTh.resumeThread();
+		}
 	}
 	
 	/**

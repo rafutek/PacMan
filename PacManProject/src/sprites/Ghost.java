@@ -1,6 +1,8 @@
 package sprites;
 
 import java.awt.image.BufferedImage;
+
+import resources.ListImages;
 import resources.Tiles;
 
 public abstract class Ghost extends MovingSprite {
@@ -13,15 +15,14 @@ public abstract class Ghost extends MovingSprite {
 	
 	@Override
 	protected void createFullSpriteImages() {
-		spriteFullImages = new SpriteImages();
+		spriteFullImages = new ListImages();
 		BufferedImage cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight, img;
 
-		System.out.println("sprite tiles array size = "+spriteImages.getSpriteImages().size());
 		for (int i = 0; i < 16; i+=2) {
-			cornerTopLeft = spriteImages.getSpriteImages().get(i);
-			cornerTopRight = spriteImages.getSpriteImages().get(i+1);
-			cornerBottomLeft = spriteImages.getSpriteImages().get(i+16);
-			cornerBottomRight = spriteImages.getSpriteImages().get(i+16+1);
+			cornerTopLeft = spriteImages.getImagesList().get(i);
+			cornerTopRight = spriteImages.getImagesList().get(i+1);
+			cornerBottomLeft = spriteImages.getImagesList().get(i+16);
+			cornerBottomRight = spriteImages.getImagesList().get(i+16+1);
 			img = createFullSpriteImage(cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight);
 			spriteFullImages.add(img);			
 		}

@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import resources.ListImages;
 import resources.Tiles;
 
 public abstract class Sprite {
@@ -13,7 +14,7 @@ public abstract class Sprite {
 	protected List<Integer> tilesNumbers = new ArrayList<Integer>();	
 	protected Position mazePosition, currentPosition;
 	protected Dimension originalSize, currentSize;
-	protected SpriteImages spriteImages, spriteFullImages;
+	protected ListImages spriteImages, spriteFullImages;
 	protected Tiles tiles;
 	protected List<Integer> animationOrder;
 	
@@ -36,7 +37,7 @@ public abstract class Sprite {
 	public abstract void chooseTilesNumbers();
 	
 	public void setImagesArray(List<Integer> tilesNumbers) {
-		spriteImages = new SpriteImages(tiles, tilesNumbers);
+		spriteImages = new ListImages(tiles, tilesNumbers);
 	}
 	
 	public Position getMazePosition() {
@@ -81,8 +82,8 @@ public abstract class Sprite {
 	 */
 	protected void setOriginalSize() {
 		// the original size of the sprite is the dimension of one of its full images
-		originalSize = new Dimension(spriteFullImages.getSpriteImages().get(0).getWidth(), 
-									spriteFullImages.getSpriteImages().get(0).getHeight());
+		originalSize = new Dimension(spriteFullImages.getImagesList().get(0).getWidth(), 
+									spriteFullImages.getImagesList().get(0).getHeight());
 	}
 	
 	
@@ -134,7 +135,7 @@ public abstract class Sprite {
 	 * @param g is the graphics where to draw the sprite.
 	 */
 	public void draw(Graphics g) {
-		g.drawImage(spriteFullImages.getSpriteImages().get(animationOrder.get(0)), 
+		g.drawImage(spriteFullImages.getImagesList().get(animationOrder.get(0)), 
 				currentPosition.getX(), currentPosition.getY(), currentSize.width, currentSize.height, null);
 	}
 }

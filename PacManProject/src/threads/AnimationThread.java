@@ -36,6 +36,9 @@ public class AnimationThread extends TimerThread {
 	}
 
 	@Override
+	protected void doThatAtStart() {}
+	
+	@Override
 	protected void doThatWhileWaiting() {
 		
 		//pac-man
@@ -94,7 +97,7 @@ public class AnimationThread extends TimerThread {
 	public void finallyDoThat() {
 		
 		// change the image of the animated sprites to display
-		energizers.update();
+		energizers.updateImg();
 		pacMan.updateImg();
 		blinky.updateImg();
 	}

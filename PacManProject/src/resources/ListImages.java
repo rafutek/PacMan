@@ -1,18 +1,16 @@
-package sprites;
+package resources;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import resources.Tiles;
-
 /**
  * Class that creates a buffer of images from a set of tiles. 
  * These images are all the tiles needed to draw a sprite.
  *
  */
-public class SpriteImages {
+public class ListImages {
 	
 	private List<BufferedImage> spriteImagesTiles = new ArrayList<BufferedImage>();
 	
@@ -21,13 +19,13 @@ public class SpriteImages {
 	 * @param tiles
 	 * @param tilesNumbers the tiles wanted in the images buffer.
 	 */
-	public SpriteImages(Tiles tiles, List<Integer> tilesNumbers) {
+	public ListImages(Tiles tiles, List<Integer> tilesNumbers) {
 		fillSpriteImagesArray(tiles,tilesNumbers);
 	}
 	/**
 	 * Constructor that only declare a list of images.
 	 */
-	public SpriteImages() {}
+	public ListImages() {}
 	
 	/**
 	 * Add the image to the list of sprite images.
@@ -67,7 +65,7 @@ public class SpriteImages {
 	 * Get the sprite images.
 	 * @return the sprite images.
 	 */
-	public List<BufferedImage> getSpriteImages(){
+	public List<BufferedImage> getImagesList(){
 		return spriteImagesTiles;
 	}
 	
@@ -83,8 +81,8 @@ public class SpriteImages {
 		return copy;
 	}
 	
-	public SpriteImages copyObject() {
-		SpriteImages obj = new SpriteImages(null, null);
+	public ListImages copyObject() {
+		ListImages obj = new ListImages(null, null);
 		obj.spriteImagesTiles = copySpriteImages();
 		return obj;
 	}
@@ -97,8 +95,8 @@ public class SpriteImages {
 			tilesWanted.add(i);
 		}
 		
-		SpriteImages spriteImages = new SpriteImages(new Tiles(), tilesWanted);
-		for (BufferedImage bufferedImage : spriteImages.getSpriteImages()) {
+		ListImages spriteImages = new ListImages(new Tiles(), tilesWanted);
+		for (BufferedImage bufferedImage : spriteImages.getImagesList()) {
 			Tiles.displayImg(bufferedImage);
 			try {
 				Thread.sleep(2000);

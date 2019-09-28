@@ -89,5 +89,13 @@ public abstract class ThreadPerso extends Thread {
 	public void stopThread() {
 		running = false;
 	}
+	
+	/**
+	 * Return true if the thread is running, else return false.
+	 * @return running boolean value.
+	 */
+	public synchronized boolean isRunning() {
+		return running;
+	}
 
 }
