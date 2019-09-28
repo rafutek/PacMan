@@ -41,8 +41,8 @@ public class StartResumeAnimationThread extends TimerThread {
 		
 		chooseAnimationTiles();
 		setAnimationImagesArray();
-		setPosition();
 		setDimension();
+		setPosition();
 	}
 
 	@Override
@@ -51,7 +51,10 @@ public class StartResumeAnimationThread extends TimerThread {
 	}
 	
 	@Override
-	protected void doThatWhileWaiting() {}
+	protected void doThatWhileWaiting() {
+		setDimension(); // if game panel is resized
+		setPosition();
+	}
 
 	@Override
 	protected void finallyDoThat() {
@@ -68,15 +71,18 @@ public class StartResumeAnimationThread extends TimerThread {
 		animationImages = new ListImages(tiles, tilesNumbers);
 	}
 	
-	private void setPosition() {
-		posX = 10;
-		posY = 10;
-	}
 	
 	private void setDimension() {
-		dim.width = 100;
-		dim.height = 100;
+		dim.width = gamePanel.getWidth()/8;
+		dim.height = dim.width;
 	}
+
+	private void setPosition() {
+		
+		posX = gamePanel.getWidth()/2 - dim.width/2;
+		posY = gamePanel.getHeight()/2 - dim.height/2;
+	}
+	
 
 	private boolean draw() {
 		if(draw_nb < animationImages.getImagesList().size()) {

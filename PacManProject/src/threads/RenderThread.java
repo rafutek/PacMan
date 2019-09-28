@@ -147,45 +147,50 @@ public class RenderThread extends ThreadPerso{
 
 	@Override
 	protected void doThat() {
-		gameUpdate(); // game state is updated
-		gameRender();   // render the game to a buffer
-		paintScreen();  // draw the buffer on-screen
+		if(startResumeAnimationTh != null && !startResumeAnimationTh.isRunning()) {
+			
+			gameUpdate(); // game state is updated
+			gameRender();   // render the game to a buffer
+			paintScreen();  // draw the buffer on-screen
 
-		afterTime = System.currentTimeMillis();
-		timeDiff = afterTime - beforeTime;
-		sleepTime = (period - timeDiff) - overSleepTime;  
+			afterTime = System.currentTimeMillis();
+			timeDiff = afterTime - beforeTime;
+			sleepTime = (period - timeDiff) - overSleepTime;  
 
-		if (sleepTime > 0) {   // some time left in this cycle
-			try {
-				Thread.sleep(sleepTime);  // already in ms
+			if (sleepTime > 0) {   // some time left in this cycle
+				try {
+					Thread.sleep(sleepTime);  // already in ms
+				}
+				catch(InterruptedException ex){}
+				overSleepTime = (int)((System.currentTimeMillis() - afterTime) - sleepTime);
 			}
-			catch(InterruptedException ex){}
-			overSleepTime = (int)((System.currentTimeMillis() - afterTime) - sleepTime);
-		}
-		else {    // sleepTime <= 0; the frame took longer than the period
-			excess -= sleepTime;  // store excess time value
-			overSleepTime = 0;
+			else {    // sleepTime <= 0; the frame took longer than the period
+				excess -= sleepTime;  // store excess time value
+				overSleepTime = 0;
 
-			if (++noDelays >= NO_DELAYS_PER_YIELD) {
-				Thread.yield();   // give another thread a chance to run
-				noDelays = 0;
+				if (++noDelays >= NO_DELAYS_PER_YIELD) {
+					Thread.yield();   // give another thread a chance to run
+					noDelays = 0;
+				}
 			}
+
+			beforeTime = System.currentTimeMillis();
+
+			/* If frame animation is taking too long, update the game state
+		      without rendering it, to get the updates/sec nearer to
+		      the required FPS. */
+			int skips = 0;
+			while((excess > period) && (skips < MAX_FRAME_SKIPS)) {
+				excess -= period;
+				gameUpdate();    // update state but don't render
+				skips++;
+			}
+			framesSkipped += skips;
+
+			storeStats();
+			
 		}
 
-		beforeTime = System.currentTimeMillis();
-
-		/* If frame animation is taking too long, update the game state
-	      without rendering it, to get the updates/sec nearer to
-	      the required FPS. */
-		int skips = 0;
-		while((excess > period) && (skips < MAX_FRAME_SKIPS)) {
-			excess -= period;
-			gameUpdate();    // update state but don't render
-			skips++;
-		}
-		framesSkipped += skips;
-
-		storeStats();
 	}
 	
 	@Override
