@@ -10,7 +10,7 @@ public class PacMan extends MovingSprite {
 	
 	
 	public PacMan(Position start_position, Tiles tiles) {
-		super(start_position, tiles, null);
+		super(start_position, tiles);
 	}
 	
 	@Override

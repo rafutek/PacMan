@@ -72,7 +72,6 @@ public class PhysicsThread extends ThreadPerso {
 				wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 			}
 			
-			System.out.println("wanted box value: "+wantedBoxValue);
 			if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13 || wantedBoxValue == 15) {
 				pacMan.setState(pacManWantedState); // pac-man can be in that state
 			}else {

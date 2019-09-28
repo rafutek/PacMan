@@ -29,9 +29,8 @@ public abstract class MovingSprite extends Sprite{
 	 * @param tiles
 	 * @param mazeValues
 	 */
-	public MovingSprite(Position start_position, Tiles tiles, List<List<Integer>> mazeValues) {
+	public MovingSprite(Position start_position, Tiles tiles) {
 		super(start_position, tiles);
-		this.mazeValues = mazeValues;
 	}
 
 	/**

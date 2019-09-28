@@ -90,6 +90,7 @@ public class RenderThread extends ThreadPerso{
 	private Sprites energizers;
 	private Sprites pacDots;
 	private MovingSprite pacMan;
+	private MovingSprite blinky;
 	
 	//animation
 	private AnimationThread animationTh;
@@ -124,6 +125,7 @@ public class RenderThread extends ThreadPerso{
 		energizers = maze.getEnergizers();
 		pacDots = maze.getPacDots();
 		pacMan = maze.getPacMan();
+		blinky = maze.getBlinky();
 		
 		animationTh = new AnimationThread(energizers, pacMan);
 		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan);
@@ -285,9 +287,8 @@ public class RenderThread extends ThreadPerso{
 			//with their respective dimension
 			pacDots.draw(dbg); 
 			energizers.draw(dbg); 
-			
 			pacMan.draw(dbg);
-			
+			blinky.draw(dbg);
 			
 	
 			if (gameOver)
@@ -311,7 +312,10 @@ public class RenderThread extends ThreadPerso{
 
 
 	
-	
+	/**
+	 * Get pac-man moving sprite.
+	 * @return pac-man
+	 */
 	public MovingSprite getPacMan() {
 		return pacMan;
 	}
