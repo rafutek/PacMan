@@ -54,7 +54,7 @@ public class Maze {
 		tiles = new Tiles();
 		chargeMazeValues("maze.txt");
 		createMazeAndSprites();
-		computeSpritesPositions();
+		computeSpritesInitialPositions();
 		createSprites();
 	}
 	
@@ -194,8 +194,8 @@ public class Maze {
 	/**
 	 * Method that computes the position of each sprite in the maze image. 
 	 */
-	private void computeSpritesPositions() {
-		System.out.println("Compute sprites position");
+	private void computeSpritesInitialPositions() {
+		System.out.println("Compute sprites initial positions");
 		int pixelX, pixelY;
 		
 		//pac-dots

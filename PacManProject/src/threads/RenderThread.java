@@ -128,7 +128,7 @@ public class RenderThread extends ThreadPerso{
 		blinky = maze.getBlinky();
 		
 		animationTh = new AnimationThread(energizers, pacMan, blinky);
-		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan);
+		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky);
 	}
 	
 
@@ -262,7 +262,7 @@ public class RenderThread extends ThreadPerso{
 			//update sprites position (like fantom positions)
 			//the image of the sprite to display is changed by the animation thread
 			pacMan.updatePos();
-			
+			blinky.updatePos();
 		}
 	}
 
