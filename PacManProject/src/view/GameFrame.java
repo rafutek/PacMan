@@ -29,6 +29,8 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 	private boolean fullScreen = false;
 	private RenderThread renderTh;
 	private LayoutManagerThread layoutTh;
+	
+	private boolean gamePaused = false;
 
 	public GameFrame(int period)
 	{ 
@@ -48,6 +50,7 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 		readyForTermination();		
 		readyForFullScreen();
 		readyForArrowsEvents();
+		readyForPause();
 	}  
 	
 	
@@ -184,7 +187,29 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 				
 			}
 		});
+	}
 	
+	private void readyForPause() {
+		addKeyListener( new KeyAdapter() {
+			public void keyPressed(KeyEvent e)
+			{ 
+				int keyCode = e.getKeyCode();
+				
+				// listen for arrows events
+				if (keyCode == KeyEvent.VK_P) {
+					if(!gamePaused) {
+						System.out.println("Game paused");
+						gamePaused = true;
+						renderTh.pauseThread();
+					}
+					else if(gamePaused) {
+						System.out.println("Game resumed");
+						gamePaused = false;
+						renderTh.resumeThread();
+					}
+				}
+			}
+		});
 	}
 
 
