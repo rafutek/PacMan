@@ -8,6 +8,8 @@ public class Blinky extends Ghost {
 
 	public Blinky(Position start_position, Tiles tiles) {
 		super(start_position, tiles);
+		state = MovingSpriteState.LEFT;
+		wantedState = state;
 	}
 	
 

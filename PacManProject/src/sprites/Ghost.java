@@ -30,7 +30,7 @@ public abstract class Ghost extends MovingSprite {
 
 	@Override
 	protected void createNoMovementAnimation() {
-		noMovementAnimation = animationOrder; // no animation for no movement
+		noMovementAnimation = goLeftAnimation; // no animation for no movement
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public abstract class Ghost extends MovingSprite {
 
 	@Override
 	protected void createDeathAnimation() {
-		deathAnimation = animationOrder; //no animation for death
+		deathAnimation = goLeftAnimation; //no animation for death
 	}
 	
 
