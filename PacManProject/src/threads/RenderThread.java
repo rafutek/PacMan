@@ -98,7 +98,8 @@ public class RenderThread extends ThreadPerso{
 	
 	//physics
 	private PhysicsThread physicsTh;
-	
+	private boolean animationDone = false;
+	private boolean initializedStats = false;
 	
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
@@ -136,18 +137,25 @@ public class RenderThread extends ThreadPerso{
 
 	@Override
 	protected void doThatAtStart() {
-		overSleepTime = 0;
-		noDelays = 0;
-		excess = 0;
-		gameStartTime = System.currentTimeMillis();
-		prevStatsTime = gameStartTime;
-		beforeTime = gameStartTime;
+		if(animationDone) {
+			overSleepTime = 0;
+			noDelays = 0;
+			excess = 0;
+			gameStartTime = System.currentTimeMillis();
+			prevStatsTime = gameStartTime;
+			beforeTime = gameStartTime;
+			initializedStats = true;			
+		}
 	}
 
 
 	@Override
 	protected void doThat() {
-		if(startResumeAnimationTh != null && !startResumeAnimationTh.isRunning()) {
+		if(animationDone) {
+			
+			if(!initializedStats) {
+				doThatAtStart();
+			}
 			
 			gameUpdate(); // game state is updated
 			gameRender();   // render the game to a buffer
@@ -225,6 +233,8 @@ public class RenderThread extends ThreadPerso{
 	 */
 	public synchronized void resumeThread() {
 		paused = false;
+		animationDone = false;
+		initializedStats = false;
 		startResumeAnimationTh = new StartResumeAnimationThread(maze.getTiles(), gamePanel);
 		startResumeAnimationTh.startThread();
 		do {
@@ -232,6 +242,8 @@ public class RenderThread extends ThreadPerso{
 				Thread.sleep(100);
 			} catch (InterruptedException e) {}
 		}while(startResumeAnimationTh.isRunning());
+		
+		animationDone = true;
 		
 		if(!animationTh.isRunning()) {
 			animationTh.startThread();
@@ -260,7 +272,7 @@ public class RenderThread extends ThreadPerso{
 	private void gameUpdate() 
 	{ 
 		if (!gameOver) {
-			
+						
 			// resize all elements if panel size changed
 			currentGamePanelWidth = gamePanel.getWidth();
 			currentGamePanelHeight = gamePanel.getHeight();
@@ -283,8 +295,11 @@ public class RenderThread extends ThreadPerso{
 			
 			//update sprites position (like fantom positions)
 			//the image of the sprite to display is changed by the animation thread
-			pacMan.updatePos();
-			blinky.updatePos();
+			if(animationDone) {
+				pacMan.updatePos();
+				blinky.updatePos();				
+			}
+
 		}
 	}
 

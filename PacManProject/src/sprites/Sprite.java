@@ -40,15 +40,15 @@ public abstract class Sprite {
 		spriteImages = new ListImages(tiles, tilesNumbers);
 	}
 	
-	public Position getMazePosition() {
+	public synchronized Position getMazePosition() {
 		return mazePosition;
 	}
 
-	public Position getCurrentPosition() {
+	public synchronized Position getCurrentPosition() {
 		return currentPosition;
 	}	
 	
-	public void setCurrentPosition(Position newCurrentPos) {
+	public synchronized void setCurrentPosition(Position newCurrentPos) {
 		currentPosition = newCurrentPos;
 	}
 	
@@ -91,7 +91,7 @@ public abstract class Sprite {
 	 * Get the original dimension of a sprite's full image in the original maze.
 	 * @return sprite's original size
 	 */
-	public Dimension getOriginalSize() {
+	public synchronized Dimension getOriginalSize() {
 		return originalSize;
 	}
 	
@@ -99,7 +99,7 @@ public abstract class Sprite {
 	 * Set the current size of the sprite.
 	 * @param newDimension
 	 */
-	public void setCurrentSize(Dimension newDimension) {
+	public synchronized void setCurrentSize(Dimension newDimension) {
 		currentSize = newDimension;
 	}
 	
@@ -107,14 +107,14 @@ public abstract class Sprite {
 	 * Get the current size of the sprite.
 	 * @return its current dimension.
 	 */
-	public Dimension getCurrentSize() {
+	public synchronized Dimension getCurrentSize() {
 		return currentSize;
 	}
 	
 	/**
 	 * Sets the list of numbers that represents the order of images for animation
 	 */
-	public void setAnimationOrder(List<Integer> animationOrder) {
+	public synchronized void setAnimationOrder(List<Integer> animationOrder) {
 		this.animationOrder = animationOrder;
 	}
 	
@@ -124,7 +124,7 @@ public abstract class Sprite {
 	 * Update the animation order buffer. More precisely takes the first item of the list and
 	 * place it at the end, so that the draw method always draw the first but different full image of the sprite.
 	 */
-	public void updateImg() {
+	public synchronized void updateImg() {
 		animationOrder.add(animationOrder.remove(0));
 	}
 	
