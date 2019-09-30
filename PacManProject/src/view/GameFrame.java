@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 
-public class GameFrame extends JFrame implements WindowListener,WindowFocusListener, WindowStateListener
+public class GameFrame extends JFrame implements WindowListener
 {
 
 	private static final long serialVersionUID = 1L;
@@ -27,7 +27,7 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 	
 	
 	private boolean fullScreen = false;
-	private RenderThread renderTh;
+	public RenderThread renderTh;
 	private LayoutManagerThread layoutTh;
 	
 	private boolean gamePaused = false;
@@ -39,7 +39,6 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 		
 		makeGUI();
 		addWindowListener(this);
-		addWindowStateListener(this);
 
 		pack();
 		setResizable(true);
@@ -254,10 +253,7 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 	public void windowClosed(WindowEvent e) {}
 	public void windowOpened(WindowEvent e) {}
 	
-	public void windowStateChanged(WindowEvent e) {}
 	
-	public void windowGainedFocus(WindowEvent e) {}
-	public void windowLostFocus(WindowEvent e) {}
 
 
 } 
