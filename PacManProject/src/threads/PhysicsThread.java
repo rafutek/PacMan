@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import sprites.Ghost;
 import sprites.MovingSprite;
 import sprites.MovingSpriteState;
 import sprites.Position;
@@ -16,7 +17,7 @@ public class PhysicsThread extends ThreadPerso {
 	private MovingSprite pacMan;
 	private MovingSpriteState pacManWantedState;
 	
-	private MovingSprite blinky;
+	private Ghost blinky;
 	private MovingSpriteState blinkyWantedState;	
 	/**
 	 * The class needs the maze number matrix, the game panel size and of course the moving sprites,
@@ -26,7 +27,7 @@ public class PhysicsThread extends ThreadPerso {
 	 * @param gamePanel
 	 * @param pacMan
 	 */
-	public PhysicsThread(List<List<Integer>> mazeValues, JPanel gamePanel, MovingSprite pacMan, MovingSprite blinky) {
+	public PhysicsThread(List<List<Integer>> mazeValues, JPanel gamePanel, MovingSprite pacMan, Ghost blinky) {
 		super("Physics");
 		this.mazeValues = mazeValues;
 		this.gamePanel = gamePanel;
@@ -123,13 +124,11 @@ public class PhysicsThread extends ThreadPerso {
 					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 				}
 				
-				System.out.println("blinky wants to go to "+wantedBoxValue);
 				if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13 || wantedBoxValue == 15|| wantedBoxValue == 193) {
 					blinky.setState(blinkyWantedState); // pac-man can be in that state
 				}else {
-					// blinky search for another possible direction
-					System.out.println("stop !");
-					blinky.setState(MovingSpriteState.STOP);
+					// blinky set another possible direction
+					blinky.setRandomDirection();;
 				}
 			}			
 		}

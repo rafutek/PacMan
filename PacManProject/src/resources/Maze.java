@@ -10,6 +10,7 @@ import java.util.List;
 
 import sprites.Blinky;
 import sprites.Energizer;
+import sprites.Ghost;
 import sprites.MovingSprite;
 import sprites.PacDot;
 import sprites.PacMan;
@@ -43,7 +44,7 @@ public class Maze {
 	
 	private Position blinkyMazeFilePosition;
 	private Position blinkyMazeImagePosition;	
-	private MovingSprite blinky;
+	private Ghost blinky;
 	
 	
 	/**
@@ -377,7 +378,7 @@ public class Maze {
 		return pacMan;
 	}
 
-	public MovingSprite getBlinky() {
+	public Ghost getBlinky() {
 		return blinky;
 	}
 	

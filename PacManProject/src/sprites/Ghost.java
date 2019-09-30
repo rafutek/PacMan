@@ -1,6 +1,7 @@
 package sprites;
 
 import java.awt.image.BufferedImage;
+import java.util.concurrent.ThreadLocalRandom;
 
 import resources.ListImages;
 import resources.Tiles;
@@ -60,6 +61,26 @@ public abstract class Ghost extends MovingSprite {
 	@Override
 	protected void createDeathAnimation() {
 		deathAnimation = goLeftAnimation; //no animation for death
+	}
+	
+
+	/**
+	 * Set ghost state to a random direction state.
+	 */
+	public void setRandomDirection() {
+		int randomNum = ThreadLocalRandom.current().nextInt(0, 3 + 1);		
+		if(randomNum == 0) {
+			setState(MovingSpriteState.LEFT);
+		}
+		else if(randomNum == 1) {
+			setState(MovingSpriteState.RIGHT);
+		}
+		else if(randomNum == 2) {
+			setState(MovingSpriteState.UP);
+		}
+		else if(randomNum == 3) {
+			setState(MovingSpriteState.DOWN);
+		}
 	}
 	
 

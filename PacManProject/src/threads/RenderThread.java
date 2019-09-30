@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 
 import resources.Maze;
+import sprites.Ghost;
 import sprites.MovingSprite;
 import sprites.Sprites;
 import view.GamePanel;
@@ -90,7 +91,7 @@ public class RenderThread extends ThreadPerso{
 	private Sprites energizers;
 	private Sprites pacDots;
 	private MovingSprite pacMan;
-	private MovingSprite blinky;
+	private Ghost blinky;
 	
 	//animations
 	private AnimationThread animationTh;
