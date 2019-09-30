@@ -16,7 +16,7 @@ public abstract class MovingSprite extends Sprite{
 	protected List<List<Integer>> mazeValues;
 	
 
-	protected MovingSpriteState state = MovingSpriteState.STOP;
+	protected MovingSpriteState state = MovingSpriteState.STOP; // initially stopped
 	protected MovingSpriteState wantedState = state;
 	protected int speed = 1;
 	
@@ -29,9 +29,8 @@ public abstract class MovingSprite extends Sprite{
 	 * @param tiles
 	 * @param mazeValues
 	 */
-	public MovingSprite(Position start_position, Tiles tiles, List<List<Integer>> mazeValues) {
+	public MovingSprite(Position start_position, Tiles tiles) {
 		super(start_position, tiles);
-		this.mazeValues = mazeValues;
 	}
 
 	/**
@@ -63,7 +62,7 @@ public abstract class MovingSprite extends Sprite{
 	protected abstract void createDeathAnimation();
 	protected abstract void chooseInitialAnimation();
 	
-	public void updatePos() {
+	public synchronized void updatePos() {
 		if(state != MovingSpriteState.STOP && state != MovingSpriteState.DEATH) {
 			if(state == MovingSpriteState.LEFT) {
 				currentPosition.setX(currentPosition.getX()-speed);
@@ -80,47 +79,47 @@ public abstract class MovingSprite extends Sprite{
 		}
 	}
 	
-	public MovingSpriteState getState() {
+	public synchronized MovingSpriteState getState() {
 		return state;
 	}
 	
-	public void setState(MovingSpriteState state) {
+	public synchronized void setState(MovingSpriteState state) {
 		this.state = state;
 	}
 	
-	public void wantToGoLeft() {
+	public synchronized void wantToGoLeft() {
 		wantedState = MovingSpriteState.LEFT;
 	}
-	public void wantToGoRight() {
+	public synchronized void wantToGoRight() {
 		wantedState = MovingSpriteState.RIGHT;
 	}
-	public void wantToGoUp() {
+	public synchronized void wantToGoUp() {
 		wantedState = MovingSpriteState.UP;
 	}
-	public void wantToGoDown() {
+	public synchronized void wantToGoDown() {
 		wantedState = MovingSpriteState.DOWN;
 	}
 	
-	public MovingSpriteState getWantedState() {
+	public synchronized MovingSpriteState getWantedState() {
 		return wantedState;
 	}
 	
-	public void setNoMovementAnimation() {
+	public synchronized void setNoMovementAnimation() {
 		setAnimationOrder(noMovementAnimation);
 	}
-	public void setGoLeftAnimation() {
+	public synchronized void setGoLeftAnimation() {
 		setAnimationOrder(goLeftAnimation);
 	}
-	public void setGoRightAnimation() {
+	public synchronized void setGoRightAnimation() {
 		setAnimationOrder(goRightAnimation);
 	}
-	public void setGoUpAnimation() {
+	public synchronized void setGoUpAnimation() {
 		setAnimationOrder(goUpAnimation);
 	}
-	public void setGoDownAnimation() {
+	public synchronized void setGoDownAnimation() {
 		setAnimationOrder(goDownAnimation);
 	}
-	public void setDeathAnimation() {
+	public synchronized void setDeathAnimation() {
 		setAnimationOrder(deathAnimation);
 	}
 }

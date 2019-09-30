@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 
 import resources.Maze;
+import sprites.Ghost;
 import sprites.MovingSprite;
 import sprites.Sprites;
 import view.GamePanel;
@@ -90,12 +91,16 @@ public class RenderThread extends ThreadPerso{
 	private Sprites energizers;
 	private Sprites pacDots;
 	private MovingSprite pacMan;
+	private Ghost blinky;
 	
-	//animation
+	//animations
 	private AnimationThread animationTh;
+	private StartResumeAnimationThread startResumeAnimationTh;
 	
 	//physics
 	private PhysicsThread physicsTh;
+	private boolean animationDone = false;
+	private boolean initializedStats = false;
 	
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
@@ -124,64 +129,77 @@ public class RenderThread extends ThreadPerso{
 		energizers = maze.getEnergizers();
 		pacDots = maze.getPacDots();
 		pacMan = maze.getPacMan();
+		blinky = maze.getBlinky();
 		
-		animationTh = new AnimationThread(energizers, pacMan);
-		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan);
+		animationTh = new AnimationThread(energizers, pacMan, blinky);
+		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky);
 	}
 	
 
 	@Override
 	protected void doThatAtStart() {
-		overSleepTime = 0;
-		noDelays = 0;
-		excess = 0;
-		gameStartTime = System.currentTimeMillis();
-		prevStatsTime = gameStartTime;
-		beforeTime = gameStartTime;
+		if(animationDone) {
+			overSleepTime = 0;
+			noDelays = 0;
+			excess = 0;
+			gameStartTime = System.currentTimeMillis();
+			prevStatsTime = gameStartTime;
+			beforeTime = gameStartTime;
+			initializedStats = true;			
+		}
 	}
 
 
 	@Override
 	protected void doThat() {
-		gameUpdate(); // game state is updated
-		gameRender();   // render the game to a buffer
-		paintScreen();  // draw the buffer on-screen
-
-		afterTime = System.currentTimeMillis();
-		timeDiff = afterTime - beforeTime;
-		sleepTime = (period - timeDiff) - overSleepTime;  
-
-		if (sleepTime > 0) {   // some time left in this cycle
-			try {
-				Thread.sleep(sleepTime);  // already in ms
+		if(animationDone) {
+			
+			if(!initializedStats) {
+				doThatAtStart();
 			}
-			catch(InterruptedException ex){}
-			overSleepTime = (int)((System.currentTimeMillis() - afterTime) - sleepTime);
-		}
-		else {    // sleepTime <= 0; the frame took longer than the period
-			excess -= sleepTime;  // store excess time value
-			overSleepTime = 0;
+			
+			gameUpdate(); // game state is updated
+			gameRender();   // render the game to a buffer
+			paintScreen();  // draw the buffer on-screen
 
-			if (++noDelays >= NO_DELAYS_PER_YIELD) {
-				Thread.yield();   // give another thread a chance to run
-				noDelays = 0;
+			afterTime = System.currentTimeMillis();
+			timeDiff = afterTime - beforeTime;
+			sleepTime = (period - timeDiff) - overSleepTime;  
+
+			if (sleepTime > 0) {   // some time left in this cycle
+				try {
+					Thread.sleep(sleepTime);  // already in ms
+				}
+				catch(InterruptedException ex){}
+				overSleepTime = (int)((System.currentTimeMillis() - afterTime) - sleepTime);
 			}
+			else {    // sleepTime <= 0; the frame took longer than the period
+				excess -= sleepTime;  // store excess time value
+				overSleepTime = 0;
+
+				if (++noDelays >= NO_DELAYS_PER_YIELD) {
+					Thread.yield();   // give another thread a chance to run
+					noDelays = 0;
+				}
+			}
+
+			beforeTime = System.currentTimeMillis();
+
+			/* If frame animation is taking too long, update the game state
+		      without rendering it, to get the updates/sec nearer to
+		      the required FPS. */
+			int skips = 0;
+			while((excess > period) && (skips < MAX_FRAME_SKIPS)) {
+				excess -= period;
+				gameUpdate();    // update state but don't render
+				skips++;
+			}
+			framesSkipped += skips;
+
+			storeStats();
+			
 		}
 
-		beforeTime = System.currentTimeMillis();
-
-		/* If frame animation is taking too long, update the game state
-	      without rendering it, to get the updates/sec nearer to
-	      the required FPS. */
-		int skips = 0;
-		while((excess > period) && (skips < MAX_FRAME_SKIPS)) {
-			excess -= period;
-			gameUpdate();    // update state but don't render
-			skips++;
-		}
-		framesSkipped += skips;
-
-		storeStats();
 	}
 	
 	@Override
@@ -196,10 +214,8 @@ public class RenderThread extends ThreadPerso{
 	 * Method that starts the thread.
 	 */
 	public void startThread() {
-		if(!running) {
+		if(!running) {			
 			this.start();
-			animationTh.startThread();
-			physicsTh.startThread();
 		}
 	}
 	
@@ -218,8 +234,29 @@ public class RenderThread extends ThreadPerso{
 	 */
 	public synchronized void resumeThread() {
 		paused = false;
-		animationTh.resumeThread();
-		physicsTh.resumeThread();
+		animationDone = false;
+		initializedStats = false;
+		startResumeAnimationTh = new StartResumeAnimationThread(maze.getTiles(), gamePanel);
+		startResumeAnimationTh.startThread();
+		do {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {}
+		}while(startResumeAnimationTh.isRunning());
+		
+		animationDone = true;
+		
+		if(!animationTh.isRunning()) {
+			animationTh.startThread();
+		}else {
+			animationTh.resumeThread();
+		}
+		
+		if(!physicsTh.isRunning()) {
+			physicsTh.startThread();
+		}else {
+			physicsTh.resumeThread();
+		}
 	}
 	
 	/**
@@ -236,7 +273,7 @@ public class RenderThread extends ThreadPerso{
 	private void gameUpdate() 
 	{ 
 		if (!gameOver) {
-			
+						
 			// resize all elements if panel size changed
 			currentGamePanelWidth = gamePanel.getWidth();
 			currentGamePanelHeight = gamePanel.getHeight();
@@ -259,8 +296,11 @@ public class RenderThread extends ThreadPerso{
 			
 			//update sprites position (like fantom positions)
 			//the image of the sprite to display is changed by the animation thread
-			pacMan.updatePos();
-			
+			if(animationDone) {
+				pacMan.updatePos();
+				blinky.updatePos();				
+			}
+
 		}
 	}
 
@@ -285,9 +325,8 @@ public class RenderThread extends ThreadPerso{
 			//with their respective dimension
 			pacDots.draw(dbg); 
 			energizers.draw(dbg); 
-			
 			pacMan.draw(dbg);
-			
+			blinky.draw(dbg);
 			
 	
 			if (gameOver)
@@ -311,7 +350,10 @@ public class RenderThread extends ThreadPerso{
 
 
 	
-	
+	/**
+	 * Get pac-man moving sprite.
+	 * @return pac-man
+	 */
 	public MovingSprite getPacMan() {
 		return pacMan;
 	}

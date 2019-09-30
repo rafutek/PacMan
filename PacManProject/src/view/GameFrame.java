@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 
-public class GameFrame extends JFrame implements WindowListener,WindowFocusListener, WindowStateListener
+public class GameFrame extends JFrame implements WindowListener
 {
 
 	private static final long serialVersionUID = 1L;
@@ -27,8 +27,10 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 	
 	
 	private boolean fullScreen = false;
-	private RenderThread renderTh;
+	public RenderThread renderTh;
 	private LayoutManagerThread layoutTh;
+	
+	private boolean gamePaused = false;
 
 	public GameFrame(int period)
 	{ 
@@ -37,7 +39,6 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 		
 		makeGUI();
 		addWindowListener(this);
-		addWindowStateListener(this);
 
 		pack();
 		setResizable(true);
@@ -48,6 +49,7 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 		readyForTermination();		
 		readyForFullScreen();
 		readyForArrowsEvents();
+		readyForPause();
 	}  
 	
 	
@@ -184,7 +186,33 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 				
 			}
 		});
+	}
 	
+	private void readyForPause() {
+		addKeyListener( new KeyAdapter() {
+			public void keyPressed(KeyEvent e)
+			{ 
+				int keyCode = e.getKeyCode();
+				
+				// listen for arrows events
+				if (keyCode == KeyEvent.VK_P) {
+					if(!gamePaused) {
+						System.out.println("Game paused");
+						gamePaused = true;
+						synchronized (renderTh) {
+							renderTh.pauseThread();
+						}
+					}
+					else if(gamePaused) {
+						System.out.println("Game resumed");
+						gamePaused = false;
+						synchronized (renderTh) {
+							renderTh.resumeThread();
+						}
+					}
+				}
+			}
+		});
 	}
 
 
@@ -225,10 +253,7 @@ public class GameFrame extends JFrame implements WindowListener,WindowFocusListe
 	public void windowClosed(WindowEvent e) {}
 	public void windowOpened(WindowEvent e) {}
 	
-	public void windowStateChanged(WindowEvent e) {}
 	
-	public void windowGainedFocus(WindowEvent e) {}
-	public void windowLostFocus(WindowEvent e) {}
 
 
 } 

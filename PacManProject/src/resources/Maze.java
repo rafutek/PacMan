@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import sprites.Blinky;
 import sprites.Energizer;
+import sprites.Ghost;
 import sprites.MovingSprite;
 import sprites.PacDot;
 import sprites.PacMan;
@@ -30,17 +32,19 @@ public class Maze {
 	//sprites 
 	private List<Position> pacDotsMazeFilePositions = new ArrayList<Position>();
 	private List<Position> pacDotsMazeImagePositions = new ArrayList<Position>();
+	private Sprites pacDots = new Sprites();	
 	
 	private List<Position> energizersMazeFilePositions = new ArrayList<Position>();
 	private List<Position> energizersMazeImagePositions = new ArrayList<Position>();
+	private Sprites energizers = new Sprites();	
 	
 	private Position pacManMazeFilePosition;
 	private Position pacManMazeImagePosition;
+	private MovingSprite pacMan;	
 	
-	
-	private Sprites energizers = new Sprites();
-	private Sprites pacDots = new Sprites();
-	private MovingSprite pacMan;
+	private Position blinkyMazeFilePosition;
+	private Position blinkyMazeImagePosition;	
+	private Ghost blinky;
 	
 	
 	/**
@@ -51,7 +55,7 @@ public class Maze {
 		tiles = new Tiles();
 		chargeMazeValues("maze.txt");
 		createMazeAndSprites();
-		computeSpritesPositions();
+		computeSpritesInitialPositions();
 		createSprites();
 	}
 	
@@ -142,7 +146,9 @@ public class Maze {
 			for (int x = 0; x < mazeValues.get(y).size(); x++) {
 				
 				number = mazeValues.get(y).get(x);
-				if(number == 0 || number == 15 || number == 13 || number == 97) {
+				if(number == 0 || number == 15 || number == 13 || number == 97
+					|| number == 193) 
+				{
 					// 0: no tile with that number
 
 					if(number == 13) { // pac-dot
@@ -153,7 +159,10 @@ public class Maze {
 					}
 					else if(number == 97) { // pac-man
 						pacManMazeFilePosition = new Position(x, y); // only one pac-man
-					}						
+					}		
+					else if(number == 193) {
+						blinkyMazeFilePosition = new Position(x,y); // only one blinky (red ghost)
+					}
 					
 					// -> black tile instead, the sprites will be displayed by the render thread
 					number = Tiles.NB_TILES_X * Tiles.NB_TILES_Y; 
@@ -186,8 +195,8 @@ public class Maze {
 	/**
 	 * Method that computes the position of each sprite in the maze image. 
 	 */
-	private void computeSpritesPositions() {
-		System.out.println("Compute sprites position");
+	private void computeSpritesInitialPositions() {
+		System.out.println("Compute sprites initial positions");
 		int pixelX, pixelY;
 		
 		//pac-dots
@@ -206,11 +215,17 @@ public class Maze {
 		}
 		energizersMazeFilePositions.clear();
 		
+		
+		int tile_width = getMazeImg().getWidth() / mazeValues.get(0).size();
 		//pac-man
 		pixelX = (pacManMazeFilePosition.getX() * getMazeImg().getWidth()) / mazeValues.get(0).size();
 		pixelY = (pacManMazeFilePosition.getY() *getMazeImg().getHeight()) / mazeValues.size();
-		int tile_width = getMazeImg().getWidth() / mazeValues.get(0).size();
 		pacManMazeImagePosition = new Position(pixelX+(tile_width/2), pixelY); 
+		
+		//blinky
+		pixelX = (blinkyMazeFilePosition.getX() * getMazeImg().getWidth()) / mazeValues.get(0).size();
+		pixelY = (blinkyMazeFilePosition.getY() *getMazeImg().getHeight()) / mazeValues.size();
+		blinkyMazeImagePosition = new Position(pixelX+(tile_width/2), pixelY); 		
 		
 		//...
 		
@@ -233,6 +248,9 @@ public class Maze {
 		
 		//pac-man
 		pacMan = new PacMan(pacManMazeImagePosition, tiles);
+		
+		//blinky
+		blinky = new Blinky(blinkyMazeImagePosition, tiles);
 		
 		//...
 	}
@@ -298,8 +316,17 @@ public class Maze {
 			newX = (int)Math.round((newDim.width * pacMan.getCurrentPosition().getX()) / (double)lastDim.width) ;
 			newY = (int)Math.round((newDim.height * pacMan.getCurrentPosition().getY()) / (double)lastDim.height);				
 		}
-
 		pacMan.setCurrentPosition(new Position(newX, newY));
+		
+		//blinky
+		if(!drawnOnce) {
+			newX = (newDim.width * blinky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+			newY = (newDim.height * blinky.getMazePosition().getY()) / originalMazeImg.getHeight();			
+		}else {
+			newX = (int)Math.round((newDim.width * blinky.getCurrentPosition().getX()) / (double)lastDim.width) ;
+			newY = (int)Math.round((newDim.height * blinky.getCurrentPosition().getY()) / (double)lastDim.height);				
+		}
+		blinky.setCurrentPosition(new Position(newX, newY));		
 		
 		//...
 	}
@@ -331,6 +358,11 @@ public class Maze {
 		newHeight = (newDim.height * pacMan.getOriginalSize().height) / originalMazeImg.getHeight();
 		pacMan.setCurrentSize(new Dimension(newWidth, newHeight));
 		
+		//blinky
+		newWidth = (newDim.width * blinky.getOriginalSize().width) / originalMazeImg.getWidth() ;
+		newHeight = (newDim.height * blinky.getOriginalSize().height) / originalMazeImg.getHeight();
+		blinky.setCurrentSize(new Dimension(newWidth, newHeight));
+		
 		//...
 	}
 	
@@ -345,7 +377,10 @@ public class Maze {
 	public MovingSprite getPacMan() {
 		return pacMan;
 	}
-	
+
+	public Ghost getBlinky() {
+		return blinky;
+	}
 	
 	public void draw(Graphics g) {
 		if(g != null && copyMazeImg != null) {

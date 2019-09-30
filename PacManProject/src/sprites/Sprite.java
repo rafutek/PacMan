@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import resources.ListImages;
 import resources.Tiles;
 
 public abstract class Sprite {
@@ -13,7 +14,7 @@ public abstract class Sprite {
 	protected List<Integer> tilesNumbers = new ArrayList<Integer>();	
 	protected Position mazePosition, currentPosition;
 	protected Dimension originalSize, currentSize;
-	protected SpriteImages spriteImages, spriteFullImages;
+	protected ListImages spriteImages, spriteFullImages;
 	protected Tiles tiles;
 	protected List<Integer> animationOrder;
 	
@@ -36,18 +37,18 @@ public abstract class Sprite {
 	public abstract void chooseTilesNumbers();
 	
 	public void setImagesArray(List<Integer> tilesNumbers) {
-		spriteImages = new SpriteImages(tiles, tilesNumbers);
+		spriteImages = new ListImages(tiles, tilesNumbers);
 	}
 	
-	public Position getMazePosition() {
+	public synchronized Position getMazePosition() {
 		return mazePosition;
 	}
 
-	public Position getCurrentPosition() {
+	public synchronized Position getCurrentPosition() {
 		return currentPosition;
 	}	
 	
-	public void setCurrentPosition(Position newCurrentPos) {
+	public synchronized void setCurrentPosition(Position newCurrentPos) {
 		currentPosition = newCurrentPos;
 	}
 	
@@ -81,8 +82,8 @@ public abstract class Sprite {
 	 */
 	protected void setOriginalSize() {
 		// the original size of the sprite is the dimension of one of its full images
-		originalSize = new Dimension(spriteFullImages.getSpriteImages().get(0).getWidth(), 
-									spriteFullImages.getSpriteImages().get(0).getHeight());
+		originalSize = new Dimension(spriteFullImages.getImagesList().get(0).getWidth(), 
+									spriteFullImages.getImagesList().get(0).getHeight());
 	}
 	
 	
@@ -90,7 +91,7 @@ public abstract class Sprite {
 	 * Get the original dimension of a sprite's full image in the original maze.
 	 * @return sprite's original size
 	 */
-	public Dimension getOriginalSize() {
+	public synchronized Dimension getOriginalSize() {
 		return originalSize;
 	}
 	
@@ -98,7 +99,7 @@ public abstract class Sprite {
 	 * Set the current size of the sprite.
 	 * @param newDimension
 	 */
-	public void setCurrentSize(Dimension newDimension) {
+	public synchronized void setCurrentSize(Dimension newDimension) {
 		currentSize = newDimension;
 	}
 	
@@ -106,14 +107,14 @@ public abstract class Sprite {
 	 * Get the current size of the sprite.
 	 * @return its current dimension.
 	 */
-	public Dimension getCurrentSize() {
+	public synchronized Dimension getCurrentSize() {
 		return currentSize;
 	}
 	
 	/**
 	 * Sets the list of numbers that represents the order of images for animation
 	 */
-	public void setAnimationOrder(List<Integer> animationOrder) {
+	public synchronized void setAnimationOrder(List<Integer> animationOrder) {
 		this.animationOrder = animationOrder;
 	}
 	
@@ -123,7 +124,7 @@ public abstract class Sprite {
 	 * Update the animation order buffer. More precisely takes the first item of the list and
 	 * place it at the end, so that the draw method always draw the first but different full image of the sprite.
 	 */
-	public void updateImg() {
+	public synchronized void updateImg() {
 		animationOrder.add(animationOrder.remove(0));
 	}
 	
@@ -134,7 +135,7 @@ public abstract class Sprite {
 	 * @param g is the graphics where to draw the sprite.
 	 */
 	public void draw(Graphics g) {
-		g.drawImage(spriteFullImages.getSpriteImages().get(animationOrder.get(0)), 
+		g.drawImage(spriteFullImages.getImagesList().get(animationOrder.get(0)), 
 				currentPosition.getX(), currentPosition.getY(), currentSize.width, currentSize.height, null);
 	}
 }

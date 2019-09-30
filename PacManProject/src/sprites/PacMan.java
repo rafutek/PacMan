@@ -3,14 +3,14 @@ package sprites;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-
+import resources.ListImages;
 import resources.Tiles;
 
 public class PacMan extends MovingSprite {
 	
 	
 	public PacMan(Position start_position, Tiles tiles) {
-		super(start_position, tiles, null);
+		super(start_position, tiles);
 	}
 	
 	@Override
@@ -30,7 +30,7 @@ public class PacMan extends MovingSprite {
 	@Override
 	protected void createFullSpriteImages() {
 
-		spriteFullImages = new SpriteImages();
+		spriteFullImages = new ListImages();
 		
 		BufferedImage cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight, img;
 		
@@ -41,10 +41,10 @@ public class PacMan extends MovingSprite {
 		
 		while(tile_nb <= 167) {
 
-			cornerTopLeft = spriteImages.getSpriteImages().get(i);
-			cornerTopRight = spriteImages.getSpriteImages().get(i+1);
-			cornerBottomLeft = spriteImages.getSpriteImages().get(i+interval);
-			cornerBottomRight = spriteImages.getSpriteImages().get(i+interval+1);
+			cornerTopLeft = spriteImages.getImagesList().get(i);
+			cornerTopRight = spriteImages.getImagesList().get(i+1);
+			cornerBottomLeft = spriteImages.getImagesList().get(i+interval);
+			cornerBottomRight = spriteImages.getImagesList().get(i+interval+1);
 			img = createFullSpriteImage(cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight);
 			spriteFullImages.add(img);
 			
@@ -108,7 +108,7 @@ public class PacMan extends MovingSprite {
 	public static void main(String[] args) throws IOException, InterruptedException {
 		PacMan pac = new PacMan(new Position(0, 0), new Tiles());
 		
-		for (BufferedImage img : pac.spriteFullImages.getSpriteImages()) {
+		for (BufferedImage img : pac.spriteFullImages.getImagesList()) {
 			Tiles.displayImg(img);
 			try {
 				Thread.sleep(100);

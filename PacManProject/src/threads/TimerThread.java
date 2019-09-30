@@ -2,19 +2,14 @@ package threads;
 
 public abstract class TimerThread extends ThreadPerso{
 	
-	private int counterWaits = 0;
-	private int nb_waits_max;
+	protected int counterWaits = 0;
+	protected int nb_waits_max;
 
 	
 	public TimerThread(int wait_time, int nb_waits) {
 		super("Timer");
 		setWaitTime(wait_time); 
 		setNbWaitsMax(nb_waits);
-	}
-
-	@Override
-	protected void doThatAtStart() {
-		// nothing to do at start
 	}
 
 
@@ -42,7 +37,7 @@ public abstract class TimerThread extends ThreadPerso{
 	 * Set the number of wait until the action defined in finallyDoThat() is called
 	 * @param nb_wait_times
 	 */
-	public void setNbWaitsMax(int nb_wait_times) {
+	public synchronized void setNbWaitsMax(int nb_wait_times) {
 		nb_waits_max = nb_wait_times;
 	}
 	
