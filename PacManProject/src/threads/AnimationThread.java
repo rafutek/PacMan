@@ -17,12 +17,15 @@ public class AnimationThread extends TimerThread {
 	private MovingSprite blinky;
 	private MovingSpriteState blinkyLastState, blinkyCurrentState;
 	
+	private MovingSprite pinky;
+	private MovingSpriteState pinkyLastState, pinkyCurrentState;
+	
 	/**
 	 * Thread that will update the sprites' images order, 
 	 * thus the render thread will display another image so it will create the animation.
 	 * @param energizers
 	 */
-	public AnimationThread(Sprites energizers, MovingSprite pacMan, MovingSprite blinky) {
+	public AnimationThread(Sprites energizers, MovingSprite pacMan, MovingSprite blinky, MovingSprite pinky) {
 		super(WAIT_TIME, NB_WAITS);
 		setName("Animation");
 		
@@ -33,6 +36,9 @@ public class AnimationThread extends TimerThread {
 		
 		this.blinky = blinky;
 		blinkyLastState = blinky.getState();
+		
+		this.pinky = pinky;
+		pinkyLastState = pinky.getState();
 	}
 
 	@Override
@@ -89,6 +95,30 @@ public class AnimationThread extends TimerThread {
 			blinkyLastState = blinkyCurrentState;
 		}		
 		
+		//pinky
+		pinkyCurrentState = pinky.getState();
+		if(pinkyCurrentState != pinkyLastState) { // have to change the animation list to the new state
+			if(pinkyCurrentState == MovingSpriteState.STOP) {
+				pinky.setNoMovementAnimation();
+			}
+			if(pinkyCurrentState == MovingSpriteState.LEFT) {
+				pinky.setGoLeftAnimation();
+			}
+			else if(pinkyCurrentState == MovingSpriteState.RIGHT) {
+				pinky.setGoRightAnimation();
+			}
+			else if(pinkyCurrentState == MovingSpriteState.UP) {
+				pinky.setGoUpAnimation();
+			}
+			else if(pinkyCurrentState == MovingSpriteState.DOWN) {
+				pinky.setGoDownAnimation();
+			}
+			else if(pinkyCurrentState == MovingSpriteState.DEATH) {
+				pinky.setDeathAnimation();
+			}
+			pinkyLastState = pinkyCurrentState;
+		}	
+		
 		//...
 		
 	}
@@ -100,6 +130,7 @@ public class AnimationThread extends TimerThread {
 		energizers.updateImg();
 		pacMan.updateImg();
 		blinky.updateImg();
+		pinky.updateImg();
 	}
 
 }

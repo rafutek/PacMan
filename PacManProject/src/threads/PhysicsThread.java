@@ -19,6 +19,11 @@ public class PhysicsThread extends ThreadPerso {
 	
 	private Ghost blinky;
 	private MovingSpriteState blinkyWantedState;	
+
+	private Ghost pinky;
+	private MovingSpriteState pinkyWantedState;	
+	
+	
 	/**
 	 * The class needs the maze number matrix, the game panel size and of course the moving sprites,
 	 * in order to locate them in the matrix.
@@ -27,12 +32,13 @@ public class PhysicsThread extends ThreadPerso {
 	 * @param gamePanel
 	 * @param pacMan
 	 */
-	public PhysicsThread(List<List<Integer>> mazeValues, JPanel gamePanel, MovingSprite pacMan, Ghost blinky) {
+	public PhysicsThread(List<List<Integer>> mazeValues, JPanel gamePanel, MovingSprite pacMan, Ghost blinky,  Ghost pinky) {
 		super("Physics");
 		this.mazeValues = mazeValues;
 		this.gamePanel = gamePanel;
 		this.pacMan = pacMan;
 		this.blinky = blinky;
+		this.pinky = pinky;
 	}
 
 	@Override
@@ -135,6 +141,57 @@ public class PhysicsThread extends ThreadPerso {
 				}
 			}			
 		}
+		
+		
+		
+		//pinky
+		if(pinky.getCurrentPosition() != null && pinky.getCurrentSize() != null) {
+			pinkyWantedState = pinky.getState();
+			if(pinkyWantedState != MovingSpriteState.STOP) {
+				
+				// we need to use a little bit changed position 
+				// so that pac-man can go a little bit farther in the maze
+				int adaptedCurrentPosX;
+				int adaptedCurrentPosY;
+				Position currentMatrixPos; // the position of the sprite in the matrix
+				int wantedBoxValue = -1; // the next box value where pac-man wants to go
+				
+				if(pinkyWantedState == MovingSpriteState.LEFT) {
+					adaptedCurrentPosX = pinky.getCurrentPosition().getX() + pinky.getCurrentSize().width/2;
+					adaptedCurrentPosY = pinky.getCurrentPosition().getY();
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
+				}
+				else if(pinkyWantedState == MovingSpriteState.RIGHT) {
+					adaptedCurrentPosX = pinky.getCurrentPosition().getX() - pinky.getCurrentSize().width/2;
+					adaptedCurrentPosY = pinky.getCurrentPosition().getY();
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
+				}
+				else if(pinkyWantedState == MovingSpriteState.UP) {
+					adaptedCurrentPosX = pinky.getCurrentPosition().getX();
+					adaptedCurrentPosY = pinky.getCurrentPosition().getY() + pinky.getCurrentSize().height/2;
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
+				}
+				else if(pinkyWantedState == MovingSpriteState.DOWN) {
+					adaptedCurrentPosX = pinky.getCurrentPosition().getX();
+					adaptedCurrentPosY = pinky.getCurrentPosition().getY() - pinky.getCurrentSize().height/2;
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
+				}
+				
+				if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13 || wantedBoxValue == 15|| wantedBoxValue == 193) {
+					pinky.setState(pinkyWantedState); // pac-man can be in that state
+				}else {					
+					if(pinky.getDirectionThread() == null || !pinky.getDirectionThread().isRunning()) {
+						pinky.startDirectionThread();
+					}
+					// pinky set another possible direction
+					pinky.getDirectionThread().changeDirection();
+				}
+			}			
+		}
 	}
 
 	
@@ -146,6 +203,9 @@ public class PhysicsThread extends ThreadPerso {
 		if(blinky.getDirectionThread() != null) {
 			blinky.getDirectionThread().pauseThread();
 		}
+		if(pinky.getDirectionThread() != null) {
+			pinky.getDirectionThread().pauseThread();
+		}
 	}
 	
 	/**
@@ -156,6 +216,9 @@ public class PhysicsThread extends ThreadPerso {
 		if(blinky.getDirectionThread() != null) {
 			blinky.getDirectionThread().resumeThread();;
 		}
+		if(pinky.getDirectionThread() != null) {
+			pinky.getDirectionThread().resumeThread();;
+		}
 	}
 	
 	
@@ -163,6 +226,9 @@ public class PhysicsThread extends ThreadPerso {
 	protected void doThatAtStop() {
 		if(blinky.getDirectionThread() != null && blinky.getDirectionThread().isRunning()) {
 			blinky.getDirectionThread().stopThread();
+		}
+		if(pinky.getDirectionThread() != null && pinky.getDirectionThread().isRunning()) {
+			pinky.getDirectionThread().stopThread();
 		}
 	}
 	

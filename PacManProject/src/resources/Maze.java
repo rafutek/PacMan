@@ -14,6 +14,7 @@ import sprites.Ghost;
 import sprites.MovingSprite;
 import sprites.PacDot;
 import sprites.PacMan;
+import sprites.Pinky;
 import sprites.Position;
 import sprites.Sprite;
 import sprites.Sprites;
@@ -45,6 +46,10 @@ public class Maze {
 	private Position blinkyMazeFilePosition;
 	private Position blinkyMazeImagePosition;	
 	private Ghost blinky;
+	
+	private Position pinkyMazeFilePosition;
+	private Position pinkyMazeImagePosition;	
+	private Ghost pinky;
 	
 	
 	/**
@@ -147,7 +152,7 @@ public class Maze {
 				
 				number = mazeValues.get(y).get(x);
 				if(number == 0 || number == 15 || number == 13 || number == 97
-					|| number == 193) 
+					|| number == 193 || number == 225) 
 				{
 					// 0: no tile with that number
 
@@ -162,6 +167,9 @@ public class Maze {
 					}		
 					else if(number == 193) {
 						blinkyMazeFilePosition = new Position(x,y); // only one blinky (red ghost)
+					}
+					else if(number == 225) {
+						pinkyMazeFilePosition = new Position(x,y); // only one pinky (pink ghost)
 					}
 					
 					// -> black tile instead, the sprites will be displayed by the render thread
@@ -226,6 +234,11 @@ public class Maze {
 		pixelX = (blinkyMazeFilePosition.getX() * getMazeImg().getWidth()) / mazeValues.get(0).size();
 		pixelY = (blinkyMazeFilePosition.getY() *getMazeImg().getHeight()) / mazeValues.size();
 		blinkyMazeImagePosition = new Position(pixelX+(tile_width/2), pixelY); 		
+
+		//pinky
+		pixelX = (pinkyMazeFilePosition.getX() * getMazeImg().getWidth()) / mazeValues.get(0).size();
+		pixelY = (pinkyMazeFilePosition.getY() *getMazeImg().getHeight()) / mazeValues.size();
+		pinkyMazeImagePosition = new Position(pixelX, pixelY); 	
 		
 		//...
 		
@@ -251,6 +264,9 @@ public class Maze {
 		
 		//blinky
 		blinky = new Blinky(blinkyMazeImagePosition, tiles);
+
+		//pinky
+		pinky = new Pinky(pinkyMazeImagePosition, tiles); 
 		
 		//...
 	}
@@ -327,6 +343,17 @@ public class Maze {
 			newY = (int)Math.round((newDim.height * blinky.getCurrentPosition().getY()) / (double)lastDim.height);				
 		}
 		blinky.setCurrentPosition(new Position(newX, newY));		
+
+		//pinky
+		if(!drawnOnce) {
+			newX = (newDim.width * pinky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+			newY = (newDim.height * pinky.getMazePosition().getY()) / originalMazeImg.getHeight();			
+		}else {
+			newX = (int)Math.round((newDim.width * pinky.getCurrentPosition().getX()) / (double)lastDim.width) ;
+			newY = (int)Math.round((newDim.height * pinky.getCurrentPosition().getY()) / (double)lastDim.height);				
+		}
+		pinky.setCurrentPosition(new Position(newX, newY));		
+		
 		
 		//...
 	}
@@ -362,6 +389,11 @@ public class Maze {
 		newWidth = (newDim.width * blinky.getOriginalSize().width) / originalMazeImg.getWidth() ;
 		newHeight = (newDim.height * blinky.getOriginalSize().height) / originalMazeImg.getHeight();
 		blinky.setCurrentSize(new Dimension(newWidth, newHeight));
+
+		//pinky
+		newWidth = (newDim.width * pinky.getOriginalSize().width) / originalMazeImg.getWidth() ;
+		newHeight = (newDim.height * pinky.getOriginalSize().height) / originalMazeImg.getHeight();
+		pinky.setCurrentSize(new Dimension(newWidth, newHeight));
 		
 		//...
 	}
@@ -380,6 +412,10 @@ public class Maze {
 
 	public Ghost getBlinky() {
 		return blinky;
+	}
+	
+	public Ghost getPinky() {
+		return pinky;
 	}
 	
 	public void draw(Graphics g) {
