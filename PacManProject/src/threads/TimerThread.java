@@ -2,8 +2,8 @@ package threads;
 
 public abstract class TimerThread extends ThreadPerso{
 	
-	private int counterWaits = 0;
-	private int nb_waits_max;
+	protected int counterWaits = 0;
+	protected int nb_waits_max;
 
 	
 	public TimerThread(int wait_time, int nb_waits) {

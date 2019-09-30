@@ -126,18 +126,45 @@ public class PhysicsThread extends ThreadPerso {
 				
 				if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13 || wantedBoxValue == 15|| wantedBoxValue == 193) {
 					blinky.setState(blinkyWantedState); // pac-man can be in that state
-				}else {
+				}else {					
+					if(blinky.getDirectionThread() == null || !blinky.getDirectionThread().isRunning()) {
+						blinky.startDirectionThread();
+					}
 					// blinky set another possible direction
-					blinky.setRandomDirection();;
+					blinky.getDirectionThread().changeDirection();
 				}
 			}			
 		}
-
-
 	}
 
+	
+	/**
+	 * Stop doing the actions defined in doThat() method.
+	 */
+	public synchronized void pauseThread() {
+		paused = true;
+		if(blinky.getDirectionThread() != null) {
+			blinky.getDirectionThread().pauseThread();
+		}
+	}
+	
+	/**
+	 * Start again or continue doing the actions defined in doThat() method.
+	 */
+	public synchronized void resumeThread() {
+		paused = false;
+		if(blinky.getDirectionThread() != null) {
+			blinky.getDirectionThread().resumeThread();;
+		}
+	}
+	
+	
 	@Override
-	protected void doThatAtStop() {}
+	protected void doThatAtStop() {
+		if(blinky.getDirectionThread() != null && blinky.getDirectionThread().isRunning()) {
+			blinky.getDirectionThread().stopThread();
+		}
+	}
 	
 	/**
 	 * Transform a game panel position in a maze matrix position.

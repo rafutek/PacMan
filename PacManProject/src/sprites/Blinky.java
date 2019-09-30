@@ -3,6 +3,7 @@ package sprites;
 import java.io.IOException;
 
 import resources.Tiles;
+import threads.RandomGhostTimer;
 
 public class Blinky extends Ghost {
 
@@ -24,6 +25,14 @@ public class Blinky extends Ghost {
 	@Override
 	protected void chooseInitialAnimation() {
 		animationOrder = goLeftAnimation; // eyes to the left for blinky
+	}
+	
+	
+	@Override
+	public void startDirectionThread() {
+		directionTh = new RandomGhostTimer(this);
+		directionTh.setName("Blinky direction thread");
+		directionTh.startThread();
 	}
 
 

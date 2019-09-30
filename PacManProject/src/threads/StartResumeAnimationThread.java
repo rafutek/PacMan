@@ -86,7 +86,6 @@ public class StartResumeAnimationThread extends TimerThread {
 
 	private boolean draw() {
 		if(draw_nb < animationImages.getImagesList().size()) {
-			System.out.println("draw !");
 			
 			BufferedImage img = animationImages.getImagesList().get(draw_nb);
 						

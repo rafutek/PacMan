@@ -5,8 +5,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import resources.ListImages;
 import resources.Tiles;
+import threads.RandomGhostTimer;
 
 public abstract class Ghost extends MovingSprite {
+	
+	protected RandomGhostTimer directionTh = new RandomGhostTimer(this);
+	
 
 	public Ghost(Position start_position, Tiles tiles) {
 		super(start_position, tiles);
@@ -83,5 +87,10 @@ public abstract class Ghost extends MovingSprite {
 		}
 	}
 	
+	public abstract void startDirectionThread();
+	
+	public RandomGhostTimer getDirectionThread() {
+		return directionTh;
+	}
 
 }
