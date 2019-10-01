@@ -64,6 +64,12 @@ public class Maze {
 	
 	private JPanel gamePanel;
 	
+	private List<Position> doorMazeFilePositions = new ArrayList<Position>();
+	private List<Position> doorMazeImagePositions = new ArrayList<Position>();
+	private Position doorMazeImagePosition, doorCurrentPosition;
+	
+	public Dimension tileDim = new Dimension();
+	
 	/**
 	 * 
 	 * Constructor that creates the maze image and sprites thanks to a text file.
@@ -195,6 +201,9 @@ public class Maze {
 					// -> black tile instead, the sprites will be displayed by the render thread
 					number = Tiles.NB_TILES_X * Tiles.NB_TILES_Y; 
 				}
+				else if(number == 2 || number == 18 || number == 19 || number == 20) { // door of the ghost box
+					doorMazeFilePositions.add(new Position(x, y));
+				}
 				
 				if(mazeLineImg == null) {
 					mazeLineImg = tiles.getTileNumber(number); // first tile
@@ -215,10 +224,22 @@ public class Maze {
 			}
 			mazeLineImg = null;
 		}
+		
+		//save tile dimension
+		tileDim.width = originalMazeImg.getWidth() / mazeValues.get(0).size();
+		tileDim.height = originalMazeImg.getWidth() / mazeValues.size();
+		
 		//finally save the final maze image in a copy
 		copyMazeImg = Tiles.copy(originalMazeImg);	
 	}
 	
+	/**
+	 * Get the maze image, created or not.
+	 * @return the maze image
+	 */
+	public BufferedImage getMazeImg() {
+		return Tiles.copy(originalMazeImg);
+	}
 
 	/**
 	 * Method that computes the position of each sprite in the maze image. 
@@ -229,46 +250,54 @@ public class Maze {
 		
 		//pac-dots
 		for (Position position : pacDotsMazeFilePositions) {
-			pixelX = (position.getX() * getMazeImg().getWidth()) / mazeValues.get(0).size();
-			pixelY = (position.getY() *getMazeImg().getHeight()) / mazeValues.size();
+			pixelX = (position.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+			pixelY = (position.getY() *originalMazeImg.getHeight()) / mazeValues.size();
 			pacDotsMazeImagePositions.add(new Position(pixelX, pixelY));
 		}
 		pacDotsMazeFilePositions.clear();		
 		
 		//energizers
 		for (Position position : energizersMazeFilePositions) {
-			pixelX = (position.getX() * getMazeImg().getWidth()) / mazeValues.get(0).size();
-			pixelY = (position.getY() *getMazeImg().getHeight()) / mazeValues.size();
+			pixelX = (position.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+			pixelY = (position.getY() *originalMazeImg.getHeight()) / mazeValues.size();
 			energizersMazeImagePositions.add(new Position(pixelX, pixelY));
 		}
 		energizersMazeFilePositions.clear();
 		
 		
-		int tile_width = getMazeImg().getWidth() / mazeValues.get(0).size();
+		
 		//pac-man
-		pixelX = (pacManMazeFilePosition.getX() * getMazeImg().getWidth()) / mazeValues.get(0).size();
-		pixelY = (pacManMazeFilePosition.getY() *getMazeImg().getHeight()) / mazeValues.size();
-		pacManMazeImagePosition = new Position(pixelX+(tile_width/2), pixelY); 
+		pixelX = (pacManMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+		pixelY = (pacManMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
+		pacManMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 
 		
 		//blinky
-		pixelX = (blinkyMazeFilePosition.getX() * getMazeImg().getWidth()) / mazeValues.get(0).size();
-		pixelY = (blinkyMazeFilePosition.getY() *getMazeImg().getHeight()) / mazeValues.size();
-		blinkyMazeImagePosition = new Position(pixelX+(tile_width/2), pixelY); 		
+		pixelX = (blinkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+		pixelY = (blinkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
+		blinkyMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 		
 
 		//pinky
-		pixelX = (pinkyMazeFilePosition.getX() * getMazeImg().getWidth()) / mazeValues.get(0).size();
-		pixelY = (pinkyMazeFilePosition.getY() *getMazeImg().getHeight()) / mazeValues.size();
+		pixelX = (pinkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+		pixelY = (pinkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
 		pinkyMazeImagePosition = new Position(pixelX, pixelY); 	
 
 		//clyde
-		pixelX = (clydeMazeFilePosition.getX() * getMazeImg().getWidth()) / mazeValues.get(0).size();
-		pixelY = (clydeMazeFilePosition.getY() *getMazeImg().getHeight()) / mazeValues.size();
-		clydeMazeImagePosition = new Position(pixelX+(tile_width/2), pixelY); 	
+		pixelX = (clydeMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+		pixelY = (clydeMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
+		clydeMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 	
 		
 		//inky
-		pixelX = (inkyMazeFilePosition.getX() * getMazeImg().getWidth()) / mazeValues.get(0).size();
-		pixelY = (inkyMazeFilePosition.getY() *getMazeImg().getHeight()) / mazeValues.size();
+		pixelX = (inkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+		pixelY = (inkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
 		inkyMazeImagePosition = new Position(pixelX, pixelY); 	
+		
+		//door
+		for (Position position : doorMazeFilePositions) {
+			pixelX = (position.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+			pixelY = (position.getY() *originalMazeImg.getHeight()) / mazeValues.size();
+			doorMazeImagePositions.add(new Position(pixelX, pixelY));
+		}
+		doorMazeFilePositions.clear();
 		
 		//...
 		
@@ -304,17 +333,27 @@ public class Maze {
 		//inky
 		inky = new Inky(inkyMazeImagePosition, tiles, gamePanel);
 		
-		//...
+		//door
+		computeDoorPosition();
 	}
 	
 	
-	/**
-	 * Get the maze image, created or not.
-	 * @return the maze image
-	 */
-	public BufferedImage getMazeImg() {
-		return Tiles.copy(originalMazeImg);
+	private void computeDoorPosition() {
+		int sumX = 0, sumY = 0;
+		double meanX, meanY;
+		int i;
+		for (i = 0; i < doorMazeImagePositions.size(); i++) {
+			sumX += doorMazeImagePositions.get(i).getX();
+			sumY += doorMazeImagePositions.get(i).getY();
+		}
+		meanX = sumX/(double)i;
+		meanY = sumY/(double)i; 
+		
+		doorMazeImagePosition = new Position((int)Math.round(meanX), (int)Math.round(meanY));
 	}
+	
+	
+
 	
 	/**
 	 * Resize the maze image, if not null, with dimension parameters
@@ -410,7 +449,15 @@ public class Maze {
 		}
 		inky.setCurrentPosition(new Position(newX, newY));	
 		
+		newX = (newDim.width * doorMazeImagePosition.getX()) / originalMazeImg.getWidth() ;
+		newY = (newDim.height * doorMazeImagePosition.getY()) / originalMazeImg.getHeight();
+		doorCurrentPosition = new Position(newX, newY);
+		
 		//...
+	}
+	
+	public Position getDoorPosition() {
+		return doorCurrentPosition;
 	}
 	
 	/**

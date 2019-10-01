@@ -1,6 +1,8 @@
 package sprites;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.JPanel;
@@ -11,12 +13,15 @@ import threads.RandomGhostTimer;
 
 public abstract class Ghost extends MovingSprite {
 	
+	public static List<Integer> acceptedMazeValues;
+	
 	protected RandomGhostTimer directionTh = new RandomGhostTimer(this);
 
 	public boolean isInTheBox = true;
 
 	public Ghost(Position start_position, Tiles tiles, JPanel gamePanel) {
 		super(start_position, tiles, gamePanel);
+		Ghost.acceptedMazeValues = super.acceptedMazeValues;
 	}
 	
 	@Override

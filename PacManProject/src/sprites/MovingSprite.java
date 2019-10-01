@@ -18,7 +18,7 @@ public abstract class MovingSprite extends Sprite{
 	protected List<Integer> deathAnimation;
 	protected List<List<Integer>> mazeValues;
 	
-	public static List<Integer> acceptedMazeValues = new ArrayList<Integer>();
+	protected List<Integer> acceptedMazeValues = new ArrayList<Integer>();
 
 	protected MovingSpriteState state = MovingSpriteState.STOP; // initially stopped
 	protected MovingSpriteState wantedState = state;

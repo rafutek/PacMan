@@ -53,7 +53,7 @@ public abstract class ThreadPerso extends Thread {
 	protected abstract void doThat();  
 	
 	/**
-	 * Actions done when the thread is stoped.
+	 * Actions done when the thread is stopped.
 	 * They have to be defined in the inheriting classes.
 	 */
 	protected abstract void doThatAtStop();  

@@ -148,6 +148,7 @@ public class PhysicsThread extends ThreadPerso {
 					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 				}
 				
+				
 				if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || blinky.isInTheBox) {
 					blinky.setState(blinkyWantedState); // pac-man can be in that state
 				}else {					

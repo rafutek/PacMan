@@ -11,6 +11,7 @@ import resources.Maze;
 import sprites.Ghost;
 import sprites.MovingSprite;
 import sprites.PacMan;
+import sprites.Position;
 import sprites.Sprites;
 import view.GamePanel;
 import view.StatusBarPanel;
@@ -139,9 +140,10 @@ public class RenderThread extends ThreadPerso{
 		clyde = maze.getClyde();
 		inky = maze.getInky();
 		
+		
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
 		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky);
-		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky);
+		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze);
 	}
 	
 

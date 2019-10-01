@@ -8,7 +8,6 @@ import sprites.Ghost;
 public class RandomGhostTimer extends TimerThread {
 	
 	private static final int WAIT_TIME = 10;
-	private int nb_waits = 100; 
 	
 	private int random_min = 100;
 	private int random_max = 500;
@@ -18,15 +17,12 @@ public class RandomGhostTimer extends TimerThread {
 	public RandomGhostTimer(Ghost ghost) {
 		super(WAIT_TIME, 0);
 		setName("Random ghost direction");
-		nb_waits_max = nb_waits;
 		this.ghost = ghost;
+		setRandomNbWaits();
 	}
 	
 	@Override
-	protected void doThatAtStart() {
-		// TODO Auto-generated method stub
-
-	}
+	protected void doThatAtStart() {}
 	
 	@Override
 	protected void doThatWhileWaiting() {}

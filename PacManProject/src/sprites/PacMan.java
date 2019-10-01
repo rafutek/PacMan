@@ -2,6 +2,8 @@ package sprites;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -10,10 +12,14 @@ import resources.Tiles;
 
 public class PacMan extends MovingSprite {
 	
+	public static List<Integer> acceptedMazeValues = new ArrayList<Integer>();
 	
 	public PacMan(Position start_position, Tiles tiles, JPanel gamePanel) {
 		super(start_position, tiles, gamePanel);
-		acceptedMazeValues.add(352); // tunnel
+		for (Integer integer : super.acceptedMazeValues) {
+			PacMan.acceptedMazeValues.add(integer);
+		}
+		PacMan.acceptedMazeValues.add(352); // tunnel
 	}
 	
 	@Override
