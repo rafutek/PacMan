@@ -108,9 +108,7 @@ public class RenderThread extends ThreadPerso{
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
 		super("Render");
-		
-		System.out.println("Create render thread");
-		
+				
 		this.gamePanel = gamePanel;
 		this.statusBarPanel = statusBarPanel;
 		

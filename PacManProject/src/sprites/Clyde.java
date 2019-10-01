@@ -27,7 +27,7 @@ public class Clyde extends Ghost {
 	@Override
 	public void startDirectionThread() {
 		directionTh = new RandomGhostTimer(this);
-		directionTh.setName("Clyde direction thread");
+		directionTh.setName("Clyde direction");
 		directionTh.startThread();
 	}
 

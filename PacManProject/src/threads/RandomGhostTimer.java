@@ -20,6 +20,7 @@ public class RandomGhostTimer extends TimerThread {
 
 	public RandomGhostTimer(Ghost ghost) {
 		super(WAIT_TIME, 0);
+		setName("Random ghost direction");
 		nb_waits_max = nb_waits;
 		this.ghost = ghost;
 	}
@@ -49,7 +50,7 @@ public class RandomGhostTimer extends TimerThread {
 	
 	public void changeDirection() {
 		ghost.setRandomDirection(); // change direction at a random time
-		counterWaits = 0; 
+		setRandomNbWaits();
 	}
 	
 	//-------------------------------------------------------

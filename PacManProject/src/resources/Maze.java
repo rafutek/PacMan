@@ -405,6 +405,7 @@ public class Maze {
 			newY = (int)Math.round((newDim.height * inky.getCurrentPosition().getY()) / (double)lastDim.height);				
 		}
 		inky.setCurrentPosition(new Position(newX, newY));	
+		
 		//...
 	}
 	

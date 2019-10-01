@@ -27,7 +27,7 @@ public class Inky extends Ghost {
 	@Override
 	public void startDirectionThread() {
 		directionTh = new RandomGhostTimer(this);
-		directionTh.setName("Inky direction thread");
+		directionTh.setName("Inky direction");
 		directionTh.startThread();
 	}
 

@@ -342,16 +342,16 @@ public class PhysicsThread extends ThreadPerso {
 	
 	@Override
 	protected void doThatAtStop() {
-		if(blinky.getDirectionThread() != null && blinky.getDirectionThread().isRunning()) {
+		if(blinky.getDirectionThread() != null) {
 			blinky.getDirectionThread().stopThread();
 		}
-		if(pinky.getDirectionThread() != null && pinky.getDirectionThread().isRunning()) {
+		if(pinky.getDirectionThread() != null) {
 			pinky.getDirectionThread().stopThread();
 		}
-		if(clyde.getDirectionThread() != null && pinky.getDirectionThread().isRunning()) {
+		if(clyde.getDirectionThread() != null) {
 			clyde.getDirectionThread().stopThread();
 		}
-		if(inky.getDirectionThread() != null && pinky.getDirectionThread().isRunning()) {
+		if(inky.getDirectionThread() != null) {
 			inky.getDirectionThread().stopThread();
 		}
 	}
