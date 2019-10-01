@@ -2,10 +2,13 @@ package sprites;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JPanel;
 
 import resources.Tiles;
 
 public abstract class MovingSprite extends Sprite{
+	
+	protected JPanel gamePanel;
 	
 	protected List<Integer> noMovementAnimation;
 	protected List<Integer> goLeftAnimation;
@@ -15,6 +18,7 @@ public abstract class MovingSprite extends Sprite{
 	protected List<Integer> deathAnimation;
 	protected List<List<Integer>> mazeValues;
 	
+	protected List<Integer> acceptedMazeValues = new ArrayList<Integer>();
 
 	protected MovingSpriteState state = MovingSpriteState.STOP; // initially stopped
 	protected MovingSpriteState wantedState = state;
@@ -29,8 +33,17 @@ public abstract class MovingSprite extends Sprite{
 	 * @param tiles
 	 * @param mazeValues
 	 */
-	public MovingSprite(Position start_position, Tiles tiles) {
+	public MovingSprite(Position start_position, Tiles tiles, JPanel gamePanel) {
 		super(start_position, tiles);
+		this.gamePanel = gamePanel;
+		acceptedMazeValues.add(0); // nothing
+		acceptedMazeValues.add(13); // pac-dot
+		acceptedMazeValues.add(97); // initial pac-man position
+		acceptedMazeValues.add(15); // energizers
+		acceptedMazeValues.add(193); // blinky initial position
+		acceptedMazeValues.add(225); // pinky -----------------
+		acceptedMazeValues.add(257); // clyde -----------------
+		acceptedMazeValues.add(289); // inky ------------------
 	}
 
 	/**
@@ -65,10 +78,20 @@ public abstract class MovingSprite extends Sprite{
 	public synchronized void updatePos() {
 		if(state != MovingSpriteState.STOP && state != MovingSpriteState.DEATH) {
 			if(state == MovingSpriteState.LEFT) {
-				currentPosition.setX(currentPosition.getX()-speed);
+				if(currentPosition.getX()-speed >= 0) {
+					currentPosition.setX(currentPosition.getX()-speed);
+				}
+				else {
+					currentPosition.setX(gamePanel.getWidth());
+				}			
 			}
 			else if(state == MovingSpriteState.RIGHT) {
-				currentPosition.setX(currentPosition.getX()+speed);
+				if(currentPosition.getX()+speed <= gamePanel.getWidth()) {
+					currentPosition.setX(currentPosition.getX()+speed);
+				}
+				else {
+					currentPosition.setX(0);
+				}
 			}
 			else if(state == MovingSpriteState.UP) {
 				currentPosition.setY(currentPosition.getY()-speed);

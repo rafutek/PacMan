@@ -1,14 +1,15 @@
 package sprites;
 
-import java.io.IOException;
+import javax.swing.JPanel;
 
 import resources.Tiles;
 import threads.RandomGhostTimer;
 
 public class Blinky extends Ghost {
 
-	public Blinky(Position start_position, Tiles tiles) {
-		super(start_position, tiles);
+	public Blinky(Position start_position, Tiles tiles, JPanel gamePanel) {
+		super(start_position, tiles, gamePanel);
+		isInTheBox = false; // blinky is already out of the box
 		state = MovingSpriteState.LEFT;
 		wantedState = state;
 	}
@@ -19,7 +20,6 @@ public class Blinky extends Ghost {
 		for (int tile_nb = 193; tile_nb < 225; tile_nb++) {
 			tilesNumbers.add(tile_nb); // add blinky tiles numbers
 		}
-
 	}
 	
 	@Override
@@ -35,12 +35,4 @@ public class Blinky extends Ghost {
 		directionTh.startThread();
 	}
 
-
-	//-------------------------------------------------------
-	
-	
-	public static void main(String[] args) throws IOException {
-		new Blinky(null, new Tiles());
-		
-	}
 }

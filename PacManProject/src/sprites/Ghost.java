@@ -1,7 +1,11 @@
 package sprites;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+
+import javax.swing.JPanel;
 
 import resources.ListImages;
 import resources.Tiles;
@@ -9,13 +13,15 @@ import threads.RandomGhostTimer;
 
 public abstract class Ghost extends MovingSprite {
 	
-	protected RandomGhostTimer directionTh = new RandomGhostTimer(this);
+	public static List<Integer> acceptedMazeValues;
 	
+	protected RandomGhostTimer directionTh = new RandomGhostTimer(this);
 
-	public Ghost(Position start_position, Tiles tiles) {
-		super(start_position, tiles);
-		// TODO Auto-generated constructor stub
-		
+	public boolean isInTheBox = true;
+
+	public Ghost(Position start_position, Tiles tiles, JPanel gamePanel) {
+		super(start_position, tiles, gamePanel);
+		Ghost.acceptedMazeValues = super.acceptedMazeValues;
 	}
 	
 	@Override
@@ -92,5 +98,5 @@ public abstract class Ghost extends MovingSprite {
 	public RandomGhostTimer getDirectionThread() {
 		return directionTh;
 	}
-
+	
 }

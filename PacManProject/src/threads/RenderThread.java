@@ -10,6 +10,8 @@ import java.text.DecimalFormat;
 import resources.Maze;
 import sprites.Ghost;
 import sprites.MovingSprite;
+import sprites.PacMan;
+import sprites.Position;
 import sprites.Sprites;
 import view.GamePanel;
 import view.StatusBarPanel;
@@ -90,7 +92,7 @@ public class RenderThread extends ThreadPerso{
 	//sprites
 	private Sprites energizers;
 	private Sprites pacDots;
-	private MovingSprite pacMan;
+	private PacMan pacMan;
 	private Ghost blinky;
 	private Ghost pinky;
 	private Ghost clyde;
@@ -104,6 +106,9 @@ public class RenderThread extends ThreadPerso{
 	private PhysicsThread physicsTh;
 	private boolean animationDone = false;
 	private boolean initializedStats = false;
+	
+	//exit the ghost of the box
+	private GhostsExitBoxThread ghostExitThread;
 	
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
@@ -123,7 +128,7 @@ public class RenderThread extends ThreadPerso{
 		
 		//create maze image and sprites from the maze file
 		try {
-			maze = new Maze();
+			maze = new Maze(gamePanel);
 		} catch (IOException e) {e.printStackTrace();}
 		
 		//get sprites
@@ -135,8 +140,10 @@ public class RenderThread extends ThreadPerso{
 		clyde = maze.getClyde();
 		inky = maze.getInky();
 		
+		
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
 		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky);
+		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze);
 	}
 	
 
@@ -207,11 +214,7 @@ public class RenderThread extends ThreadPerso{
 	}
 	
 	@Override
-	protected void doThatAtStop() {
-		System.out.println("Stop "+getName()+" and program");		
-		printStats();
-		System.exit(0);   // so window disappears	
-	}
+	protected void doThatAtStop() {}
 	
 	
 	/**
@@ -231,6 +234,7 @@ public class RenderThread extends ThreadPerso{
 		paused = true;
 		animationTh.pauseThread();
 		physicsTh.pauseThread();
+		ghostExitThread.pauseThread();
 	}
 	
 	/**
@@ -261,6 +265,12 @@ public class RenderThread extends ThreadPerso{
 		}else {
 			physicsTh.resumeThread();
 		}
+		
+		if(!ghostExitThread.isRunning()) {
+			ghostExitThread.startThread();
+		}else {
+			ghostExitThread.resumeThread();
+		}
 	}
 	
 	/**
@@ -269,7 +279,32 @@ public class RenderThread extends ThreadPerso{
 	public void stopThread() {
 		running = false;
 		animationTh.stopThread();
+		synchronized (animationTh){
+			try {
+				animationTh.join(100);
+			} catch (InterruptedException e1) {}
+			if(animationTh.isRunning()) {
+				animationTh.interrupt();
+			}
+		}
 		physicsTh.stopThread();
+		synchronized (physicsTh){
+			try {
+				physicsTh.join(100);
+			} catch (InterruptedException e1) {}
+			if(physicsTh.isRunning()) {
+				physicsTh.interrupt();
+			}
+		}
+		ghostExitThread.stopThread();
+		synchronized (ghostExitThread){
+			try {
+				ghostExitThread.join(100);
+			} catch (InterruptedException e1) {}
+			if(ghostExitThread.isRunning()) {
+				ghostExitThread.interrupt();
+			}
+		}
 	}
 	
 	
@@ -451,9 +486,9 @@ public class RenderThread extends ThreadPerso{
 	}  // end of storeStats()
 
 
-	private void printStats()
+	public void printStats()
 	{
-		System.out.println("Frame Count/Loss: " + frameCount + " / " + totalFramesSkipped);
+		System.out.println("\nFrame Count/Loss: " + frameCount + " / " + totalFramesSkipped);
 		System.out.println("Average FPS: " + df.format(averageFPS));
 		System.out.println("Average UPS: " + df.format(averageUPS));
 		System.out.println("Time Spent: " + timeSpentInGame + " secs");

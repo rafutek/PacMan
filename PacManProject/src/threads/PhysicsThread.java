@@ -1,12 +1,11 @@
 package threads;
 
 import java.util.List;
-
 import javax.swing.JPanel;
 
 import sprites.Ghost;
-import sprites.MovingSprite;
 import sprites.MovingSpriteState;
+import sprites.PacMan;
 import sprites.Position;
 
 public class PhysicsThread extends ThreadPerso {
@@ -14,7 +13,7 @@ public class PhysicsThread extends ThreadPerso {
 	private List<List<Integer>> mazeValues;
 	private JPanel gamePanel;
 	
-	private MovingSprite pacMan;
+	private PacMan pacMan;
 	private MovingSpriteState pacManWantedState;
 	
 	private Ghost blinky;
@@ -38,7 +37,7 @@ public class PhysicsThread extends ThreadPerso {
 	 * @param gamePanel
 	 * @param pacMan
 	 */
-	public PhysicsThread(List<List<Integer>> mazeValues, JPanel gamePanel, MovingSprite pacMan, Ghost blinky,  Ghost pinky,  Ghost clyde,  Ghost inky) {
+	public PhysicsThread(List<List<Integer>> mazeValues, JPanel gamePanel, PacMan pacMan, Ghost blinky,  Ghost pinky,  Ghost clyde,  Ghost inky) {
 		super("Physics");
 		this.mazeValues = mazeValues;
 		this.gamePanel = gamePanel;
@@ -71,13 +70,24 @@ public class PhysicsThread extends ThreadPerso {
 					adaptedCurrentPosX = pacMan.getCurrentPosition().getX() + pacMan.getCurrentSize().width/2;
 					adaptedCurrentPosY = pacMan.getCurrentPosition().getY();
 					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
-					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
+					if(currentMatrixPos.getX()-1 > 0) {
+						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
+					}
+					else {
+						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(mazeValues.get(0).size()-1); // opposite maze value
+					}
+					
 				}
 				else if(pacManWantedState == MovingSpriteState.RIGHT) {
 					adaptedCurrentPosX = pacMan.getCurrentPosition().getX() - pacMan.getCurrentSize().width/2;
 					adaptedCurrentPosY = pacMan.getCurrentPosition().getY();
 					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
-					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
+					if(currentMatrixPos.getX()+1 < mazeValues.get(currentMatrixPos.getY()).size()) {
+						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
+					}
+					else {
+						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(0); // opposite maze value
+					}
 				}
 				else if(pacManWantedState == MovingSpriteState.UP) {
 					adaptedCurrentPosX = pacMan.getCurrentPosition().getX();
@@ -92,7 +102,7 @@ public class PhysicsThread extends ThreadPerso {
 					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 				}
 				
-				if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13 || wantedBoxValue == 15 || wantedBoxValue == 193) {
+				if(PacMan.acceptedMazeValues.contains(wantedBoxValue)) {
 					pacMan.setState(pacManWantedState); // pac-man can be in that state
 				}else {
 					pacMan.setState(MovingSpriteState.STOP);
@@ -138,7 +148,8 @@ public class PhysicsThread extends ThreadPerso {
 					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 				}
 				
-				if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13 || wantedBoxValue == 15|| wantedBoxValue == 193) {
+				
+				if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || blinky.isInTheBox) {
 					blinky.setState(blinkyWantedState); // pac-man can be in that state
 				}else {					
 					if(blinky.getDirectionThread() == null || !blinky.getDirectionThread().isRunning()) {
@@ -149,8 +160,6 @@ public class PhysicsThread extends ThreadPerso {
 				}
 			}			
 		}
-		
-		
 		
 		//pinky
 		if(pinky.getCurrentPosition() != null && pinky.getCurrentSize() != null) {
@@ -189,7 +198,7 @@ public class PhysicsThread extends ThreadPerso {
 					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 				}
 				
-				if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13 || wantedBoxValue == 15|| wantedBoxValue == 193) {
+				if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || pinky.isInTheBox) {
 					pinky.setState(pinkyWantedState); // pac-man can be in that state
 				}else {					
 					if(pinky.getDirectionThread() == null || !pinky.getDirectionThread().isRunning()) {
@@ -238,7 +247,7 @@ public class PhysicsThread extends ThreadPerso {
 					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 				}
 				
-				if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13 || wantedBoxValue == 15|| wantedBoxValue == 193) {
+				if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || clyde.isInTheBox) {
 					clyde.setState(clydeWantedState); // pac-man can be in that state
 				}else {					
 					if(clyde.getDirectionThread() == null || !clyde.getDirectionThread().isRunning()) {
@@ -287,7 +296,7 @@ public class PhysicsThread extends ThreadPerso {
 					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 				}
 				
-				if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13 || wantedBoxValue == 15|| wantedBoxValue == 193) {
+				if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || inky.isInTheBox) {
 					inky.setState(inkyWantedState); // pac-man can be in that state
 				}else {					
 					if(inky.getDirectionThread() == null || !inky.getDirectionThread().isRunning()) {
