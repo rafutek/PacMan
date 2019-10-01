@@ -148,7 +148,7 @@ public class PhysicsThread extends ThreadPerso {
 					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 				}
 				
-				if( Ghost.acceptedMazeValues.contains(wantedBoxValue)) {
+				if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || blinky.isInTheBox) {
 					blinky.setState(blinkyWantedState); // pac-man can be in that state
 				}else {					
 					if(blinky.getDirectionThread() == null || !blinky.getDirectionThread().isRunning()) {
@@ -197,7 +197,7 @@ public class PhysicsThread extends ThreadPerso {
 					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 				}
 				
-				if( Ghost.acceptedMazeValues.contains(wantedBoxValue)) {
+				if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || pinky.isInTheBox) {
 					pinky.setState(pinkyWantedState); // pac-man can be in that state
 				}else {					
 					if(pinky.getDirectionThread() == null || !pinky.getDirectionThread().isRunning()) {
@@ -246,7 +246,7 @@ public class PhysicsThread extends ThreadPerso {
 					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 				}
 				
-				if( Ghost.acceptedMazeValues.contains(wantedBoxValue)) {
+				if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || clyde.isInTheBox) {
 					clyde.setState(clydeWantedState); // pac-man can be in that state
 				}else {					
 					if(clyde.getDirectionThread() == null || !clyde.getDirectionThread().isRunning()) {
@@ -295,7 +295,7 @@ public class PhysicsThread extends ThreadPerso {
 					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 				}
 				
-				if( Ghost.acceptedMazeValues.contains(wantedBoxValue)) {
+				if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || inky.isInTheBox) {
 					inky.setState(inkyWantedState); // pac-man can be in that state
 				}else {					
 					if(inky.getDirectionThread() == null || !inky.getDirectionThread().isRunning()) {

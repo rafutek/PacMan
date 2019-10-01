@@ -209,9 +209,9 @@ public class RenderThread extends ThreadPerso{
 	
 	@Override
 	protected void doThatAtStop() {
-		System.out.println("Stop "+getName()+" and program");		
-		printStats();
-		System.exit(0);   // so window disappears	
+//		System.out.println("Stop "+getName()+" and program");		
+//		printStats();
+//		System.exit(0);   // so window disappears	
 	}
 	
 	
@@ -452,9 +452,9 @@ public class RenderThread extends ThreadPerso{
 	}  // end of storeStats()
 
 
-	private void printStats()
+	public void printStats()
 	{
-		System.out.println("Frame Count/Loss: " + frameCount + " / " + totalFramesSkipped);
+		System.out.println("\nFrame Count/Loss: " + frameCount + " / " + totalFramesSkipped);
 		System.out.println("Average FPS: " + df.format(averageFPS));
 		System.out.println("Average UPS: " + df.format(averageUPS));
 		System.out.println("Time Spent: " + timeSpentInGame + " secs");

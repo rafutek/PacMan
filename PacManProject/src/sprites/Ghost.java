@@ -12,7 +12,8 @@ import threads.RandomGhostTimer;
 public abstract class Ghost extends MovingSprite {
 	
 	protected RandomGhostTimer directionTh = new RandomGhostTimer(this);
-	
+
+	public boolean isInTheBox = true;
 
 	public Ghost(Position start_position, Tiles tiles, JPanel gamePanel) {
 		super(start_position, tiles, gamePanel);
@@ -92,4 +93,5 @@ public abstract class Ghost extends MovingSprite {
 	public RandomGhostTimer getDirectionThread() {
 		return directionTh;
 	}
+	
 }

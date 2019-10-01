@@ -134,8 +134,7 @@ public class GameFrame extends JFrame implements WindowListener
 				if ((keyCode == KeyEvent.VK_ESCAPE) || (keyCode == KeyEvent.VK_Q) ||
 						(keyCode == KeyEvent.VK_END) ||
 						((keyCode == KeyEvent.VK_C) && e.isControlDown()) ) {
-					renderTh.stopThread();
-					layoutTh.stopThread();
+					closeGame();
 				}
 			}
 		});
@@ -215,6 +214,21 @@ public class GameFrame extends JFrame implements WindowListener
 		});
 	}
 
+	private void closeGame() {
+		renderTh.stopThread(); 
+		layoutTh.stopThread();
+		synchronized (renderTh){
+			try {
+				renderTh.join(100);
+			} catch (InterruptedException e1) {}
+			if(renderTh.isRunning()) {
+				renderTh.interrupt();
+			}
+		}
+		
+		renderTh.printStats();
+		System.exit(0);   // so window disappears	
+	}
 
 // ----------------- window listener methods -------------
 
@@ -246,8 +260,7 @@ public class GameFrame extends JFrame implements WindowListener
 	
 	public void windowClosing(WindowEvent e)
 	{  
-		renderTh.stopThread(); 
-		layoutTh.stopThread();
+		closeGame();
 	}
 	
 	public void windowClosed(WindowEvent e) {}
