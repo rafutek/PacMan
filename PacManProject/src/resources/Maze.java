@@ -12,6 +12,7 @@ import sprites.Blinky;
 import sprites.Clyde;
 import sprites.Energizer;
 import sprites.Ghost;
+import sprites.Inky;
 import sprites.MovingSprite;
 import sprites.PacDot;
 import sprites.PacMan;
@@ -56,8 +57,12 @@ public class Maze {
 	private Position clydeMazeImagePosition;	
 	private Ghost clyde;
 	
+	private Position inkyMazeFilePosition;
+	private Position inkyMazeImagePosition;	
+	private Ghost inky;
 	
 	/**
+	 * 
 	 * Constructor that creates the maze image and sprites thanks to a text file.
 	 * @throws IOException
 	 */
@@ -157,7 +162,7 @@ public class Maze {
 				
 				number = mazeValues.get(y).get(x);
 				if(number == 0 || number == 15 || number == 13 || number == 97
-					|| number == 193 || number == 225 || number == 257) 
+					|| number == 193 || number == 225 || number == 257 || number == 289) 
 				{
 					// 0: no tile with that number
 
@@ -178,6 +183,9 @@ public class Maze {
 					}
 					else if(number == 257) {
 						clydeMazeFilePosition = new Position(x,y); // only one clyde (orange ghost)
+					}
+					else if(number == 289) {
+						inkyMazeFilePosition = new Position(x,y); // only one inky (blue ghost)
 					}
 					
 					// -> black tile instead, the sprites will be displayed by the render thread
@@ -253,6 +261,11 @@ public class Maze {
 		pixelY = (clydeMazeFilePosition.getY() *getMazeImg().getHeight()) / mazeValues.size();
 		clydeMazeImagePosition = new Position(pixelX+(tile_width/2), pixelY); 	
 		
+		//inky
+		pixelX = (inkyMazeFilePosition.getX() * getMazeImg().getWidth()) / mazeValues.get(0).size();
+		pixelY = (inkyMazeFilePosition.getY() *getMazeImg().getHeight()) / mazeValues.size();
+		inkyMazeImagePosition = new Position(pixelX, pixelY); 	
+		
 		//...
 		
 	}
@@ -283,6 +296,9 @@ public class Maze {
 
 		//clyde
 		clyde = new Clyde(clydeMazeImagePosition, tiles); 
+
+		//inky
+		inky = new Inky(inkyMazeImagePosition, tiles);
 		
 		//...
 	}
@@ -379,7 +395,16 @@ public class Maze {
 			newY = (int)Math.round((newDim.height * clyde.getCurrentPosition().getY()) / (double)lastDim.height);				
 		}
 		clyde.setCurrentPosition(new Position(newX, newY));				
-		
+
+		//inky
+		if(!drawnOnce) {
+			newX = (newDim.width * inky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+			newY = (newDim.height * inky.getMazePosition().getY()) / originalMazeImg.getHeight();			
+		}else {
+			newX = (int)Math.round((newDim.width * inky.getCurrentPosition().getX()) / (double)lastDim.width) ;
+			newY = (int)Math.round((newDim.height * inky.getCurrentPosition().getY()) / (double)lastDim.height);				
+		}
+		inky.setCurrentPosition(new Position(newX, newY));	
 		//...
 	}
 	
@@ -425,6 +450,11 @@ public class Maze {
 		newHeight = (newDim.height * clyde.getOriginalSize().height) / originalMazeImg.getHeight();
 		clyde.setCurrentSize(new Dimension(newWidth, newHeight));
 		
+		//inky
+		newWidth = (newDim.width * inky.getOriginalSize().width) / originalMazeImg.getWidth() ;
+		newHeight = (newDim.height * inky.getOriginalSize().height) / originalMazeImg.getHeight();
+		inky.setCurrentSize(new Dimension(newWidth, newHeight));
+		
 		//...
 	}
 	
@@ -450,6 +480,10 @@ public class Maze {
 	
 	public Ghost getClyde() {
 		return clyde;
+	}
+	
+	public Ghost getInky() {
+		return inky;
 	}
 	
 	public void draw(Graphics g) {

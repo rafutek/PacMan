@@ -94,6 +94,7 @@ public class RenderThread extends ThreadPerso{
 	private Ghost blinky;
 	private Ghost pinky;
 	private Ghost clyde;
+	private Ghost inky;
 	
 	//animations
 	private AnimationThread animationTh;
@@ -134,9 +135,10 @@ public class RenderThread extends ThreadPerso{
 		blinky = maze.getBlinky();
 		pinky = maze.getPinky();
 		clyde = maze.getClyde();
+		inky = maze.getInky();
 		
-		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde);
-		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde);
+		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
+		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky);
 	}
 	
 
@@ -305,6 +307,7 @@ public class RenderThread extends ThreadPerso{
 				blinky.updatePos();		
 				pinky.updatePos();
 				clyde.updatePos();
+				inky.updatePos();
 			}
 
 		}
@@ -335,7 +338,7 @@ public class RenderThread extends ThreadPerso{
 			blinky.draw(dbg);
 			pinky.draw(dbg);
 			clyde.draw(dbg);
-			
+			inky.draw(dbg);
 			
 	
 			if (gameOver)

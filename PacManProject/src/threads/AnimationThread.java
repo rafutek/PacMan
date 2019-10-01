@@ -23,12 +23,15 @@ public class AnimationThread extends TimerThread {
 	private MovingSprite clyde;
 	private MovingSpriteState clydeLastState, clydeCurrentState;
 	
+	private MovingSprite inky;
+	private MovingSpriteState inkyLastState, inkyCurrentState;
+	
 	/**
 	 * Thread that will update the sprites' images order, 
 	 * thus the render thread will display another image so it will create the animation.
 	 * @param energizers
 	 */
-	public AnimationThread(Sprites energizers, MovingSprite pacMan, MovingSprite blinky, MovingSprite pinky, MovingSprite clyde) {
+	public AnimationThread(Sprites energizers, MovingSprite pacMan, MovingSprite blinky, MovingSprite pinky, MovingSprite clyde, MovingSprite inky) {
 		super(WAIT_TIME, NB_WAITS);
 		setName("Animation");
 		
@@ -45,6 +48,9 @@ public class AnimationThread extends TimerThread {
 		
 		this.clyde = clyde;
 		clydeLastState = clyde.getState();
+		
+		this.inky = inky;
+		inkyLastState = inky.getState();
 	}
 
 	@Override
@@ -149,6 +155,30 @@ public class AnimationThread extends TimerThread {
 			clydeLastState = clydeCurrentState;
 		}	
 		
+		//inky
+		inkyCurrentState = inky.getState();
+		if(inkyCurrentState != inkyLastState) { // have to change the animation list to the new state
+			if(inkyCurrentState == MovingSpriteState.STOP) {
+				inky.setNoMovementAnimation();
+			}
+			if(inkyCurrentState == MovingSpriteState.LEFT) {
+				inky.setGoLeftAnimation();
+			}
+			else if(inkyCurrentState == MovingSpriteState.RIGHT) {
+				inky.setGoRightAnimation();
+			}
+			else if(inkyCurrentState == MovingSpriteState.UP) {
+				inky.setGoUpAnimation();
+			}
+			else if(inkyCurrentState == MovingSpriteState.DOWN) {
+				inky.setGoDownAnimation();
+			}
+			else if(inkyCurrentState == MovingSpriteState.DEATH) {
+				inky.setDeathAnimation();
+			}
+			inkyLastState = inkyCurrentState;
+		}	
+		
 		//...
 		
 	}
@@ -162,6 +192,7 @@ public class AnimationThread extends TimerThread {
 		blinky.updateImg();
 		pinky.updateImg();
 		clyde.updateImg();
+		inky.updateImg();
 	}
 
 }
