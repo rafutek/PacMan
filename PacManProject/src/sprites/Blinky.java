@@ -20,7 +20,6 @@ public class Blinky extends Ghost {
 		for (int tile_nb = 193; tile_nb < 225; tile_nb++) {
 			tilesNumbers.add(tile_nb); // add blinky tiles numbers
 		}
-
 	}
 	
 	@Override
