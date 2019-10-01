@@ -3,6 +3,8 @@ package sprites;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javax.swing.JPanel;
+
 import resources.ListImages;
 import resources.Tiles;
 import threads.RandomGhostTimer;
@@ -12,10 +14,8 @@ public abstract class Ghost extends MovingSprite {
 	protected RandomGhostTimer directionTh = new RandomGhostTimer(this);
 	
 
-	public Ghost(Position start_position, Tiles tiles) {
-		super(start_position, tiles);
-		// TODO Auto-generated constructor stub
-		
+	public Ghost(Position start_position, Tiles tiles, JPanel gamePanel) {
+		super(start_position, tiles, gamePanel);
 	}
 	
 	@Override
@@ -92,5 +92,4 @@ public abstract class Ghost extends MovingSprite {
 	public RandomGhostTimer getDirectionThread() {
 		return directionTh;
 	}
-
 }

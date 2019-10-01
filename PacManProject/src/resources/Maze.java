@@ -8,12 +8,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JPanel;
+
 import sprites.Blinky;
 import sprites.Clyde;
 import sprites.Energizer;
 import sprites.Ghost;
 import sprites.Inky;
-import sprites.MovingSprite;
 import sprites.PacDot;
 import sprites.PacMan;
 import sprites.Pinky;
@@ -43,7 +44,7 @@ public class Maze {
 	
 	private Position pacManMazeFilePosition;
 	private Position pacManMazeImagePosition;
-	private MovingSprite pacMan;	
+	private PacMan pacMan;	
 	
 	private Position blinkyMazeFilePosition;
 	private Position blinkyMazeImagePosition;	
@@ -61,12 +62,15 @@ public class Maze {
 	private Position inkyMazeImagePosition;	
 	private Ghost inky;
 	
+	private JPanel gamePanel;
+	
 	/**
 	 * 
 	 * Constructor that creates the maze image and sprites thanks to a text file.
 	 * @throws IOException
 	 */
-	public Maze() throws IOException {
+	public Maze(JPanel gamePanel) throws IOException {
+		this.gamePanel = gamePanel;
 		tiles = new Tiles();
 		chargeMazeValues("maze.txt");
 		createMazeAndSprites();
@@ -124,7 +128,7 @@ public class Maze {
 	/**
 	 * Print the maze numbers in the console as a 2D matrix.
 	 */
-	private void printMazeValues() {
+	public void printMazeValues() {
 		for (List<Integer> mazeLine : mazeValues) {
 			for (Integer integer : mazeLine) {
 				System.out.print(integer);
@@ -286,19 +290,19 @@ public class Maze {
 		energizersMazeImagePositions.clear();
 		
 		//pac-man
-		pacMan = new PacMan(pacManMazeImagePosition, tiles);
+		pacMan = new PacMan(pacManMazeImagePosition, tiles, gamePanel);
 		
 		//blinky
-		blinky = new Blinky(blinkyMazeImagePosition, tiles);
+		blinky = new Blinky(blinkyMazeImagePosition, tiles, gamePanel);
 
 		//pinky
-		pinky = new Pinky(pinkyMazeImagePosition, tiles); 
+		pinky = new Pinky(pinkyMazeImagePosition, tiles, gamePanel); 
 
 		//clyde
-		clyde = new Clyde(clydeMazeImagePosition, tiles); 
+		clyde = new Clyde(clydeMazeImagePosition, tiles, gamePanel); 
 
 		//inky
-		inky = new Inky(inkyMazeImagePosition, tiles);
+		inky = new Inky(inkyMazeImagePosition, tiles, gamePanel);
 		
 		//...
 	}
@@ -467,7 +471,7 @@ public class Maze {
 		return pacDots;
 	}
 	
-	public MovingSprite getPacMan() {
+	public PacMan getPacMan() {
 		return pacMan;
 	}
 
@@ -493,15 +497,6 @@ public class Maze {
 		}
 	}
 	
-	//-------------------------------------------------------
-	
-	
-	public static void main(String[] args) throws IOException {
-		Maze maze = new Maze();
-		maze.printMazeValues();
-//		maze.resizeMazeAndSprites(500, 600);
-//		Tiles.displayImg(maze.getMazeImg());
-		
-	}
+
 
 }

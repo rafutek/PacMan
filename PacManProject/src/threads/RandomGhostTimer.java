@@ -1,12 +1,9 @@
 package threads;
 
-import java.io.IOException;
+
 import java.util.concurrent.ThreadLocalRandom;
 
-import resources.Tiles;
-import sprites.Blinky;
 import sprites.Ghost;
-import sprites.Position;
 
 public class RandomGhostTimer extends TimerThread {
 	
@@ -53,22 +50,4 @@ public class RandomGhostTimer extends TimerThread {
 		setRandomNbWaits();
 	}
 	
-	//-------------------------------------------------------
-	
-	
-	public static void main(String[] args) throws InterruptedException, IOException {
-		RandomGhostTimer rTh = new RandomGhostTimer(new Blinky(new Position(0, 0), new Tiles()));
-		rTh.startThread();
-		
-		synchronized (rTh) {
-			
-			Thread.sleep(10000);
-			
-			rTh.stopThread();
-			rTh.join(100);
-			if(rTh.isAlive()) {
-				rTh.interrupt();
-			}
-		}
-	}
 }

@@ -3,14 +3,17 @@ package sprites;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import javax.swing.JPanel;
+
 import resources.ListImages;
 import resources.Tiles;
 
 public class PacMan extends MovingSprite {
 	
 	
-	public PacMan(Position start_position, Tiles tiles) {
-		super(start_position, tiles);
+	public PacMan(Position start_position, Tiles tiles, JPanel gamePanel) {
+		super(start_position, tiles, gamePanel);
+		acceptedMazeValues.add(352); // tunnel
 	}
 	
 	@Override
@@ -106,7 +109,7 @@ public class PacMan extends MovingSprite {
 	
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
-		PacMan pac = new PacMan(new Position(0, 0), new Tiles());
+		PacMan pac = new PacMan(new Position(0, 0), new Tiles(), null);
 		
 		for (BufferedImage img : pac.spriteFullImages.getImagesList()) {
 			Tiles.displayImg(img);

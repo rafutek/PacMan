@@ -10,6 +10,7 @@ import java.text.DecimalFormat;
 import resources.Maze;
 import sprites.Ghost;
 import sprites.MovingSprite;
+import sprites.PacMan;
 import sprites.Sprites;
 import view.GamePanel;
 import view.StatusBarPanel;
@@ -90,7 +91,7 @@ public class RenderThread extends ThreadPerso{
 	//sprites
 	private Sprites energizers;
 	private Sprites pacDots;
-	private MovingSprite pacMan;
+	private PacMan pacMan;
 	private Ghost blinky;
 	private Ghost pinky;
 	private Ghost clyde;
@@ -123,7 +124,7 @@ public class RenderThread extends ThreadPerso{
 		
 		//create maze image and sprites from the maze file
 		try {
-			maze = new Maze();
+			maze = new Maze(gamePanel);
 		} catch (IOException e) {e.printStackTrace();}
 		
 		//get sprites

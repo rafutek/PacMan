@@ -1,12 +1,14 @@
 package sprites;
 
+import javax.swing.JPanel;
+
 import resources.Tiles;
 import threads.RandomGhostTimer;
 
 public class Clyde extends Ghost {
 
-	public Clyde(Position start_position, Tiles tiles) {
-		super(start_position, tiles);
+	public Clyde(Position start_position, Tiles tiles, JPanel gamePanel) {
+		super(start_position, tiles, gamePanel);
 	}
 	
 
