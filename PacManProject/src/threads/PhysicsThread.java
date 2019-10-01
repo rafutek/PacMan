@@ -19,6 +19,17 @@ public class PhysicsThread extends ThreadPerso {
 	
 	private Ghost blinky;
 	private MovingSpriteState blinkyWantedState;	
+
+	private Ghost pinky;
+	private MovingSpriteState pinkyWantedState;	
+
+	private Ghost clyde;
+	private MovingSpriteState clydeWantedState;	
+	
+	private Ghost inky;
+	private MovingSpriteState inkyWantedState;	
+	
+	
 	/**
 	 * The class needs the maze number matrix, the game panel size and of course the moving sprites,
 	 * in order to locate them in the matrix.
@@ -27,12 +38,15 @@ public class PhysicsThread extends ThreadPerso {
 	 * @param gamePanel
 	 * @param pacMan
 	 */
-	public PhysicsThread(List<List<Integer>> mazeValues, JPanel gamePanel, MovingSprite pacMan, Ghost blinky) {
+	public PhysicsThread(List<List<Integer>> mazeValues, JPanel gamePanel, MovingSprite pacMan, Ghost blinky,  Ghost pinky,  Ghost clyde,  Ghost inky) {
 		super("Physics");
 		this.mazeValues = mazeValues;
 		this.gamePanel = gamePanel;
 		this.pacMan = pacMan;
 		this.blinky = blinky;
+		this.pinky = pinky;
+		this.clyde = clyde;
+		this.inky = inky;
 	}
 
 	@Override
@@ -135,6 +149,155 @@ public class PhysicsThread extends ThreadPerso {
 				}
 			}			
 		}
+		
+		
+		
+		//pinky
+		if(pinky.getCurrentPosition() != null && pinky.getCurrentSize() != null) {
+			pinkyWantedState = pinky.getState();
+			if(pinkyWantedState != MovingSpriteState.STOP) {
+				
+				// we need to use a little bit changed position 
+				// so that pac-man can go a little bit farther in the maze
+				int adaptedCurrentPosX;
+				int adaptedCurrentPosY;
+				Position currentMatrixPos; // the position of the sprite in the matrix
+				int wantedBoxValue = -1; // the next box value where pac-man wants to go
+				
+				if(pinkyWantedState == MovingSpriteState.LEFT) {
+					adaptedCurrentPosX = pinky.getCurrentPosition().getX() + pinky.getCurrentSize().width/2;
+					adaptedCurrentPosY = pinky.getCurrentPosition().getY();
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
+				}
+				else if(pinkyWantedState == MovingSpriteState.RIGHT) {
+					adaptedCurrentPosX = pinky.getCurrentPosition().getX() - pinky.getCurrentSize().width/2;
+					adaptedCurrentPosY = pinky.getCurrentPosition().getY();
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
+				}
+				else if(pinkyWantedState == MovingSpriteState.UP) {
+					adaptedCurrentPosX = pinky.getCurrentPosition().getX();
+					adaptedCurrentPosY = pinky.getCurrentPosition().getY() + pinky.getCurrentSize().height/2;
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
+				}
+				else if(pinkyWantedState == MovingSpriteState.DOWN) {
+					adaptedCurrentPosX = pinky.getCurrentPosition().getX();
+					adaptedCurrentPosY = pinky.getCurrentPosition().getY() - pinky.getCurrentSize().height/2;
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
+				}
+				
+				if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13 || wantedBoxValue == 15|| wantedBoxValue == 193) {
+					pinky.setState(pinkyWantedState); // pac-man can be in that state
+				}else {					
+					if(pinky.getDirectionThread() == null || !pinky.getDirectionThread().isRunning()) {
+						pinky.startDirectionThread();
+					}
+					// pinky set another possible direction
+					pinky.getDirectionThread().changeDirection();
+				}
+			}			
+		}
+		
+		//clyde
+		if(clyde.getCurrentPosition() != null && clyde.getCurrentSize() != null) {
+			clydeWantedState = clyde.getState();
+			if(clydeWantedState != MovingSpriteState.STOP) {
+				
+				// we need to use a little bit changed position 
+				// so that pac-man can go a little bit farther in the maze
+				int adaptedCurrentPosX;
+				int adaptedCurrentPosY;
+				Position currentMatrixPos; // the position of the sprite in the matrix
+				int wantedBoxValue = -1; // the next box value where pac-man wants to go
+				
+				if(clydeWantedState == MovingSpriteState.LEFT) {
+					adaptedCurrentPosX = clyde.getCurrentPosition().getX() + clyde.getCurrentSize().width/2;
+					adaptedCurrentPosY = clyde.getCurrentPosition().getY();
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
+				}
+				else if(clydeWantedState == MovingSpriteState.RIGHT) {
+					adaptedCurrentPosX = clyde.getCurrentPosition().getX() - clyde.getCurrentSize().width/2;
+					adaptedCurrentPosY = clyde.getCurrentPosition().getY();
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
+				}
+				else if(clydeWantedState == MovingSpriteState.UP) {
+					adaptedCurrentPosX = clyde.getCurrentPosition().getX();
+					adaptedCurrentPosY = clyde.getCurrentPosition().getY() + clyde.getCurrentSize().height/2;
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
+				}
+				else if(clydeWantedState == MovingSpriteState.DOWN) {
+					adaptedCurrentPosX = clyde.getCurrentPosition().getX();
+					adaptedCurrentPosY = clyde.getCurrentPosition().getY() - clyde.getCurrentSize().height/2;
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
+				}
+				
+				if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13 || wantedBoxValue == 15|| wantedBoxValue == 193) {
+					clyde.setState(clydeWantedState); // pac-man can be in that state
+				}else {					
+					if(clyde.getDirectionThread() == null || !clyde.getDirectionThread().isRunning()) {
+						clyde.startDirectionThread();
+					}
+					// clyde set another possible direction
+					clyde.getDirectionThread().changeDirection();
+				}
+			}			
+		}
+		
+		//inky
+		if(inky.getCurrentPosition() != null && inky.getCurrentSize() != null) {
+			inkyWantedState = inky.getState();
+			if(inkyWantedState != MovingSpriteState.STOP) {
+				
+				// we need to use a little bit changed position 
+				// so that pac-man can go a little bit farther in the maze
+				int adaptedCurrentPosX;
+				int adaptedCurrentPosY;
+				Position currentMatrixPos; // the position of the sprite in the matrix
+				int wantedBoxValue = -1; // the next box value where pac-man wants to go
+				
+				if(inkyWantedState == MovingSpriteState.LEFT) {
+					adaptedCurrentPosX = inky.getCurrentPosition().getX() + inky.getCurrentSize().width/2;
+					adaptedCurrentPosY = inky.getCurrentPosition().getY();
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
+				}
+				else if(inkyWantedState == MovingSpriteState.RIGHT) {
+					adaptedCurrentPosX = inky.getCurrentPosition().getX() - inky.getCurrentSize().width/2;
+					adaptedCurrentPosY = inky.getCurrentPosition().getY();
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
+				}
+				else if(inkyWantedState == MovingSpriteState.UP) {
+					adaptedCurrentPosX = inky.getCurrentPosition().getX();
+					adaptedCurrentPosY = inky.getCurrentPosition().getY() + inky.getCurrentSize().height/2;
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
+				}
+				else if(inkyWantedState == MovingSpriteState.DOWN) {
+					adaptedCurrentPosX = inky.getCurrentPosition().getX();
+					adaptedCurrentPosY = inky.getCurrentPosition().getY() - inky.getCurrentSize().height/2;
+					currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+					wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
+				}
+				
+				if(wantedBoxValue == 0 || wantedBoxValue == 97 || wantedBoxValue == 13 || wantedBoxValue == 15|| wantedBoxValue == 193) {
+					inky.setState(inkyWantedState); // pac-man can be in that state
+				}else {					
+					if(inky.getDirectionThread() == null || !inky.getDirectionThread().isRunning()) {
+						inky.startDirectionThread();
+					}
+					// inky set another possible direction
+					inky.getDirectionThread().changeDirection();
+				}
+			}			
+		}
 	}
 
 	
@@ -146,6 +309,15 @@ public class PhysicsThread extends ThreadPerso {
 		if(blinky.getDirectionThread() != null) {
 			blinky.getDirectionThread().pauseThread();
 		}
+		if(pinky.getDirectionThread() != null) {
+			pinky.getDirectionThread().pauseThread();
+		}
+		if(clyde.getDirectionThread() != null) {
+			clyde.getDirectionThread().pauseThread();
+		}
+		if(inky.getDirectionThread() != null) {
+			inky.getDirectionThread().pauseThread();
+		}
 	}
 	
 	/**
@@ -156,13 +328,31 @@ public class PhysicsThread extends ThreadPerso {
 		if(blinky.getDirectionThread() != null) {
 			blinky.getDirectionThread().resumeThread();;
 		}
+		if(pinky.getDirectionThread() != null) {
+			pinky.getDirectionThread().resumeThread();;
+		}
+		if(clyde.getDirectionThread() != null) {
+			clyde.getDirectionThread().resumeThread();;
+		}
+		if(inky.getDirectionThread() != null) {
+			inky.getDirectionThread().resumeThread();;
+		}
 	}
 	
 	
 	@Override
 	protected void doThatAtStop() {
-		if(blinky.getDirectionThread() != null && blinky.getDirectionThread().isRunning()) {
+		if(blinky.getDirectionThread() != null) {
 			blinky.getDirectionThread().stopThread();
+		}
+		if(pinky.getDirectionThread() != null) {
+			pinky.getDirectionThread().stopThread();
+		}
+		if(clyde.getDirectionThread() != null) {
+			clyde.getDirectionThread().stopThread();
+		}
+		if(inky.getDirectionThread() != null) {
+			inky.getDirectionThread().stopThread();
 		}
 	}
 	

@@ -92,6 +92,9 @@ public class RenderThread extends ThreadPerso{
 	private Sprites pacDots;
 	private MovingSprite pacMan;
 	private Ghost blinky;
+	private Ghost pinky;
+	private Ghost clyde;
+	private Ghost inky;
 	
 	//animations
 	private AnimationThread animationTh;
@@ -105,9 +108,7 @@ public class RenderThread extends ThreadPerso{
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
 		super("Render");
-		
-		System.out.println("Create render thread");
-		
+				
 		this.gamePanel = gamePanel;
 		this.statusBarPanel = statusBarPanel;
 		
@@ -130,9 +131,12 @@ public class RenderThread extends ThreadPerso{
 		pacDots = maze.getPacDots();
 		pacMan = maze.getPacMan();
 		blinky = maze.getBlinky();
+		pinky = maze.getPinky();
+		clyde = maze.getClyde();
+		inky = maze.getInky();
 		
-		animationTh = new AnimationThread(energizers, pacMan, blinky);
-		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky);
+		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
+		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky);
 	}
 	
 
@@ -298,7 +302,10 @@ public class RenderThread extends ThreadPerso{
 			//the image of the sprite to display is changed by the animation thread
 			if(animationDone) {
 				pacMan.updatePos();
-				blinky.updatePos();				
+				blinky.updatePos();		
+				pinky.updatePos();
+				clyde.updatePos();
+				inky.updatePos();
 			}
 
 		}
@@ -327,6 +334,9 @@ public class RenderThread extends ThreadPerso{
 			energizers.draw(dbg); 
 			pacMan.draw(dbg);
 			blinky.draw(dbg);
+			pinky.draw(dbg);
+			clyde.draw(dbg);
+			inky.draw(dbg);
 			
 	
 			if (gameOver)

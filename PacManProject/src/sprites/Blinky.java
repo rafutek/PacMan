@@ -31,7 +31,7 @@ public class Blinky extends Ghost {
 	@Override
 	public void startDirectionThread() {
 		directionTh = new RandomGhostTimer(this);
-		directionTh.setName("Blinky direction thread");
+		directionTh.setName("Blinky direction");
 		directionTh.startThread();
 	}
 

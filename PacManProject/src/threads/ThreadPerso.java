@@ -11,7 +11,7 @@ public abstract class ThreadPerso extends Thread {
 	}
 	
 	public void run() {
-		System.out.println("Start "+getName());
+		System.out.println("Start "+getName()+" thread");
 		
 		doThatAtStart();
 		
@@ -27,7 +27,7 @@ public abstract class ThreadPerso extends Thread {
 		
 		doThatAtStop();
 		
-		System.out.println("Stop "+getName());
+		System.out.println("Stop "+getName()+" thread");
 	}
 	
 	/**

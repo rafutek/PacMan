@@ -17,12 +17,21 @@ public class AnimationThread extends TimerThread {
 	private MovingSprite blinky;
 	private MovingSpriteState blinkyLastState, blinkyCurrentState;
 	
+	private MovingSprite pinky;
+	private MovingSpriteState pinkyLastState, pinkyCurrentState;
+	
+	private MovingSprite clyde;
+	private MovingSpriteState clydeLastState, clydeCurrentState;
+	
+	private MovingSprite inky;
+	private MovingSpriteState inkyLastState, inkyCurrentState;
+	
 	/**
 	 * Thread that will update the sprites' images order, 
 	 * thus the render thread will display another image so it will create the animation.
 	 * @param energizers
 	 */
-	public AnimationThread(Sprites energizers, MovingSprite pacMan, MovingSprite blinky) {
+	public AnimationThread(Sprites energizers, MovingSprite pacMan, MovingSprite blinky, MovingSprite pinky, MovingSprite clyde, MovingSprite inky) {
 		super(WAIT_TIME, NB_WAITS);
 		setName("Animation");
 		
@@ -33,6 +42,15 @@ public class AnimationThread extends TimerThread {
 		
 		this.blinky = blinky;
 		blinkyLastState = blinky.getState();
+		
+		this.pinky = pinky;
+		pinkyLastState = pinky.getState();
+		
+		this.clyde = clyde;
+		clydeLastState = clyde.getState();
+		
+		this.inky = inky;
+		inkyLastState = inky.getState();
 	}
 
 	@Override
@@ -89,6 +107,78 @@ public class AnimationThread extends TimerThread {
 			blinkyLastState = blinkyCurrentState;
 		}		
 		
+		//pinky
+		pinkyCurrentState = pinky.getState();
+		if(pinkyCurrentState != pinkyLastState) { // have to change the animation list to the new state
+			if(pinkyCurrentState == MovingSpriteState.STOP) {
+				pinky.setNoMovementAnimation();
+			}
+			if(pinkyCurrentState == MovingSpriteState.LEFT) {
+				pinky.setGoLeftAnimation();
+			}
+			else if(pinkyCurrentState == MovingSpriteState.RIGHT) {
+				pinky.setGoRightAnimation();
+			}
+			else if(pinkyCurrentState == MovingSpriteState.UP) {
+				pinky.setGoUpAnimation();
+			}
+			else if(pinkyCurrentState == MovingSpriteState.DOWN) {
+				pinky.setGoDownAnimation();
+			}
+			else if(pinkyCurrentState == MovingSpriteState.DEATH) {
+				pinky.setDeathAnimation();
+			}
+			pinkyLastState = pinkyCurrentState;
+		}	
+		
+		//clyde
+		clydeCurrentState = clyde.getState();
+		if(clydeCurrentState != clydeLastState) { // have to change the animation list to the new state
+			if(clydeCurrentState == MovingSpriteState.STOP) {
+				clyde.setNoMovementAnimation();
+			}
+			if(clydeCurrentState == MovingSpriteState.LEFT) {
+				clyde.setGoLeftAnimation();
+			}
+			else if(clydeCurrentState == MovingSpriteState.RIGHT) {
+				clyde.setGoRightAnimation();
+			}
+			else if(clydeCurrentState == MovingSpriteState.UP) {
+				clyde.setGoUpAnimation();
+			}
+			else if(clydeCurrentState == MovingSpriteState.DOWN) {
+				clyde.setGoDownAnimation();
+			}
+			else if(clydeCurrentState == MovingSpriteState.DEATH) {
+				clyde.setDeathAnimation();
+			}
+			clydeLastState = clydeCurrentState;
+		}	
+		
+		//inky
+		inkyCurrentState = inky.getState();
+		if(inkyCurrentState != inkyLastState) { // have to change the animation list to the new state
+			if(inkyCurrentState == MovingSpriteState.STOP) {
+				inky.setNoMovementAnimation();
+			}
+			if(inkyCurrentState == MovingSpriteState.LEFT) {
+				inky.setGoLeftAnimation();
+			}
+			else if(inkyCurrentState == MovingSpriteState.RIGHT) {
+				inky.setGoRightAnimation();
+			}
+			else if(inkyCurrentState == MovingSpriteState.UP) {
+				inky.setGoUpAnimation();
+			}
+			else if(inkyCurrentState == MovingSpriteState.DOWN) {
+				inky.setGoDownAnimation();
+			}
+			else if(inkyCurrentState == MovingSpriteState.DEATH) {
+				inky.setDeathAnimation();
+			}
+			inkyLastState = inkyCurrentState;
+		}	
+		
 		//...
 		
 	}
@@ -100,6 +190,9 @@ public class AnimationThread extends TimerThread {
 		energizers.updateImg();
 		pacMan.updateImg();
 		blinky.updateImg();
+		pinky.updateImg();
+		clyde.updateImg();
+		inky.updateImg();
 	}
 
 }
