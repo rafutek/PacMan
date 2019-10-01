@@ -33,7 +33,7 @@ public class AnimationThread extends TimerThread {
 	 */
 	public AnimationThread(Sprites energizers, MovingSprite pacMan, MovingSprite blinky, MovingSprite pinky, MovingSprite clyde, MovingSprite inky) {
 		super(WAIT_TIME, NB_WAITS);
-		setName("Animation");
+		setName("Sprites Animation");
 		
 		this.energizers = energizers;
 		

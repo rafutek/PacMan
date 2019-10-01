@@ -20,6 +20,7 @@ public class GhostsExitBoxThread extends TimerThread {
 	
 	public GhostsExitBoxThread(Ghost blinky, Ghost pinky, Ghost clyde, Ghost inky) {
 		super(WAIT_TIME, NB_WAITS);
+		setName("Ghosts Exit");
 		this.blinky = blinky;
 		this.pinky = pinky;
 		this.clyde = clyde;

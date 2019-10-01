@@ -215,8 +215,18 @@ public class GameFrame extends JFrame implements WindowListener
 	}
 
 	private void closeGame() {
-		renderTh.stopThread(); 
+		
 		layoutTh.stopThread();
+		synchronized (layoutTh){
+			try {
+				layoutTh.join(100);
+			} catch (InterruptedException e1) {}
+			if(layoutTh.isRunning()) {
+				layoutTh.interrupt();
+			}
+		}
+		
+		renderTh.stopThread(); 
 		synchronized (renderTh){
 			try {
 				renderTh.join(100);

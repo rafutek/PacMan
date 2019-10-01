@@ -35,7 +35,7 @@ public class StartResumeAnimationThread extends TimerThread {
 
 	public StartResumeAnimationThread(Tiles tiles, JPanel gamePanel) {
 		super(WAIT_TIME, NB_WAITS);
-		setName("Start&Resume animation");
+		setName("3,2,1");
 		this.tiles = tiles;
 		this.gamePanel = gamePanel;
 		

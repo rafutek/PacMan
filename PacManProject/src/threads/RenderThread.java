@@ -106,6 +106,9 @@ public class RenderThread extends ThreadPerso{
 	private boolean animationDone = false;
 	private boolean initializedStats = false;
 	
+	//exit the ghost of the box
+	private GhostsExitBoxThread ghostExitThread;
+	
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
 		super("Render");
@@ -138,6 +141,7 @@ public class RenderThread extends ThreadPerso{
 		
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
 		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky);
+		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky);
 	}
 	
 
@@ -208,11 +212,7 @@ public class RenderThread extends ThreadPerso{
 	}
 	
 	@Override
-	protected void doThatAtStop() {
-//		System.out.println("Stop "+getName()+" and program");		
-//		printStats();
-//		System.exit(0);   // so window disappears	
-	}
+	protected void doThatAtStop() {}
 	
 	
 	/**
@@ -232,6 +232,7 @@ public class RenderThread extends ThreadPerso{
 		paused = true;
 		animationTh.pauseThread();
 		physicsTh.pauseThread();
+		ghostExitThread.pauseThread();
 	}
 	
 	/**
@@ -262,6 +263,12 @@ public class RenderThread extends ThreadPerso{
 		}else {
 			physicsTh.resumeThread();
 		}
+		
+		if(!ghostExitThread.isRunning()) {
+			ghostExitThread.startThread();
+		}else {
+			ghostExitThread.resumeThread();
+		}
 	}
 	
 	/**
@@ -270,7 +277,32 @@ public class RenderThread extends ThreadPerso{
 	public void stopThread() {
 		running = false;
 		animationTh.stopThread();
+		synchronized (animationTh){
+			try {
+				animationTh.join(100);
+			} catch (InterruptedException e1) {}
+			if(animationTh.isRunning()) {
+				animationTh.interrupt();
+			}
+		}
 		physicsTh.stopThread();
+		synchronized (physicsTh){
+			try {
+				physicsTh.join(100);
+			} catch (InterruptedException e1) {}
+			if(physicsTh.isRunning()) {
+				physicsTh.interrupt();
+			}
+		}
+		ghostExitThread.stopThread();
+		synchronized (ghostExitThread){
+			try {
+				ghostExitThread.join(100);
+			} catch (InterruptedException e1) {}
+			if(ghostExitThread.isRunning()) {
+				ghostExitThread.interrupt();
+			}
+		}
 	}
 	
 	
