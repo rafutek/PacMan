@@ -54,6 +54,8 @@ public class PhysicsThread extends ThreadPerso {
 	@Override
 	protected void doThat() {
 		
+		// wall collisions
+		
 		//pac-man
 		if(pacMan.getCurrentPosition() != null && pacMan.getCurrentSize() != null) {
 			pacManWantedState = pacMan.getWantedState();
@@ -307,6 +309,13 @@ public class PhysicsThread extends ThreadPerso {
 				}
 			}			
 		}
+		
+		
+		// pac-man and ghosts collisions
+		if(ghostCollision()) {
+			//...
+		}
+		
 	}
 
 	
@@ -376,4 +385,46 @@ public class PhysicsThread extends ThreadPerso {
 		return new Position(matPosX, matPosY);
 	}
 
+	private boolean ghostCollision() {
+		if(pacMan.getCurrentPosition() != null && pacMan.getCurrentSize() != null) {
+			int pacman_left = pacMan.getCurrentPosition().getX();
+			int pacman_right = pacMan.getCurrentPosition().getX() + pacMan.getCurrentSize().width;
+			int pacman_up = pacMan.getCurrentPosition().getY();
+			int pacman_down = pacMan.getCurrentPosition().getY() + pacMan.getCurrentSize().height;
+			
+			if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky)) {
+				System.out.println("collision with blinky!");
+				return true;
+			}
+			if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky)) {
+				System.out.println("collision with pinky!");
+				return true;
+			}		
+			if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde)) {
+				System.out.println("collision with clyde!");
+				return true;
+			}
+			if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky)) {
+				System.out.println("collision with inky!");
+				return true;
+			}			
+		}
+
+		return false;
+	}
+	
+	private boolean collisionWith(int pacman_left, int pacman_right, int pacman_up, int pacman_down, Ghost ghost) {
+		int ghost_left = ghost.getCurrentPosition().getX();
+		int ghost_right = ghost.getCurrentPosition().getX() + ghost.getCurrentSize().width;
+		int ghost_up = ghost.getCurrentPosition().getY();
+		int ghost_down = ghost.getCurrentPosition().getY() + ghost.getCurrentSize().height;
+		
+		if( pacman_left < ghost_right && pacman_right > ghost_left && pacman_down > ghost_up && pacman_up < ghost_down ) {
+			return true;
+		}
+		return false;
+	}
+	
+
+	
 }
