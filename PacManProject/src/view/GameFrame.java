@@ -171,16 +171,24 @@ public class GameFrame extends JFrame implements WindowListener
 				
 				// listen for arrows events
 				if (keyCode == KeyEvent.VK_LEFT) {
-					renderTh.getPacMan().wantToGoLeft();
+					synchronized(renderTh) {
+						renderTh.getPacMan().wantToGoLeft();
+					}
 				}
 				else if(keyCode == KeyEvent.VK_RIGHT){
-					renderTh.getPacMan().wantToGoRight();
+					synchronized(renderTh) {
+						renderTh.getPacMan().wantToGoRight();
+					}
 				}
 				else if(keyCode == KeyEvent.VK_UP){
-					renderTh.getPacMan().wantToGoUp();
+					synchronized(renderTh) {
+						renderTh.getPacMan().wantToGoUp();
+					}
 				}
 				else if(keyCode == KeyEvent.VK_DOWN){
-					renderTh.getPacMan().wantToGoDown();
+					synchronized(renderTh) {
+						renderTh.getPacMan().wantToGoDown();
+					}
 				}
 				
 			}
@@ -216,25 +224,8 @@ public class GameFrame extends JFrame implements WindowListener
 
 	private void closeGame() {
 		
-		layoutTh.stopThread();
-		synchronized (layoutTh){
-			try {
-				layoutTh.join(100);
-			} catch (InterruptedException e1) {}
-			if(layoutTh.isRunning()) {
-				layoutTh.interrupt();
-			}
-		}
-		
+		layoutTh.stopThread();		
 		renderTh.stopThread(); 
-		synchronized (renderTh){
-			try {
-				renderTh.join(100);
-			} catch (InterruptedException e1) {}
-			if(renderTh.isRunning()) {
-				renderTh.interrupt();
-			}
-		}
 		
 		renderTh.printStats();
 		System.exit(0);   // so window disappears	

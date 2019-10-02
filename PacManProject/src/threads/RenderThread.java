@@ -243,6 +243,9 @@ public class RenderThread extends ThreadPerso{
 		paused = false;
 		animationDone = false;
 		initializedStats = false;
+		if(threeTwoOneTh != null && threeTwoOneTh.isRunning()) {
+			threeTwoOneTh.stopThread();
+		}
 		threeTwoOneTh = new ThreeTwoOneThread(maze.getTiles(), gamePanel);
 		threeTwoOneTh.startThread();
 		do {
@@ -278,32 +281,8 @@ public class RenderThread extends ThreadPerso{
 	public void stopThread() {
 		running = false;
 		animationTh.stopThread();
-		synchronized (animationTh){
-			try {
-				animationTh.join(100);
-			} catch (InterruptedException e1) {}
-			if(animationTh.isRunning()) {
-				animationTh.interrupt();
-			}
-		}
 		physicsTh.stopThread();
-		synchronized (physicsTh){
-			try {
-				physicsTh.join(100);
-			} catch (InterruptedException e1) {}
-			if(physicsTh.isRunning()) {
-				physicsTh.interrupt();
-			}
-		}
 		ghostExitThread.stopThread();
-		synchronized (ghostExitThread){
-			try {
-				ghostExitThread.join(100);
-			} catch (InterruptedException e1) {}
-			if(ghostExitThread.isRunning()) {
-				ghostExitThread.interrupt();
-			}
-		}
 	}
 	
 	
@@ -335,13 +314,22 @@ public class RenderThread extends ThreadPerso{
 			//update sprites position (like fantom positions)
 			//the image of the sprite to display is changed by the animation thread
 			if(animationDone) {
-				pacMan.updatePos();
-				blinky.updatePos();		
-				pinky.updatePos();
-				clyde.updatePos();
-				inky.updatePos();
+				synchronized(pacMan) {
+					pacMan.updatePos();
+				}
+				synchronized(blinky) {
+					blinky.updatePos();		
+				}
+				synchronized(pinky) {
+					pinky.updatePos();
+				}
+				synchronized(clyde) {
+					clyde.updatePos();
+				}
+				synchronized(inky) {
+					inky.updatePos();
+				}
 			}
-
 		}
 	}
 
@@ -398,7 +386,7 @@ public class RenderThread extends ThreadPerso{
 	 * Get pac-man moving sprite.
 	 * @return pac-man
 	 */
-	public MovingSprite getPacMan() {
+	public synchronized MovingSprite getPacMan() {
 		return pacMan;
 	}
 	
