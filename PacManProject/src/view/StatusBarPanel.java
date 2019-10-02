@@ -33,7 +33,7 @@ public class StatusBarPanel extends JPanel {
 	
 	public StatusBarPanel() {
 		
-		setLayout(new GridLayout(0,8));
+		setLayout(new GridLayout(0,4));
 		setBackground(Color.black);
 		try {
 			t = new Tiles();
@@ -68,13 +68,7 @@ public class StatusBarPanel extends JPanel {
 		life = t.resize(life, new Dimension(18,18));
 		livesImg.setIcon(new ImageIcon(life));
 		
-		
-		
-		fullScreen = new JLabel("");
-		fullScreen.setIcon(new ImageIcon(rsc.getImagePath("fullScreen.png")));
-		fullScreen.setBounds(479, 393, 44, 35);
-		
-		
+		/*
 		direction = new JLabel();
 		direction.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		direction.setForeground(Color.WHITE);
@@ -85,7 +79,7 @@ public class StatusBarPanel extends JPanel {
 		statut.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		statut.setForeground(Color.WHITE);
 		statut.setText("play");
-		
+		*/
 		niveau = new JLabel();
 		niveau.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		niveau.setForeground(Color.WHITE);
@@ -97,20 +91,19 @@ public class StatusBarPanel extends JPanel {
 		LEVEL = t.resize(LEVEL, new Dimension(50,18));
 		niveau.setIcon(new ImageIcon(LEVEL));
 		
-		
+		/*
 		fps = new JLabel("FPS");
 		fps.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		fps.setForeground(Color.WHITE);
-		
+		*/
 
 		add(score);
 		add(lives);
 		add(livesImg);
-		add(direction);
-		add(statut);
+		/*add(direction);
+		add(statut)*/;
 		add(niveau);
-		add(fps);
-		add(fullScreen);
+		//add(fps);
 	}
 
 }
