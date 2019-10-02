@@ -75,10 +75,10 @@ public class Maze {
 	 * Constructor that creates the maze image and sprites thanks to a text file.
 	 * @throws IOException
 	 */
-	public Maze(JPanel gamePanel) throws IOException {
+	public Maze(JPanel gamePanel, String mazeFilename) throws IOException {
 		this.gamePanel = gamePanel;
 		tiles = new Tiles();
-		chargeMazeValues("maze.txt");
+		chargeMazeValues(mazeFilename);
 		createMazeAndSprites();
 		computeSpritesInitialPositions();
 		createSprites();

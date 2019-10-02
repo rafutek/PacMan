@@ -117,7 +117,7 @@ public class RenderThread extends ThreadPerso{
 		
 		//create maze image and sprites from the maze file
 		try {
-			maze = new Maze(gamePanel);
+			maze = new Maze(gamePanel, "maze.txt");
 		} catch (IOException e) {e.printStackTrace();}
 		
 		//get sprites
