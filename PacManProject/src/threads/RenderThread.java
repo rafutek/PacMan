@@ -11,7 +11,6 @@ import resources.Maze;
 import sprites.Ghost;
 import sprites.MovingSprite;
 import sprites.PacMan;
-import sprites.Position;
 import sprites.Sprites;
 import view.GamePanel;
 import view.StatusBarPanel;
@@ -100,7 +99,7 @@ public class RenderThread extends ThreadPerso{
 	
 	//animations
 	private AnimationThread animationTh;
-	private StartResumeAnimationThread startResumeAnimationTh;
+	private ThreeTwoOneThread threeTwoOneTh;
 	
 	//physics
 	private PhysicsThread physicsTh;
@@ -244,13 +243,13 @@ public class RenderThread extends ThreadPerso{
 		paused = false;
 		animationDone = false;
 		initializedStats = false;
-		startResumeAnimationTh = new StartResumeAnimationThread(maze.getTiles(), gamePanel);
-		startResumeAnimationTh.startThread();
+		threeTwoOneTh = new ThreeTwoOneThread(maze.getTiles(), gamePanel);
+		threeTwoOneTh.startThread();
 		do {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {}
-		}while(startResumeAnimationTh.isRunning());
+		}while(threeTwoOneTh.isRunning());
 		
 		animationDone = true;
 		

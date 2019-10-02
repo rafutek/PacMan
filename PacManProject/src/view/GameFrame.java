@@ -244,27 +244,43 @@ public class GameFrame extends JFrame implements WindowListener
 
 	public void windowActivated(WindowEvent e) 
 	{ 
-		renderTh.resumeThread();
-		layoutTh.resumeThread();
+		synchronized (renderTh){
+			renderTh.resumeThread();
+		}
+		synchronized (layoutTh){
+			layoutTh.resumeThread();
+		}
 	}
 	
 	public void windowDeactivated(WindowEvent e) 
 	{  
-		renderTh.pauseThread();
-		layoutTh.pauseThread();
+		synchronized (renderTh){
+			renderTh.pauseThread();
+		}
+		synchronized (layoutTh){
+			layoutTh.pauseThread();
+		}
 	}
 	
 	
 	public void windowDeiconified(WindowEvent e) 
 	{  
-		renderTh.resumeThread(); 
-		layoutTh.resumeThread();
+		synchronized (renderTh){
+			renderTh.resumeThread();
+		}
+		synchronized (layoutTh){
+			layoutTh.resumeThread();
+		}
 	}
 	
 	public void windowIconified(WindowEvent e) 
 	{  
-		renderTh.pauseThread();
-		layoutTh.pauseThread();
+		synchronized (renderTh){
+			renderTh.pauseThread();
+		}
+		synchronized (layoutTh){
+			layoutTh.pauseThread();
+		}
 	}
 	
 	

@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import resources.ListImages;
 import resources.Tiles;
 
-public class StartResumeAnimationThread extends TimerThread {
+public class ThreeTwoOneThread extends TimerThread {
 	
 	// one loop is 1000 ms = 1 s
 	private static final int WAIT_TIME = 10;
@@ -33,7 +33,7 @@ public class StartResumeAnimationThread extends TimerThread {
 	
 	private int draw_nb = 0;
 
-	public StartResumeAnimationThread(Tiles tiles, JPanel gamePanel) {
+	public ThreeTwoOneThread(Tiles tiles, JPanel gamePanel) {
 		super(WAIT_TIME, NB_WAITS);
 		setName("3,2,1");
 		this.tiles = tiles;
@@ -135,7 +135,7 @@ public class StartResumeAnimationThread extends TimerThread {
 		jf.setFocusable(true);
 		jf.requestFocus();   
 		
-		StartResumeAnimationThread animTh = new StartResumeAnimationThread(new Tiles(), jp);
+		ThreeTwoOneThread animTh = new ThreeTwoOneThread(new Tiles(), jp);
 		animTh.startThread();
 		
 	}
