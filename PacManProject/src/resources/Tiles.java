@@ -25,7 +25,7 @@ public class Tiles {
 	public static final int NB_TILES_Y = 22;
 	private final int SPACE = 2; //px
 	
-	private ArrayList<List<BufferedImage>> tilesImages = new ArrayList<List<BufferedImage>>(); //create list for x
+	private static ArrayList<List<BufferedImage>> tilesImages = new ArrayList<List<BufferedImage>>(); //create list for x
 	
 
 	/**
@@ -103,7 +103,7 @@ public class Tiles {
 		}
 		int x = nb -1 - y*NB_TILES_X; 
 		
-		return getTileAt(x, y);
+		return this.getTileAt(x, y);
 		
 	}
 	
