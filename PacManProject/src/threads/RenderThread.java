@@ -54,23 +54,14 @@ public class RenderThread extends ThreadPerso{
 
 	private DecimalFormat df = new DecimalFormat("0.##");  // 2 dp
 
-//	private volatile boolean running = false;   // used to stop the animation thread
-//	private boolean isPaused = false;
-
 	private int period; // period between drawing in _ms_
 
 	// used in thread
+	private boolean initStats = false;
 	private long beforeTime, afterTime, timeDiff, sleepTime;
 	private int overSleepTime;
 	private int noDelays;
 	private int excess;
-
-
-	// used at game termination
-	private volatile boolean gameOver = false;
-	private int score = 0;
-	//private Font font;
-	//private FontMetrics metrics;
 
 	// off screen rendering
 	private Graphics dbg; 
@@ -104,7 +95,6 @@ public class RenderThread extends ThreadPerso{
 	//physics
 	private PhysicsThread physicsTh;
 	private boolean animationDone = false;
-	private boolean initializedStats = false;
 	
 	//exit the ghost of the box
 	private GhostsExitBoxThread ghostExitThread;
@@ -143,72 +133,96 @@ public class RenderThread extends ThreadPerso{
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
 		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky);
 		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze);
+		this.paused = true;
 	}
 	
+	private void checkResize() {
+		// resize all elements if panel size changed
+		currentGamePanelWidth = gamePanel.getWidth();
+		currentGamePanelHeight = gamePanel.getHeight();
+		
+		if(lastGamePanelWidth <= 0 && lastGamePanelHeight <=0) {
+			lastGamePanelWidth = currentGamePanelWidth;
+			lastGamePanelHeight = currentGamePanelHeight;
+		}
+		else if(currentGamePanelWidth > 0 && currentGamePanelHeight > 0 && 
+				(!drawnOnce || lastGamePanelWidth != currentGamePanelWidth || lastGamePanelHeight != currentGamePanelHeight)) 
+		{
+			maze.resizeMazeAndSprites(drawnOnce, new Dimension(lastGamePanelWidth, lastGamePanelHeight),
+											new Dimension(currentGamePanelWidth, currentGamePanelHeight));
+			lastGamePanelWidth = currentGamePanelWidth;
+			lastGamePanelHeight = currentGamePanelHeight;
+			if(!drawnOnce) {
+				drawnOnce = true;
+			}
+		}
+	}
 
 	@Override
 	protected void doThatAtStart() {
-		if(animationDone) {
-			overSleepTime = 0;
-			noDelays = 0;
-			excess = 0;
-			gameStartTime = System.currentTimeMillis();
-			prevStatsTime = gameStartTime;
-			beforeTime = gameStartTime;
-			initializedStats = true;			
-		}
+		do {		
+			checkResize();
+		}while(!animationDone);
+		
+		initializeStats();
 	}
 
+	private void initializeStats() {
+		overSleepTime = 0;
+		noDelays = 0;
+		excess = 0;
+		gameStartTime = System.currentTimeMillis();
+		prevStatsTime = gameStartTime;
+		beforeTime = gameStartTime;
+		initStats = true;
+	}
 
 	@Override
 	protected void doThat() {
-		if(animationDone) {
-			
-			if(!initializedStats) {
-				doThatAtStart();
-			}
-			
-			gameUpdate(); // game state is updated
-			gameRender();   // render the game to a buffer
-			paintScreen();  // draw the buffer on-screen
-
-			afterTime = System.currentTimeMillis();
-			timeDiff = afterTime - beforeTime;
-			sleepTime = (period - timeDiff) - overSleepTime;  
-
-			if (sleepTime > 0) {   // some time left in this cycle
-				try {
-					Thread.sleep(sleepTime);  // already in ms
-				}
-				catch(InterruptedException ex){}
-				overSleepTime = (int)((System.currentTimeMillis() - afterTime) - sleepTime);
-			}
-			else {    // sleepTime <= 0; the frame took longer than the period
-				excess -= sleepTime;  // store excess time value
-				overSleepTime = 0;
-
-				if (++noDelays >= NO_DELAYS_PER_YIELD) {
-					Thread.yield();   // give another thread a chance to run
-					noDelays = 0;
-				}
-			}
-
-			beforeTime = System.currentTimeMillis();
-
-			/* If frame animation is taking too long, update the game state
-		      without rendering it, to get the updates/sec nearer to
-		      the required FPS. */
-			int skips = 0;
-			while((excess > period) && (skips < MAX_FRAME_SKIPS)) {
-				excess -= period;
-				gameUpdate();    // update state but don't render
-				skips++;
-			}
-			framesSkipped += skips;
-
-			storeStats();
-			
+		
+		if(!initStats) {
+			initializeStats();
 		}
+			
+		gameUpdate(); // game state is updated
+		gameRender();   // render the game to a buffer
+		paintScreen();  // draw the buffer on-screen
+
+		afterTime = System.currentTimeMillis();
+		timeDiff = afterTime - beforeTime;
+		sleepTime = (period - timeDiff) - overSleepTime;  
+
+		if (sleepTime > 0) {   // some time left in this cycle
+			try {
+				Thread.sleep(sleepTime);  // already in ms
+			}
+			catch(InterruptedException ex){}
+			overSleepTime = (int)((System.currentTimeMillis() - afterTime) - sleepTime);
+		}
+		else {    // sleepTime <= 0; the frame took longer than the period
+			excess -= sleepTime;  // store excess time value
+			overSleepTime = 0;
+
+			if (++noDelays >= NO_DELAYS_PER_YIELD) {
+				Thread.yield();   // give another thread a chance to run
+				noDelays = 0;
+			}
+		}
+
+		beforeTime = System.currentTimeMillis();
+
+		/* If frame animation is taking too long, update the game state
+	      without rendering it, to get the updates/sec nearer to
+	      the required FPS. */
+		int skips = 0;
+		while((excess > period) && (skips < MAX_FRAME_SKIPS)) {
+			excess -= period;
+			gameUpdate();    // update state but don't render
+			skips++;
+		}
+		framesSkipped += skips;
+
+		storeStats();
 
 	}
 	
@@ -240,39 +254,42 @@ public class RenderThread extends ThreadPerso{
 	 * Start again or continue doing the actions defined in doThat() method.
 	 */
 	public synchronized void resumeThread() {
-		paused = false;
-		animationDone = false;
-		initializedStats = false;
-		if(threeTwoOneTh != null && threeTwoOneTh.isRunning()) {
-			threeTwoOneTh.stopThread();
+		if(paused) {
+			animationDone = false;
+			if(threeTwoOneTh != null && threeTwoOneTh.isRunning()) {
+				threeTwoOneTh.stopThread();
+			}
+			threeTwoOneTh = new ThreeTwoOneThread(maze.getTiles(), gamePanel);
+			threeTwoOneTh.startThread();
+			do {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {}
+			}while(threeTwoOneTh.isRunning());
+			
+			animationDone = true;
+			
+			initStats = false;
+			paused = false;
+			if(!animationTh.isRunning()) {
+				animationTh.startThread();
+			}else {
+				animationTh.resumeThread();
+			}
+			
+			if(!physicsTh.isRunning()) {
+				physicsTh.startThread();
+			}else {
+				physicsTh.resumeThread();
+			}
+			
+			if(!ghostExitThread.isRunning()) {
+				ghostExitThread.startThread();
+			}else {
+				ghostExitThread.resumeThread();
+			}			
 		}
-		threeTwoOneTh = new ThreeTwoOneThread(maze.getTiles(), gamePanel);
-		threeTwoOneTh.startThread();
-		do {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {}
-		}while(threeTwoOneTh.isRunning());
-		
-		animationDone = true;
-		
-		if(!animationTh.isRunning()) {
-			animationTh.startThread();
-		}else {
-			animationTh.resumeThread();
-		}
-		
-		if(!physicsTh.isRunning()) {
-			physicsTh.startThread();
-		}else {
-			physicsTh.resumeThread();
-		}
-		
-		if(!ghostExitThread.isRunning()) {
-			ghostExitThread.startThread();
-		}else {
-			ghostExitThread.resumeThread();
-		}
+
 	}
 	
 	/**
@@ -288,52 +305,32 @@ public class RenderThread extends ThreadPerso{
 	
 
 	private void gameUpdate() 
-	{ 
-		if (!gameOver) {
-						
-			// resize all elements if panel size changed
-			currentGamePanelWidth = gamePanel.getWidth();
-			currentGamePanelHeight = gamePanel.getHeight();
-			
-			if(lastGamePanelWidth <= 0 && lastGamePanelHeight <=0) {
-				lastGamePanelWidth = currentGamePanelWidth;
-				lastGamePanelHeight = currentGamePanelHeight;
-			}
-			else if(currentGamePanelWidth > 0 && currentGamePanelHeight > 0 && 
-					(!drawnOnce || lastGamePanelWidth != currentGamePanelWidth || lastGamePanelHeight != currentGamePanelHeight)) 
-			{
-				maze.resizeMazeAndSprites(drawnOnce, new Dimension(lastGamePanelWidth, lastGamePanelHeight),
-												new Dimension(currentGamePanelWidth, currentGamePanelHeight));
-				lastGamePanelWidth = currentGamePanelWidth;
-				lastGamePanelHeight = currentGamePanelHeight;
-				if(!drawnOnce) {
-					drawnOnce = true;
-				}
-			}
-			
-			//update sprites position (like fantom positions)
-			//the image of the sprite to display is changed by the animation thread
-			if(animationDone) {
-				synchronized(pacMan) {
-					pacMan.updatePos();
-				}
-				synchronized(blinky) {
-					blinky.updatePos();		
-				}
-				synchronized(pinky) {
-					pinky.updatePos();
-				}
-				synchronized(clyde) {
-					clyde.updatePos();
-				}
-				synchronized(inky) {
-					inky.updatePos();
-				}
-			}
+	{ 					
+		// resize maze and sprites if necessary
+		checkResize();
+		
+		//update sprites position (like fantom positions)
+		//the image of the sprite to display is changed by the animation thread
+		synchronized(pacMan) {
+			pacMan.updatePos();
+		}
+		synchronized(blinky) {
+			blinky.updatePos();		
+		}
+		synchronized(pinky) {
+			pinky.updatePos();
+		}
+		synchronized(clyde) {
+			clyde.updatePos();
+		}
+		synchronized(inky) {
+			inky.updatePos();
 		}
 	}
 
-
+	/**
+	 * Draw the wanted image to a buffered image.
+	 */
 	private void gameRender()
 	{
 		if (drawnOnce){
@@ -358,29 +355,9 @@ public class RenderThread extends ThreadPerso{
 			blinky.draw(dbg);
 			pinky.draw(dbg);
 			clyde.draw(dbg);
-			inky.draw(dbg);
-			
-	
-			if (gameOver)
-				gameOverMessage(dbg);
-		
+			inky.draw(dbg);		
 		}
 	}  
-
-
-	private void gameOverMessage(Graphics g)
-	// center the game-over message in the panel
-	{
-		String msg = "Game Over. Your Score: " + score;
-		System.out.println(msg);
-//		int x = (PWIDTH - metrics.stringWidth(msg))/2; 
-//		int y = (PHEIGHT - metrics.getHeight())/2;
-//		g.setColor(Color.red);
-//		g.setFont(font);
-//		g.drawString(msg, x, y);
-	}  // end of gameOverMessage()
-
-
 	
 	/**
 	 * Get pac-man moving sprite.
@@ -390,7 +367,9 @@ public class RenderThread extends ThreadPerso{
 		return pacMan;
 	}
 	
-	
+	/**
+	 * Draw the buffered image to the graphics of the game panel.
+	 */
 	private void paintScreen()
 	// use active rendering to put the buffered image on-screen
 	{ 
@@ -404,7 +383,7 @@ public class RenderThread extends ThreadPerso{
 		}
 		catch (Exception e)
 		{ System.out.println("Graphics error: " + e);  }
-	} // end of paintScreen()
+	}
 
 
 	private void storeStats()
