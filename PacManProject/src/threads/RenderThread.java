@@ -293,17 +293,20 @@ public class RenderThread extends ThreadPerso{
 	}
 	
 	/**
-	 * Stop the thread.
+	 * Stop render and other launched threads.
 	 */
 	public void stopThread() {
-		running = false;
 		animationTh.stopThread();
 		physicsTh.stopThread();
 		ghostExitThread.stopThread();
+		running = false;
 	}
 	
 	
-
+	/**
+	 * Check if the game panel size changed to resize the maze and the sprites if necessary,
+	 * and change the position of the moving sprites with their respective speed.
+	 */
 	private void gameUpdate() 
 	{ 					
 		// resize maze and sprites if necessary
@@ -342,10 +345,9 @@ public class RenderThread extends ThreadPerso{
 			else {
 				dbg = dbImage.getGraphics();
 			}
-		
-			// draw game elements
-			maze.draw(dbg); //draw maze (background)
 			
+			//draw maze (background)
+			maze.draw(dbg); 
 			
 			//draw all the sprites at their respective position, 
 			//with their respective dimension

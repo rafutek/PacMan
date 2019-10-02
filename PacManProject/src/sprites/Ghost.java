@@ -95,7 +95,7 @@ public abstract class Ghost extends MovingSprite {
 	
 	public abstract void startDirectionThread();
 	
-	public RandomGhostTimer getDirectionThread() {
+	public synchronized RandomGhostTimer getDirectionThread() {
 		return directionTh;
 	}
 	

@@ -24,11 +24,10 @@ public abstract class ThreadPerso extends Thread {
 				}
 			} catch (InterruptedException e) {}
 		}
+		
 		doThatAtStop();
-		
-		verifyThreadIsStopped();
-		
 		System.out.println("Stop "+getName()+" thread");
+		verifyThreadIsStopped();
 	}
 	
 	/**
@@ -61,12 +60,13 @@ public abstract class ThreadPerso extends Thread {
 	
 	
 	private void verifyThreadIsStopped() {
+		stopThread();
 		try {
 			join(100);
+			if(isRunning()) {
+				interrupt();
+			}
 		} catch (InterruptedException e) {}
-		if(isRunning()) {
-			interrupt();
-		}
 	}
 	
 	/**

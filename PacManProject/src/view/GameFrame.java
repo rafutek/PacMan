@@ -226,7 +226,14 @@ public class GameFrame extends JFrame implements WindowListener
 		
 		layoutTh.stopThread();		
 		renderTh.stopThread(); 
-		
+		synchronized(renderTh) {
+			try {
+				renderTh.join(100);
+				if(renderTh.isRunning()) {
+					renderTh.interrupt();
+				}
+			} catch (InterruptedException e) {}
+		}
 		renderTh.printStats();
 		System.exit(0);   // so window disappears	
 	}
