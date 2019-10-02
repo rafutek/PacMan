@@ -134,7 +134,7 @@ public abstract class Sprite {
 	 * The full image is drawn at the current position, with the current size wanted.
 	 * @param g is the graphics where to draw the sprite.
 	 */
-	public void draw(Graphics g) {
+	public synchronized void draw(Graphics g) {
 		g.drawImage(spriteFullImages.getImagesList().get(animationOrder.get(0)), 
 				currentPosition.getX(), currentPosition.getY(), currentSize.width, currentSize.height, null);
 	}

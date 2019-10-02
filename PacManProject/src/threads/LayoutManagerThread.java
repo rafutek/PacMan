@@ -92,8 +92,7 @@ public class LayoutManagerThread extends ThreadPerso {
 	
 	private Double getPanelScale(JPanel panel) {
 		Double scale = panel.getWidth()/(double)panel.getHeight();
-		if(scale == null || scale.isNaN() || scale.isInfinite())
-		{
+		if(scale == null || scale.isNaN() || scale.isInfinite()){
 			return null;
 		}
 		return scale;
@@ -119,7 +118,7 @@ public class LayoutManagerThread extends ThreadPerso {
 			
 			if( gamePanelCurrentScale < gamePanelScale - 0.1 || gamePanelCurrentScale > gamePanelScale + 0.1) {
 				
-				System.out.println(gamePanelScale+" "+gamePanelCurrentScale);
+				System.out.println("wanted scale: "+gamePanelScale+" current scale: "+gamePanelCurrentScale);
 		    	gamePanelWeightX = (gamePanelScale*(double)window.getHeight()*gamePanelWeightY)/(double)window.getWidth();
 				setPanelsWeights(gamePanelWeightX);
 				setAllPanelsLayout();					

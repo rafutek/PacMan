@@ -17,7 +17,7 @@ public abstract class Ghost extends MovingSprite {
 	
 	protected RandomGhostTimer directionTh = new RandomGhostTimer(this);
 
-	public boolean isInTheBox = true;
+	private boolean isInTheBox = true;
 
 	public Ghost(Position start_position, Tiles tiles, JPanel gamePanel) {
 		super(start_position, tiles, gamePanel);
@@ -73,6 +73,14 @@ public abstract class Ghost extends MovingSprite {
 		deathAnimation = goLeftAnimation; //no animation for death
 	}
 	
+	public synchronized boolean isInTheBox() {
+		return isInTheBox;
+	}
+
+	public synchronized void setInTheBox(boolean isInTheBox) {
+		this.isInTheBox = isInTheBox;
+	}
+	
 
 	/**
 	 * Set ghost state to a random direction state.
@@ -95,8 +103,7 @@ public abstract class Ghost extends MovingSprite {
 	
 	public abstract void startDirectionThread();
 	
-	public RandomGhostTimer getDirectionThread() {
+	public synchronized RandomGhostTimer getDirectionThread() {
 		return directionTh;
 	}
-	
 }

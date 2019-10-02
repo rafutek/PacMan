@@ -171,16 +171,24 @@ public class GameFrame extends JFrame implements WindowListener
 				
 				// listen for arrows events
 				if (keyCode == KeyEvent.VK_LEFT) {
-					renderTh.getPacMan().wantToGoLeft();
+					synchronized(renderTh) {
+						renderTh.getPacMan().wantToGoLeft();
+					}
 				}
 				else if(keyCode == KeyEvent.VK_RIGHT){
-					renderTh.getPacMan().wantToGoRight();
+					synchronized(renderTh) {
+						renderTh.getPacMan().wantToGoRight();
+					}
 				}
 				else if(keyCode == KeyEvent.VK_UP){
-					renderTh.getPacMan().wantToGoUp();
+					synchronized(renderTh) {
+						renderTh.getPacMan().wantToGoUp();
+					}
 				}
 				else if(keyCode == KeyEvent.VK_DOWN){
-					renderTh.getPacMan().wantToGoDown();
+					synchronized(renderTh) {
+						renderTh.getPacMan().wantToGoDown();
+					}
 				}
 				
 			}
@@ -216,26 +224,16 @@ public class GameFrame extends JFrame implements WindowListener
 
 	private void closeGame() {
 		
-		layoutTh.stopThread();
-		synchronized (layoutTh){
-			try {
-				layoutTh.join(100);
-			} catch (InterruptedException e1) {}
-			if(layoutTh.isRunning()) {
-				layoutTh.interrupt();
-			}
-		}
-		
+		layoutTh.stopThread();		
 		renderTh.stopThread(); 
-		synchronized (renderTh){
+		synchronized(renderTh) {
 			try {
 				renderTh.join(100);
-			} catch (InterruptedException e1) {}
-			if(renderTh.isRunning()) {
-				renderTh.interrupt();
-			}
+				if(renderTh.isRunning()) {
+					renderTh.interrupt();
+				}
+			} catch (InterruptedException e) {}
 		}
-		
 		renderTh.printStats();
 		System.exit(0);   // so window disappears	
 	}
@@ -244,28 +242,31 @@ public class GameFrame extends JFrame implements WindowListener
 
 	public void windowActivated(WindowEvent e) 
 	{ 
-		renderTh.resumeThread();
-		layoutTh.resumeThread();
+		System.out.println("window activated");
+		synchronized (renderTh){
+			renderTh.resumeThread();
+		}
+		synchronized (layoutTh){
+			layoutTh.resumeThread();
+		}
 	}
 	
 	public void windowDeactivated(WindowEvent e) 
 	{  
-		renderTh.pauseThread();
-		layoutTh.pauseThread();
+		System.out.println("window deactivated");
+		synchronized (renderTh){
+			renderTh.pauseThread();
+		}
+		synchronized (layoutTh){
+			layoutTh.pauseThread();
+		}
 	}
 	
+	public void windowOpened(WindowEvent e) {}
 	
-	public void windowDeiconified(WindowEvent e) 
-	{  
-		renderTh.resumeThread(); 
-		layoutTh.resumeThread();
-	}
+	public void windowDeiconified(WindowEvent e) {}
 	
-	public void windowIconified(WindowEvent e) 
-	{  
-		renderTh.pauseThread();
-		layoutTh.pauseThread();
-	}
+	public void windowIconified(WindowEvent e) {}
 	
 	
 	public void windowClosing(WindowEvent e)
@@ -274,7 +275,7 @@ public class GameFrame extends JFrame implements WindowListener
 	}
 	
 	public void windowClosed(WindowEvent e) {}
-	public void windowOpened(WindowEvent e) {}
+
 	
 	
 

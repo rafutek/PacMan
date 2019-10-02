@@ -233,13 +233,6 @@ public class Maze {
 		copyMazeImg = Tiles.copy(originalMazeImg);	
 	}
 	
-	/**
-	 * Get the maze image, created or not.
-	 * @return the maze image
-	 */
-	public BufferedImage getMazeImg() {
-		return Tiles.copy(originalMazeImg);
-	}
 
 	/**
 	 * Method that computes the position of each sprite in the maze image. 
@@ -263,8 +256,6 @@ public class Maze {
 			energizersMazeImagePositions.add(new Position(pixelX, pixelY));
 		}
 		energizersMazeFilePositions.clear();
-		
-		
 		
 		//pac-man
 		pixelX = (pacManMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
@@ -297,10 +288,7 @@ public class Maze {
 			pixelY = (position.getY() *originalMazeImg.getHeight()) / mazeValues.size();
 			doorMazeImagePositions.add(new Position(pixelX, pixelY));
 		}
-		doorMazeFilePositions.clear();
-		
-		//...
-		
+		doorMazeFilePositions.clear();		
 	}
 	
 	private void createSprites() {
@@ -353,7 +341,43 @@ public class Maze {
 	}
 	
 	
+	public Sprites getEnergizers() {
+		return energizers;
+	}
+	
+	public Sprites getPacDots() {
+		return pacDots;
+	}
+	
+	public PacMan getPacMan() {
+		return pacMan;
+	}
 
+	public Ghost getBlinky() {
+		return blinky;
+	}
+	
+	public Ghost getPinky() {
+		return pinky;
+	}
+	
+	public Ghost getClyde() {
+		return clyde;
+	}
+	
+	public Ghost getInky() {
+		return inky;
+	}
+	
+	public Position getDoorPosition() {
+		return doorCurrentPosition;
+	}
+	
+	public void draw(Graphics g) {
+		if(g != null && copyMazeImg != null) {
+			g.drawImage(copyMazeImg,0,0, null);
+		}
+	}
 	
 	/**
 	 * Resize the maze image, if not null, with dimension parameters
@@ -386,78 +410,88 @@ public class Maze {
 		int newX, newY;
 		
 		//pac-dots
-		for (Sprite pacdot : pacDots.getSprites()) {
-			newX = (newDim.width * pacdot.getMazePosition().getX()) / originalMazeImg.getWidth() ;
-			newY = (newDim.height * pacdot.getMazePosition().getY()) / originalMazeImg.getHeight();
-			pacdot.setCurrentPosition(new Position(newX, newY));
+		synchronized (pacDots) {
+			for (Sprite pacdot : pacDots.getSprites()) {
+				newX = (newDim.width * pacdot.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+				newY = (newDim.height * pacdot.getMazePosition().getY()) / originalMazeImg.getHeight();
+				pacdot.setCurrentPosition(new Position(newX, newY));
+			}
 		}
 		
 		//energizers
-		for (Sprite e : energizers.getSprites()) {
-			newX = (newDim.width * e.getMazePosition().getX()) / originalMazeImg.getWidth() ;
-			newY = (newDim.height * e.getMazePosition().getY()) / originalMazeImg.getHeight();
-			e.setCurrentPosition(new Position(newX, newY));
+		synchronized (energizers) {
+			for (Sprite e : energizers.getSprites()) {
+				newX = (newDim.width * e.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+				newY = (newDim.height * e.getMazePosition().getY()) / originalMazeImg.getHeight();
+				e.setCurrentPosition(new Position(newX, newY));
+			}
 		}
 		
 		//pac-man
-		if(!drawnOnce) {
-			newX = (newDim.width * pacMan.getMazePosition().getX()) / originalMazeImg.getWidth() ;
-			newY = (newDim.height * pacMan.getMazePosition().getY()) / originalMazeImg.getHeight();			
-		}else {
-			newX = (int)Math.round((newDim.width * pacMan.getCurrentPosition().getX()) / (double)lastDim.width) ;
-			newY = (int)Math.round((newDim.height * pacMan.getCurrentPosition().getY()) / (double)lastDim.height);				
+		synchronized (pacMan) {
+			if(!drawnOnce) {
+				newX = (newDim.width * pacMan.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+				newY = (newDim.height * pacMan.getMazePosition().getY()) / originalMazeImg.getHeight();			
+			}else {
+				newX = (int)Math.round((newDim.width * pacMan.getCurrentPosition().getX()) / (double)lastDim.width) ;
+				newY = (int)Math.round((newDim.height * pacMan.getCurrentPosition().getY()) / (double)lastDim.height);				
+			}
+			pacMan.setCurrentPosition(new Position(newX, newY));
 		}
-		pacMan.setCurrentPosition(new Position(newX, newY));
 		
 		//blinky
-		if(!drawnOnce) {
-			newX = (newDim.width * blinky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
-			newY = (newDim.height * blinky.getMazePosition().getY()) / originalMazeImg.getHeight();			
-		}else {
-			newX = (int)Math.round((newDim.width * blinky.getCurrentPosition().getX()) / (double)lastDim.width) ;
-			newY = (int)Math.round((newDim.height * blinky.getCurrentPosition().getY()) / (double)lastDim.height);				
+		synchronized (blinky) {
+			if(!drawnOnce) {
+				newX = (newDim.width * blinky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+				newY = (newDim.height * blinky.getMazePosition().getY()) / originalMazeImg.getHeight();			
+			}else {
+				newX = (int)Math.round((newDim.width * blinky.getCurrentPosition().getX()) / (double)lastDim.width) ;
+				newY = (int)Math.round((newDim.height * blinky.getCurrentPosition().getY()) / (double)lastDim.height);				
+			}
+			blinky.setCurrentPosition(new Position(newX, newY));
 		}
-		blinky.setCurrentPosition(new Position(newX, newY));		
 
 		//pinky
-		if(!drawnOnce) {
-			newX = (newDim.width * pinky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
-			newY = (newDim.height * pinky.getMazePosition().getY()) / originalMazeImg.getHeight();			
-		}else {
-			newX = (int)Math.round((newDim.width * pinky.getCurrentPosition().getX()) / (double)lastDim.width) ;
-			newY = (int)Math.round((newDim.height * pinky.getCurrentPosition().getY()) / (double)lastDim.height);				
+		synchronized (pinky) {
+			if(!drawnOnce) {
+				newX = (newDim.width * pinky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+				newY = (newDim.height * pinky.getMazePosition().getY()) / originalMazeImg.getHeight();			
+			}else {
+				newX = (int)Math.round((newDim.width * pinky.getCurrentPosition().getX()) / (double)lastDim.width) ;
+				newY = (int)Math.round((newDim.height * pinky.getCurrentPosition().getY()) / (double)lastDim.height);				
+			}
+			pinky.setCurrentPosition(new Position(newX, newY));	
 		}
-		pinky.setCurrentPosition(new Position(newX, newY));		
 		
 		//clyde
-		if(!drawnOnce) {
-			newX = (newDim.width * clyde.getMazePosition().getX()) / originalMazeImg.getWidth() ;
-			newY = (newDim.height * clyde.getMazePosition().getY()) / originalMazeImg.getHeight();			
-		}else {
-			newX = (int)Math.round((newDim.width * clyde.getCurrentPosition().getX()) / (double)lastDim.width) ;
-			newY = (int)Math.round((newDim.height * clyde.getCurrentPosition().getY()) / (double)lastDim.height);				
+		synchronized (clyde) {
+			if(!drawnOnce) {
+				newX = (newDim.width * clyde.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+				newY = (newDim.height * clyde.getMazePosition().getY()) / originalMazeImg.getHeight();			
+			}else {
+				newX = (int)Math.round((newDim.width * clyde.getCurrentPosition().getX()) / (double)lastDim.width) ;
+				newY = (int)Math.round((newDim.height * clyde.getCurrentPosition().getY()) / (double)lastDim.height);				
+			}
+			clyde.setCurrentPosition(new Position(newX, newY));	
 		}
-		clyde.setCurrentPosition(new Position(newX, newY));				
 
 		//inky
-		if(!drawnOnce) {
-			newX = (newDim.width * inky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
-			newY = (newDim.height * inky.getMazePosition().getY()) / originalMazeImg.getHeight();			
-		}else {
-			newX = (int)Math.round((newDim.width * inky.getCurrentPosition().getX()) / (double)lastDim.width) ;
-			newY = (int)Math.round((newDim.height * inky.getCurrentPosition().getY()) / (double)lastDim.height);				
+		synchronized (inky) {
+			if(!drawnOnce) {
+				newX = (newDim.width * inky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
+				newY = (newDim.height * inky.getMazePosition().getY()) / originalMazeImg.getHeight();			
+			}else {
+				newX = (int)Math.round((newDim.width * inky.getCurrentPosition().getX()) / (double)lastDim.width) ;
+				newY = (int)Math.round((newDim.height * inky.getCurrentPosition().getY()) / (double)lastDim.height);				
+			}
+			inky.setCurrentPosition(new Position(newX, newY));	
 		}
-		inky.setCurrentPosition(new Position(newX, newY));	
 		
 		newX = (newDim.width * doorMazeImagePosition.getX()) / originalMazeImg.getWidth() ;
 		newY = (newDim.height * doorMazeImagePosition.getY()) / originalMazeImg.getHeight();
 		doorCurrentPosition = new Position(newX, newY);
 		
 		//...
-	}
-	
-	public Position getDoorPosition() {
-		return doorCurrentPosition;
 	}
 	
 	/**
@@ -469,81 +503,56 @@ public class Maze {
 		int newWidth, newHeight;
 		
 		//pac-dots
-		for (Sprite pacdot : pacDots.getSprites()) {
-			newWidth = (newDim.width * pacdot.getOriginalSize().width) / originalMazeImg.getWidth() ;
-			newHeight = (newDim.height * pacdot.getOriginalSize().height) / originalMazeImg.getHeight();
-			pacdot.setCurrentSize(new Dimension(newWidth, newHeight));
+		synchronized (pacDots) {
+			for (Sprite pacdot : pacDots.getSprites()) {
+				newWidth = (newDim.width * pacdot.getOriginalSize().width) / originalMazeImg.getWidth() ;
+				newHeight = (newDim.height * pacdot.getOriginalSize().height) / originalMazeImg.getHeight();
+				pacdot.setCurrentSize(new Dimension(newWidth, newHeight));
+			}
 		}
 		
 		//energizers
-		for (Sprite e : energizers.getSprites()) {
-			newWidth = (newDim.width * e.getOriginalSize().width) / originalMazeImg.getWidth() ;
-			newHeight = (newDim.height * e.getOriginalSize().height) / originalMazeImg.getHeight();
-			e.setCurrentSize(new Dimension(newWidth, newHeight));
+		synchronized (energizers) {
+			for (Sprite e : energizers.getSprites()) {
+				newWidth = (newDim.width * e.getOriginalSize().width) / originalMazeImg.getWidth() ;
+				newHeight = (newDim.height * e.getOriginalSize().height) / originalMazeImg.getHeight();
+				e.setCurrentSize(new Dimension(newWidth, newHeight));
+			}
 		}
 		
 		//pac-man
-		newWidth = (newDim.width * pacMan.getOriginalSize().width) / originalMazeImg.getWidth() ;
-		newHeight = (newDim.height * pacMan.getOriginalSize().height) / originalMazeImg.getHeight();
-		pacMan.setCurrentSize(new Dimension(newWidth, newHeight));
+		synchronized (pacMan) {
+			newWidth = (newDim.width * pacMan.getOriginalSize().width) / originalMazeImg.getWidth() ;
+			newHeight = (newDim.height * pacMan.getOriginalSize().height) / originalMazeImg.getHeight();
+			pacMan.setCurrentSize(new Dimension(newWidth, newHeight));
+		}
 		
 		//blinky
-		newWidth = (newDim.width * blinky.getOriginalSize().width) / originalMazeImg.getWidth() ;
-		newHeight = (newDim.height * blinky.getOriginalSize().height) / originalMazeImg.getHeight();
-		blinky.setCurrentSize(new Dimension(newWidth, newHeight));
+		synchronized (blinky) {
+			newWidth = (newDim.width * blinky.getOriginalSize().width) / originalMazeImg.getWidth() ;
+			newHeight = (newDim.height * blinky.getOriginalSize().height) / originalMazeImg.getHeight();
+			blinky.setCurrentSize(new Dimension(newWidth, newHeight));
+		}
 
 		//pinky
-		newWidth = (newDim.width * pinky.getOriginalSize().width) / originalMazeImg.getWidth() ;
-		newHeight = (newDim.height * pinky.getOriginalSize().height) / originalMazeImg.getHeight();
-		pinky.setCurrentSize(new Dimension(newWidth, newHeight));
+		synchronized (pinky) {
+			newWidth = (newDim.width * pinky.getOriginalSize().width) / originalMazeImg.getWidth() ;
+			newHeight = (newDim.height * pinky.getOriginalSize().height) / originalMazeImg.getHeight();
+			pinky.setCurrentSize(new Dimension(newWidth, newHeight));
+		}
 
 		//clyde
-		newWidth = (newDim.width * clyde.getOriginalSize().width) / originalMazeImg.getWidth() ;
-		newHeight = (newDim.height * clyde.getOriginalSize().height) / originalMazeImg.getHeight();
-		clyde.setCurrentSize(new Dimension(newWidth, newHeight));
+		synchronized (clyde) {
+			newWidth = (newDim.width * clyde.getOriginalSize().width) / originalMazeImg.getWidth() ;
+			newHeight = (newDim.height * clyde.getOriginalSize().height) / originalMazeImg.getHeight();
+			clyde.setCurrentSize(new Dimension(newWidth, newHeight));
+		}
 		
 		//inky
-		newWidth = (newDim.width * inky.getOriginalSize().width) / originalMazeImg.getWidth() ;
-		newHeight = (newDim.height * inky.getOriginalSize().height) / originalMazeImg.getHeight();
-		inky.setCurrentSize(new Dimension(newWidth, newHeight));
-		
-		//...
-	}
-	
-	public Sprites getEnergizers() {
-		return energizers;
-	}
-	
-	public Sprites getPacDots() {
-		return pacDots;
-	}
-	
-	public PacMan getPacMan() {
-		return pacMan;
-	}
-
-	public Ghost getBlinky() {
-		return blinky;
-	}
-	
-	public Ghost getPinky() {
-		return pinky;
-	}
-	
-	public Ghost getClyde() {
-		return clyde;
-	}
-	
-	public Ghost getInky() {
-		return inky;
-	}
-	
-	public void draw(Graphics g) {
-		if(g != null && copyMazeImg != null) {
-			g.drawImage(copyMazeImg,0,0, null);
+		synchronized (inky) {
+			newWidth = (newDim.width * inky.getOriginalSize().width) / originalMazeImg.getWidth() ;
+			newHeight = (newDim.height * inky.getOriginalSize().height) / originalMazeImg.getHeight();
+			inky.setCurrentSize(new Dimension(newWidth, newHeight));
 		}
 	}
-	
-
-
 }

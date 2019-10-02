@@ -26,8 +26,8 @@ public abstract class ThreadPerso extends Thread {
 		}
 		
 		doThatAtStop();
-		
 		System.out.println("Stop "+getName()+" thread");
+		verifyThreadIsStopped();
 	}
 	
 	/**
@@ -58,6 +58,16 @@ public abstract class ThreadPerso extends Thread {
 	 */
 	protected abstract void doThatAtStop();  
 	
+	
+	private void verifyThreadIsStopped() {
+		stopThread();
+		try {
+			join(100);
+			if(isRunning()) {
+				interrupt();
+			}
+		} catch (InterruptedException e) {}
+	}
 	
 	/**
 	 * Method that starts the thread.
@@ -94,7 +104,7 @@ public abstract class ThreadPerso extends Thread {
 	 * Return true if the thread is running, else return false.
 	 * @return running boolean value.
 	 */
-	public synchronized boolean isRunning() {
+	public boolean isRunning() {
 		return running;
 	}
 

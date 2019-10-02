@@ -9,7 +9,7 @@ public class Blinky extends Ghost {
 
 	public Blinky(Position start_position, Tiles tiles, JPanel gamePanel) {
 		super(start_position, tiles, gamePanel);
-		isInTheBox = false; // blinky is already out of the box
+		setInTheBox(false); // blinky is already out of the box
 		state = MovingSpriteState.LEFT;
 		wantedState = state;
 	}
