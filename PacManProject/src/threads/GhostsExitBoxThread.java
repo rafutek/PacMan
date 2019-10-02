@@ -37,23 +37,23 @@ public class GhostsExitBoxThread extends TimerThread {
 	
 	@Override
 	protected void doThatWhileWaiting() {
-		if(!ghostWantsToGoOut) {
-			if(blinky.isInTheBox) {
+		if(!ghostWantsToGoOut) {			
+			if(blinky.isInTheBox()) {
 				ghostWantsToGoOut = true;
 				blinkyWantsToGoOut = ghostWantsToGoOut;
 				counterWaits = 0; // reset the timer to make the ghost wait until...
 			}
-			else if(pinky.isInTheBox) {
+			else if(pinky.isInTheBox()) {
 				ghostWantsToGoOut = true;
 				pinkyWantsToGoOut = ghostWantsToGoOut;
 				counterWaits = 0;
 			}
-			else if(clyde.isInTheBox) {
+			else if(clyde.isInTheBox()) {
 				ghostWantsToGoOut = true;
 				clydeWantsToGoOut = ghostWantsToGoOut;
 				counterWaits = 0; 
 			}
-			else if(inky.isInTheBox) {
+			else if(inky.isInTheBox()) {
 				ghostWantsToGoOut = true;
 				inkyWantsToGoOut = ghostWantsToGoOut;
 				counterWaits = 0; 
@@ -124,7 +124,7 @@ public class GhostsExitBoxThread extends TimerThread {
 			ghost.setState(MovingSpriteState.UP);
 			if(ghost.getCurrentPosition().getY() < doorPosition.getY()-maze.tileDim.height/2){        // if the ghost is out, start its direction thread
 				
-				ghost.isInTheBox = false;
+				ghost.setInTheBox(false);
 				ghostWantsToGoOut = false;
 				ghostCanGoOut = false;
 				
@@ -142,7 +142,7 @@ public class GhostsExitBoxThread extends TimerThread {
 		else if(ghost.getCurrentPosition().getX() > doorPosition.getX()) {
 			ghost.setState(MovingSpriteState.LEFT);
 		}
-		return false;
+		return false;			
 	}
 
 	//-------------------------------------------------------
@@ -156,7 +156,7 @@ public class GhostsExitBoxThread extends TimerThread {
 		c = new Clyde(new Position(0, 0), tiles, null);
 		d = new Inky(new Position(0, 0), tiles, null);
 		
-		a.isInTheBox = false;
+		a.setInTheBox(false);
 		
 		GhostsExitBoxThread gExitTh = new GhostsExitBoxThread(a, b, c, d, null);
 		gExitTh.startThread();

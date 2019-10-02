@@ -351,13 +351,27 @@ public class RenderThread extends ThreadPerso{
 			
 			//draw all the sprites at their respective position, 
 			//with their respective dimension
-			pacDots.draw(dbg); 
-			energizers.draw(dbg); 
-			pacMan.draw(dbg);
-			blinky.draw(dbg);
-			pinky.draw(dbg);
-			clyde.draw(dbg);
-			inky.draw(dbg);		
+			synchronized (pacDots) {
+				pacDots.draw(dbg); 
+			}
+			synchronized (energizers) {
+				energizers.draw(dbg); 
+			}
+			synchronized (pacMan) {
+				pacMan.draw(dbg);
+			}
+			synchronized (blinky) {
+				blinky.draw(dbg);
+			}
+			synchronized (pinky) {
+				pinky.draw(dbg);
+			}
+			synchronized (clyde) {
+				clyde.draw(dbg);
+			}
+			synchronized (inky) {
+				inky.draw(dbg);		
+			}
 		}
 	}  
 	

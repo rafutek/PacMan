@@ -13,27 +13,25 @@ public class Sprites {
 		sprites.add(e);
 	}
 	
-	public List<Sprite> getSprites(){
+	public synchronized List<Sprite> getSprites(){
 		return sprites;
 	}
 	
-	public Sprite getSpriteNb(int nb) {
+	public synchronized Sprite getSpriteNb(int nb) {
 		return sprites.get(nb);
 	}
 	
-	public void removeSpriteNb(int nb) {
+	public synchronized void removeSpriteNb(int nb) {
 		sprites.remove(nb);
 	}
 	
-	public void updateImg() {
+	public synchronized void updateImg() {
 		for (Sprite sprite : sprites) {
-			synchronized(sprite) {
-				sprite.updateImg();
-			}
+			sprite.updateImg();
 		}
 	}
 	
-	public void draw(Graphics g) {
+	public synchronized void draw(Graphics g) {
 		for (Sprite sprite : sprites) {
 			sprite.draw(g);
 		}

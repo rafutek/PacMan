@@ -153,7 +153,7 @@ public class PhysicsThread extends ThreadPerso {
 					}
 					
 					
-					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || blinky.isInTheBox) {
+					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || blinky.isInTheBox()) {
 						blinky.setState(blinkyWantedState);
 					}else {					
 						if(blinky.getDirectionThread() == null || !blinky.getDirectionThread().isRunning()) {
@@ -205,7 +205,7 @@ public class PhysicsThread extends ThreadPerso {
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 					}
 					
-					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || pinky.isInTheBox) {
+					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || pinky.isInTheBox()) {
 						pinky.setState(pinkyWantedState);
 					}else {					
 						if(pinky.getDirectionThread() == null || !pinky.getDirectionThread().isRunning()) {
@@ -257,7 +257,7 @@ public class PhysicsThread extends ThreadPerso {
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 					}
 					
-					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || clyde.isInTheBox) {
+					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || clyde.isInTheBox()) {
 						clyde.setState(clydeWantedState);
 					}else {					
 						if(clyde.getDirectionThread() == null || !clyde.getDirectionThread().isRunning()) {
@@ -308,7 +308,7 @@ public class PhysicsThread extends ThreadPerso {
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 					}
 					
-					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || inky.isInTheBox) {
+					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || inky.isInTheBox()) {
 						inky.setState(inkyWantedState); // pac-man can be in that state
 					}else {					
 						if(inky.getDirectionThread() == null || !inky.getDirectionThread().isRunning()) {
@@ -421,31 +421,33 @@ public class PhysicsThread extends ThreadPerso {
 	}
 
 	private boolean ghostCollision() {
-		if(pacMan.getCurrentPosition() != null && pacMan.getCurrentSize() != null) {
-			int pacman_left = pacMan.getCurrentPosition().getX();
-			int pacman_right = pacMan.getCurrentPosition().getX() + pacMan.getCurrentSize().width;
-			int pacman_up = pacMan.getCurrentPosition().getY();
-			int pacman_down = pacMan.getCurrentPosition().getY() + pacMan.getCurrentSize().height;
-			
-			if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky)) {
-				System.out.println("collision with blinky!");
-				return true;
+		synchronized(pacMan) {
+			if(pacMan.getCurrentPosition() != null && pacMan.getCurrentSize() != null) {
+				int pacman_left = pacMan.getCurrentPosition().getX();
+				int pacman_right = pacMan.getCurrentPosition().getX() + pacMan.getCurrentSize().width;
+				int pacman_up = pacMan.getCurrentPosition().getY();
+				int pacman_down = pacMan.getCurrentPosition().getY() + pacMan.getCurrentSize().height;
+				
+				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky)) {
+					System.out.println("collision with blinky!");
+					return true;
+				}
+				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky)) {
+					System.out.println("collision with pinky!");
+					return true;
+				}		
+				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde)) {
+					System.out.println("collision with clyde!");
+					return true;
+				}
+				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky)) {
+					System.out.println("collision with inky!");
+					return true;
+				}			
 			}
-			if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky)) {
-				System.out.println("collision with pinky!");
-				return true;
-			}		
-			if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde)) {
-				System.out.println("collision with clyde!");
-				return true;
-			}
-			if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky)) {
-				System.out.println("collision with inky!");
-				return true;
-			}			
+	
+			return false;			
 		}
-
-		return false;
 	}
 	
 	private boolean collisionWith(int pacman_left, int pacman_right, int pacman_up, int pacman_down, Ghost ghost) {
