@@ -207,6 +207,24 @@ public class Tiles {
 		Image img = original.getScaledInstance(newDim.width,newDim.height,Image.SCALE_SMOOTH);
 		return cast(img);
 	}
+	
+	/**
+	 * Takes four images in parameter and return the combined image, with the dimension of one.
+	 * The images must have the same dimension.
+	 * @param cornerTopLeft
+	 * @param cornerTopRight
+	 * @param cornerBottomLeft
+	 * @param cornerBottomRight
+	 * @return the combined image
+	 */
+	public BufferedImage createFullSpriteImage(BufferedImage cornerTopLeft, BufferedImage cornerTopRight,
+			BufferedImage cornerBottomLeft, BufferedImage cornerBottomRight) {
+		
+		BufferedImage imgTop = Tiles.joinToRight(cornerTopLeft, cornerTopRight);
+		BufferedImage imgBottom = Tiles.joinToRight(cornerBottomLeft, cornerBottomRight);
+		BufferedImage fullBigImg = Tiles.joinBelow(imgTop, imgBottom);
+		return Tiles.resize(fullBigImg, new Dimension(cornerTopLeft.getWidth(), cornerTopLeft.getHeight()));
+	}
 
 
 	

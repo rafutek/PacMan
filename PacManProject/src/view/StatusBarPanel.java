@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 
 import resources.Resources;
 import resources.Tiles;
+import sprites.Sprite;
 
 public class StatusBarPanel extends JPanel {
 
@@ -54,10 +55,18 @@ public class StatusBarPanel extends JPanel {
 		
 		
 		lives = new JLabel();
-		lives.setIcon(new ImageIcon(rsc.getImagePath("lives.PNG")));
+		BufferedImage L = t.getTileNumber(50);
+		BufferedImage LI = t.joinToRight(L , t.getTileNumber(47));
+		BufferedImage LIV = t.joinToRight(LI , t.getTileNumber(60));
+		BufferedImage LIVE = t.joinToRight(LIV , t.getTileNumber(43));
+		BufferedImage LIVES = t.joinToRight(LIVE , t.getTileNumber(57));
+		LIVES = t.resize(LIVES, new Dimension(50,18));
+		lives.setIcon(new ImageIcon(LIVES));
 		
 		livesImg = new JLabel();
-		livesImg.setIcon(new ImageIcon(rsc.getImagePath("lives3.png")));
+		BufferedImage life = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
+		life = t.resize(life, new Dimension(18,18));
+		livesImg.setIcon(new ImageIcon(life));
 		
 		
 		
@@ -80,7 +89,14 @@ public class StatusBarPanel extends JPanel {
 		niveau = new JLabel();
 		niveau.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		niveau.setForeground(Color.WHITE);
-		niveau.setIcon(new ImageIcon(rsc.getImagePath("level.png")));
+		BufferedImage L2 = t.getTileNumber(50);
+		BufferedImage LE = t.joinToRight(L2 , t.getTileNumber(43));
+		BufferedImage LEV = t.joinToRight(LE , t.getTileNumber(60));
+		BufferedImage LEVE = t.joinToRight(LEV , t.getTileNumber(43));
+		BufferedImage LEVEL = t.joinToRight(LEVE , t.getTileNumber(50));
+		LEVEL = t.resize(LEVEL, new Dimension(50,18));
+		niveau.setIcon(new ImageIcon(LEVEL));
+		
 		
 		fps = new JLabel("FPS");
 		fps.setFont(new Font("Tahoma", Font.PLAIN, 17));
