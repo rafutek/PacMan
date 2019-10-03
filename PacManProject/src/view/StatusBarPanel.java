@@ -22,9 +22,10 @@ public class StatusBarPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	public Integer s = 0;
 	GridLayout g ;
+	JPanel Top;
+	JPanel Bottom;
 	public JLabel score;
 	JLabel lives;
-	JLabel fullScreen;
 	JLabel direction;
 	JLabel statut;
 	JLabel livesImg;
@@ -33,8 +34,20 @@ public class StatusBarPanel extends JPanel {
 	
 	public StatusBarPanel() {
 		
-		setLayout(new GridLayout(0,8));
-		setBackground(Color.black);
+		setLayout(new GridLayout(2,0));
+		TopPanel();
+		BottomPanel();
+		add(Top);
+		add(Bottom);
+		
+	}
+	
+	
+	public void TopPanel() {
+		
+		Top = new JPanel();
+		Top.setLayout(new GridLayout(0,4));
+		Top.setBackground(Color.black);
 		try {
 			t = new Tiles();
 		} catch (IOException e) {
@@ -69,11 +82,37 @@ public class StatusBarPanel extends JPanel {
 		livesImg.setIcon(new ImageIcon(life));
 		
 		
+		niveau = new JLabel();
+		niveau.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		niveau.setForeground(Color.WHITE);
+		BufferedImage L2 = t.getTileNumber(50);
+		BufferedImage LE = t.joinToRight(L2 , t.getTileNumber(43));
+		BufferedImage LEV = t.joinToRight(LE , t.getTileNumber(60));
+		BufferedImage LEVE = t.joinToRight(LEV , t.getTileNumber(43));
+		BufferedImage LEVEL = t.joinToRight(LEVE , t.getTileNumber(50));
+		LEVEL = t.resize(LEVEL, new Dimension(50,18));
+		niveau.setIcon(new ImageIcon(LEVEL));
 		
-		fullScreen = new JLabel("");
-		fullScreen.setIcon(new ImageIcon(rsc.getImagePath("fullScreen.png")));
-		fullScreen.setBounds(479, 393, 44, 35);
+
+		Top.add(score);
+		Top.add(lives);
+		Top.add(livesImg);
+		Top.add(niveau);
+	}
+
+	public void BottomPanel() {
 		
+		Bottom = new JPanel();
+		Bottom.setLayout(new GridLayout(0,3));
+		Bottom.setBackground(new Color(0,0,0,100));
+
+		
+		try {
+			t = new Tiles();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 		
 		direction = new JLabel();
 		direction.setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -86,31 +125,14 @@ public class StatusBarPanel extends JPanel {
 		statut.setForeground(Color.WHITE);
 		statut.setText("play");
 		
-		niveau = new JLabel();
-		niveau.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		niveau.setForeground(Color.WHITE);
-		BufferedImage L2 = t.getTileNumber(50);
-		BufferedImage LE = t.joinToRight(L2 , t.getTileNumber(43));
-		BufferedImage LEV = t.joinToRight(LE , t.getTileNumber(60));
-		BufferedImage LEVE = t.joinToRight(LEV , t.getTileNumber(43));
-		BufferedImage LEVEL = t.joinToRight(LEVE , t.getTileNumber(50));
-		LEVEL = t.resize(LEVEL, new Dimension(50,18));
-		niveau.setIcon(new ImageIcon(LEVEL));
 		
 		
 		fps = new JLabel("FPS");
 		fps.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		fps.setForeground(Color.WHITE);
 		
-
-		add(score);
-		add(lives);
-		add(livesImg);
-		add(direction);
-		add(statut);
-		add(niveau);
-		add(fps);
-		add(fullScreen);
+		Bottom.add(fps);
+		Bottom.add(direction);
+		Bottom.add(statut);
 	}
-
 }
