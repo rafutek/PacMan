@@ -28,11 +28,15 @@ public class StatusBarPanel extends JPanel {
 	JLabel direction;
 	JLabel statut;
 	JLabel livesImg;
-	JLabel niveau;
+	JLabel level;
 	JLabel fps;
 	JLabel valueFps;
 	JLabel valueDirection;
 	JLabel valueStatut;
+	JLabel valueScore;
+	JLabel valueLevel;
+	private BufferedImage Lives;
+	private int vie = 4;
 
 	
 	
@@ -50,7 +54,7 @@ public class StatusBarPanel extends JPanel {
 	public void TopPanel() {
 		
 		Top = new JPanel();
-		Top.setLayout(new GridLayout(0,4));
+		Top.setLayout(new GridLayout(0,6));
 		Top.setBackground(Color.black);
 		try {
 			t = new Tiles();
@@ -70,6 +74,10 @@ public class StatusBarPanel extends JPanel {
 		scoref = t.resize(scoref, new Dimension(50,18));
 		score.setIcon(new ImageIcon(scoref));
 		
+		valueScore = new JLabel("000000");
+		valueScore.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		valueScore.setForeground(Color.WHITE);
+		
 		
 		lives = new JLabel();
 		BufferedImage L = t.getTileNumber(50);
@@ -81,27 +89,32 @@ public class StatusBarPanel extends JPanel {
 		lives.setIcon(new ImageIcon(LIVES));
 		
 		livesImg = new JLabel();
-		BufferedImage life = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
-		life = t.resize(life, new Dimension(18,18));
-		livesImg.setIcon(new ImageIcon(life));
+		setImageLives();
+		livesImg.setIcon(new ImageIcon(Lives));
 		
 		
-		niveau = new JLabel();
-		niveau.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		niveau.setForeground(Color.WHITE);
+		level = new JLabel();
+		level.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		level.setForeground(Color.WHITE);
 		BufferedImage L2 = t.getTileNumber(50);
 		BufferedImage LE = t.joinToRight(L2 , t.getTileNumber(43));
 		BufferedImage LEV = t.joinToRight(LE , t.getTileNumber(60));
 		BufferedImage LEVE = t.joinToRight(LEV , t.getTileNumber(43));
 		BufferedImage LEVEL = t.joinToRight(LEVE , t.getTileNumber(50));
 		LEVEL = t.resize(LEVEL, new Dimension(50,18));
-		niveau.setIcon(new ImageIcon(LEVEL));
+		level.setIcon(new ImageIcon(LEVEL));
+		
+		valueLevel = new JLabel("1");
+		valueLevel.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		valueLevel.setForeground(Color.WHITE);
 		
 
 		Top.add(score);
+		Top.add(valueScore);
 		Top.add(lives);
 		Top.add(livesImg);
-		Top.add(niveau);
+		Top.add(level);
+		Top.add(valueLevel);
 	}
 
 	public void BottomPanel() {
@@ -125,6 +138,7 @@ public class StatusBarPanel extends JPanel {
 		valueDirection = new JLabel("value");
 		valueDirection.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		valueDirection.setForeground(Color.WHITE);
+
 		
 		
 		statut= new JLabel("statut = ");
@@ -152,6 +166,54 @@ public class StatusBarPanel extends JPanel {
 		Bottom.add(valueStatut);
 		Bottom.add(fps);
 		Bottom.add(valueFps);
+	}
+	
+	public JLabel getScore() {
+		return valueStatut;
+	}
+
+	public void setScore(JLabel statut) {
+		this.valueStatut = statut;
+	}
+	public int getLives() {
+		return vie;
+	}
+
+	public void setLives(int vie) {
+		this.vie = vie;
+	}
+	
+	public void setImageLives() {
+		if(this.vie == 1) {
+			this.Lives = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
+			this.Lives = t.resize(Lives, new Dimension(18,18));
+			
+		} else if (this.vie == 2) {
+			
+			BufferedImage L1 = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
+			this.Lives = t.joinToRight(L1, L1);
+			this.Lives = t.resize(Lives, new Dimension(36,18));
+			
+		}else if (this.vie == 3) {
+			BufferedImage L1 = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
+			BufferedImage L2 = t.joinToRight(L1, L1);
+			this.Lives = t.joinToRight(L2, L1);
+			this.Lives = t.resize(Lives, new Dimension(54,18));
+		}else{
+			BufferedImage L1 = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
+			BufferedImage L2 = t.joinToRight(L1, L1);
+			BufferedImage L3 = t.joinToRight(L2, L1);
+			this.Lives = t.joinToRight(L3, L1);
+			this.Lives = t.resize(Lives, new Dimension(72,18));
+		}
+	}
+	
+	public JLabel getLevel() {
+		return valueStatut;
+	}
+
+	public void setLevel(JLabel statut) {
+		this.valueStatut = statut;
 	}
 	
 	public JLabel getFps() {
