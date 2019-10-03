@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 
 import resources.Resources;
 import resources.Tiles;
-import sprites.Sprite;
 
 public class StatusBarPanel extends JPanel {
 
