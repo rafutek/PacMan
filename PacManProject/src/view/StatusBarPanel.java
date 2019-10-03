@@ -30,6 +30,11 @@ public class StatusBarPanel extends JPanel {
 	JLabel livesImg;
 	JLabel niveau;
 	JLabel fps;
+	JLabel valueFps;
+	JLabel valueDirection;
+	JLabel valueStatut;
+
+	
 	
 	public StatusBarPanel() {
 		
@@ -102,7 +107,7 @@ public class StatusBarPanel extends JPanel {
 	public void BottomPanel() {
 		
 		Bottom = new JPanel();
-		Bottom.setLayout(new GridLayout(0,3));
+		Bottom.setLayout(new GridLayout(0,6));
 		Bottom.setBackground(new Color(0,0,0,100));
 
 		
@@ -113,25 +118,65 @@ public class StatusBarPanel extends JPanel {
 			e.printStackTrace();
 		}		
 		
-		direction = new JLabel();
+		direction = new JLabel("direction = ");
 		direction.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		direction.setForeground(Color.WHITE);
-		direction.setText("Error");
+		
+		valueDirection = new JLabel("value");
+		valueDirection.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		valueDirection.setForeground(Color.WHITE);
 		
 		
-		statut= new JLabel();
+		statut= new JLabel("statut = ");
 		statut.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		statut.setForeground(Color.WHITE);
-		statut.setText("play");
 		
+		valueStatut = new JLabel("Play");
+		valueStatut.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		valueStatut.setForeground(Color.WHITE);
 		
-		
-		fps = new JLabel("FPS");
+		fps = new JLabel("FPS = ");
 		fps.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		fps.setForeground(Color.WHITE);
 		
-		Bottom.add(fps);
+		valueFps = new JLabel("value");
+		valueFps.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		valueFps.setForeground(Color.WHITE);
+
+		
+		
+		
 		Bottom.add(direction);
+		Bottom.add(valueDirection);
 		Bottom.add(statut);
+		Bottom.add(valueStatut);
+		Bottom.add(fps);
+		Bottom.add(valueFps);
+	}
+	
+	public JLabel getFps() {
+		return valueFps;
+	}
+
+	public void setFps(JLabel fps) {
+		this.valueFps = fps;
+	}
+	
+	public JLabel getDirection() {
+		return valueDirection;
+	}
+
+	public void setDirection(JLabel direction) {
+		this.valueDirection = direction;
+	}
+	
+	public JLabel getStatut() {
+		return valueStatut;
+	}
+
+	public void setStatut(JLabel statut) {
+		this.valueStatut = statut;
 	}
 }
+
+

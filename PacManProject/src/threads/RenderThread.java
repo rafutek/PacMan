@@ -1,11 +1,14 @@
 package threads;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.text.DecimalFormat;
+
+import javax.swing.JLabel;
 
 import resources.Maze;
 import sprites.Ghost;
@@ -464,6 +467,9 @@ public class RenderThread extends ThreadPerso{
 			framesSkipped = 0;
 			prevStatsTime = timeNow;
 			statsInterval = 0L;   // reset
+			JLabel f= statusBarPanel.getFps();
+			f.setText(Double.toString(averageFPS));
+			statusBarPanel.setFps(f);
 		}
 	}  // end of storeStats()
 

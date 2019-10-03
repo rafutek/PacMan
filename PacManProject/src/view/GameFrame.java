@@ -24,6 +24,8 @@ public class GameFrame extends JFrame implements WindowListener
 	private GamePanel gamePanel;
 	private StatusBarPanel statusBarPanel;
 	private JPanel leftPanel, rightPanel;
+	private JLabel direction;
+	private JLabel statut;
 	
 	
 	private boolean fullScreen = false;
@@ -173,21 +175,34 @@ public class GameFrame extends JFrame implements WindowListener
 				if (keyCode == KeyEvent.VK_LEFT) {
 					synchronized(renderTh) {
 						renderTh.getPacMan().wantToGoLeft();
+						direction = statusBarPanel.getDirection();
+						direction.setText("LEFT");
+						statusBarPanel.setDirection(direction);
+						
 					}
 				}
 				else if(keyCode == KeyEvent.VK_RIGHT){
 					synchronized(renderTh) {
 						renderTh.getPacMan().wantToGoRight();
+						direction = statusBarPanel.getDirection();
+						direction.setText("RIGHT");
+						statusBarPanel.setDirection(direction);
 					}
 				}
 				else if(keyCode == KeyEvent.VK_UP){
 					synchronized(renderTh) {
 						renderTh.getPacMan().wantToGoUp();
+						direction = statusBarPanel.getDirection();
+						direction.setText("UP");
+						statusBarPanel.setDirection(direction);
 					}
 				}
 				else if(keyCode == KeyEvent.VK_DOWN){
 					synchronized(renderTh) {
 						renderTh.getPacMan().wantToGoDown();
+						direction = statusBarPanel.getDirection();
+						direction.setText("DOWN");
+						statusBarPanel.setDirection(direction);
 					}
 				}
 				
@@ -209,6 +224,12 @@ public class GameFrame extends JFrame implements WindowListener
 						synchronized (renderTh) {
 							renderTh.pauseThread();
 						}
+						direction = statusBarPanel.getDirection();
+						direction.setText("STOP");
+						statusBarPanel.setDirection(direction);
+						statut = statusBarPanel.getStatut();
+						statut.setText("Paused");
+						statusBarPanel.setStatut(statut);
 					}
 					else if(gamePaused) {
 						System.out.println("Game resumed");
@@ -216,6 +237,9 @@ public class GameFrame extends JFrame implements WindowListener
 						synchronized (renderTh) {
 							renderTh.resumeThread();
 						}
+						statut = statusBarPanel.getStatut();
+						statut.setText("Resumed");
+						statusBarPanel.setStatut(statut);
 					}
 				}
 			}
