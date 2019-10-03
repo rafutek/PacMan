@@ -160,9 +160,9 @@ public class RenderThread extends ThreadPerso{
 
 	@Override
 	protected void doThatAtStart() {
-		do {		
+		//do {		
 			checkResize();
-		}while(!animationDone);
+	//	}while(!animationDone);
 		
 		initializeStats();
 	}
@@ -255,20 +255,20 @@ public class RenderThread extends ThreadPerso{
 	 */
 	public synchronized void resumeThread() {
 		if(paused) {
-			animationDone = false;
-			if(threeTwoOneTh != null && threeTwoOneTh.isRunning()) {
-				threeTwoOneTh.stopThread();
-			}
-			threeTwoOneTh = new ThreeTwoOneThread(maze.getTiles(), gamePanel);
-			threeTwoOneTh.startThread();
-			do {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {}
-			}while(threeTwoOneTh.isRunning());
-			
-			animationDone = true;
-			
+//			animationDone = false;
+//			if(threeTwoOneTh != null && threeTwoOneTh.isRunning()) {
+//				threeTwoOneTh.stopThread();
+//			}
+//			threeTwoOneTh = new ThreeTwoOneThread(maze.getTiles(), gamePanel);
+//			threeTwoOneTh.startThread();
+//			do {
+//				try {
+//					Thread.sleep(100);
+//				} catch (InterruptedException e) {}
+//			}while(threeTwoOneTh.isRunning());
+//			
+//			animationDone = true;
+//			
 			initStats = false;
 			paused = false;
 			if(!animationTh.isRunning()) {
