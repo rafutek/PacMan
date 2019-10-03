@@ -82,11 +82,11 @@ public abstract class MovingSprite extends Sprite{
 					currentPosition.setX(currentPosition.getX()-speed);
 				}
 				else {
-					currentPosition.setX(gamePanel.getWidth());
+					currentPosition.setX(gamePanel.getWidth()-10);
 				}			
 			}
 			else if(state == MovingSpriteState.RIGHT) {
-				if(currentPosition.getX()+speed <= gamePanel.getWidth()) {
+				if(currentPosition.getX()+speed <= gamePanel.getWidth()-10) {
 					currentPosition.setX(currentPosition.getX()+speed);
 				}
 				else {

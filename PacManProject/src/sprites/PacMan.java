@@ -13,6 +13,7 @@ import resources.Tiles;
 public class PacMan extends MovingSprite {
 	
 	public static List<Integer> acceptedMazeValues = new ArrayList<Integer>();
+	private boolean isInTunnel = false;
 	
 	public PacMan(Position start_position, Tiles tiles, JPanel gamePanel) {
 		super(start_position, tiles, gamePanel);
@@ -20,6 +21,16 @@ public class PacMan extends MovingSprite {
 			PacMan.acceptedMazeValues.add(integer);
 		}
 		PacMan.acceptedMazeValues.add(352); // tunnel
+	}
+	
+
+	public boolean isInTunnel() {
+		return isInTunnel;
+	}
+
+
+	public void setIsInTunnel(boolean isInTunnel) {
+		this.isInTunnel = isInTunnel;
 	}
 	
 	@Override
@@ -128,4 +139,5 @@ public class PacMan extends MovingSprite {
 //		Thread.sleep(1000);
 //		Tiles.displayImg(pac.spriteImages.getSpriteImages().get(pac.spriteImages.getSpriteImages().size()-1));
 	}
+
 }

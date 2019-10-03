@@ -106,8 +106,16 @@ public class PhysicsThread extends ThreadPerso {
 					}
 					
 					if(PacMan.acceptedMazeValues.contains(wantedBoxValue)) {
-						pacMan.setState(pacManWantedState); // pac-man can be in that state
-					}else {
+						if(wantedBoxValue == 352 && !pacMan.isInTunnel()) {
+							pacMan.setState(pacManWantedState); // pac-man can be in that state
+							pacMan.setIsInTunnel(true);
+						}
+						else if(wantedBoxValue != 352) {
+							pacMan.setState(pacManWantedState); // pac-man can be in that state
+							pacMan.setIsInTunnel(false);
+						}
+						
+					}else if(!pacMan.isInTunnel()) {
 						pacMan.setState(MovingSpriteState.STOP);
 					}
 				}			
