@@ -7,7 +7,8 @@ import java.util.List;
 public class Sprites {
 	
 	protected List<Sprite> sprites = new ArrayList<Sprite>();
-	
+	public int showX=0;
+	public int showY=0;
 	
 	public void add(Sprite e) {
 		sprites.add(e);
@@ -30,7 +31,6 @@ public class Sprites {
 			sprite.updateImg();
 		}
 	}
-	
 	public synchronized void draw(Graphics g) {
 		for (Sprite sprite : sprites) {
 			sprite.draw(g);
