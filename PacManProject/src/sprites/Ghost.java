@@ -18,9 +18,9 @@ public abstract class Ghost extends MovingSprite {
 
 	private boolean isInTheBox = true;
 	
-	private JPanel gamePanel;
-	private List<List<Integer>> mazeValues;
-	private MovingSprite pacMan;
+	protected JPanel gamePanel;
+	protected List<List<Integer>> mazeValues;
+	protected MovingSprite pacMan;
 	
 	protected Position lastSeenPacManMatrixPos;
 

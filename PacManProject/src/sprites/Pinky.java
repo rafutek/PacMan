@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 
 import resources.Tiles;
 import threads.GhostBehaviorThread;
+import threads.PhysicsThread;
 
 public class Pinky extends Ghost {
 
@@ -38,8 +39,12 @@ public class Pinky extends Ghost {
 
 	@Override
 	public boolean specificAvailable() {
-		// TODO Auto-generated method stub
-		return false;
+		Position posGhost = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
+		MovingSpriteState pacmanDir=pacMan.getState();
+		if (pacmanDir==MovingSpriteState.LEFT && wallInRow(posGhost,posGhost.setX(posGhost.getX()-2))) {
+			
+		}
+		return true;
 	}
 
 
