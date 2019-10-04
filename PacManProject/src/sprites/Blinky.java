@@ -8,7 +8,7 @@ import resources.Tiles;
 import threads.GhostBehaviorThread;
 
 public class Blinky extends Ghost {
-
+	
 	public Blinky(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, MovingSprite pacMan) {
 		super(start_position, tiles, gamePanel, mazeValues, pacMan);
 		setInTheBox(false); // blinky is already out of the box
@@ -50,7 +50,8 @@ public class Blinky extends Ghost {
 
 	@Override
 	public void launchSpecific() {
-		System.out.println("do nothing yet");
+		System.out.println("go to the last seen point");
+		chooseDirectionToGoTo(lastSeenPacManMatrixPos);
 	}
 
 }

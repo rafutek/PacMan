@@ -22,6 +22,8 @@ public abstract class Ghost extends MovingSprite {
 	private List<List<Integer>> mazeValues;
 	private MovingSprite pacMan;
 	
+	protected Position lastSeenPacManMatrixPos;
+
 
 	public Ghost(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, MovingSprite pacMan) {
 		super(start_position, tiles, gamePanel);
@@ -145,7 +147,7 @@ public abstract class Ghost extends MovingSprite {
 		return false;
 	}
 	
-	public boolean sameCorridor() {
+	protected boolean sameCorridor() {
 		Position posGhost = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
 		Position posPacMan = PhysicsThread.mazeToMatrixPosition(pacMan.currentPosition, gamePanel, mazeValues);
 		
@@ -154,6 +156,7 @@ public abstract class Ghost extends MovingSprite {
 			if(wallInColumn(posGhost,posPacMan)) {
 				return false;
 			}
+			lastSeenPacManMatrixPos = new Position(posPacMan.getX(),posPacMan.getY());
 			return true;
 		}
 		
@@ -162,10 +165,36 @@ public abstract class Ghost extends MovingSprite {
 			if(wallInRow(posGhost,posPacMan)) {
 				return false;
 			}
+			lastSeenPacManMatrixPos = new Position(posPacMan.getX(),posPacMan.getY());
 			return true;
 		}
+		
 		return false;
 	}
 	
-	
+	/**
+	 * If the ghost and the matrix position are on the same row or column, 
+	 * the ghost state is changed to the direction of the matrix position.
+	 * @param matrixPos is the point in the matrix to go to.
+	 */
+	protected void chooseDirectionToGoTo(Position matrixPos) {
+		Position ghostMatrixPos = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
+		
+		if (ghostMatrixPos.getY() == matrixPos.getY()) {
+			if(ghostMatrixPos.getX() < matrixPos.getX()) {
+				setState(MovingSpriteState.RIGHT);
+			}
+			else {
+				setState(MovingSpriteState.LEFT);
+			}
+		}
+		else if(ghostMatrixPos.getX() == matrixPos.getX()) {
+			if(ghostMatrixPos.getY() < matrixPos.getY()) {
+				setState(MovingSpriteState.DOWN);
+			}
+			else {
+				setState(MovingSpriteState.UP);
+			}
+		}
+	}
 }
