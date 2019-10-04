@@ -20,7 +20,7 @@ public abstract class Ghost extends MovingSprite {
 	
 	protected JPanel gamePanel;
 	protected List<List<Integer>> mazeValues;
-	private MovingSprite pacMan;
+	protected MovingSprite pacMan;
 	
 	protected Position lastSeenPacManMatrixPos;
 	protected boolean goingToLastSeenPos, escaping;
