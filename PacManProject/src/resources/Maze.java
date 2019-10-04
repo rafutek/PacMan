@@ -258,29 +258,39 @@ public class Maze {
 		energizersMazeFilePositions.clear();
 		
 		//pac-man
-		pixelX = (pacManMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
-		pixelY = (pacManMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
-		pacManMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 
+		if(pacManMazeFilePosition != null) {
+			pixelX = (pacManMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+			pixelY = (pacManMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
+			pacManMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 			
+		}
 		
 		//blinky
-		pixelX = (blinkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
-		pixelY = (blinkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
-		blinkyMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 		
+		if(blinkyMazeFilePosition != null) {
+			pixelX = (blinkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+			pixelY = (blinkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
+			blinkyMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 					
+		}
 
 		//pinky
-		pixelX = (pinkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
-		pixelY = (pinkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
-		pinkyMazeImagePosition = new Position(pixelX, pixelY); 	
+		if(pinkyMazeFilePosition != null) {
+			pixelX = (pinkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+			pixelY = (pinkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
+			pinkyMazeImagePosition = new Position(pixelX, pixelY); 				
+		}
 
 		//clyde
-		pixelX = (clydeMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
-		pixelY = (clydeMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
-		clydeMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 	
-		
+		if(clydeMazeFilePosition != null) {
+			pixelX = (clydeMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+			pixelY = (clydeMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
+			clydeMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 			
+		}
+	
 		//inky
-		pixelX = (inkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
-		pixelY = (inkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
-		inkyMazeImagePosition = new Position(pixelX, pixelY); 	
+		if(inkyMazeFilePosition != null) {
+			pixelX = (inkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+			pixelY = (inkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
+			inkyMazeImagePosition = new Position(pixelX, pixelY); 				
+		}
 		
 		//door
 		for (Position position : doorMazeFilePositions) {

@@ -28,6 +28,7 @@ public abstract class Sprite {
 		setImagesArray(tilesNumbers); // fill an image array with these tiles
 		createFullSpriteImages();
 		setOriginalSize();
+		setCurrentSize(originalSize);
 		createAnimationOrderList();
 	}
 	
@@ -135,6 +136,9 @@ public abstract class Sprite {
 	 * @param g is the graphics where to draw the sprite.
 	 */
 	public synchronized void draw(Graphics g) {
+		System.out.println(currentPosition);
+		System.out.println(currentSize);
+		System.out.println(originalSize);
 		g.drawImage(spriteFullImages.getImagesList().get(animationOrder.get(0)), 
 				currentPosition.getX(), currentPosition.getY(), currentSize.width, currentSize.height, null);
 	}
