@@ -310,16 +310,16 @@ public class Maze {
 		pacMan = new PacMan(pacManMazeImagePosition, tiles, gamePanel);
 		
 		//blinky
-		blinky = new Blinky(blinkyMazeImagePosition, tiles, gamePanel);
+		blinky = new Blinky(blinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);
 
 		//pinky
-		pinky = new Pinky(pinkyMazeImagePosition, tiles, gamePanel); 
+		pinky = new Pinky(pinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan); 
 
 		//clyde
-		clyde = new Clyde(clydeMazeImagePosition, tiles, gamePanel); 
+		clyde = new Clyde(clydeMazeImagePosition, tiles, gamePanel, mazeValues, pacMan); 
 
 		//inky
-		inky = new Inky(inkyMazeImagePosition, tiles, gamePanel);
+		inky = new Inky(inkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);
 		
 		//door
 		computeDoorPosition();

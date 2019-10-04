@@ -1,14 +1,16 @@
 package sprites;
 
+import java.util.List;
+
 import javax.swing.JPanel;
 
 import resources.Tiles;
-import threads.RandomGhostTimer;
+import threads.GhostBehaviorThread;
 
 public class Blinky extends Ghost {
 
-	public Blinky(Position start_position, Tiles tiles, JPanel gamePanel) {
-		super(start_position, tiles, gamePanel);
+	public Blinky(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, MovingSprite pacMan) {
+		super(start_position, tiles, gamePanel, mazeValues, pacMan);
 		setInTheBox(false); // blinky is already out of the box
 		state = MovingSpriteState.LEFT;
 		wantedState = state;
@@ -30,9 +32,25 @@ public class Blinky extends Ghost {
 	
 	@Override
 	public void startDirectionThread() {
-		directionTh = new RandomGhostTimer(this);
-		directionTh.setName("Blinky direction");
-		directionTh.startThread();
+		behaviorTh = new GhostBehaviorThread(this);
+		behaviorTh.setName("Blinky behavior");
+		behaviorTh.startThread();
+	}
+
+
+	@Override
+	public boolean specificAvailable() {
+		if(sameCorridor()) {
+			System.out.println("pac-man and blinky in the same corridor !");
+			return true;
+		}
+		return false;
+	}
+
+
+	@Override
+	public void launchSpecific() {
+		System.out.println("do nothing yet");
 	}
 
 }

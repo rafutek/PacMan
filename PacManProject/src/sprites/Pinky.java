@@ -1,14 +1,16 @@
 package sprites;
 
+import java.util.List;
+
 import javax.swing.JPanel;
 
 import resources.Tiles;
-import threads.RandomGhostTimer;
+import threads.GhostBehaviorThread;
 
 public class Pinky extends Ghost {
 
-	public Pinky(Position start_position, Tiles tiles, JPanel gamePanel) {
-		super(start_position, tiles, gamePanel);
+	public Pinky(Position start_position, Tiles tiles, JPanel gamePanel,  List<List<Integer>> mazeValues, MovingSprite pacMan) {
+		super(start_position, tiles, gamePanel, mazeValues, pacMan);
 	}
 	
 
@@ -28,8 +30,22 @@ public class Pinky extends Ghost {
 	
 	@Override
 	public void startDirectionThread() {
-		directionTh = new RandomGhostTimer(this);
-		directionTh.setName("Pinky direction");
-		directionTh.startThread();
+		behaviorTh = new GhostBehaviorThread(this);
+		behaviorTh.setName("Pinky behavior");
+		behaviorTh.startThread();
+	}
+
+
+	@Override
+	public boolean specificAvailable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public void launchSpecific() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -1,27 +1,34 @@
 package sprites;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-
 import javax.swing.JPanel;
 
 import resources.ListImages;
 import resources.Tiles;
-import threads.RandomGhostTimer;
+import threads.PhysicsThread;
+import threads.GhostBehaviorThread;
 
 public abstract class Ghost extends MovingSprite {
 	
 	public static List<Integer> acceptedMazeValues;
 	
-	protected RandomGhostTimer directionTh = new RandomGhostTimer(this);
+	protected GhostBehaviorThread behaviorTh = new GhostBehaviorThread(this);
 
 	private boolean isInTheBox = true;
+	
+	private JPanel gamePanel;
+	private List<List<Integer>> mazeValues;
+	private MovingSprite pacMan;
+	
 
-	public Ghost(Position start_position, Tiles tiles, JPanel gamePanel) {
+	public Ghost(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, MovingSprite pacMan) {
 		super(start_position, tiles, gamePanel);
 		Ghost.acceptedMazeValues = super.acceptedMazeValues;
+		this.gamePanel = gamePanel;
+		this.mazeValues = mazeValues;
+		this.pacMan = pacMan;
 	}
 	
 	@Override
@@ -103,7 +110,62 @@ public abstract class Ghost extends MovingSprite {
 	
 	public abstract void startDirectionThread();
 	
-	public synchronized RandomGhostTimer getDirectionThread() {
-		return directionTh;
+	public synchronized GhostBehaviorThread getDirectionThread() {
+		return behaviorTh;
 	}
+	
+	
+	/**
+	 * Specific behavior defined by child
+	 */
+	public abstract boolean specificAvailable();
+	public abstract void launchSpecific();
+	
+	private boolean wallInRow(Position pos1, Position pos2) {
+		int petit= Math.min(pos1.getX(),pos2.getX());
+		int grand= Math.max(pos1.getX(),pos2.getX());
+		for (int i = petit+1; i < grand; i++) {
+			int posI = mazeValues.get(pos1.getY()).get(i);
+			if (posI!=0 && posI!=13 && posI!=15) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean wallInColumn(Position pos1, Position pos2) {
+		int petit= Math.min(pos1.getY(),pos2.getY());
+		int grand= Math.max(pos1.getY(),pos2.getY());
+		for (int i = petit+1; i < grand; i++) {
+			int posI = mazeValues.get(i).get(pos1.getX());
+			if (posI!=0 && posI!=13 && posI!=15) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean sameCorridor() {
+		Position posGhost = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
+		Position posPacMan = PhysicsThread.mazeToMatrixPosition(pacMan.currentPosition, gamePanel, mazeValues);
+		
+		if (posGhost.getX() == posPacMan.getX()) {
+			System.out.println("pacman in same column");
+			if(wallInColumn(posGhost,posPacMan)) {
+				return false;
+			}
+			return true;
+		}
+		
+		if (posGhost.getY() == posPacMan.getY()) {
+			System.out.println("pacman in same line");
+			if(wallInRow(posGhost,posPacMan)) {
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	
 }
