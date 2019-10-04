@@ -164,11 +164,11 @@ public class PhysicsThread extends ThreadPerso {
 					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || blinky.isInTheBox()) {
 						blinky.setState(blinkyWantedState);
 					}else {					
-						if(blinky.getDirectionThread() == null || !blinky.getDirectionThread().isRunning()) {
+						if(blinky.getBehaviorThread() == null || !blinky.getBehaviorThread().isRunning()) {
 							blinky.startDirectionThread();
 						}
 						// blinky set another possible direction
-						blinky.getDirectionThread().changeDirection();
+						blinky.getBehaviorThread().changeDirection();
 					}
 				}			
 			}			
@@ -216,11 +216,11 @@ public class PhysicsThread extends ThreadPerso {
 					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || pinky.isInTheBox()) {
 						pinky.setState(pinkyWantedState);
 					}else {					
-						if(pinky.getDirectionThread() == null || !pinky.getDirectionThread().isRunning()) {
+						if(pinky.getBehaviorThread() == null || !pinky.getBehaviorThread().isRunning()) {
 							pinky.startDirectionThread();
 						}
 						// pinky set another possible direction
-						pinky.getDirectionThread().changeDirection();
+						pinky.getBehaviorThread().changeDirection();
 					}
 				}			
 			}			
@@ -268,11 +268,11 @@ public class PhysicsThread extends ThreadPerso {
 					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || clyde.isInTheBox()) {
 						clyde.setState(clydeWantedState);
 					}else {					
-						if(clyde.getDirectionThread() == null || !clyde.getDirectionThread().isRunning()) {
+						if(clyde.getBehaviorThread() == null || !clyde.getBehaviorThread().isRunning()) {
 							clyde.startDirectionThread();
 						}
 						// clyde set another possible direction
-						clyde.getDirectionThread().changeDirection();
+						clyde.getBehaviorThread().changeDirection();
 					}
 				}			
 			}			
@@ -319,11 +319,11 @@ public class PhysicsThread extends ThreadPerso {
 					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || inky.isInTheBox()) {
 						inky.setState(inkyWantedState); // pac-man can be in that state
 					}else {					
-						if(inky.getDirectionThread() == null || !inky.getDirectionThread().isRunning()) {
+						if(inky.getBehaviorThread() == null || !inky.getBehaviorThread().isRunning()) {
 							inky.startDirectionThread();
 						}
 						// inky set another possible direction
-						inky.getDirectionThread().changeDirection();
+						inky.getBehaviorThread().changeDirection();
 					}
 				}			
 			}		
@@ -344,23 +344,23 @@ public class PhysicsThread extends ThreadPerso {
 	public synchronized void pauseThread() {
 		paused = true;
 		synchronized(blinky) {
-			if(blinky.getDirectionThread() != null) {
-				blinky.getDirectionThread().pauseThread();
+			if(blinky.getBehaviorThread() != null) {
+				blinky.getBehaviorThread().pauseThread();
 			}			
 		}
 		synchronized(pinky) {
-			if(pinky.getDirectionThread() != null) {
-				pinky.getDirectionThread().pauseThread();
+			if(pinky.getBehaviorThread() != null) {
+				pinky.getBehaviorThread().pauseThread();
 			}			
 		}
 		synchronized(clyde) {
-			if(clyde.getDirectionThread() != null) {
-				clyde.getDirectionThread().pauseThread();
+			if(clyde.getBehaviorThread() != null) {
+				clyde.getBehaviorThread().pauseThread();
 			}			
 		}
 		synchronized(inky) {
-			if(inky.getDirectionThread() != null) {
-				inky.getDirectionThread().pauseThread();
+			if(inky.getBehaviorThread() != null) {
+				inky.getBehaviorThread().pauseThread();
 			}			
 		}
 	}
@@ -371,23 +371,23 @@ public class PhysicsThread extends ThreadPerso {
 	public synchronized void resumeThread() {
 		paused = false;
 		synchronized(blinky) {
-			if(blinky.getDirectionThread() != null) {
-				blinky.getDirectionThread().resumeThread();
+			if(blinky.getBehaviorThread() != null) {
+				blinky.getBehaviorThread().resumeThread();
 			}			
 		}
 		synchronized(pinky) {
-			if(pinky.getDirectionThread() != null) {
-				pinky.getDirectionThread().resumeThread();
+			if(pinky.getBehaviorThread() != null) {
+				pinky.getBehaviorThread().resumeThread();
 			}			
 		}
 		synchronized(clyde) {
-			if(clyde.getDirectionThread() != null) {
-				clyde.getDirectionThread().resumeThread();
+			if(clyde.getBehaviorThread() != null) {
+				clyde.getBehaviorThread().resumeThread();
 			}			
 		}
 		synchronized(inky) {
-			if(inky.getDirectionThread() != null) {
-				inky.getDirectionThread().resumeThread();
+			if(inky.getBehaviorThread() != null) {
+				inky.getBehaviorThread().resumeThread();
 			}			
 		}
 	}
@@ -396,23 +396,23 @@ public class PhysicsThread extends ThreadPerso {
 	@Override
 	protected void doThatAtStop() {
 		synchronized(blinky) {
-			if(blinky.getDirectionThread() != null) {
-				blinky.getDirectionThread().stopThread();
+			if(blinky.getBehaviorThread() != null) {
+				blinky.getBehaviorThread().stopThread();
 			}			
 		}
 		synchronized(pinky) {
-			if(pinky.getDirectionThread() != null) {
-				pinky.getDirectionThread().stopThread();
+			if(pinky.getBehaviorThread() != null) {
+				pinky.getBehaviorThread().stopThread();
 			}			
 		}
 		synchronized(clyde) {
-			if(clyde.getDirectionThread() != null) {
-				clyde.getDirectionThread().stopThread();
+			if(clyde.getBehaviorThread() != null) {
+				clyde.getBehaviorThread().stopThread();
 			}			
 		}
 		synchronized(inky) {
-			if(inky.getDirectionThread() != null) {
-				inky.getDirectionThread().stopThread();
+			if(inky.getBehaviorThread() != null) {
+				inky.getBehaviorThread().stopThread();
 			}			
 		}
 	}

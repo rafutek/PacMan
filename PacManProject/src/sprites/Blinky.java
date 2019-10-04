@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 
 import resources.Tiles;
 import threads.GhostBehaviorThread;
+import threads.PhysicsThread;
 
 public class Blinky extends Ghost {
 	
@@ -37,20 +38,24 @@ public class Blinky extends Ghost {
 		behaviorTh.startThread();
 	}
 
-
+	/**
+	 * Return true if pac-man is in the same corridor.
+	 */
 	@Override
 	public boolean specificAvailable() {
+		
 		if(sameCorridor()) {
-			System.out.println("pac-man and blinky in the same corridor !");
 			return true;
 		}
 		return false;
 	}
 
-
+	/**
+	 * Go to the last seen position of pac-man.
+	 */
 	@Override
 	public void launchSpecific() {
-		System.out.println("go to the last seen point");
+		goingToLastSeenPos = true;
 		chooseDirectionToGoTo(lastSeenPacManMatrixPos);
 	}
 

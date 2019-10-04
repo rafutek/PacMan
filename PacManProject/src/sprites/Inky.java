@@ -1,11 +1,13 @@
 package sprites;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.JPanel;
 
 import resources.Tiles;
 import threads.GhostBehaviorThread;
+import threads.PhysicsThread;
 
 public class Inky extends Ghost {
 
@@ -36,18 +38,36 @@ public class Inky extends Ghost {
 	}
 
 
+	/**
+	 * Return true if pac-man is in the same corridor.
+	 */
 	@Override
 	public boolean specificAvailable() {
-		// TODO Auto-generated method stub
+		
+		if(sameCorridor()) {
+			return true;
+		}
 		return false;
 	}
 
-
+	/**
+	 * Has 50% chances to go to the last seen position of pac-man, 
+	 * else he goes in the opposite direction.
+	 */
 	@Override
 	public void launchSpecific() {
-		// TODO Auto-generated method stub
-		
-	}
 
+		if(ThreadLocalRandom.current().nextInt(0, 100 + 1) < 50)
+		{
+			System.out.println("inky choose to follow pac-man");
+			chooseDirectionToGoTo(lastSeenPacManMatrixPos);
+			goingToLastSeenPos = true;
+		}
+		else {
+			System.out.println("inky choose to go in the opposite direction");
+			chooseDirectionToEscapeFrom(lastSeenPacManMatrixPos);
+			escaping = true;
+		}
+	}
 
 }
