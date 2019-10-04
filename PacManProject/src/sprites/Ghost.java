@@ -227,6 +227,18 @@ public abstract class Ghost extends MovingSprite {
 		return goingToLastSeenPos;
 	}
 	
+	public void notGoingToLastSeenPosition() {
+		goingToLastSeenPos = false;
+	}
+	
+	public boolean escaping() {
+		return escaping;
+	}
+	
+	public void notEscape() {
+		escaping = false;
+	}
+	
 	/**
 	 * Check, if ghost is going to the last seen position,
 	 * if its current matrix position is the same as the last seen position of pac-man.
