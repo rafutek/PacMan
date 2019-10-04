@@ -42,16 +42,7 @@ public class Pinky extends Ghost {
 	@Override
 	public boolean specificAvailable() {
 		// if can go in parallel
-		/* vdir=up si ghost Y> pacman Y
-		 * vdir=no si ghost Y = pacman Y
-		 * vdir=down si ghost Y<pacman Y
-		 * 
-		 * hdir=left si ghost X>pacman X
-		 * hdir=no si ghost X=pacmanX
-		 * hdir=right si ghost X<pacman X
-		 * 
-		 * 
-		 * si pac man go HORIZONTAL (LEFT||RIGHT)
+		/* si pac man go HORIZONTAL (LEFT||RIGHT)
 		 * -> ghost x < pacman x si hdir=left
 		 *    -> ghost x  go RIGHT si pas de mur
 		 * -> ghost x > pacman x
@@ -71,20 +62,19 @@ public class Pinky extends Ghost {
 		int upBoxValue;
 		int downBoxValue;
 		
+		nextState = getState();
 		
 		if(pacMan.getState() == MovingSpriteState.LEFT || pacMan.getState() == MovingSpriteState.RIGHT) {
 			if(this.currentPosition.getX() < pacMan.getCurrentPosition().getX()) { // want to go to right
 				rightBoxValue = mazeValues.get(posGhost.getY()).get(posGhost.getX()+1);
 				if(rightBoxValue == 0 || rightBoxValue == 13 || rightBoxValue == 15) {
 					nextState=MovingSpriteState.RIGHT;
-					return true;
 				}
 			}
 			else if(this.currentPosition.getX() > pacMan.getCurrentPosition().getX()) { // want to go to left
 				leftBoxValue = mazeValues.get(posGhost.getY()).get(posGhost.getX()-1);
 				if(leftBoxValue == 0 || leftBoxValue == 13 || leftBoxValue == 15) {
 					nextState=MovingSpriteState.LEFT;
-					return true;
 				}
 			}
 		}
@@ -93,21 +83,17 @@ public class Pinky extends Ghost {
 				downBoxValue = mazeValues.get(posGhost.getY()+1).get(posGhost.getX());
 				if(downBoxValue == 0 || downBoxValue == 13 || downBoxValue == 15) {
 					nextState=MovingSpriteState.DOWN;
-					return true;
 				}
 			}
 			else if(this.currentPosition.getX() > pacMan.getCurrentPosition().getX()) { // want to go to left
 				upBoxValue = mazeValues.get(posGhost.getY()-1).get(posGhost.getX());
 				if(upBoxValue == 0 || upBoxValue == 13 || upBoxValue == 15) {
 					nextState=MovingSpriteState.UP;
-					return true;
 				}
 			}
 		}
 		
-		
-		//go
-		return false;
+		return true;
 	}
 
 

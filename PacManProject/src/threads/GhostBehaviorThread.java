@@ -32,12 +32,10 @@ public class GhostBehaviorThread extends TimerThread {
 			counterWaits=0;
 			ghost.checkAtLastSeenPosition();
 		}		
-		
 		else if(ghost.escaping()) {
 			System.out.println("escaping");
 			counterWaits=0;
 		}
-		
 		else if (ghost.specificAvailable()) {
 			counterWaits=0; //reset the timer so the direction will not be randomized
   			ghost.launchSpecific();
