@@ -160,7 +160,7 @@ public class RenderThread extends ThreadPerso{
 
 	@Override
 	protected void doThatAtStart() {
-		//do {		
+	//	do {		
 			checkResize();
 	//	}while(!animationDone);
 		
@@ -268,7 +268,7 @@ public class RenderThread extends ThreadPerso{
 //			}while(threeTwoOneTh.isRunning());
 //			
 //			animationDone = true;
-//			
+			
 			initStats = false;
 			paused = false;
 			if(!animationTh.isRunning()) {

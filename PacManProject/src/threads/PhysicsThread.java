@@ -10,10 +10,10 @@ import sprites.Position;
 
 public class PhysicsThread extends ThreadPerso {
 
-	private List<List<Integer>> mazeValues;
-	private JPanel gamePanel;
+	public List<List<Integer>> mazeValues;
+	public JPanel gamePanel;
 	
-	private PacMan pacMan;
+	public PacMan pacMan;
 	private MovingSpriteState pacManWantedState;
 	
 	private Ghost blinky;
@@ -72,7 +72,7 @@ public class PhysicsThread extends ThreadPerso {
 					if(pacManWantedState == MovingSpriteState.LEFT) {
 						adaptedCurrentPosX = pacMan.getCurrentPosition().getX() + pacMan.getCurrentSize().width/2;
 						adaptedCurrentPosY = pacMan.getCurrentPosition().getY();
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						if(currentMatrixPos.getX()-1 > 0) {
 							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
 						}
@@ -84,7 +84,7 @@ public class PhysicsThread extends ThreadPerso {
 					else if(pacManWantedState == MovingSpriteState.RIGHT) {
 						adaptedCurrentPosX = pacMan.getCurrentPosition().getX() - pacMan.getCurrentSize().width/2;
 						adaptedCurrentPosY = pacMan.getCurrentPosition().getY();
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						if(currentMatrixPos.getX()+1 < mazeValues.get(currentMatrixPos.getY()).size()) {
 							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
 						}
@@ -95,13 +95,13 @@ public class PhysicsThread extends ThreadPerso {
 					else if(pacManWantedState == MovingSpriteState.UP) {
 						adaptedCurrentPosX = pacMan.getCurrentPosition().getX();
 						adaptedCurrentPosY = pacMan.getCurrentPosition().getY() + pacMan.getCurrentSize().height/2;
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
 					}
 					else if(pacManWantedState == MovingSpriteState.DOWN) {
 						adaptedCurrentPosX = pacMan.getCurrentPosition().getX();
 						adaptedCurrentPosY = pacMan.getCurrentPosition().getY() - pacMan.getCurrentSize().height/2;
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 					}
 					
@@ -138,25 +138,25 @@ public class PhysicsThread extends ThreadPerso {
 					if(blinkyWantedState == MovingSpriteState.LEFT) {
 						adaptedCurrentPosX = blinky.getCurrentPosition().getX() + blinky.getCurrentSize().width/2;
 						adaptedCurrentPosY = blinky.getCurrentPosition().getY();
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
 					}
 					else if(blinkyWantedState == MovingSpriteState.RIGHT) {
 						adaptedCurrentPosX = blinky.getCurrentPosition().getX() - blinky.getCurrentSize().width/2;
 						adaptedCurrentPosY = blinky.getCurrentPosition().getY();
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
 					}
 					else if(blinkyWantedState == MovingSpriteState.UP) {
 						adaptedCurrentPosX = blinky.getCurrentPosition().getX();
 						adaptedCurrentPosY = blinky.getCurrentPosition().getY() + blinky.getCurrentSize().height/2;
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
 					}
 					else if(blinkyWantedState == MovingSpriteState.DOWN) {
 						adaptedCurrentPosX = blinky.getCurrentPosition().getX();
 						adaptedCurrentPosY = blinky.getCurrentPosition().getY() - blinky.getCurrentSize().height/2;
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 					}
 					
@@ -164,11 +164,11 @@ public class PhysicsThread extends ThreadPerso {
 					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || blinky.isInTheBox()) {
 						blinky.setState(blinkyWantedState);
 					}else {					
-						if(blinky.getDirectionThread() == null || !blinky.getDirectionThread().isRunning()) {
+						if(blinky.getBehaviorThread() == null || !blinky.getBehaviorThread().isRunning()) {
 							blinky.startDirectionThread();
 						}
 						// blinky set another possible direction
-						blinky.getDirectionThread().changeDirection();
+						blinky.getBehaviorThread().changeDirection();
 					}
 				}			
 			}			
@@ -191,36 +191,36 @@ public class PhysicsThread extends ThreadPerso {
 					if(pinkyWantedState == MovingSpriteState.LEFT) {
 						adaptedCurrentPosX = pinky.getCurrentPosition().getX() + pinky.getCurrentSize().width/2;
 						adaptedCurrentPosY = pinky.getCurrentPosition().getY();
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
 					}
 					else if(pinkyWantedState == MovingSpriteState.RIGHT) {
 						adaptedCurrentPosX = pinky.getCurrentPosition().getX() - pinky.getCurrentSize().width/2;
 						adaptedCurrentPosY = pinky.getCurrentPosition().getY();
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
 					}
 					else if(pinkyWantedState == MovingSpriteState.UP) {
 						adaptedCurrentPosX = pinky.getCurrentPosition().getX();
 						adaptedCurrentPosY = pinky.getCurrentPosition().getY() + pinky.getCurrentSize().height/2;
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
 					}
 					else if(pinkyWantedState == MovingSpriteState.DOWN) {
 						adaptedCurrentPosX = pinky.getCurrentPosition().getX();
 						adaptedCurrentPosY = pinky.getCurrentPosition().getY() - pinky.getCurrentSize().height/2;
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 					}
 					
 					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || pinky.isInTheBox()) {
 						pinky.setState(pinkyWantedState);
 					}else {					
-						if(pinky.getDirectionThread() == null || !pinky.getDirectionThread().isRunning()) {
+						if(pinky.getBehaviorThread() == null || !pinky.getBehaviorThread().isRunning()) {
 							pinky.startDirectionThread();
 						}
 						// pinky set another possible direction
-						pinky.getDirectionThread().changeDirection();
+						pinky.getBehaviorThread().changeDirection();
 					}
 				}			
 			}			
@@ -243,36 +243,36 @@ public class PhysicsThread extends ThreadPerso {
 					if(clydeWantedState == MovingSpriteState.LEFT) {
 						adaptedCurrentPosX = clyde.getCurrentPosition().getX() + clyde.getCurrentSize().width/2;
 						adaptedCurrentPosY = clyde.getCurrentPosition().getY();
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
 					}
 					else if(clydeWantedState == MovingSpriteState.RIGHT) {
 						adaptedCurrentPosX = clyde.getCurrentPosition().getX() - clyde.getCurrentSize().width/2;
 						adaptedCurrentPosY = clyde.getCurrentPosition().getY();
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
 					}
 					else if(clydeWantedState == MovingSpriteState.UP) {
 						adaptedCurrentPosX = clyde.getCurrentPosition().getX();
 						adaptedCurrentPosY = clyde.getCurrentPosition().getY() + clyde.getCurrentSize().height/2;
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
 					}
 					else if(clydeWantedState == MovingSpriteState.DOWN) {
 						adaptedCurrentPosX = clyde.getCurrentPosition().getX();
 						adaptedCurrentPosY = clyde.getCurrentPosition().getY() - clyde.getCurrentSize().height/2;
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 					}
 					
 					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || clyde.isInTheBox()) {
 						clyde.setState(clydeWantedState);
 					}else {					
-						if(clyde.getDirectionThread() == null || !clyde.getDirectionThread().isRunning()) {
+						if(clyde.getBehaviorThread() == null || !clyde.getBehaviorThread().isRunning()) {
 							clyde.startDirectionThread();
 						}
 						// clyde set another possible direction
-						clyde.getDirectionThread().changeDirection();
+						clyde.getBehaviorThread().changeDirection();
 					}
 				}			
 			}			
@@ -294,36 +294,36 @@ public class PhysicsThread extends ThreadPerso {
 					if(inkyWantedState == MovingSpriteState.LEFT) {
 						adaptedCurrentPosX = inky.getCurrentPosition().getX() + inky.getCurrentSize().width/2;
 						adaptedCurrentPosY = inky.getCurrentPosition().getY();
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
 					}
 					else if(inkyWantedState == MovingSpriteState.RIGHT) {
 						adaptedCurrentPosX = inky.getCurrentPosition().getX() - inky.getCurrentSize().width/2;
 						adaptedCurrentPosY = inky.getCurrentPosition().getY();
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
 					}
 					else if(inkyWantedState == MovingSpriteState.UP) {
 						adaptedCurrentPosX = inky.getCurrentPosition().getX();
 						adaptedCurrentPosY = inky.getCurrentPosition().getY() + inky.getCurrentSize().height/2;
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
 					}
 					else if(inkyWantedState == MovingSpriteState.DOWN) {
 						adaptedCurrentPosX = inky.getCurrentPosition().getX();
 						adaptedCurrentPosY = inky.getCurrentPosition().getY() - inky.getCurrentSize().height/2;
-						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY));
+						currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
 						wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 					}
 					
 					if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || inky.isInTheBox()) {
 						inky.setState(inkyWantedState); // pac-man can be in that state
 					}else {					
-						if(inky.getDirectionThread() == null || !inky.getDirectionThread().isRunning()) {
+						if(inky.getBehaviorThread() == null || !inky.getBehaviorThread().isRunning()) {
 							inky.startDirectionThread();
 						}
 						// inky set another possible direction
-						inky.getDirectionThread().changeDirection();
+						inky.getBehaviorThread().changeDirection();
 					}
 				}			
 			}		
@@ -344,23 +344,23 @@ public class PhysicsThread extends ThreadPerso {
 	public synchronized void pauseThread() {
 		paused = true;
 		synchronized(blinky) {
-			if(blinky.getDirectionThread() != null) {
-				blinky.getDirectionThread().pauseThread();
+			if(blinky.getBehaviorThread() != null) {
+				blinky.getBehaviorThread().pauseThread();
 			}			
 		}
 		synchronized(pinky) {
-			if(pinky.getDirectionThread() != null) {
-				pinky.getDirectionThread().pauseThread();
+			if(pinky.getBehaviorThread() != null) {
+				pinky.getBehaviorThread().pauseThread();
 			}			
 		}
 		synchronized(clyde) {
-			if(clyde.getDirectionThread() != null) {
-				clyde.getDirectionThread().pauseThread();
+			if(clyde.getBehaviorThread() != null) {
+				clyde.getBehaviorThread().pauseThread();
 			}			
 		}
 		synchronized(inky) {
-			if(inky.getDirectionThread() != null) {
-				inky.getDirectionThread().pauseThread();
+			if(inky.getBehaviorThread() != null) {
+				inky.getBehaviorThread().pauseThread();
 			}			
 		}
 	}
@@ -371,23 +371,23 @@ public class PhysicsThread extends ThreadPerso {
 	public synchronized void resumeThread() {
 		paused = false;
 		synchronized(blinky) {
-			if(blinky.getDirectionThread() != null) {
-				blinky.getDirectionThread().resumeThread();
+			if(blinky.getBehaviorThread() != null) {
+				blinky.getBehaviorThread().resumeThread();
 			}			
 		}
 		synchronized(pinky) {
-			if(pinky.getDirectionThread() != null) {
-				pinky.getDirectionThread().resumeThread();
+			if(pinky.getBehaviorThread() != null) {
+				pinky.getBehaviorThread().resumeThread();
 			}			
 		}
 		synchronized(clyde) {
-			if(clyde.getDirectionThread() != null) {
-				clyde.getDirectionThread().resumeThread();
+			if(clyde.getBehaviorThread() != null) {
+				clyde.getBehaviorThread().resumeThread();
 			}			
 		}
 		synchronized(inky) {
-			if(inky.getDirectionThread() != null) {
-				inky.getDirectionThread().resumeThread();
+			if(inky.getBehaviorThread() != null) {
+				inky.getBehaviorThread().resumeThread();
 			}			
 		}
 	}
@@ -396,35 +396,42 @@ public class PhysicsThread extends ThreadPerso {
 	@Override
 	protected void doThatAtStop() {
 		synchronized(blinky) {
-			if(blinky.getDirectionThread() != null) {
-				blinky.getDirectionThread().stopThread();
+			if(blinky.getBehaviorThread() != null) {
+				blinky.getBehaviorThread().stopThread();
 			}			
 		}
 		synchronized(pinky) {
-			if(pinky.getDirectionThread() != null) {
-				pinky.getDirectionThread().stopThread();
+			if(pinky.getBehaviorThread() != null) {
+				pinky.getBehaviorThread().stopThread();
 			}			
 		}
 		synchronized(clyde) {
-			if(clyde.getDirectionThread() != null) {
-				clyde.getDirectionThread().stopThread();
+			if(clyde.getBehaviorThread() != null) {
+				clyde.getBehaviorThread().stopThread();
 			}			
 		}
 		synchronized(inky) {
-			if(inky.getDirectionThread() != null) {
-				inky.getDirectionThread().stopThread();
+			if(inky.getBehaviorThread() != null) {
+				inky.getBehaviorThread().stopThread();
 			}			
 		}
 	}
 	
 	/**
+	 * 
+	 * @param 
+	 * @return 
+	 */
+	/**
 	 * Transform a game panel position in a maze matrix position.
-	 * @param gamePanelPos is the position in the game panel.
+	 * @param panelPos is the position in the game panel.
+	 * @param panel is the game panel
+	 * @param mazeValues is the matrix numbers corresponding to the maze.
 	 * @return the position in the maze numbers matrix.
 	 */
-	private Position mazeToMatrixPosition(Position gamePanelPos) {
-		int matPosX = (int)Math.round((gamePanelPos.getX() * mazeValues.get(0).size()) / (double)gamePanel.getWidth());
-		int matPosY = (int)Math.round((gamePanelPos.getY() * mazeValues.size()) / (double)gamePanel.getHeight());
+	public static Position mazeToMatrixPosition(Position panelPos, JPanel panel, List<List<Integer>> mazeValues) {
+		int matPosX = (int)Math.round((panelPos.getX() * mazeValues.get(0).size()) / (double)panel.getWidth());
+		int matPosY = (int)Math.round((panelPos.getY() * mazeValues.size()) / (double)panel.getHeight());
 		return new Position(matPosX, matPosY);
 	}
 

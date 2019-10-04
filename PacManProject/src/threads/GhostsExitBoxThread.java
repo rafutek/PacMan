@@ -1,15 +1,8 @@
 package threads;
 
-import java.io.IOException;
-
 import resources.Maze;
-import resources.Tiles;
-import sprites.Blinky;
-import sprites.Clyde;
 import sprites.Ghost;
-import sprites.Inky;
 import sprites.MovingSpriteState;
-import sprites.Pinky;
 import sprites.Position;
 
 public class GhostsExitBoxThread extends TimerThread {
@@ -83,7 +76,6 @@ public class GhostsExitBoxThread extends TimerThread {
 				}
 			}
 			else if(inkyCanGoOut) {
-				System.out.println("inky is going out !");
 				if(manageGhostExit(inky)) {
 					inkyWantsToGoOut = false;
 					inkyCanGoOut = false;
@@ -128,10 +120,10 @@ public class GhostsExitBoxThread extends TimerThread {
 				ghostWantsToGoOut = false;
 				ghostCanGoOut = false;
 				
-				if(ghost.getDirectionThread() == null || !ghost.getDirectionThread().isRunning()) {
+				if(ghost.getBehaviorThread() == null || !ghost.getBehaviorThread().isRunning()) {
 					ghost.startDirectionThread();
 				}
-				ghost.getDirectionThread().changeDirection();
+				ghost.getBehaviorThread().changeDirection();
 				
 				return true;
 			}
@@ -143,33 +135,6 @@ public class GhostsExitBoxThread extends TimerThread {
 			ghost.setState(MovingSpriteState.LEFT);
 		}
 		return false;			
-	}
-
-	//-------------------------------------------------------
-	
-	
-	public static void main(String[] args) throws IOException, InterruptedException {
-		Ghost a,b,c,d;
-		Tiles tiles = new Tiles();
-		a = new Blinky(new Position(0, 0), tiles, null);
-		b = new Pinky(new Position(0, 0), tiles, null);
-		c = new Clyde(new Position(0, 0), tiles, null);
-		d = new Inky(new Position(0, 0), tiles, null);
-		
-		a.setInTheBox(false);
-		
-		GhostsExitBoxThread gExitTh = new GhostsExitBoxThread(a, b, c, d, null);
-		gExitTh.startThread();
-		
-		synchronized(gExitTh) {
-			Thread.sleep(5000);
-			gExitTh.stopThread();
-			gExitTh.join(100);
-			if(gExitTh.isRunning()) {
-				gExitTh.interrupt();
-			}
-		}
-	
 	}
 
 }
