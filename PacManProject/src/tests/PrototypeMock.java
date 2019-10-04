@@ -23,8 +23,8 @@ public class PrototypeMock extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 	
-	private int windowWidth = 600;   
-	private int windowHeight = 600; 
+	private int windowWidth = 650;   
+	private int windowHeight = 900; 
 	private JPanel panel = new JPanel();
 	private volatile boolean running = true;
 	
@@ -71,13 +71,31 @@ public class PrototypeMock extends JFrame{
 				maze.draw(dbg); 
 				//draw all the sprites at their respective position, 
 				//with their respective dimension
-				pacDots.draw(dbg); 
-				energizers.draw(dbg); 
-				pacMan.draw(dbg);
-				blinky.draw(dbg);
-				pinky.draw(dbg);
-				clyde.draw(dbg);
-				inky.draw(dbg);		
+				if(pacDots != null) {
+					System.out.println("draw pacdots");
+					pacDots.draw(dbg); 
+				}
+				if(energizers != null) {
+					energizers.draw(dbg); 
+				}
+				if(pacMan != null) {
+					System.out.println("draw pacman");
+					pacMan.draw(dbg);
+				}
+				if(blinky != null) {
+					System.out.println("draw blinky");
+					blinky.draw(dbg);
+				}
+				if(pinky != null) {
+					pinky.draw(dbg);
+				}
+				if(clyde != null) {
+					clyde.draw(dbg);
+				}
+				if(inky != null) {
+					inky.draw(dbg);	
+				}
+					
 				
 				
 				paintScreen();
@@ -102,6 +120,7 @@ public class PrototypeMock extends JFrame{
 		 energizers = maze.getEnergizers();
 		 pacDots = maze.getPacDots();
 		 pacMan = maze.getPacMan();
+		 pacMan.setCurrentPosition(pacMan.getMazePosition());
 		 blinky = maze.getBlinky();
 		 pinky = maze.getPinky();
 		 clyde = maze.getClyde();
@@ -111,6 +130,8 @@ public class PrototypeMock extends JFrame{
 		physicsTh = new PhysicsThread(maze.getMazeValues(), panel, pacMan, blinky, pinky, clyde, inky);
 		
 		startRenderLoop();
+		animationTh.startThread();
+		physicsTh.startThread();
 	}
 	
 	
@@ -142,6 +163,8 @@ public class PrototypeMock extends JFrame{
 	
 	public void stop() {
 		running = false;
+		physicsTh.stopThread();
+		animationTh.stopThread();
 		System.out.println("stop");
 		System.exit(0);
 	}
