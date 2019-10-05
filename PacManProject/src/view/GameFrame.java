@@ -4,6 +4,7 @@ package view;
 import javax.swing.*;
 
 import threads.LayoutManagerThread;
+import threads.MusicThread;
 import threads.RenderThread;
 
 import java.awt.*;
@@ -24,15 +25,16 @@ public class GameFrame extends JFrame implements WindowListener
 	private GamePanel gamePanel;
 	private StatusBarPanel statusBarPanel;
 	private JPanel leftPanel, rightPanel;
-	private JLabel direction;
 	private JLabel statut;
 	
 	
 	private boolean fullScreen = false;
 	public RenderThread renderTh;
 	private LayoutManagerThread layoutTh;
+	private MusicThread musicTh;
 	
 	private boolean gamePaused = false;
+	private boolean gameMute = false;
 
 	public GameFrame(int period)
 	{ 
@@ -119,9 +121,12 @@ public class GameFrame extends JFrame implements WindowListener
 		super.addNotify();   // creates the peer
 		layoutTh = new LayoutManagerThread(this);
 		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
+		musicTh = new MusicThread("musicTh");
+		
 		
 		layoutTh.startThread();
 		renderTh.startThread();
+		musicTh.startThread();
 	}
 	
 	private void readyForTermination()
@@ -211,9 +216,6 @@ public class GameFrame extends JFrame implements WindowListener
 						synchronized (renderTh) {
 							renderTh.pauseThread();
 						}
-						direction = statusBarPanel.getDirection();
-						direction.setText("STOP");
-						statusBarPanel.setDirection(direction);
 						statut = statusBarPanel.getStatut();
 						statut.setText("Paused");
 						statusBarPanel.setStatut(statut);

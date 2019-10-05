@@ -1,6 +1,10 @@
 package threads;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JPanel;
 
 import sprites.Ghost;
@@ -31,6 +35,8 @@ public class PhysicsThread extends ThreadPerso {
 	private MovingSpriteState inkyWantedState;	
 	private Sprites pacDots; 
 	private Sprites energizer;
+	
+	private SoundThread soundTh;
 	
 	/**
 	 * The class needs the maze number matrix, the game panel size and of course the moving sprites,
@@ -459,18 +465,66 @@ public class PhysicsThread extends ThreadPerso {
 				
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky)) {
 					System.out.println("collision with blinky!");
+					soundTh = new SoundThread("soundTh");
+					if(soundTh != null) {
+						synchronized(soundTh) {
+								try {
+									soundTh.playAudio("death.wav");
+								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} // play sound
+							
+						}					
+					}
 					return true;
 				}
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky)) {
 					System.out.println("collision with pinky!");
+					soundTh = new SoundThread("soundTh");
+					if(soundTh != null) {
+						synchronized(soundTh) {
+								try {
+									soundTh.playAudio("death.wav");
+								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} // play sound
+							
+						}					
+					}
 					return true;
 				}		
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde)) {
 					System.out.println("collision with clyde!");
+					soundTh = new SoundThread("soundTh");
+					if(soundTh != null) {
+						synchronized(soundTh) {
+								try {
+									soundTh.playAudio("death.wav");
+								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} // play sound
+							
+						}					
+					}
 					return true;
 				}
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky)) {
 					System.out.println("collision with inky!");
+					soundTh = new SoundThread("soundTh");
+					if(soundTh != null) {
+						synchronized(soundTh) {
+								try {
+									soundTh.playAudio("death.wav");
+								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} // play sound
+							
+						}					
+					}
 					return true;
 				}			
 			}
@@ -481,6 +535,7 @@ public class PhysicsThread extends ThreadPerso {
 	private boolean pacDotsCollision() {
 		synchronized(pacMan) {
 			if(collisionWith(pacDots)) {
+				
 				System.out.println("collision pacDot, showX : "+pacDots.showX+ " showY : "+pacDots.showY);
 				return true;
 			}
@@ -491,7 +546,7 @@ public class PhysicsThread extends ThreadPerso {
 	boolean f=true;
 	private boolean energizerCollision() {
 		synchronized(pacMan) {
-			if(collisionWith(energizer)) {
+			if(collisionWithE(energizer)) {
 				score=score+50;
 				StatusBarPanel.valueScore.setText(""+score);
 				System.out.println("collision energizer, showX : "+energizer.showX+ " showY : "+energizer.showY);
@@ -508,6 +563,18 @@ public class PhysicsThread extends ThreadPerso {
 			int positionX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
 			int positionY= pacDots.getSpriteNb(i).getCurrentPosition().getY();
 			if(pacMan.getCurrentPosition().getX()<=positionX+(13/2) && pacMan.getCurrentPosition().getX()>= positionX-(13/2)  && pacMan.getCurrentPosition().getY()<=positionY+(12/2) && pacMan.getCurrentPosition().getY()>= positionY-(12/2) )  {
+				soundTh = new SoundThread("soundTh");
+				if(soundTh != null) {
+					synchronized(soundTh) {
+							try {
+								soundTh.playAudio("chomp.wav");
+							} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} // play sound
+						
+					}					
+				}
 				pacDots.showX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
 				pacDots.showY=pacDots.getSpriteNb(i).getCurrentPosition().getY();
 				pacDots.removeSpriteNb(i);
@@ -523,6 +590,18 @@ public class PhysicsThread extends ThreadPerso {
 			int positionX=energizer.getSpriteNb(i).getCurrentPosition().getX();
 			int positionY= energizer.getSpriteNb(i).getCurrentPosition().getY();
 			if(pacMan.getCurrentPosition().getX()<=positionX+(13/2) && pacMan.getCurrentPosition().getX()>= positionX-(13/2)  && pacMan.getCurrentPosition().getY()<=positionY+(12/2) && pacMan.getCurrentPosition().getY()>= positionY-(12/2) )  {
+				soundTh = new SoundThread("soundTh");
+				if(soundTh != null) {
+					synchronized(soundTh) {
+							try {
+								soundTh.playAudio("extrapac.wav");
+							} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} // play sound
+						
+					}					
+				}
 				energizer.showX=energizer.getSpriteNb(i).getCurrentPosition().getX();
 				energizer.showY=energizer.getSpriteNb(i).getCurrentPosition().getY();
 				energizer.removeSpriteNb(i);
