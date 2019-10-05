@@ -33,7 +33,7 @@ public class StatusBarPanel extends JPanel {
 	JLabel valueFps;
 	JLabel valueDirection;
 	JLabel valueStatut;
-	JLabel valueScore;
+	public static JLabel valueScore;
 	JLabel valueLevel;
 	private BufferedImage Lives;
 	private int vie = 3;

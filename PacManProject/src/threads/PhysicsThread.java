@@ -8,6 +8,7 @@ import sprites.MovingSpriteState;
 import sprites.PacMan;
 import sprites.Position;
 import sprites.Sprites;
+import view.StatusBarPanel;
 
 public class PhysicsThread extends ThreadPerso {
 
@@ -349,12 +350,8 @@ public class PhysicsThread extends ThreadPerso {
 			//...
 		}
 		pacDotsCollision(); 
-			
-		
-		
+		energizerCollision();
 	}
-
-	
 	/**
 	 * Stop doing the actions defined in doThat() method.
 	 */
@@ -491,6 +488,21 @@ public class PhysicsThread extends ThreadPerso {
 				
 		}
 	}
+	boolean f=true;
+	private boolean energizerCollision() {
+		synchronized(pacMan) {
+			if(collisionWith(energizer)) {
+				score=score+50;
+				StatusBarPanel.valueScore.setText(""+score);
+				System.out.println("collision energizer, showX : "+energizer.showX+ " showY : "+energizer.showY);
+				f=false;
+				return true;
+			}
+			return false;
+				
+		}
+	}
+	int score=0;
 	private boolean collisionWith(Sprites pacDots) {
 		for(int i=0; i<pacDots.getSprites().size();i++){
 			int positionX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
@@ -499,11 +511,27 @@ public class PhysicsThread extends ThreadPerso {
 				pacDots.showX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
 				pacDots.showY=pacDots.getSpriteNb(i).getCurrentPosition().getY();
 				pacDots.removeSpriteNb(i);
+				score=score+10;
+				StatusBarPanel.valueScore.setText(""+score);
 				return true;
 			}	
 		}
 		return false;
 	}
+	private boolean collisionWithE(Sprites energizer) {
+		for(int i=0; i<energizer.getSprites().size();i++){
+			int positionX=energizer.getSpriteNb(i).getCurrentPosition().getX();
+			int positionY= energizer.getSpriteNb(i).getCurrentPosition().getY();
+			if(pacMan.getCurrentPosition().getX()<=positionX+(13/2) && pacMan.getCurrentPosition().getX()>= positionX-(13/2)  && pacMan.getCurrentPosition().getY()<=positionY+(12/2) && pacMan.getCurrentPosition().getY()>= positionY-(12/2) )  {
+				energizer.showX=energizer.getSpriteNb(i).getCurrentPosition().getX();
+				energizer.showY=energizer.getSpriteNb(i).getCurrentPosition().getY();
+				energizer.removeSpriteNb(i);
+				return true;
+			}	
+		}
+		return false;
+	}
+	
 	
 	
 	private boolean collisionWith(int pacman_left, int pacman_right, int pacman_up, int pacman_down, Ghost ghost) {
