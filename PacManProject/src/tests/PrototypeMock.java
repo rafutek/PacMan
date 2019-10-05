@@ -127,8 +127,8 @@ public class PrototypeMock extends JFrame{
 		 inky = maze.getInky();
 		 
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
-		physicsTh = new PhysicsThread(maze.getMazeValues(), panel, pacMan, blinky, pinky, clyde, inky);
-		
+		physicsTh = new PhysicsThread(maze.getMazeValues(), panel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers);
+
 		startRenderLoop();
 		animationTh.startThread();
 		physicsTh.startThread();
