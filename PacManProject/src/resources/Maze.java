@@ -352,11 +352,19 @@ public class Maze {
 	
 	
 	public Sprites getEnergizers() {
-		return energizers;
+		Sprites copyEnergizers= new Sprites();
+		for(Sprite sprite: energizers.getSprites() ){
+			copyEnergizers.add(sprite);
+		}
+		return  copyEnergizers;
 	}
 	
 	public Sprites getPacDots() {
-		return pacDots;
+		Sprites copyPacDots= new Sprites();
+		for(Sprite sprite: pacDots.getSprites() ){
+			copyPacDots.add(sprite);
+		}
+		return  copyPacDots;
 	}
 	
 	public PacMan getPacMan() {

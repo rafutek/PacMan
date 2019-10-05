@@ -7,6 +7,7 @@ import sprites.Ghost;
 import sprites.MovingSpriteState;
 import sprites.PacMan;
 import sprites.Position;
+import sprites.Sprites;
 
 public class PhysicsThread extends ThreadPerso {
 
@@ -27,7 +28,8 @@ public class PhysicsThread extends ThreadPerso {
 	
 	private Ghost inky;
 	private MovingSpriteState inkyWantedState;	
-	
+	private Sprites pacDots; 
+	private Sprites energizer;
 	
 	/**
 	 * The class needs the maze number matrix, the game panel size and of course the moving sprites,
@@ -37,7 +39,7 @@ public class PhysicsThread extends ThreadPerso {
 	 * @param gamePanel
 	 * @param pacMan
 	 */
-	public PhysicsThread(List<List<Integer>> mazeValues, JPanel gamePanel, PacMan pacMan, Ghost blinky,  Ghost pinky,  Ghost clyde,  Ghost inky) {
+	public PhysicsThread(List<List<Integer>> mazeValues, JPanel gamePanel, PacMan pacMan, Ghost blinky,  Ghost pinky,  Ghost clyde,  Ghost inky, Sprites pacDots, Sprites energizer) {
 		super("Physics");
 		this.mazeValues = mazeValues;
 		this.gamePanel = gamePanel;
@@ -46,6 +48,8 @@ public class PhysicsThread extends ThreadPerso {
 		this.pinky = pinky;
 		this.clyde = clyde;
 		this.inky = inky;
+		this.pacDots=pacDots;
+		this.energizer=energizer;
 	}
 
 	@Override
@@ -344,6 +348,9 @@ public class PhysicsThread extends ThreadPerso {
 		if(ghostCollision()) {
 			//...
 		}
+		pacDotsCollision(); 
+			
+		
 		
 	}
 
@@ -474,6 +481,30 @@ public class PhysicsThread extends ThreadPerso {
 			return false;			
 		}
 	}
+	private boolean pacDotsCollision() {
+		synchronized(pacMan) {
+			if(collisionWith(pacDots)) {
+				System.out.println("collision pacDot, showX : "+pacDots.showX+ " showY : "+pacDots.showY);
+				return true;
+			}
+			return false;
+				
+		}
+	}
+	private boolean collisionWith(Sprites pacDots) {
+		for(int i=0; i<pacDots.getSprites().size();i++){
+			int positionX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
+			int positionY= pacDots.getSpriteNb(i).getCurrentPosition().getY();
+			if(pacMan.getCurrentPosition().getX()<=positionX+(13/2) && pacMan.getCurrentPosition().getX()>= positionX-(13/2)  && pacMan.getCurrentPosition().getY()<=positionY+(12/2) && pacMan.getCurrentPosition().getY()>= positionY-(12/2) )  {
+				pacDots.showX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
+				pacDots.showY=pacDots.getSpriteNb(i).getCurrentPosition().getY();
+				pacDots.removeSpriteNb(i);
+				return true;
+			}	
+		}
+		return false;
+	}
+	
 	
 	private boolean collisionWith(int pacman_left, int pacman_right, int pacman_up, int pacman_down, Ghost ghost) {
 		if(ghost != null) {
