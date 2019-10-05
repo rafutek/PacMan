@@ -42,7 +42,7 @@ public class Resources {
 	public static void main(String[] args) {
 		Resources rsc = new Resources();
 		System.out.println(rsc.getMazePath("maze.txt"));
-		//System.out.println(rsc.getSoundPath("beginning.wav"));
+		System.out.println(rsc.getSoundPath("beginning.wav"));
 		System.out.println(rsc.getImagePath("pacmanTilesSheet.png"));
 	}
 }
