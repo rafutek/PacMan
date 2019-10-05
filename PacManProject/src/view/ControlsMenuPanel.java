@@ -38,23 +38,11 @@ public class ControlsMenuPanel extends JPanel implements KeyListener{
 		}
 		pacManTitle = new JLabel("");
 		// Build the PACMAN Title tile from the tileSheet
-		BufferedImage p1 = t.getTileNumber(73);
-		BufferedImage p2 = t.joinToRight(p1 , t.getTileNumber(74));
-		BufferedImage p3 = t.joinToRight(p2 , t.getTileNumber(75));
-		BufferedImage p4 = t.joinToRight(p3 , t.getTileNumber(76));
-		BufferedImage p5 = t.joinToRight(p4 , t.getTileNumber(77));
-		BufferedImage p6 = t.joinToRight(p5 , t.getTileNumber(78));
-		BufferedImage p7 = t.joinToRight(p6 , t.getTileNumber(79));
-		BufferedImage p8 = t.joinToRight(p7 , t.getTileNumber(80));
-		BufferedImage p9 = t.getTileNumber(89);
-		BufferedImage p10 = t.joinToRight(p9 , t.getTileNumber(90));
-		BufferedImage p11 = t.joinToRight(p10 , t.getTileNumber(91));
-		BufferedImage p12 = t.joinToRight(p11 , t.getTileNumber(92));
-		BufferedImage p13 = t.joinToRight(p12 , t.getTileNumber(93));
-		BufferedImage p14 = t.joinToRight(p13 , t.getTileNumber(94));
-		BufferedImage p15 = t.joinToRight(p14 , t.getTileNumber(95));
-		BufferedImage p16 = t.joinToRight(p15 , t.getTileNumber(96));	
-		BufferedImage PACMAN = t.joinBelow(p8, p16);
+		
+		//BufferedImage p8 = t.joinToRight(p7 , t.getTileNumber(80));
+		BufferedImage p1 = t.createWord(t.getTileNumber(73), t.getTileNumber(74),t.getTileNumber(75),t.getTileNumber(76),t.getTileNumber(77),t.getTileNumber(78),t.getTileNumber(79),t.getTileNumber(80));
+		BufferedImage p2 = t.createWord(t.getTileNumber(89),t.getTileNumber(90),t.getTileNumber(91), t.getTileNumber(92), t.getTileNumber(93), t.getTileNumber(94),t.getTileNumber(95), t.getTileNumber(96));
+		BufferedImage PACMAN = t.joinBelow(p1, p2);
 		PACMAN = t.resize(PACMAN, new Dimension(400,100));
 		pacManTitle.setIcon(new ImageIcon(PACMAN));
 		pacManTitle.setBounds(100, 0, 400, 100);

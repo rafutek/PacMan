@@ -3,6 +3,7 @@ package view;
 
 import javax.swing.*;
 
+
 import main.Main;
 import threads.CheckPageThread;
 import threads.LayoutManagerThread;
@@ -134,22 +135,29 @@ public class GameFrame extends JFrame implements WindowListener
 				System.out.println("......................... menu is Visible.................");
 				add(principalMenuPanel);
 				addKeyListener(principalMenuPanel);
-			}else if(Main.getGlobalFrame().getPage()=="Game"){
-			principalMenuPanel.setVisible(false);
-			add(gamePanel);
-			gamePanel.setVisible(true);
-			add(statusBarPanel);
-			statusBarPanel.setVisible(true);
-			add(leftPanel);
-			leftPanel.setVisible(true);
-			add(rightPanel);
-			rightPanel.setVisible(true);
-			//addKeyListener(arg0);
+			} else {
+				Main.getGlobalFrame();
+				if(GameFrame.getPage()=="Game"){
+				principalMenuPanel.setVisible(false);
+				add(gamePanel);
+				gamePanel.setVisible(true);
+				add(statusBarPanel);
+				statusBarPanel.setVisible(true);
+				add(leftPanel);
+				leftPanel.setVisible(true);
+				add(rightPanel);
+				rightPanel.setVisible(true);
+				//addKeyListener(arg0);
+				}
 			}
 			add(gamePanel);
+			gamePanel.setVisible(false);
 			add(statusBarPanel);
-			leftPanel.setVisible(true);
-			rightPanel.setVisible(true);
+			statusBarPanel.setVisible(false);
+			add(leftPanel);
+			leftPanel.setVisible(false);
+			add(rightPanel);
+			rightPanel.setVisible(false);
 		setPreferredSize(new Dimension(windowWidth, windowHeight)); // set window size
 		
 	} 
@@ -220,6 +228,7 @@ public class GameFrame extends JFrame implements WindowListener
 		addKeyListener( new KeyAdapter() {
 			public void keyPressed(KeyEvent e)
 			{ 
+				if(page=="Game") {
 				int keyCode = e.getKeyCode();
 				
 				// listen for arrows events
@@ -255,6 +264,7 @@ public class GameFrame extends JFrame implements WindowListener
 						direction.setText("DOWN");
 						statusBarPanel.setDirection(direction);
 					}
+				}
 				}
 				
 			}

@@ -17,6 +17,7 @@ public class CheckPageThread extends ThreadPerso{
 		
 		gameFrame = Main.getGlobalFrame();
 		if(gameFrame.getPage()=="PrincipalMenu") {
+			gameFrame.renderTh.pauseThread();
 			gameFrame.getGamePanel().setVisible(false);
 			gameFrame.getStatusBarPanel().setVisible(false);
 			gameFrame.getLeftPanel().setVisible(false);
@@ -27,6 +28,8 @@ public class CheckPageThread extends ThreadPerso{
 			gameFrame.addKeyListener(gameFrame.getPrincipalMenuPanel());
 
 		}else if(gameFrame.getPage()=="Game"){
+			gameFrame.removeKeyListener(gameFrame.getPrincipalMenuPanel());
+			//gameFrame.readyForArrowsEvents();
 			renderThread = new RenderThread(period,gameFrame.getGamePanel() , gameFrame.getStatusBarPanel());
 			renderThread.startThread();
 			layoutManagerThread = new LayoutManagerThread(gameFrame);

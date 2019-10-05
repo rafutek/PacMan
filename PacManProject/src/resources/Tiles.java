@@ -225,15 +225,19 @@ public class Tiles {
 		BufferedImage fullBigImg = Tiles.joinBelow(imgTop, imgBottom);
 		return Tiles.resize(fullBigImg, new Dimension(cornerTopLeft.getWidth(), cornerTopLeft.getHeight()));
 	}
+	
+	public static BufferedImage createWord(BufferedImage...bufferedImages ) {
+		BufferedImage word = bufferedImages[0];
+		for (int i = 1;i<bufferedImages.length;i++) {
+	       word = joinToRight(word, bufferedImages[i]);
+	    }
+		return word;
+	}
 
 
 	
 	//-------------------------------------------------------
 	
 	
-	public static void main(String[] args) throws IOException {
-		Tiles tiles = new Tiles();
-		Tiles.displayImg(tiles.getTileNumber(17));		
-	}
-
+	
 }

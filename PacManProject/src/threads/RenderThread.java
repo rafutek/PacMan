@@ -96,6 +96,8 @@ public class RenderThread extends ThreadPerso{
 	private AnimationThread animationTh;
 	private ThreeTwoOneThread threeTwoOneTh;
 	
+	
+
 	//physics
 	private PhysicsThread physicsTh;
 	private boolean animationDone = false;
@@ -485,6 +487,37 @@ public class RenderThread extends ThreadPerso{
 		System.out.println("Average UPS: " + df.format(averageUPS));
 		System.out.println("Time Spent: " + timeSpentInGame + " secs");
 	}  // end of printStats()
+	public AnimationThread getAnimationTh() {
+		return animationTh;
+	}
+
+	public void setAnimationTh(AnimationThread animationTh) {
+		this.animationTh = animationTh;
+	}
+
+	public ThreeTwoOneThread getThreeTwoOneTh() {
+		return threeTwoOneTh;
+	}
+
+	public void setThreeTwoOneTh(ThreeTwoOneThread threeTwoOneTh) {
+		this.threeTwoOneTh = threeTwoOneTh;
+	}
+
+	public PhysicsThread getPhysicsTh() {
+		return physicsTh;
+	}
+
+	public void setPhysicsTh(PhysicsThread physicsTh) {
+		this.physicsTh = physicsTh;
+	}
+
+	public GhostsExitBoxThread getGhostExitThread() {
+		return ghostExitThread;
+	}
+
+	public void setGhostExitThread(GhostsExitBoxThread ghostExitThread) {
+		this.ghostExitThread = ghostExitThread;
+	}
 
 
 
