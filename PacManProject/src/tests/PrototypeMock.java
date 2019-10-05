@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -79,6 +81,8 @@ public class PrototypeMock extends JFrame{
 		startRenderLoop();
 		animationTh.startThread();
 		physicsTh.startThread();
+		
+		readyForArrowsEvents();
 	}
 	
 	
@@ -121,27 +125,32 @@ public class PrototypeMock extends JFrame{
 					pacDots.draw(dbg); 
 				}
 				if(energizers.getSprites() != null && !energizers.getSprites().isEmpty()) {
-					System.out.println("draw pacdots");
+					System.out.println("draw energizers");
 					energizers.draw(dbg); 
 				}
 				if(pacMan != null) {
 					System.out.println("draw pacman");
+					pacMan.updatePos();
 					pacMan.draw(dbg);
 				}
 				if(blinky != null) {
 					System.out.println("draw blinky");
+					blinky.updatePos();
 					blinky.draw(dbg);
 				}
 				if(pinky != null) {
 					System.out.println("draw pinky");
+					pinky.updatePos();
 					pinky.draw(dbg);
 				}
 				if(clyde != null) {
 					System.out.println("draw clyde");
+					clyde.updatePos();
 					clyde.draw(dbg);
 				}
 				if(inky != null) {
 					System.out.println("draw inky");
+					inky.updatePos();
 					inky.draw(dbg);	
 				}
 					
@@ -169,6 +178,34 @@ public class PrototypeMock extends JFrame{
 		}
 		catch (Exception e)
 		{ System.out.println("Graphics error: " + e);  }
+	}
+	
+	private void readyForArrowsEvents() {
+		addKeyListener( new KeyAdapter() {
+			public void keyPressed(KeyEvent e)
+			{ 
+				int keyCode = e.getKeyCode();
+				
+				// listen for arrows events
+				if (keyCode == KeyEvent.VK_LEFT) {
+					pacMan.wantToGoLeft();						
+				}
+				
+				else if(keyCode == KeyEvent.VK_RIGHT){
+					pacMan.wantToGoRight();
+					
+				}
+				else if(keyCode == KeyEvent.VK_UP){
+					pacMan.wantToGoUp();
+					
+				}
+				else if(keyCode == KeyEvent.VK_DOWN){
+					pacMan.wantToGoDown();
+					
+				}
+				
+			}
+		});
 	}
 
 //------------------------------------------------------------------------------------

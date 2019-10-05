@@ -365,26 +365,35 @@ public class PhysicsThread extends ThreadPerso {
 	 */
 	public synchronized void pauseThread() {
 		paused = true;
-		synchronized(blinky) {
-			if(blinky.getBehaviorThread() != null) {
-				blinky.getBehaviorThread().pauseThread();
+		if(blinky != null) {
+			synchronized(blinky) {
+				if(blinky.getBehaviorThread() != null) {
+					blinky.getBehaviorThread().pauseThread();
+				}			
 			}			
 		}
-		synchronized(pinky) {
-			if(pinky.getBehaviorThread() != null) {
-				pinky.getBehaviorThread().pauseThread();
+		if(pinky != null) {
+			synchronized(pinky) {
+				if(pinky.getBehaviorThread() != null) {
+					pinky.getBehaviorThread().pauseThread();
+				}			
 			}			
 		}
-		synchronized(clyde) {
-			if(clyde.getBehaviorThread() != null) {
-				clyde.getBehaviorThread().pauseThread();
+		if(clyde != null) {
+			synchronized(clyde) {
+				if(clyde.getBehaviorThread() != null) {
+					clyde.getBehaviorThread().pauseThread();
+				}			
 			}			
 		}
-		synchronized(inky) {
-			if(inky.getBehaviorThread() != null) {
-				inky.getBehaviorThread().pauseThread();
+		if(inky != null) {
+			synchronized(inky) {
+				if(inky.getBehaviorThread() != null) {
+					inky.getBehaviorThread().pauseThread();
+				}			
 			}			
 		}
+
 	}
 	
 	/**
@@ -392,51 +401,69 @@ public class PhysicsThread extends ThreadPerso {
 	 */
 	public synchronized void resumeThread() {
 		paused = false;
-		synchronized(blinky) {
-			if(blinky.getBehaviorThread() != null) {
-				blinky.getBehaviorThread().resumeThread();
+		if(blinky != null) {
+			synchronized(blinky) {
+				if(blinky.getBehaviorThread() != null) {
+					blinky.getBehaviorThread().resumeThread();
+				}			
 			}			
 		}
-		synchronized(pinky) {
-			if(pinky.getBehaviorThread() != null) {
-				pinky.getBehaviorThread().resumeThread();
+		if(pinky != null) {
+			synchronized(pinky) {
+				if(pinky.getBehaviorThread() != null) {
+					pinky.getBehaviorThread().resumeThread();
+				}			
 			}			
 		}
-		synchronized(clyde) {
-			if(clyde.getBehaviorThread() != null) {
-				clyde.getBehaviorThread().resumeThread();
+		if(clyde != null) {
+			synchronized(clyde) {
+				if(clyde.getBehaviorThread() != null) {
+					clyde.getBehaviorThread().resumeThread();
+				}			
 			}			
 		}
-		synchronized(inky) {
-			if(inky.getBehaviorThread() != null) {
-				inky.getBehaviorThread().resumeThread();
+		if(inky != null) {
+			synchronized(inky) {
+				if(inky.getBehaviorThread() != null) {
+					inky.getBehaviorThread().resumeThread();
+				}			
 			}			
 		}
+
 	}
 	
 	
 	@Override
 	protected void doThatAtStop() {
-		synchronized(blinky) {
-			if(blinky.getBehaviorThread() != null) {
-				blinky.getBehaviorThread().stopThread();
+		if(blinky != null) {
+			synchronized(blinky) {
+				if(blinky.getBehaviorThread() != null) {
+					blinky.getBehaviorThread().stopThread();
+				}			
 			}			
 		}
-		synchronized(pinky) {
-			if(pinky.getBehaviorThread() != null) {
-				pinky.getBehaviorThread().stopThread();
+		if(pinky != null) {
+			synchronized(pinky) {
+				if(pinky.getBehaviorThread() != null) {
+					pinky.getBehaviorThread().stopThread();
+				}			
 			}			
 		}
-		synchronized(clyde) {
-			if(clyde.getBehaviorThread() != null) {
-				clyde.getBehaviorThread().stopThread();
+		if(clyde != null) {
+			synchronized(clyde) {
+				if(clyde.getBehaviorThread() != null) {
+					clyde.getBehaviorThread().stopThread();
+				}			
 			}			
 		}
-		synchronized(inky) {
-			if(inky.getBehaviorThread() != null) {
-				inky.getBehaviorThread().stopThread();
+		if(inky != null) {
+			synchronized(inky) {
+				if(inky.getBehaviorThread() != null) {
+					inky.getBehaviorThread().stopThread();
+				}			
 			}			
 		}
+
 	}
 	
 	/**
