@@ -120,7 +120,7 @@ public class RenderThread extends ThreadPerso{
 		
 		//create maze image and sprites from the maze file
 		try {
-			maze = new Maze(gamePanel);
+			maze = new Maze(gamePanel, "maze.txt");
 		} catch (IOException e) {e.printStackTrace();}
 		
 		//get sprites
@@ -134,7 +134,7 @@ public class RenderThread extends ThreadPerso{
 		
 		
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
-		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky);
+		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers );
 		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze);
 		this.paused = true;
 	}
@@ -163,7 +163,7 @@ public class RenderThread extends ThreadPerso{
 
 	@Override
 	protected void doThatAtStart() {
-		//do {		
+	//	do {		
 			checkResize();
 	//	}while(!animationDone);
 		
@@ -271,7 +271,7 @@ public class RenderThread extends ThreadPerso{
 //			}while(threeTwoOneTh.isRunning());
 //			
 //			animationDone = true;
-//			
+			
 			initStats = false;
 			paused = false;
 			if(!animationTh.isRunning()) {
@@ -332,6 +332,8 @@ public class RenderThread extends ThreadPerso{
 		synchronized(inky) {
 			inky.updatePos();
 		}
+		
+		statusBarPanel.getDirection().setText(pacMan.getState().toString());
 	}
 
 	/**
@@ -468,7 +470,7 @@ public class RenderThread extends ThreadPerso{
 			prevStatsTime = timeNow;
 			statsInterval = 0L;   // reset
 			JLabel f= statusBarPanel.getFps();
-			f.setText(Double.toString(averageFPS));
+			f.setText(Integer.toString((int)averageFPS));
 			statusBarPanel.setFps(f);
 		}
 	}  // end of storeStats()

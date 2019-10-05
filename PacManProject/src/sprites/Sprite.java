@@ -135,7 +135,9 @@ public abstract class Sprite {
 	 * @param g is the graphics where to draw the sprite.
 	 */
 	public synchronized void draw(Graphics g) {
-		g.drawImage(spriteFullImages.getImagesList().get(animationOrder.get(0)), 
-				currentPosition.getX(), currentPosition.getY(), currentSize.width, currentSize.height, null);
+		if(currentPosition != null && currentSize != null) {
+			g.drawImage(spriteFullImages.getImagesList().get(animationOrder.get(0)), 
+					currentPosition.getX(), currentPosition.getY(), currentSize.width, currentSize.height, null);			
+		}
 	}
 }

@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import sprites.Ghost;
 
-public class RandomGhostTimer extends TimerThread {
+public class GhostBehaviorThread extends TimerThread {
 	
 	private static final int WAIT_TIME = 10;
 	
@@ -14,9 +14,9 @@ public class RandomGhostTimer extends TimerThread {
 	
 	private Ghost ghost;
 
-	public RandomGhostTimer(Ghost ghost) {
+	public GhostBehaviorThread(Ghost ghost) {
 		super(WAIT_TIME, 0);
-		setName("Random ghost direction");
+		setName("Ghost behavior");
 		this.ghost = ghost;
 		setRandomNbWaits();
 	}
@@ -25,7 +25,23 @@ public class RandomGhostTimer extends TimerThread {
 	protected void doThatAtStart() {}
 	
 	@Override
-	protected void doThatWhileWaiting() {}
+	protected void doThatWhileWaiting() {
+		
+		if(ghost.goingToLastSeenPosition()) {
+			System.out.println("going to last seen position");
+			counterWaits=0;
+			ghost.checkAtLastSeenPosition();
+		}		
+		else if(ghost.escaping()) {
+			System.out.println("escaping");
+			counterWaits=0;
+		}
+		else if (ghost.specificAvailable()) {
+			counterWaits=0; //reset the timer so the direction will not be randomized
+  			ghost.launchSpecific();
+		}
+
+	}
 
 	@Override
 	protected void finallyDoThat() {
@@ -44,6 +60,12 @@ public class RandomGhostTimer extends TimerThread {
 	public void changeDirection() {
 		ghost.setRandomDirection(); // change direction at a random time
 		setRandomNbWaits();
+		if(ghost.goingToLastSeenPosition()) {
+			ghost.notGoingToLastSeenPosition();
+		}
+		if(ghost.escaping()) {
+			ghost.notEscape();
+		}
 	}
 	
 }

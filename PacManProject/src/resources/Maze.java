@@ -75,10 +75,10 @@ public class Maze {
 	 * Constructor that creates the maze image and sprites thanks to a text file.
 	 * @throws IOException
 	 */
-	public Maze(JPanel gamePanel) throws IOException {
+	public Maze(JPanel gamePanel, String mazeFilename) throws IOException {
 		this.gamePanel = gamePanel;
 		tiles = new Tiles();
-		chargeMazeValues("maze.txt");
+		chargeMazeValues(mazeFilename);
 		createMazeAndSprites();
 		computeSpritesInitialPositions();
 		createSprites();
@@ -258,29 +258,39 @@ public class Maze {
 		energizersMazeFilePositions.clear();
 		
 		//pac-man
-		pixelX = (pacManMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
-		pixelY = (pacManMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
-		pacManMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 
+		if(pacManMazeFilePosition != null) {
+			pixelX = (pacManMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+			pixelY = (pacManMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
+			pacManMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 			
+		}
 		
 		//blinky
-		pixelX = (blinkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
-		pixelY = (blinkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
-		blinkyMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 		
+		if(blinkyMazeFilePosition != null) {
+			pixelX = (blinkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+			pixelY = (blinkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
+			blinkyMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 					
+		}
 
 		//pinky
-		pixelX = (pinkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
-		pixelY = (pinkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
-		pinkyMazeImagePosition = new Position(pixelX, pixelY); 	
+		if(pinkyMazeFilePosition != null) {
+			pixelX = (pinkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+			pixelY = (pinkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
+			pinkyMazeImagePosition = new Position(pixelX, pixelY); 				
+		}
 
 		//clyde
-		pixelX = (clydeMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
-		pixelY = (clydeMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
-		clydeMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 	
-		
+		if(clydeMazeFilePosition != null) {
+			pixelX = (clydeMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+			pixelY = (clydeMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
+			clydeMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 			
+		}
+	
 		//inky
-		pixelX = (inkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
-		pixelY = (inkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
-		inkyMazeImagePosition = new Position(pixelX, pixelY); 	
+		if(inkyMazeFilePosition != null) {
+			pixelX = (inkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
+			pixelY = (inkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
+			inkyMazeImagePosition = new Position(pixelX, pixelY); 				
+		}
 		
 		//door
 		for (Position position : doorMazeFilePositions) {
@@ -310,16 +320,16 @@ public class Maze {
 		pacMan = new PacMan(pacManMazeImagePosition, tiles, gamePanel);
 		
 		//blinky
-		blinky = new Blinky(blinkyMazeImagePosition, tiles, gamePanel);
+		blinky = new Blinky(blinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);
 
 		//pinky
-		pinky = new Pinky(pinkyMazeImagePosition, tiles, gamePanel); 
+		pinky = new Pinky(pinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan); 
 
 		//clyde
-		clyde = new Clyde(clydeMazeImagePosition, tiles, gamePanel); 
+		clyde = new Clyde(clydeMazeImagePosition, tiles, gamePanel, mazeValues, pacMan); 
 
 		//inky
-		inky = new Inky(inkyMazeImagePosition, tiles, gamePanel);
+		inky = new Inky(inkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);
 		
 		//door
 		computeDoorPosition();
@@ -342,11 +352,19 @@ public class Maze {
 	
 	
 	public Sprites getEnergizers() {
-		return energizers;
+		Sprites copyEnergizers= new Sprites();
+		for(Sprite sprite: energizers.getSprites() ){
+			copyEnergizers.add(sprite);
+		}
+		return  copyEnergizers;
 	}
 	
 	public Sprites getPacDots() {
-		return pacDots;
+		Sprites copyPacDots= new Sprites();
+		for(Sprite sprite: pacDots.getSprites() ){
+			copyPacDots.add(sprite);
+		}
+		return  copyPacDots;
 	}
 	
 	public PacMan getPacMan() {

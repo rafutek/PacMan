@@ -1,14 +1,16 @@
 package sprites;
 
+import java.util.List;
+
 import javax.swing.JPanel;
 
 import resources.Tiles;
-import threads.RandomGhostTimer;
+import threads.GhostBehaviorThread;
 
 public class Clyde extends Ghost {
 
-	public Clyde(Position start_position, Tiles tiles, JPanel gamePanel) {
-		super(start_position, tiles, gamePanel);
+	public Clyde(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, MovingSprite pacMan) {
+		super(start_position, tiles, gamePanel, mazeValues, pacMan);
 	}
 	
 
@@ -28,9 +30,21 @@ public class Clyde extends Ghost {
 	
 	@Override
 	public void startDirectionThread() {
-		directionTh = new RandomGhostTimer(this);
-		directionTh.setName("Clyde direction");
-		directionTh.startThread();
+		behaviorTh = new GhostBehaviorThread(this);
+		behaviorTh.setName("Clyde behavior");
+		behaviorTh.startThread();
+	}
+
+
+	@Override
+	public boolean specificAvailable() {
+		return false;
+	}
+
+
+	@Override
+	public void launchSpecific() {
+		System.out.println("Launch Clyde Specific behavior");		
 	}
 
 }

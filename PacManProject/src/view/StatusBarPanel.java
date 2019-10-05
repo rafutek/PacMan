@@ -33,10 +33,10 @@ public class StatusBarPanel extends JPanel {
 	JLabel valueFps;
 	JLabel valueDirection;
 	JLabel valueStatut;
-	JLabel valueScore;
+	public static JLabel valueScore;
 	JLabel valueLevel;
 	private BufferedImage Lives;
-	private int vie = 4;
+	private int vie = 3;
 
 	
 	
@@ -67,11 +67,11 @@ public class StatusBarPanel extends JPanel {
 		score.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		score.setForeground(Color.WHITE);
 		BufferedImage s = t.getTileNumber(57);
-		BufferedImage sc = t.joinToRight(s , t.getTileNumber(41));
-		BufferedImage sco = t.joinToRight(sc , t.getTileNumber(53));
-		BufferedImage scor = t.joinToRight(sco , t.getTileNumber(56));
-		BufferedImage scoref = t.joinToRight(scor , t.getTileNumber(43));
-		scoref = t.resize(scoref, new Dimension(50,18));
+		BufferedImage sc = Tiles.joinToRight(s , t.getTileNumber(41));
+		BufferedImage sco = Tiles.joinToRight(sc , t.getTileNumber(53));
+		BufferedImage scor = Tiles.joinToRight(sco , t.getTileNumber(56));
+		BufferedImage scoref = Tiles.joinToRight(scor , t.getTileNumber(43));
+		scoref = Tiles.resize(scoref, new Dimension(50,18));
 		score.setIcon(new ImageIcon(scoref));
 		
 		valueScore = new JLabel("000000");
@@ -81,11 +81,11 @@ public class StatusBarPanel extends JPanel {
 		
 		lives = new JLabel();
 		BufferedImage L = t.getTileNumber(50);
-		BufferedImage LI = t.joinToRight(L , t.getTileNumber(47));
-		BufferedImage LIV = t.joinToRight(LI , t.getTileNumber(60));
-		BufferedImage LIVE = t.joinToRight(LIV , t.getTileNumber(43));
-		BufferedImage LIVES = t.joinToRight(LIVE , t.getTileNumber(57));
-		LIVES = t.resize(LIVES, new Dimension(50,18));
+		BufferedImage LI = Tiles.joinToRight(L , t.getTileNumber(47));
+		BufferedImage LIV = Tiles.joinToRight(LI , t.getTileNumber(60));
+		BufferedImage LIVE = Tiles.joinToRight(LIV , t.getTileNumber(43));
+		BufferedImage LIVES = Tiles.joinToRight(LIVE , t.getTileNumber(57));
+		LIVES = Tiles.resize(LIVES, new Dimension(50,18));
 		lives.setIcon(new ImageIcon(LIVES));
 		
 		livesImg = new JLabel();
@@ -97,11 +97,11 @@ public class StatusBarPanel extends JPanel {
 		level.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		level.setForeground(Color.WHITE);
 		BufferedImage L2 = t.getTileNumber(50);
-		BufferedImage LE = t.joinToRight(L2 , t.getTileNumber(43));
-		BufferedImage LEV = t.joinToRight(LE , t.getTileNumber(60));
-		BufferedImage LEVE = t.joinToRight(LEV , t.getTileNumber(43));
-		BufferedImage LEVEL = t.joinToRight(LEVE , t.getTileNumber(50));
-		LEVEL = t.resize(LEVEL, new Dimension(50,18));
+		BufferedImage LE = Tiles.joinToRight(L2 , t.getTileNumber(43));
+		BufferedImage LEV = Tiles.joinToRight(LE , t.getTileNumber(60));
+		BufferedImage LEVE = Tiles.joinToRight(LEV , t.getTileNumber(43));
+		BufferedImage LEVEL = Tiles.joinToRight(LEVE , t.getTileNumber(50));
+		LEVEL = Tiles.resize(LEVEL, new Dimension(50,18));
 		level.setIcon(new ImageIcon(LEVEL));
 		
 		valueLevel = new JLabel("1");
@@ -121,7 +121,7 @@ public class StatusBarPanel extends JPanel {
 		
 		Bottom = new JPanel();
 		Bottom.setLayout(new GridLayout(0,6));
-		Bottom.setBackground(new Color(0,0,0,100));
+		Bottom.setBackground(new Color(0,0,0));
 
 		
 		try {
@@ -131,7 +131,7 @@ public class StatusBarPanel extends JPanel {
 			e.printStackTrace();
 		}		
 		
-		direction = new JLabel("direction = ");
+		direction = new JLabel("Direction :");
 		direction.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		direction.setForeground(Color.WHITE);
 		
@@ -141,7 +141,7 @@ public class StatusBarPanel extends JPanel {
 
 		
 		
-		statut= new JLabel("statut = ");
+		statut= new JLabel("Status :");
 		statut.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		statut.setForeground(Color.WHITE);
 		
@@ -149,7 +149,7 @@ public class StatusBarPanel extends JPanel {
 		valueStatut.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		valueStatut.setForeground(Color.WHITE);
 		
-		fps = new JLabel("FPS = ");
+		fps = new JLabel("FPS :");
 		fps.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		fps.setForeground(Color.WHITE);
 		
@@ -186,25 +186,25 @@ public class StatusBarPanel extends JPanel {
 	public void setImageLives() {
 		if(this.vie == 1) {
 			this.Lives = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
-			this.Lives = t.resize(Lives, new Dimension(18,18));
+			this.Lives = Tiles.resize(Lives, new Dimension(18,18));
 			
 		} else if (this.vie == 2) {
 			
 			BufferedImage L1 = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
-			this.Lives = t.joinToRight(L1, L1);
-			this.Lives = t.resize(Lives, new Dimension(36,18));
+			this.Lives = Tiles.joinToRight(L1, L1);
+			this.Lives = Tiles.resize(Lives, new Dimension(36,18));
 			
 		}else if (this.vie == 3) {
 			BufferedImage L1 = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
-			BufferedImage L2 = t.joinToRight(L1, L1);
-			this.Lives = t.joinToRight(L2, L1);
-			this.Lives = t.resize(Lives, new Dimension(54,18));
+			BufferedImage L2 = Tiles.joinToRight(L1, L1);
+			this.Lives = Tiles.joinToRight(L2, L1);
+			this.Lives = Tiles.resize(Lives, new Dimension(54,18));
 		}else{
 			BufferedImage L1 = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
-			BufferedImage L2 = t.joinToRight(L1, L1);
-			BufferedImage L3 = t.joinToRight(L2, L1);
-			this.Lives = t.joinToRight(L3, L1);
-			this.Lives = t.resize(Lives, new Dimension(72,18));
+			BufferedImage L2 = Tiles.joinToRight(L1, L1);
+			BufferedImage L3 = Tiles.joinToRight(L2, L1);
+			this.Lives = Tiles.joinToRight(L3, L1);
+			this.Lives = Tiles.resize(Lives, new Dimension(72,18));
 		}
 	}
 	
