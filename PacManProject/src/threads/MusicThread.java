@@ -13,15 +13,7 @@ public class MusicThread extends AudioThread{
 		super(threadName);
 		// TODO Auto-generated constructor stub
 	}
-
-	/**
-	 * Play the music sound when the thread is started
-	 */
-	@Override
-	protected void actionOnStart() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-		playAudio("beginning.wav");
-	}
-
+	 
 	/**
 	 * Stop the thread when the music is finished
 	 */
@@ -29,11 +21,27 @@ public class MusicThread extends AudioThread{
 	protected void settings() {
 		audioClip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
-
+	
+	/**
+	 * Play the music sound when the thread is started
+	 */
 	@Override
 	protected void doThatAtStart() {
 		// TODO Auto-generated method stub
+		try {
+			playAudio("beginning.wav");
+		} catch (UnsupportedAudioFileException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+
 	}
 
 	@Override
@@ -47,4 +55,25 @@ public class MusicThread extends AudioThread{
 		// TODO Auto-generated method stub
 		
 	}
+	
+//	public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
+//		
+//
+//		int wait_delay = 10000, join_delay = 100;
+//		
+//		MusicThread musicth = new MusicThread("music");
+//		musicth.start();
+//		
+//		synchronized(musicth) {
+//			//musicth.playAudio("chomp.wav");
+//			musicth.wait(wait_delay);
+//			musicth.stopThread();
+//			musicth.stopAudioThread();
+//			//thread should be down now
+//			musicth.wait(join_delay);
+//			if(musicth.isAlive()) {
+//				musicth.interrupt();
+//			}
+//		}
+//	}
 }
