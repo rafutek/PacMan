@@ -116,6 +116,7 @@ public class AnimationThread extends TimerThread {
 				}
 				else if(blinkyCurrentState == MovingSpriteState.DEATH) {
 					blinky.setDeathAnimation();
+					
 				}
 				blinkyLastState = blinkyCurrentState;
 			}				
@@ -174,7 +175,7 @@ public class AnimationThread extends TimerThread {
 		}
 		
 		//inky
-		synchronized(clyde) {
+		synchronized(inky) {
 			inkyCurrentState = inky.getState();
 			if(inkyCurrentState != inkyLastState) { // have to change the animation list to the new state
 				if(inkyCurrentState == MovingSpriteState.STOP) {
