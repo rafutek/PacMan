@@ -3,6 +3,8 @@ package view;
 
 import javax.swing.*;
 
+import main.Main;
+import threads.CheckPageThread;
 import threads.LayoutManagerThread;
 import threads.RenderThread;
 
@@ -20,17 +22,20 @@ public class GameFrame extends JFrame implements WindowListener
 	private int windowWidth = 620;   
 	private int windowHeight = 700; 
 	
-	private GridBagLayout gridbag;
-	private GamePanel gamePanel;
+	private static GridBagLayout gridbag;
+	private static GamePanel gamePanel;
+	private static PrincipalMenuPanel principalMenuPanel;
 	private StatusBarPanel statusBarPanel;
 	private JPanel leftPanel, rightPanel;
 	private JLabel direction;
 	private JLabel statut;
 	
+	private static String page = "PrincipalMenu";
 	
 	private boolean fullScreen = false;
 	public RenderThread renderTh;
 	private LayoutManagerThread layoutTh;
+	private CheckPageThread checkPageThread;
 	
 	private boolean gamePaused = false;
 
@@ -41,6 +46,7 @@ public class GameFrame extends JFrame implements WindowListener
 		
 		makeGUI();
 		addWindowListener(this);
+		
 
 		pack();
 		setResizable(true);
@@ -52,6 +58,7 @@ public class GameFrame extends JFrame implements WindowListener
 		readyForFullScreen();
 		readyForArrowsEvents();
 		readyForPause();
+
 	}  
 	
 	
@@ -60,7 +67,7 @@ public class GameFrame extends JFrame implements WindowListener
 	}
 
 
-	public synchronized GamePanel getGamePanel() {
+	public synchronized static GamePanel getGamePanel() {
 		return gamePanel;
 	}
 
@@ -79,32 +86,70 @@ public class GameFrame extends JFrame implements WindowListener
 		return rightPanel;
 	}
 	
+	public static PrincipalMenuPanel getPrincipalMenuPanel() {
+		return principalMenuPanel;
+	}
+
+
+	public void setPrincipalMenuPanel(PrincipalMenuPanel principalMenuPanel) {
+		this.principalMenuPanel = principalMenuPanel;
+	}
+	
+
+	public static String getPage() {
+		return page;
+	}
+
+
+	public static void setPage(String page4) {
+		page = page4;
+	}
+
+
+
+	
 
 	/**
 	 * Create game and status bar panels, and the rendering thread
 	 * @param period
 	 */
-	private void makeGUI()
+	public void makeGUI()
 	{
 		gridbag = new GridBagLayout();
 		setLayout(gridbag);
-		
+		principalMenuPanel = new PrincipalMenuPanel();
 		gamePanel = new GamePanel();
 		statusBarPanel = new StatusBarPanel();
 		
 		leftPanel = new JPanel();
-		leftPanel.setBackground(Color.CYAN);
+		leftPanel.setBackground(Color.BLACK);
 		
 		rightPanel = new JPanel();
-		rightPanel.setBackground(Color.darkGray);	
+		rightPanel.setBackground(Color.BLACK);	
 		
 
 		
-		add(gamePanel);
-		add(statusBarPanel);
-		add(leftPanel);
-		add(rightPanel);
-
+			if(Main.getGlobalFrame().getPage()=="PrincipalMenu") {
+				principalMenuPanel.setVisible(true);
+				System.out.println("......................... menu is Visible.................");
+				add(principalMenuPanel);
+				addKeyListener(principalMenuPanel);
+			}else if(Main.getGlobalFrame().getPage()=="Game"){
+			principalMenuPanel.setVisible(false);
+			add(gamePanel);
+			gamePanel.setVisible(true);
+			add(statusBarPanel);
+			statusBarPanel.setVisible(true);
+			add(leftPanel);
+			leftPanel.setVisible(true);
+			add(rightPanel);
+			rightPanel.setVisible(true);
+			//addKeyListener(arg0);
+			}
+			add(gamePanel);
+			add(statusBarPanel);
+			leftPanel.setVisible(true);
+			rightPanel.setVisible(true);
 		setPreferredSize(new Dimension(windowWidth, windowHeight)); // set window size
 		
 	} 
@@ -116,12 +161,14 @@ public class GameFrame extends JFrame implements WindowListener
 	 */
 	public void addNotify()
 	{ 
+		
 		super.addNotify();   // creates the peer
 		layoutTh = new LayoutManagerThread(this);
 		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
-		
+		//checkPageThread = new CheckPageThread("CheckPageThread");
 		layoutTh.startThread();
-		renderTh.startThread();
+		renderTh.startThread();	
+		//checkPageThread.startThread();
 	}
 	
 	private void readyForTermination()
@@ -133,11 +180,15 @@ public class GameFrame extends JFrame implements WindowListener
 				
 				// listen for esc, q, end, ctrl-c on the canvas to
 				// allow a convenient exit from the full screen configuration
-				if ((keyCode == KeyEvent.VK_ESCAPE) || (keyCode == KeyEvent.VK_Q) ||
+				if ((keyCode == KeyEvent.VK_Q) ||
 						(keyCode == KeyEvent.VK_END) ||
 						((keyCode == KeyEvent.VK_C) && e.isControlDown()) ) {
 					closeGame();
-				}
+				}if(keyCode == KeyEvent.VK_ESCAPE) {
+						page="PrincipalMenu";
+						checkPageThread= new CheckPageThread("CheckPageThread");
+					}
+				
 			}
 		});
 	} 
@@ -165,7 +216,7 @@ public class GameFrame extends JFrame implements WindowListener
 		});
 	}
 	
-	private void readyForArrowsEvents() {
+	public void readyForArrowsEvents() {
 		addKeyListener( new KeyAdapter() {
 			public void keyPressed(KeyEvent e)
 			{ 
@@ -267,22 +318,26 @@ public class GameFrame extends JFrame implements WindowListener
 	public void windowActivated(WindowEvent e) 
 	{ 
 		System.out.println("window activated");
+		if(page=="Game") {
 		synchronized (renderTh){
 			renderTh.resumeThread();
 		}
 		synchronized (layoutTh){
 			layoutTh.resumeThread();
 		}
+		}
 	}
 	
 	public void windowDeactivated(WindowEvent e) 
 	{  
 		System.out.println("window deactivated");
+		if(page=="Game") {
 		synchronized (renderTh){
 			renderTh.pauseThread();
 		}
 		synchronized (layoutTh){
 			layoutTh.pauseThread();
+		}
 		}
 	}
 	
@@ -299,9 +354,11 @@ public class GameFrame extends JFrame implements WindowListener
 	}
 	
 	public void windowClosed(WindowEvent e) {}
+	
 
 	
 	
 
 
 } 
+

@@ -12,12 +12,21 @@ public class LayoutManagerThread extends ThreadPerso {
 	private GameFrame window;
 	
 	private Double gamePanelScale = null;
+	private Double menuPanelScale = null;
 	private double gamePanelWeightX = 1; //initial weight (percentage) of game panel width in the window
 	private double gamePanelWeightY;
+	private double menuPanelWeightX = 1; //initial weight (percentage) of game panel width in the window
+	private double menuPanelWeightY =1;
 	private double statusBarPanelWeightX ;
 	private double statusBarPanelWeightY;
 	private double leftPanelWeightX;
 	private double rightPanelWeightX;
+	
+	private static int DEFAULT_FPS = 50;
+	int fps = DEFAULT_FPS;
+	int period = (int) 1000.0/fps;
+	GameFrame gameFrame;
+
 	
 	
 	public LayoutManagerThread( GameFrame window) 
@@ -27,6 +36,7 @@ public class LayoutManagerThread extends ThreadPerso {
 		this.window = window;
 		setPanelsWeights(gamePanelWeightX);
 		setAllPanelsLayout();
+		//gameFrame = new GameFrame(period);
 	}
 	
 
@@ -41,6 +51,7 @@ public class LayoutManagerThread extends ThreadPerso {
 		if(gamePanelScale == null) {
 			synchronized(window) {
 				gamePanelScale = getPanelScale(window.getGamePanel()); // get the original panel scale
+				menuPanelScale = getPanelScale(window.getPrincipalMenuPanel()); // get the original panel scale
 			}
 		}else {
 			adaptPanels(); // adapt the panels in the window to maintain the game panel scale
@@ -66,6 +77,8 @@ public class LayoutManagerThread extends ThreadPerso {
 		statusBarPanelWeightY = 1 - gamePanelWeightY;
 		leftPanelWeightX = (1 - gamePanelWeightX)/2.;
 		rightPanelWeightX = leftPanelWeightX;
+		menuPanelWeightX = 1;
+		menuPanelWeightY = 1;
 	}
 
 	/**
@@ -104,7 +117,8 @@ public class LayoutManagerThread extends ThreadPerso {
 			setPanelLayout(window.getGamePanel(), 1, 0, 1, gamePanelWeightX, gamePanelWeightY);
 			setPanelLayout(window.getStatusBarPanel(), 1, 1, 1, statusBarPanelWeightX, statusBarPanelWeightY);
 			setPanelLayout(window.getLeftPanel(), 0, 0, 2, leftPanelWeightX, 1);
-			setPanelLayout(window.getRightPanel(), 2, 0, 2, rightPanelWeightX, 1);			
+			setPanelLayout(window.getRightPanel(), 2, 0, 2, rightPanelWeightX, 1);		
+			setPanelLayout(window.getPrincipalMenuPanel(), 1, 0, 2, menuPanelWeightX, menuPanelWeightY);
 		}
 	}
 	
@@ -115,12 +129,20 @@ public class LayoutManagerThread extends ThreadPerso {
 		synchronized(window) {
 			
 			double gamePanelCurrentScale = getPanelScale(window.getGamePanel());
+			double menuPanelCurrentScale = getPanelScale(window.getPrincipalMenuPanel());
 			
 			if( gamePanelCurrentScale < gamePanelScale - 0.1 || gamePanelCurrentScale > gamePanelScale + 0.1) {
 				
 				System.out.println("wanted scale: "+gamePanelScale+" current scale: "+gamePanelCurrentScale);
 		    	gamePanelWeightX = (gamePanelScale*(double)window.getHeight()*gamePanelWeightY)/(double)window.getWidth();
 				setPanelsWeights(gamePanelWeightX);
+				setAllPanelsLayout();					
+			}
+			if( menuPanelCurrentScale < menuPanelScale - 0.1 || menuPanelCurrentScale > menuPanelScale + 0.1) {
+				
+				System.out.println("wanted scale: "+menuPanelScale+" current scale: "+menuPanelCurrentScale);
+		    	menuPanelWeightX = (menuPanelScale*(double)window.getHeight()*menuPanelWeightY)/(double)window.getWidth();
+				setPanelsWeights(menuPanelWeightX);
 				setAllPanelsLayout();					
 			}
 		

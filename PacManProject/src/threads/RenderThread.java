@@ -15,6 +15,7 @@ import sprites.Ghost;
 import sprites.MovingSprite;
 import sprites.PacMan;
 import sprites.Sprites;
+import view.GameFrame;
 import view.GamePanel;
 import view.StatusBarPanel;
 
@@ -271,7 +272,7 @@ public class RenderThread extends ThreadPerso{
 //			}while(threeTwoOneTh.isRunning());
 //			
 //			animationDone = true;
-			
+			if(GameFrame.getPage()=="Game") {
 			initStats = false;
 			paused = false;
 			if(!animationTh.isRunning()) {
@@ -290,7 +291,8 @@ public class RenderThread extends ThreadPerso{
 				ghostExitThread.startThread();
 			}else {
 				ghostExitThread.resumeThread();
-			}			
+			}	
+			}
 		}
 
 	}
@@ -391,7 +393,7 @@ public class RenderThread extends ThreadPerso{
 	 */
 	private void paintScreen()
 	// use active rendering to put the buffered image on-screen
-	{ 
+	{ if(GameFrame.getPage()=="Game") {
 		Graphics g;
 		try {
 			g = gamePanel.getGraphics();
@@ -400,8 +402,10 @@ public class RenderThread extends ThreadPerso{
 			Toolkit.getDefaultToolkit().sync();  // sync the display on some systems
 			g.dispose();
 		}
+		
 		catch (Exception e)
 		{ System.out.println("Graphics error: " + e);  }
+	}
 	}
 
 
