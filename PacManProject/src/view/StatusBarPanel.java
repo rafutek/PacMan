@@ -121,7 +121,7 @@ public class StatusBarPanel extends JPanel {
 		
 		Bottom = new JPanel();
 		Bottom.setLayout(new GridLayout(0,6));
-		Bottom.setBackground(new Color(0,0,0,100));
+		Bottom.setBackground(new Color(0,0,0));
 
 		
 		try {
@@ -131,7 +131,7 @@ public class StatusBarPanel extends JPanel {
 			e.printStackTrace();
 		}		
 		
-		direction = new JLabel("direction = ");
+		direction = new JLabel("Direction :");
 		direction.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		direction.setForeground(Color.WHITE);
 		
@@ -141,7 +141,7 @@ public class StatusBarPanel extends JPanel {
 
 		
 		
-		statut= new JLabel("statut = ");
+		statut= new JLabel("Status :");
 		statut.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		statut.setForeground(Color.WHITE);
 		
@@ -149,7 +149,7 @@ public class StatusBarPanel extends JPanel {
 		valueStatut.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		valueStatut.setForeground(Color.WHITE);
 		
-		fps = new JLabel("FPS = ");
+		fps = new JLabel("FPS :");
 		fps.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		fps.setForeground(Color.WHITE);
 		

@@ -153,7 +153,7 @@ public class GameFrame extends JFrame implements WindowListener
 				// listen for f to go on full screen or normal sized window
 				if (keyCode == KeyEvent.VK_F) {
 					if(!fullScreen) {
-						fullScreen = true;				
+						fullScreen = true;
 						setExtendedState(JFrame.MAXIMIZED_BOTH);
 					}
 					else {
@@ -174,35 +174,22 @@ public class GameFrame extends JFrame implements WindowListener
 				// listen for arrows events
 				if (keyCode == KeyEvent.VK_LEFT) {
 					synchronized(renderTh) {
-						renderTh.getPacMan().wantToGoLeft();
-						direction = statusBarPanel.getDirection();
-						direction.setText("LEFT");
-						statusBarPanel.setDirection(direction);
-						
+						renderTh.getPacMan().wantToGoLeft();						
 					}
 				}
 				else if(keyCode == KeyEvent.VK_RIGHT){
 					synchronized(renderTh) {
 						renderTh.getPacMan().wantToGoRight();
-						direction = statusBarPanel.getDirection();
-						direction.setText("RIGHT");
-						statusBarPanel.setDirection(direction);
 					}
 				}
 				else if(keyCode == KeyEvent.VK_UP){
 					synchronized(renderTh) {
 						renderTh.getPacMan().wantToGoUp();
-						direction = statusBarPanel.getDirection();
-						direction.setText("UP");
-						statusBarPanel.setDirection(direction);
 					}
 				}
 				else if(keyCode == KeyEvent.VK_DOWN){
 					synchronized(renderTh) {
 						renderTh.getPacMan().wantToGoDown();
-						direction = statusBarPanel.getDirection();
-						direction.setText("DOWN");
-						statusBarPanel.setDirection(direction);
 					}
 				}
 				
