@@ -16,41 +16,9 @@ public class SoundThread extends AudioThread {
 	}
 
 	@Override
-	protected void actionOnStart() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	protected void settings() {
 		// TODO Auto-generated method stub
 		
-	}
-	
-	public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
-		
-
-		int wait_delay = 3000, join_delay = 100;
-		
-		SoundThread soundsTh = new SoundThread("soundsTh");
-		soundsTh.start();
-		
-		synchronized(soundsTh) {
-			soundsTh.playAudio("chomp.wav");
-			//soundsTh.wait(wait_delay);
-//			soundsTh.playAudio(soundsTh.rsc.getSoundPath("chomp.wav"));
-//			//soundsTh.wait(wait_delay);
-//			soundsTh.playAudio(soundsTh.rsc.getSoundPath("chomp.wav"));
-//			soundsTh.wait(wait_delay);
-//			soundsTh.playAudio(soundsTh.rsc.getSoundPath("death.wav"));
-//			soundsTh.wait(wait_delay);
-//			soundsTh.stopAudioThread();
-			//thread should be down now
-			soundsTh.wait(join_delay);
-			if(soundsTh.isAlive()) {
-				soundsTh.interrupt();
-			}
-		}
 	}
 
 
@@ -73,5 +41,32 @@ public class SoundThread extends AudioThread {
 		// TODO Auto-generated method stub
 		
 	}
+
+//	
+//	public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
+//		
+//
+//		int wait_delay = 3000, join_delay = 100;
+//		
+//		SoundThread soundsTh = new SoundThread("soundsTh");
+//		soundsTh.start();
+//		
+//		synchronized(soundsTh) {
+//			soundsTh.playAudio("chomp.wav");
+//			soundsTh.wait(wait_delay);
+//			soundsTh.playAudio("chomp.wav");
+//			soundsTh.wait(wait_delay);
+//			soundsTh.playAudio("chomp.wav");
+//			soundsTh.wait(wait_delay);
+//			soundsTh.playAudio("death.wav");
+//			soundsTh.wait(wait_delay);
+//			soundsTh.stopAudioThread();
+//			//thread should be down now
+//			soundsTh.wait(join_delay);
+//			if(soundsTh.isAlive()) {
+//				soundsTh.interrupt();
+//			}
+//		}
+//	}
 
 }

@@ -25,8 +25,6 @@ public abstract class AudioThread extends ThreadPerso{
 	
 	protected boolean isRunning;
 	private boolean isPlaying;
-	private final int WAIT_DELAY = 100; //ms
-	
 	private float vol = 1;
 	private float volBefore = vol;
 	private boolean mute = false;
@@ -38,40 +36,20 @@ public abstract class AudioThread extends ThreadPerso{
 	}
 	
 	/** 
-	 * Audio loop on the selected sound
+	 * What the thread is doing while running
 	 */
-	
-	public void run() {
-		System.out.println("Strart Audio Thread");
-		isRunning = true;
+	protected void doThat() {
 		
-		try {
-			actionOnStart();
-		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e1) {
-			e1.printStackTrace();
-		}
-		
-		while(isRunning) {
-			
-			try {
-				sleep(WAIT_DELAY);
-			} catch (InterruptedException e) {
-				//e.printStackTrace(); not necessary
+		if(audioClip != null && !audioClip.isRunning()) {
+			isPlaying = false;
+		}else if(audioClip != null && audioClip.isRunning()) {
+			if(vol != volBefore) {
+				setVolume(vol);
+				volBefore = vol;
 			}
-			
-			if(audioClip != null && !audioClip.isRunning()) {
-				isPlaying = false;
-			}else if(audioClip != null && audioClip.isRunning()) {
-				if(vol != volBefore) {
-					setVolume(vol);
-					volBefore = vol;
-				}
-			}
-			
 		}
-		
-		System.out.println("Stop Audio Thread");
 	}
+	
 	
 	/**
      * Play the audio of your choice: 
@@ -103,7 +81,7 @@ public abstract class AudioThread extends ThreadPerso{
 	 * Stop AudioThread Method
 	 */
 	
-	public void stopAudioThread() {
+	protected void doThatAtStop() {
 		
 		if(isPlaying) {
 			audioClip.stop();
@@ -118,7 +96,6 @@ public abstract class AudioThread extends ThreadPerso{
 	 * Abstract Methods implemented in music and sound Thread
 	 */
 	
-	protected abstract void actionOnStart() throws UnsupportedAudioFileException, IOException, LineUnavailableException;
 	protected abstract void settings() ;
 
 
