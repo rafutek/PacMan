@@ -51,58 +51,6 @@ public class PrototypeMock extends JFrame{
 	private PhysicsThread physicsTh;
 	
 	
-	Runnable renderLoop  = new Runnable() {
-		@Override
-		public void run() {
-			while(running) {
-				try { Thread.sleep(10); } catch (InterruptedException e) {}
-				
-				System.out.println("draw");
-				dbImage = panel.createImage(panel.getWidth(), panel.getHeight());
-				if (dbImage == null) {
-					System.out.println("dbImage is null");
-					return;
-				}
-				else {
-					dbg = dbImage.getGraphics();
-				}
-				
-				//draw maze (background)
-				maze.draw(dbg); 
-				//draw all the sprites at their respective position, 
-				//with their respective dimension
-				if(pacDots != null) {
-					System.out.println("draw pacdots");
-					pacDots.draw(dbg); 
-				}
-				if(energizers != null) {
-					energizers.draw(dbg); 
-				}
-				if(pacMan != null) {
-					System.out.println("draw pacman");
-					pacMan.draw(dbg);
-				}
-				if(blinky != null) {
-					System.out.println("draw blinky");
-					blinky.draw(dbg);
-				}
-				if(pinky != null) {
-					pinky.draw(dbg);
-				}
-				if(clyde != null) {
-					clyde.draw(dbg);
-				}
-				if(inky != null) {
-					inky.draw(dbg);	
-				}
-					
-				
-				
-				paintScreen();
-			}
-		}
-	};
-	
 	public PrototypeMock() throws IOException {
 		super("Prototype");
 		panel.setBackground(Color.black);	
@@ -120,7 +68,6 @@ public class PrototypeMock extends JFrame{
 		 energizers = maze.getEnergizers();
 		 pacDots = maze.getPacDots();
 		 pacMan = maze.getPacMan();
-		 pacMan.setCurrentPosition(pacMan.getMazePosition());
 		 blinky = maze.getBlinky();
 		 pinky = maze.getPinky();
 		 clyde = maze.getClyde();
@@ -135,6 +82,75 @@ public class PrototypeMock extends JFrame{
 	}
 	
 	
+	private void startRenderLoop() {
+		Thread renderLoopTh = new Thread(renderLoop);
+		renderLoopTh.start();
+	}
+	
+	
+	public void stop() {
+		running = false;
+		physicsTh.stopThread();
+		animationTh.stopThread();
+		System.out.println("stop");
+		System.exit(0);
+	}
+	
+	Runnable renderLoop  = new Runnable() {
+		@Override
+		public void run() {
+			while(running) {
+				try { Thread.sleep(10); } catch (InterruptedException e) {}
+				
+				dbImage = panel.createImage(panel.getWidth(), panel.getHeight());
+				
+				if (dbImage == null) {
+					System.out.println("dbImage is null");
+					return;
+				}
+				else {
+					dbg = dbImage.getGraphics();
+				}
+				
+				//draw maze (background)
+				maze.draw(dbg); 
+				//draw all the sprites at their respective position, 
+				//with their respective dimension
+				if(pacDots.getSprites() != null && !pacDots.getSprites().isEmpty()) {
+					System.out.println("draw pacdots");
+					pacDots.draw(dbg); 
+				}
+				if(energizers.getSprites() != null && !energizers.getSprites().isEmpty()) {
+					System.out.println("draw pacdots");
+					energizers.draw(dbg); 
+				}
+				if(pacMan != null) {
+					System.out.println("draw pacman");
+					pacMan.draw(dbg);
+				}
+				if(blinky != null) {
+					System.out.println("draw blinky");
+					blinky.draw(dbg);
+				}
+				if(pinky != null) {
+					System.out.println("draw pinky");
+					pinky.draw(dbg);
+				}
+				if(clyde != null) {
+					System.out.println("draw clyde");
+					clyde.draw(dbg);
+				}
+				if(inky != null) {
+					System.out.println("draw inky");
+					inky.draw(dbg);	
+				}
+					
+				
+				
+				paintScreen();
+			}
+		}
+	};
 	
 	
 	/**
@@ -154,20 +170,8 @@ public class PrototypeMock extends JFrame{
 		catch (Exception e)
 		{ System.out.println("Graphics error: " + e);  }
 	}
-	
-	private void startRenderLoop() {
-		Thread renderLoopTh = new Thread(renderLoop);
-		renderLoopTh.start();
-	}
-	
-	
-	public void stop() {
-		running = false;
-		physicsTh.stopThread();
-		animationTh.stopThread();
-		System.out.println("stop");
-		System.exit(0);
-	}
+
+//------------------------------------------------------------------------------------
 	
 	public static void main(String[] arg) throws InterruptedException, IOException {
 		PrototypeMock proto = new PrototypeMock();

@@ -147,25 +147,33 @@ public class PhysicsThread extends ThreadPerso {
 							adaptedCurrentPosX = blinky.getCurrentPosition().getX() + blinky.getCurrentSize().width/2;
 							adaptedCurrentPosY = blinky.getCurrentPosition().getY();
 							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
+							if(currentMatrixPos != null) {
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
+							}
 						}
 						else if(blinkyWantedState == MovingSpriteState.RIGHT) {
 							adaptedCurrentPosX = blinky.getCurrentPosition().getX() - blinky.getCurrentSize().width/2;
 							adaptedCurrentPosY = blinky.getCurrentPosition().getY();
 							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
+							if(currentMatrixPos != null) {
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
+							}
 						}
 						else if(blinkyWantedState == MovingSpriteState.UP) {
 							adaptedCurrentPosX = blinky.getCurrentPosition().getX();
 							adaptedCurrentPosY = blinky.getCurrentPosition().getY() + blinky.getCurrentSize().height/2;
 							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
+							if(currentMatrixPos != null) {
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
+							}
 						}
 						else if(blinkyWantedState == MovingSpriteState.DOWN) {
 							adaptedCurrentPosX = blinky.getCurrentPosition().getX();
 							adaptedCurrentPosY = blinky.getCurrentPosition().getY() - blinky.getCurrentSize().height/2;
 							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
+							if(currentMatrixPos != null) {
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
+							}
 						}
 						
 						
@@ -446,6 +454,10 @@ public class PhysicsThread extends ThreadPerso {
 	public static Position mazeToMatrixPosition(Position panelPos, JPanel panel, List<List<Integer>> mazeValues) {
 		int matPosX = (int)Math.round((panelPos.getX() * mazeValues.get(0).size()) / (double)panel.getWidth());
 		int matPosY = (int)Math.round((panelPos.getY() * mazeValues.size()) / (double)panel.getHeight());
+		if(matPosX >= mazeValues.get(0).size() || matPosY >= mazeValues.size()) {
+			System.out.println("matrix value out of the bounds !");
+			return null;
+		}
 		return new Position(matPosX, matPosY);
 	}
 

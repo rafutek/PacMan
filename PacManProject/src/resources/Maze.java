@@ -317,19 +317,29 @@ public class Maze {
 		energizersMazeImagePositions.clear();
 		
 		//pac-man
-		pacMan = new PacMan(pacManMazeImagePosition, tiles, gamePanel);
+		if(pacManMazeImagePosition != null) {
+			pacMan = new PacMan(pacManMazeImagePosition, tiles, gamePanel);
+		}
 		
 		//blinky
-		blinky = new Blinky(blinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);
+		if(blinkyMazeImagePosition != null) {
+			blinky = new Blinky(blinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);			
+		}
 
 		//pinky
-		pinky = new Pinky(pinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan); 
+		if(pinkyMazeImagePosition != null) {
+			pinky = new Pinky(pinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan); 
+		}
 
 		//clyde
-		clyde = new Clyde(clydeMazeImagePosition, tiles, gamePanel, mazeValues, pacMan); 
+		if(clydeMazeImagePosition != null) {
+			clyde = new Clyde(clydeMazeImagePosition, tiles, gamePanel, mazeValues, pacMan); 
+		}
 
 		//inky
-		inky = new Inky(inkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);
+		if(inkyMazeImagePosition != null) {
+			inky = new Inky(inkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);
+		}
 		
 		//door
 		computeDoorPosition();
@@ -543,6 +553,7 @@ public class Maze {
 			newWidth = (newDim.width * pacMan.getOriginalSize().width) / originalMazeImg.getWidth() ;
 			newHeight = (newDim.height * pacMan.getOriginalSize().height) / originalMazeImg.getHeight();
 			pacMan.setCurrentSize(new Dimension(newWidth, newHeight));
+			System.out.println("set current pacman size to "+pacMan.getCurrentSize());
 		}
 		
 		//blinky
