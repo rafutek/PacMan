@@ -79,8 +79,8 @@ class TestRobotCollisions {
 		int xPosGhost = window.getGameLoop().getBlinky().getCurrentPosition().getX();
 		assertTrue(xPosPacMan < xPosGhost, "pac-man must be at the left of ghost for testing");
 		
-//		int nbLives = window.getGameLoop().getPacMan().
-		
+		int nbLives = window.getGameLoop().getPacMan().getLife();
+
 //		robot.keyPress(KeyEvent.VK_RIGHT);
 //		assertTimeout(5000, executable);
 		
