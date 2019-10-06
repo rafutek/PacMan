@@ -28,6 +28,14 @@ public class MusicThread extends AudioThread{
 	@Override
 	protected void doThatAtStart() {
 		// TODO Auto-generated method stub
+		
+		
+
+	}
+
+	@Override
+	protected void doThat() {
+		// TODO Auto-generated method stub
 		try {
 			playAudio("beginning.wav");
 		} catch (UnsupportedAudioFileException e) {
@@ -40,14 +48,6 @@ public class MusicThread extends AudioThread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
-	}
-
-	@Override
-	protected void doThat() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
