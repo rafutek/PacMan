@@ -14,19 +14,21 @@ public abstract class Ghost extends MovingSprite {
 	
 	public static List<Integer> acceptedMazeValues;
 	
-	protected GhostBehaviorThread behaviorTh = new GhostBehaviorThread(this);
+	
 
 	public  boolean isInTheBox = true;
 	
 	protected JPanel gamePanel;
 	protected List<List<Integer>> mazeValues;
-	protected MovingSprite pacMan;
+	protected PacMan pacMan;
+	
+	protected GhostBehaviorThread behaviorTh = new GhostBehaviorThread(this, pacMan);
 	
 	protected Position lastSeenPacManMatrixPos;
 	protected boolean goingToLastSeenPos, escaping;
 
 
-	public Ghost(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, MovingSprite pacMan) {
+	public Ghost(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, PacMan pacMan) {
 		super(start_position, tiles, gamePanel);
 		Ghost.acceptedMazeValues = super.acceptedMazeValues;
 		this.gamePanel = gamePanel;
@@ -124,6 +126,7 @@ public abstract class Ghost extends MovingSprite {
 	 */
 	public abstract boolean specificAvailable();
 	public abstract void launchSpecific();
+	public abstract void replacementOnDeath();
 	
 	private boolean wallInRow(Position pos1, Position pos2) {
 		int petit= Math.min(pos1.getX(),pos2.getX());
@@ -233,6 +236,9 @@ public abstract class Ghost extends MovingSprite {
 	}
 	
 	public boolean escaping() {
+		if (pacMan.invincible()){
+			this.escaping = true;
+		}
 		return escaping;
 	}
 	

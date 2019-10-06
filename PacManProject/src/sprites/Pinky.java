@@ -12,7 +12,7 @@ public class Pinky extends Ghost {
 	
 	MovingSpriteState nextState;
 
-	public Pinky(Position start_position, Tiles tiles, JPanel gamePanel,  List<List<Integer>> mazeValues, MovingSprite pacMan) {
+	public Pinky(Position start_position, Tiles tiles, JPanel gamePanel,  List<List<Integer>> mazeValues, PacMan pacMan) {
 		super(start_position, tiles, gamePanel, mazeValues, pacMan);
 	}
 	
@@ -34,7 +34,7 @@ public class Pinky extends Ghost {
 	
 	@Override
 	public void startDirectionThread() {
-		behaviorTh = new GhostBehaviorThread(this);
+		behaviorTh = new GhostBehaviorThread(this,pacMan);
 		behaviorTh.setName("Pinky behavior");
 		behaviorTh.startThread();
 	}
@@ -105,5 +105,11 @@ public class Pinky extends Ghost {
 	public void launchSpecific() {
 		this.setState(nextState);
 		
+	}
+
+	@Override
+	public void replacementOnDeath() {
+		// TODO Auto-generated method stub
+		this.setCurrentPosition(new Position(242, 253));
 	}
 }

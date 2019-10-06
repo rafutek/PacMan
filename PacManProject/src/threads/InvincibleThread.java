@@ -22,6 +22,7 @@ public class InvincibleThread extends TimerThread {
 	protected void finallyDoThat() {
 		pacMan.setInvincible(false);
 		stopThread();
+		
 	}
 
 	@Override

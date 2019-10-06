@@ -11,7 +11,7 @@ import threads.PhysicsThread;
 
 public class Inky extends Ghost {
 
-	public Inky(Position start_position, Tiles tiles, JPanel gamePanel,  List<List<Integer>> mazeValues, MovingSprite pacMan) {
+	public Inky(Position start_position, Tiles tiles, JPanel gamePanel,  List<List<Integer>> mazeValues, PacMan pacMan) {
 		super(start_position, tiles, gamePanel, mazeValues, pacMan);
 	}
 	
@@ -32,7 +32,7 @@ public class Inky extends Ghost {
 	
 	@Override
 	public void startDirectionThread() {
-		behaviorTh = new GhostBehaviorThread(this);
+		behaviorTh = new GhostBehaviorThread(this,pacMan);
 		behaviorTh.setName("Inky behavior");
 		behaviorTh.startThread();
 	}
@@ -72,6 +72,12 @@ public class Inky extends Ghost {
 			chooseDirectionToEscapeFrom(lastSeenPacManMatrixPos);
 			escaping = true;
 		}
+	}
+
+	@Override
+	public void replacementOnDeath() {
+		// TODO Auto-generated method stub
+		this.setCurrentPosition(new Position(301, 253));
 	}
 
 }

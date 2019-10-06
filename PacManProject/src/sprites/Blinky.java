@@ -10,7 +10,7 @@ import threads.PhysicsThread;
 
 public class Blinky extends Ghost {
 	
-	public Blinky(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, MovingSprite pacMan) {
+	public Blinky(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, PacMan pacMan) {
 		super(start_position, tiles, gamePanel, mazeValues, pacMan);
 		setInTheBox(false); // blinky is already out of the box
 		state = MovingSpriteState.LEFT;
@@ -33,7 +33,7 @@ public class Blinky extends Ghost {
 	
 	@Override
 	public void startDirectionThread() {
-		behaviorTh = new GhostBehaviorThread(this);
+		behaviorTh = new GhostBehaviorThread(this, pacMan);
 		behaviorTh.setName("Blinky behavior");
 		behaviorTh.startThread();
 	}
@@ -61,6 +61,12 @@ public class Blinky extends Ghost {
 	public void launchSpecific() {
 		goingToLastSeenPos = true;
 		chooseDirectionToGoTo(lastSeenPacManMatrixPos);
+	}
+
+	@Override
+	public void replacementOnDeath() {
+		// TODO Auto-generated method stub
+		this.setCurrentPosition(new Position(273, 253));
 	}
 
 }

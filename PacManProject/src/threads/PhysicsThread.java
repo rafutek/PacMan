@@ -13,6 +13,7 @@ import sprites.Ghost;
 import sprites.MovingSpriteState;
 import sprites.PacMan;
 import sprites.Position;
+import sprites.Sprite;
 import sprites.Sprites;
 import view.StatusBarPanel;
 
@@ -382,30 +383,13 @@ public class PhysicsThread extends ThreadPerso {
 		
 		// pac-man and ghosts collisions
 		if(ghostCollision()) {
-			pacMan.setCurrentPosition(matrixToMazePosition(pacMan.getMatrixPosition(), gamePanel, mazeValues));
-			blinky.setCurrentPosition(matrixToMazePosition(blinky.getMatrixPosition(), gamePanel, mazeValues));
-			pinky.setCurrentPosition(matrixToMazePosition(pinky.getMatrixPosition(), gamePanel, mazeValues));
-			clyde.setCurrentPosition(matrixToMazePosition(clyde.getMatrixPosition(), gamePanel, mazeValues));
-			inky.setCurrentPosition(matrixToMazePosition(inky.getMatrixPosition(), gamePanel, mazeValues));
-			pinky.setInTheBox(true);
-			clyde.setInTheBox(true);
-			inky.setInTheBox(true);
-			GhostsExitBoxThread.clydeCanGoOut=true;
-			GhostsExitBoxThread.pinkyCanGoOut=true;
-			GhostsExitBoxThread.inkyCanGoOut=true;
-			clyde.setState(MovingSpriteState.STOP);
-			pinky.setState(MovingSpriteState.STOP);
-			inky.setState(MovingSpriteState.STOP);
-			clyde.stopDirectionThread();
-			inky.stopDirectionThread();
-			timerstarted=true;
-			if(pacMan.getLife()!=0 && pacMan.getLife()<=4) {
-				int life=pacMan.getLife()-1;
-				pacMan.setLife(life);
-
-				if(life==0) {
-					System.out.println("GAMEOVER");
-				}
+			if(vie!=0 && vie<=4) {
+				resetAllSprites();
+				vie--;
+				StatusBarPanel.setImageLives(vie);
+				StatusBarPanel.livesImg.setIcon(new ImageIcon(StatusBarPanel.Lives));
+			}else if(vie==0) {
+				System.out.println("GAMEOVER");
 			}
 		}
 		pacDotsCollision(); 
@@ -420,6 +404,10 @@ public class PhysicsThread extends ThreadPerso {
 			ScoreBonus=true;
 		}
 	}
+	
+
+	
+	
 	/**
 	 * Stop doing the actions defined in doThat() method.
 	 */
@@ -571,22 +559,54 @@ public class PhysicsThread extends ThreadPerso {
 				int pacman_up = pacMan.getCurrentPosition().getY();
 				int pacman_down = pacMan.getCurrentPosition().getY() + pacMan.getCurrentSize().height;
 				collisionDone=false;
-				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky)) {
+				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky) && pacMan.invincible()) {
 					System.out.println("collision with blinky!");
+					resetOneSprite(blinky);
+					return false;
+				}
+				
+				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky)) {
+					System.out.println("collision with blinky!");
+					resetAllSprites();
 					return true;
 				}
-				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky)) {
+				
+				
+				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky) && pacMan.invincible()) {
 					System.out.println("collision with pinky!");
-					return true;
+					resetOneSprite(pinky);
+					return false;
 				}		
-				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde)) {
-					System.out.println("collision with clyde!");
+				
+				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky)) {
+					System.out.println("collision with pinky!");
+					resetAllSprites();
 					return true;
 				}
-				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky)) {
-					System.out.println("collision with inky!");
+				
+				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde) && pacMan.invincible()) {
+					System.out.println("collision with clyde!");
+					resetOneSprite(clyde);
+					return false;
+				}
+				
+				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde)) {
+					System.out.println("collision with clyde!");
+					resetAllSprites();
 					return true;
-				}			
+				}
+				
+				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky) && pacMan.invincible()) {
+					System.out.println("collision with inky!");
+					resetOneSprite(inky);
+					return false;
+				}
+				
+				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky)) {
+					System.out.println("collision with inky!");
+					resetAllSprites();
+					return true;
+				}
 			}
 	
 			return false;			
@@ -713,6 +733,32 @@ public class PhysicsThread extends ThreadPerso {
 		soundMute = Mute;
 	}
 	
+	private void resetAllSprites() {
+		pacMan.setCurrentPosition(new Position(273, 405));
+		blinky.setCurrentPosition(new Position(272, 202));
+		pinky.setCurrentPosition(new Position(242, 253));
+		clyde.setCurrentPosition(new Position(273, 253));
+		inky.setCurrentPosition(new Position(301, 253));
+		pinky.setInTheBox(true);
+		clyde.setInTheBox(true);
+		inky.setInTheBox(true);
+		GhostsExitBoxThread.clydeCanGoOut=true;
+		GhostsExitBoxThread.pinkyCanGoOut=true;
+		GhostsExitBoxThread.inkyCanGoOut=true;
+		clyde.setState(MovingSpriteState.STOP);
+		pinky.setState(MovingSpriteState.STOP);
+		inky.setState(MovingSpriteState.STOP);
+		clyde.stopDirectionThread();
+		inky.stopDirectionThread();
+	}
+	
+	private void resetOneSprite(Ghost ghost) {
+		ghost.replacementOnDeath();
+		ghost.setInTheBox(true);
+		ghost.setState(MovingSpriteState.STOP);
+		ghost.stopDirectionThread();
+		
+	}
 
 	
 }

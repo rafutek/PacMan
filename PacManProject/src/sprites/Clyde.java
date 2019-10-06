@@ -9,7 +9,7 @@ import threads.GhostBehaviorThread;
 
 public class Clyde extends Ghost {
 
-	public Clyde(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, MovingSprite pacMan) {
+	public Clyde(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, PacMan pacMan) {
 		super(start_position, tiles, gamePanel, mazeValues, pacMan);
 	}
 	
@@ -30,7 +30,7 @@ public class Clyde extends Ghost {
 	
 	@Override
 	public void startDirectionThread() {
-		behaviorTh = new GhostBehaviorThread(this);
+		behaviorTh = new GhostBehaviorThread(this,pacMan);
 		behaviorTh.setName("Clyde behavior");
 		behaviorTh.startThread();
 	}
@@ -51,6 +51,13 @@ public class Clyde extends Ghost {
 	@Override
 	public void launchSpecific() {
 		System.out.println("Launch Clyde Specific behavior");		
+	}
+
+
+	@Override
+	public void replacementOnDeath() {
+		// TODO Auto-generated method stub
+		this.setCurrentPosition(new Position(273, 253));
 	}
 
 }
