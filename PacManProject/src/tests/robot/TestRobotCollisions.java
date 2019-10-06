@@ -66,7 +66,25 @@ class TestRobotCollisions {
 	}
 	
 	
-	
+	/**
+	 * Test that normal pac-man loses a life when collision with ghost.
+	 */
+	@Test
+	void testPacManGhostCollision() {
+		int yPosPacMan = window.getGameLoop().getPacMan().getCurrentPosition().getY();
+		int yPosGhost = window.getGameLoop().getBlinky().getCurrentPosition().getY();
+		assertEquals(yPosPacMan, yPosGhost, "pac-man and ghost must be at the same line for testing");
+		
+		int xPosPacMan = window.getGameLoop().getPacMan().getCurrentPosition().getX();
+		int xPosGhost = window.getGameLoop().getBlinky().getCurrentPosition().getX();
+		assertTrue(xPosPacMan < xPosGhost, "pac-man must be at the left of ghost for testing");
+		
+//		int nbLives = window.getGameLoop().getPacMan().
+		
+//		robot.keyPress(KeyEvent.VK_RIGHT);
+//		assertTimeout(5000, executable);
+		
+	}
 	
 	
 	

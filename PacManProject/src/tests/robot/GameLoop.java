@@ -207,5 +207,9 @@ public class GameLoop extends ThreadPerso {
 		return pacMan;
 	}
 	
+	public Ghost getBlinky() {
+		return blinky;
+	}
+	
 }
 
