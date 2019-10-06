@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
+import java.time.Duration;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -71,18 +72,27 @@ class TestRobotCollisions {
 	 */
 	@Test
 	void testPacManGhostCollision() {
-		int yPosPacMan = window.getGameLoop().getPacMan().getCurrentPosition().getY();
-		int yPosGhost = window.getGameLoop().getBlinky().getCurrentPosition().getY();
-		assertEquals(yPosPacMan, yPosGhost, "pac-man and ghost must be at the same line for testing");
 		
-		int xPosPacMan = window.getGameLoop().getPacMan().getCurrentPosition().getX();
-		int xPosGhost = window.getGameLoop().getBlinky().getCurrentPosition().getX();
-		assertTrue(xPosPacMan < xPosGhost, "pac-man must be at the left of ghost for testing");
-		
-		int nbLives = window.getGameLoop().getPacMan().getLife();
+		assertTimeout(Duration.ofSeconds(5), () -> {
+			int yPosPacMan = window.getGameLoop().getPacMan().getCurrentPosition().getY();
+			int yPosGhost = window.getGameLoop().getBlinky().getCurrentPosition().getY();
+			assertEquals(yPosPacMan, yPosGhost, "pac-man and ghost must be at the same line for testing");
+			
+			int xPosPacMan = window.getGameLoop().getPacMan().getCurrentPosition().getX();
+			int xPosGhost = window.getGameLoop().getBlinky().getCurrentPosition().getX();
+			assertTrue(xPosPacMan < xPosGhost, "pac-man must be at the left of ghost for testing");
+			
+			int nbLives = window.getGameLoop().getPacMan().getLife();
+			
+			robot.keyPress(KeyEvent.VK_RIGHT);	
+			
+			do {
+				xPosPacMan = window.getGameLoop().getPacMan().getCurrentPosition().getX();
+				xPosGhost = window.getGameLoop().getBlinky().getCurrentPosition().getX();				
+			}while(xPosPacMan < xPosGhost);
+			System.out.println("collision");
 
-//		robot.keyPress(KeyEvent.VK_RIGHT);
-//		assertTimeout(5000, executable);
+	    });
 		
 	}
 	
