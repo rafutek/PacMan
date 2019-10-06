@@ -383,12 +383,11 @@ public class PhysicsThread extends ThreadPerso {
 		
 		// pac-man and ghosts collisions
 		if(ghostCollision()) {
-			if(vie!=0 && vie<=4) {
+			int nbLives = pacMan.getLife();
+			if(nbLives!=0 && nbLives<=4) {
 				resetAllSprites();
-				vie--;
-				StatusBarPanel.setImageLives(vie);
-				StatusBarPanel.livesImg.setIcon(new ImageIcon(StatusBarPanel.Lives));
-			}else if(vie==0) {
+				pacMan.setLife(nbLives--);
+			}else if(nbLives==0) {
 				System.out.println("GAMEOVER");
 			}
 		}
@@ -734,11 +733,11 @@ public class PhysicsThread extends ThreadPerso {
 	}
 	
 	private void resetAllSprites() {
-		pacMan.setCurrentPosition(new Position(273, 405));
-		blinky.setCurrentPosition(new Position(272, 202));
-		pinky.setCurrentPosition(new Position(242, 253));
-		clyde.setCurrentPosition(new Position(273, 253));
-		inky.setCurrentPosition(new Position(301, 253));
+		pacMan.setCurrentPosition(matrixToMazePosition(pacMan.getMatrixPosition(), gamePanel, mazeValues));
+		blinky.setCurrentPosition(matrixToMazePosition(blinky.getMatrixPosition(), gamePanel, mazeValues));
+		pinky.setCurrentPosition(matrixToMazePosition(pinky.getMatrixPosition(), gamePanel, mazeValues));
+		clyde.setCurrentPosition(matrixToMazePosition(clyde.getMatrixPosition(), gamePanel, mazeValues));
+		inky.setCurrentPosition(matrixToMazePosition(inky.getMatrixPosition(), gamePanel, mazeValues));
 		pinky.setInTheBox(true);
 		clyde.setInTheBox(true);
 		inky.setInTheBox(true);
