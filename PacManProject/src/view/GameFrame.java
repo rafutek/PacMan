@@ -5,7 +5,9 @@ import javax.swing.*;
 
 import threads.LayoutManagerThread;
 import threads.MusicThread;
+import threads.PhysicsThread;
 import threads.RenderThread;
+import threads.SoundThread;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -54,6 +56,7 @@ public class GameFrame extends JFrame implements WindowListener
 		readyForFullScreen();
 		readyForArrowsEvents();
 		readyForPause();
+		readyForMute();
 	}  
 	
 	
@@ -120,7 +123,7 @@ public class GameFrame extends JFrame implements WindowListener
 	{ 
 		super.addNotify();   // creates the peer
 		layoutTh = new LayoutManagerThread(this);
-		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
+		renderTh = new RenderThread(period, gamePanel, statusBarPanel, soundTh);
 		musicTh = new MusicThread("musicTh");
 		
 		
@@ -234,6 +237,33 @@ public class GameFrame extends JFrame implements WindowListener
 			}
 		});
 	}
+	
+	private void readyForMute() {
+		addKeyListener( new KeyAdapter() {
+			public void keyPressed(KeyEvent e)
+			{ 
+				int keyCode = e.getKeyCode();
+				
+				// listen for arrows events
+				if (keyCode == KeyEvent.VK_M) {
+					if(!gameMute) {
+						System.out.println("Sound mute");
+						gameMute = true;
+						synchronized (musicTh) {
+							musicTh.setMute(true);
+						}
+					}
+					else if(gameMute) {
+						System.out.println("Sound on");
+						gameMute = false;
+						synchronized (musicTh) {
+							musicTh.setMute(false);
+						}
+					}
+				} 
+			}
+		});
+	}
 
 	private void closeGame() {
 		
@@ -262,6 +292,9 @@ public class GameFrame extends JFrame implements WindowListener
 		synchronized (layoutTh){
 			layoutTh.resumeThread();
 		}
+		synchronized (musicTh){
+			musicTh.setMute(false);
+		}
 	}
 	
 	public void windowDeactivated(WindowEvent e) 
@@ -273,6 +306,10 @@ public class GameFrame extends JFrame implements WindowListener
 		synchronized (layoutTh){
 			layoutTh.pauseThread();
 		}
+		
+		synchronized (musicTh){
+			musicTh.setMute(true);
+		} 
 	}
 	
 	public void windowOpened(WindowEvent e) {}
