@@ -36,7 +36,11 @@ public class PhysicsThread extends ThreadPerso {
 	private Sprites pacDots; 
 	private Sprites energizer;
 	
+	/**
+	 * Management of the sounds
+	 */
 	private SoundThread soundTh;
+	private static boolean soundMute = false;
 	
 	/**
 	 * The class needs the maze number matrix, the game panel size and of course the moving sprites,
@@ -465,66 +469,18 @@ public class PhysicsThread extends ThreadPerso {
 				
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky)) {
 					System.out.println("collision with blinky!");
-					soundTh = new SoundThread("soundTh");
-					if(soundTh != null) {
-						synchronized(soundTh) {
-								try {
-									soundTh.playAudio("death.wav");
-								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} // play sound
-							
-						}					
-					}
 					return true;
 				}
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky)) {
 					System.out.println("collision with pinky!");
-					soundTh = new SoundThread("soundTh");
-					if(soundTh != null) {
-						synchronized(soundTh) {
-								try {
-									soundTh.playAudio("death.wav");
-								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} // play sound
-							
-						}					
-					}
 					return true;
 				}		
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde)) {
 					System.out.println("collision with clyde!");
-					soundTh = new SoundThread("soundTh");
-					if(soundTh != null) {
-						synchronized(soundTh) {
-								try {
-									soundTh.playAudio("death.wav");
-								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} // play sound
-							
-						}					
-					}
 					return true;
 				}
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky)) {
 					System.out.println("collision with inky!");
-					soundTh = new SoundThread("soundTh");
-					if(soundTh != null) {
-						synchronized(soundTh) {
-								try {
-									soundTh.playAudio("death.wav");
-								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} // play sound
-							
-						}					
-					}
 					return true;
 				}			
 			}
@@ -563,17 +519,19 @@ public class PhysicsThread extends ThreadPerso {
 			int positionX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
 			int positionY= pacDots.getSpriteNb(i).getCurrentPosition().getY();
 			if(pacMan.getCurrentPosition().getX()<=positionX+(13/2) && pacMan.getCurrentPosition().getX()>= positionX-(13/2)  && pacMan.getCurrentPosition().getY()<=positionY+(12/2) && pacMan.getCurrentPosition().getY()>= positionY-(12/2) )  {
-				soundTh = new SoundThread("soundTh");
-				if(soundTh != null) {
-					synchronized(soundTh) {
-							try {
-								soundTh.playAudio("chomp.wav");
-							} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} // play sound
-						
-					}					
+				if (!soundMute) {
+					soundTh = new SoundThread("soundTh");
+					if(soundTh != null) {
+						synchronized(soundTh) {
+								try {
+									soundTh.playAudio("chomp.wav");
+								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} // play sound
+							
+						}					
+					}
 				}
 				pacDots.showX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
 				pacDots.showY=pacDots.getSpriteNb(i).getCurrentPosition().getY();
@@ -590,17 +548,19 @@ public class PhysicsThread extends ThreadPerso {
 			int positionX=energizer.getSpriteNb(i).getCurrentPosition().getX();
 			int positionY= energizer.getSpriteNb(i).getCurrentPosition().getY();
 			if(pacMan.getCurrentPosition().getX()<=positionX+(13/2) && pacMan.getCurrentPosition().getX()>= positionX-(13/2)  && pacMan.getCurrentPosition().getY()<=positionY+(12/2) && pacMan.getCurrentPosition().getY()>= positionY-(12/2) )  {
-				soundTh = new SoundThread("soundTh");
-				if(soundTh != null) {
-					synchronized(soundTh) {
-							try {
-								soundTh.playAudio("extrapac.wav");
-							} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} // play sound
-						
-					}					
+				if (!soundMute) {
+					soundTh = new SoundThread("soundTh");
+					if(soundTh != null) {
+						synchronized(soundTh) {
+								try {
+									soundTh.playAudio("extrapac.wav");
+								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} // play sound
+							
+						}					
+					}
 				}
 				energizer.showX=energizer.getSpriteNb(i).getCurrentPosition().getX();
 				energizer.showY=energizer.getSpriteNb(i).getCurrentPosition().getY();
@@ -622,12 +582,31 @@ public class PhysicsThread extends ThreadPerso {
 				int ghost_down = ghost.getCurrentPosition().getY() + ghost.getCurrentSize().height;		
 			
 				if( pacman_left < ghost_right && pacman_right > ghost_left && pacman_down > ghost_up && pacman_up < ghost_down ) {
-					return true;
+					if (!soundMute) {
+						soundTh = new SoundThread("soundTh");
+						if(soundTh != null) {
+							synchronized(soundTh) {
+									try {
+										soundTh.playAudio("death.wav");
+									} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									} // play sound
+								
+							}					
+						}
+
+					}
+										return true;
 				}
 				return false;
 			}			
 		}
 		return false;
+	}
+	
+	public static void setSoundMute(boolean Mute) {
+		soundMute = Mute;
 	}
 	
 

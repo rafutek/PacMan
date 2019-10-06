@@ -251,13 +251,16 @@ public class GameFrame extends JFrame implements WindowListener
 						gameMute = true;
 						synchronized (musicTh) {
 							musicTh.setMute(true);
+							PhysicsThread.setSoundMute(true);
 						}
+						
 					}
 					else if(gameMute) {
 						System.out.println("Sound on");
 						gameMute = false;
 						synchronized (musicTh) {
 							musicTh.setMute(false);
+							PhysicsThread.setSoundMute(false);
 						}
 					}
 				} 
