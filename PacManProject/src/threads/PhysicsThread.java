@@ -38,9 +38,9 @@ public class PhysicsThread extends ThreadPerso {
 	private Sprites pacDots; 
 	private Sprites energizer;
 	private int score=0;
-	private int vie=3;
 	private boolean ScoreBonus=false;
 	private boolean collisionDone=true;
+	public static boolean timerstarted=false;
 	/**
 	 * Management of the sounds
 	 */
@@ -394,12 +394,14 @@ public class PhysicsThread extends ThreadPerso {
 			inky.setState(MovingSpriteState.STOP);
 			clyde.stopDirectionThread();
 			inky.stopDirectionThread();
-			if(vie!=0 && vie<=4) {
-				vie--;
-				StatusBarPanel.setImageLives(vie);
-				StatusBarPanel.livesImg.setIcon(new ImageIcon(StatusBarPanel.Lives));
-			}else if(vie==0) {
-				System.out.println("GAMEOVER");
+			timerstarted=true;
+			if(pacMan.getLife()!=0 && pacMan.getLife()<=4) {
+				int life=pacMan.getLife()-1;
+				pacMan.setLife(life);
+
+				if(life==0) {
+					System.out.println("GAMEOVER");
+				}
 			}
 		}
 		pacDotsCollision(); 
@@ -407,9 +409,9 @@ public class PhysicsThread extends ThreadPerso {
 			
 		}
 		
-		if(score>=10000 && !ScoreBonus) {
-			vie=4;
-			StatusBarPanel.setImageLives(vie);
+		if(score>=10000 && !ScoreBonus && pacMan.getLife()==3) {
+			pacMan.setLife(4);
+			StatusBarPanel.setImageLives(4);
 			StatusBarPanel.livesImg.setIcon(new ImageIcon(StatusBarPanel.Lives));
 			ScoreBonus=true;
 		}

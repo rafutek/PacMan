@@ -8,11 +8,13 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 import resources.Maze;
 import sprites.Ghost;
 import sprites.MovingSprite;
+import sprites.MovingSpriteState;
 import sprites.PacMan;
 import sprites.Sprites;
 import view.GamePanel;
@@ -102,6 +104,7 @@ public class RenderThread extends ThreadPerso{
 	//exit the ghost of the box
 	private GhostsExitBoxThread ghostExitThread;
 	
+	private int lastLife = 0;
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
 		super("Render");
@@ -132,7 +135,7 @@ public class RenderThread extends ThreadPerso{
 		clyde = maze.getClyde();
 		inky = maze.getInky();
 		
-		
+		statusBarPanel.setPacman(pacMan);
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
 		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers );
 		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze);
@@ -182,6 +185,11 @@ public class RenderThread extends ThreadPerso{
 
 	@Override
 	protected void doThat() {
+		if(physicsTh.timerstarted) {
+			pacMan.setState(MovingSpriteState.DEATH);
+			physicsTh.timerstarted=false;
+		}
+		
 		
 		if(!initStats) {
 			initializeStats();
@@ -258,6 +266,7 @@ public class RenderThread extends ThreadPerso{
 	 */
 	public synchronized void resumeThread() {
 		if(paused) {
+			
 //			animationDone = false;
 //			if(threeTwoOneTh != null && threeTwoOneTh.isRunning()) {
 //				threeTwoOneTh.stopThread();
@@ -377,6 +386,12 @@ public class RenderThread extends ThreadPerso{
 			synchronized (inky) {
 				inky.draw(dbg);		
 			}
+			
+			if(pacMan.getLife()!=lastLife) {
+				StatusBarPanel.setImageLives(pacMan.getLife());
+				StatusBarPanel.livesImg.setIcon(new ImageIcon(StatusBarPanel.Lives));
+			}
+			
 		}
 	}  
 	

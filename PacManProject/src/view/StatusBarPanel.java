@@ -13,17 +13,19 @@ import javax.swing.JPanel;
 
 import resources.Resources;
 import resources.Tiles;
+import sprites.PacMan;
 
 public class StatusBarPanel extends JPanel {
-
+	PacMan pacman;
 	Resources rsc = new Resources();
 	static Tiles t;
 	private static final long serialVersionUID = 1L;
 	public Integer s = 0;
 	GridLayout g ;
-	JPanel Top;
+	static JPanel Top;
 	JPanel Bottom;
 	public JLabel score;
+	public static JLabel gameover;
 	private static JLabel lives;
 	JLabel direction;
 	JLabel statut;
@@ -36,9 +38,8 @@ public class StatusBarPanel extends JPanel {
 	public static JLabel valueScore;
 	JLabel valueLevel;
 	public static BufferedImage Lives;
-	public static int vie =3;
-
-	
+	public JPanel panelGameOver;
+	public static BufferedImage gameOver;
 	
 	public StatusBarPanel() {
 		setLayout(new GridLayout(2,0));
@@ -47,8 +48,25 @@ public class StatusBarPanel extends JPanel {
 		add(Top);
 		add(Bottom);
 	}
+	public void chargerPanelGameOver() {
+		gameover= new JLabel();
+		BufferedImage g = t.getTileNumber(45);
+		BufferedImage ga = t.joinToRight(g , t.getTileNumber(39));
+		BufferedImage gam = t.joinToRight(ga , t.getTileNumber(51));
+		BufferedImage game= t.joinToRight(gam , t.getTileNumber(43));
+		BufferedImage game_ = t.joinToRight(game ,t.getTileNumber(352));
+		BufferedImage game_o = t.joinToRight(game_ ,t.getTileNumber(53));
+		BufferedImage game_ov = t.joinToRight(game_o ,t.getTileNumber(60));
+		BufferedImage game_ove = t.joinToRight(game_ov ,t.getTileNumber(43));
+		gameOver = t.joinToRight(game_ove ,t.getTileNumber(56));
+		gameOver = t.resize(Lives, new Dimension(72,18));
+		gameover.setIcon(new ImageIcon(gameOver));
+	}
 	
-	
+	public void gameOverPanel() {
+		chargerPanelGameOver();
+		panelGameOver.add(gameover);
+	}
 	public void TopPanel() {
 		
 		Top = new JPanel();
@@ -87,8 +105,13 @@ public class StatusBarPanel extends JPanel {
 		lives.setIcon(new ImageIcon(LIVES));
 		
 		livesImg = new JLabel();
-		setImageLives(vie);
-		livesImg.setIcon(new ImageIcon(Lives));
+		if(pacman!=null) {
+			setImageLives(pacman.getLife());
+		}
+		if(Lives!=null) {
+			livesImg.setIcon(new ImageIcon(Lives));
+
+		}
 		
 		
 		level = new JLabel();
@@ -105,8 +128,6 @@ public class StatusBarPanel extends JPanel {
 		valueLevel = new JLabel("1");
 		valueLevel.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		valueLevel.setForeground(Color.WHITE);
-		
-
 		Top.add(score);
 		Top.add(valueScore);
 		Top.add(lives);
@@ -115,8 +136,10 @@ public class StatusBarPanel extends JPanel {
 		Top.add(valueLevel);
 	}
 
+	public void setPacman(PacMan pacman) {
+		this.pacman = pacman;
+	}
 	public void BottomPanel() {
-		
 		Bottom = new JPanel();
 		Bottom.setLayout(new GridLayout(0,6));
 		Bottom.setBackground(new Color(0,0,0));
@@ -164,6 +187,7 @@ public class StatusBarPanel extends JPanel {
 		Bottom.add(valueStatut);
 		Bottom.add(fps);
 		Bottom.add(valueFps);
+		
 	}
 	
 	public JLabel getScore() {
@@ -173,13 +197,6 @@ public class StatusBarPanel extends JPanel {
 	public void setScore(JLabel statut) {
 		this.valueStatut = statut;
 	}
-	public int getLives() {
-		return vie;
-	}
-
-	public void setLives(int vie) {
-		this.vie = vie;
-	}
 	
 	public static void setImageLives(int vie) {
 		if(vie == 1) {
@@ -187,7 +204,6 @@ public class StatusBarPanel extends JPanel {
 			Lives = t.resize(Lives, new Dimension(18,18));
 			
 		} else if (vie == 2) {
-			
 			BufferedImage L1 = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
 			Lives = t.joinToRight(L1, L1);
 			Lives = t.resize(Lives, new Dimension(36,18));
@@ -197,14 +213,31 @@ public class StatusBarPanel extends JPanel {
 			BufferedImage L2 = t.joinToRight(L1, L1);
 			Lives = t.joinToRight(L2, L1);
 			Lives = t.resize(Lives, new Dimension(54,18));
-		}else{
+		}
+		
+		else if(vie==4){
 			BufferedImage L1 = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
 			BufferedImage L2 = t.joinToRight(L1, L1);
 			BufferedImage L3 = t.joinToRight(L2, L1);
 			Lives = t.joinToRight(L3, L1);
 			Lives = t.resize(Lives, new Dimension(72,18));
 		}
+		else if(vie==0)  {
+			BufferedImage g = t.getTileNumber(45);
+			BufferedImage ga = t.joinToRight(g , t.getTileNumber(39));
+			BufferedImage gam = t.joinToRight(ga , t.getTileNumber(51));
+			BufferedImage game= t.joinToRight(gam , t.getTileNumber(43));
+			BufferedImage game_ = t.joinToRight(game ,t.getTileNumber(352));
+			BufferedImage game_o = t.joinToRight(game_ ,t.getTileNumber(53));
+			BufferedImage game_ov = t.joinToRight(game_o ,t.getTileNumber(60));
+			BufferedImage game_ove = t.joinToRight(game_ov ,t.getTileNumber(43));
+			Lives = t.joinToRight(game_ove ,t.getTileNumber(56));
+			Lives = t.resize(Lives, new Dimension(72,18));
+			
+			 
+		}
 	}
+	static boolean f=true;
 	
 	public JLabel getLevel() {
 		return valueStatut;

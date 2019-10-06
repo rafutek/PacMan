@@ -11,7 +11,7 @@ import resources.ListImages;
 import resources.Tiles;
 
 public class PacMan extends MovingSprite {
-	
+	private int life=3;
 	public static List<Integer> acceptedMazeValues = new ArrayList<Integer>();
 	private boolean isInTunnel = false;
 	
@@ -21,6 +21,14 @@ public class PacMan extends MovingSprite {
 			PacMan.acceptedMazeValues.add(integer);
 		}
 		PacMan.acceptedMazeValues.add(352); // tunnel
+	}
+	public int getLife() {
+		return life;
+	}
+
+
+	public void setLife(int life) {
+		this.life = life;
 	}
 	
 
