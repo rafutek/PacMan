@@ -123,7 +123,7 @@ public class GameFrame extends JFrame implements WindowListener
 	{ 
 		super.addNotify();   // creates the peer
 		layoutTh = new LayoutManagerThread(this);
-		renderTh = new RenderThread(period, gamePanel, statusBarPanel, soundTh);
+		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
 		musicTh = new MusicThread("musicTh");
 		
 		
@@ -251,13 +251,16 @@ public class GameFrame extends JFrame implements WindowListener
 						gameMute = true;
 						synchronized (musicTh) {
 							musicTh.setMute(true);
+							PhysicsThread.setSoundMute(true);
 						}
+						
 					}
 					else if(gameMute) {
 						System.out.println("Sound on");
 						gameMute = false;
 						synchronized (musicTh) {
 							musicTh.setMute(false);
+							PhysicsThread.setSoundMute(false);
 						}
 					}
 				} 
