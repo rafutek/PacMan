@@ -24,7 +24,7 @@ public abstract class AudioThread extends ThreadPerso{
 	private File soundFile;
 	
 	protected boolean isRunning;
-	private boolean isPlaying;
+	protected boolean isPlaying;
 	private float vol = 1;
 	private float volBefore = vol;
 	private boolean mute = false;

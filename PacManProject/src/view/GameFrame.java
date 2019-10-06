@@ -295,9 +295,12 @@ public class GameFrame extends JFrame implements WindowListener
 		synchronized (layoutTh){
 			layoutTh.resumeThread();
 		}
-		synchronized (musicTh){
-			musicTh.setMute(false);
+		if (!gameMute) {
+			synchronized (musicTh){
+				musicTh.setMute(false);
+			}
 		}
+		
 	}
 	
 	public void windowDeactivated(WindowEvent e) 
@@ -310,9 +313,11 @@ public class GameFrame extends JFrame implements WindowListener
 			layoutTh.pauseThread();
 		}
 		
-		synchronized (musicTh){
-			musicTh.setMute(true);
-		} 
+		if (!gameMute) {
+			synchronized (musicTh){
+				musicTh.setMute(true);
+			}
+		}
 	}
 	
 	public void windowOpened(WindowEvent e) {}

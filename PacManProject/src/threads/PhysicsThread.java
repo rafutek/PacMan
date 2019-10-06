@@ -69,6 +69,7 @@ public class PhysicsThread extends ThreadPerso {
 		this.inky = inky;
 		this.pacDots=pacDots;
 		this.energizer=energizer;
+		
 	}
 
 	@Override
@@ -593,6 +594,7 @@ public class PhysicsThread extends ThreadPerso {
 			if(collisionWithE(energizer)) {
 				score=score+50;
 				StatusBarPanel.valueScore.setText(""+score);
+				MusicThread.setInvincibility(true);
 				System.out.println("collision energizer, showX : "+energizer.showX+ " showY : "+energizer.showY);
 				pacMan.setInvincible(true);
 				invTh=new InvincibleThread(pacMan);
@@ -642,7 +644,7 @@ public class PhysicsThread extends ThreadPerso {
 					if(soundTh != null) {
 						synchronized(soundTh) {
 								try {
-									soundTh.playAudio("extrapac.wav");
+									soundTh.playAudio("chomp.wav");
 								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -650,6 +652,7 @@ public class PhysicsThread extends ThreadPerso {
 							
 						}					
 					}
+					
 				}
 				energizer.showX=energizer.getSpriteNb(i).getCurrentPosition().getX();
 				energizer.showY=energizer.getSpriteNb(i).getCurrentPosition().getY();

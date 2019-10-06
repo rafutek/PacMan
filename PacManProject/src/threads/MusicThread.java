@@ -7,6 +7,9 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class MusicThread extends AudioThread{
+	
+	private static boolean invincible = false;
+	private boolean invincibleIsPlaying = false;
 
 	
 	public MusicThread(String threadName) {
@@ -36,24 +39,46 @@ public class MusicThread extends AudioThread{
 	@Override
 	protected void doThat() {
 		// TODO Auto-generated method stub
-		try {
-			playAudio("beginning.wav");
-		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+			try {
+				if(!invincible) {
+					playAudio("beginning.wav");
+				} else if(isPlaying) {
+						InvinsibilityIsPlaying();
+						playAudio("intermission.wav");
+					
+				}
+			} catch (UnsupportedAudioFileException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (LineUnavailableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		
 	}
 
 	@Override
 	protected void doThatAtStop() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public static void setInvincibility(boolean b) {
+		invincible = b;
+	}
+	
+	public void InvinsibilityIsPlaying() {
+		if(!invincibleIsPlaying) {
+			audioClip.stop();
+			audioClip.close();
+			isPlaying = false;
+			this.invincibleIsPlaying = true;
+		}
 	}
 	
 //	public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
