@@ -53,4 +53,11 @@ public class Clyde extends Ghost {
 		System.out.println("Launch Clyde Specific behavior");		
 	}
 
+
+	@Override
+	public void replacementOnDeath() {
+		// TODO Auto-generated method stub
+		this.setCurrentPosition(new Position(273, 253));
+	}
+
 }

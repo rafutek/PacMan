@@ -74,4 +74,10 @@ public class Inky extends Ghost {
 		}
 	}
 
+	@Override
+	public void replacementOnDeath() {
+		// TODO Auto-generated method stub
+		this.setCurrentPosition(new Position(301, 253));
+	}
+
 }

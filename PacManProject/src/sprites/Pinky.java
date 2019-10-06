@@ -106,4 +106,10 @@ public class Pinky extends Ghost {
 		this.setState(nextState);
 		
 	}
+
+	@Override
+	public void replacementOnDeath() {
+		// TODO Auto-generated method stub
+		this.setCurrentPosition(new Position(242, 253));
+	}
 }
