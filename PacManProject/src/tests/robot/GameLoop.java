@@ -91,22 +91,24 @@ public class GameLoop extends ThreadPerso {
 			{ 
 				int keyCode = e.getKeyCode();
 				
-				// listen for arrows events
-				if (keyCode == KeyEvent.VK_LEFT) {
-					pacMan.wantToGoLeft();						
-				}
-				
-				else if(keyCode == KeyEvent.VK_RIGHT){
-					pacMan.wantToGoRight();
+				if(pacMan != null) {
+					// listen for arrows events
+					if (keyCode == KeyEvent.VK_LEFT) {
+						pacMan.wantToGoLeft();						
+					}
 					
-				}
-				else if(keyCode == KeyEvent.VK_UP){
-					pacMan.wantToGoUp();
-					
-				}
-				else if(keyCode == KeyEvent.VK_DOWN){
-					pacMan.wantToGoDown();
-					
+					else if(keyCode == KeyEvent.VK_RIGHT){
+						pacMan.wantToGoRight();
+						
+					}
+					else if(keyCode == KeyEvent.VK_UP){
+						pacMan.wantToGoUp();
+						
+					}
+					else if(keyCode == KeyEvent.VK_DOWN){
+						pacMan.wantToGoDown();
+						
+					}					
 				}
 				
 			}
@@ -197,5 +199,11 @@ public class GameLoop extends ThreadPerso {
 		catch (Exception e)
 		{ System.out.println("Graphics error: " + e);  }
 	}
+	
+	
+	public PacMan getPacMan() {
+		return pacMan;
+	}
+	
 }
 

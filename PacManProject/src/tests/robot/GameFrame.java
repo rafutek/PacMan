@@ -56,6 +56,10 @@ public class GameFrame extends JFrame implements WindowListener{
 		}
 	}
 	
+	public GameLoop getGameLoop() {
+		return gameloopTh;
+	}
+	
 
 	@Override
 	public void windowOpened(WindowEvent arg0) {}
