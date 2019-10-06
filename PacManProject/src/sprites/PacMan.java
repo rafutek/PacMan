@@ -15,6 +15,9 @@ public class PacMan extends MovingSprite {
 	public static List<Integer> acceptedMazeValues = new ArrayList<Integer>();
 	private boolean isInTunnel = false;
 	
+	private boolean invincible = false;
+	
+	
 	public PacMan(Position start_position, Tiles tiles, JPanel gamePanel) {
 		super(start_position, tiles, gamePanel);
 		for (Integer integer : super.acceptedMazeValues) {
@@ -146,6 +149,17 @@ public class PacMan extends MovingSprite {
 //		Tiles.displayImg(pac.spriteImages.getSpriteImages().get(0));
 //		Thread.sleep(1000);
 //		Tiles.displayImg(pac.spriteImages.getSpriteImages().get(pac.spriteImages.getSpriteImages().size()-1));
+	}
+
+
+	public boolean invincible() {
+		return invincible;
+	}
+
+
+	public void setInvincible(boolean invincible) {
+		this.invincible = invincible;
+		System.out.println("PacMan est invincible");
 	}
 
 }

@@ -35,6 +35,9 @@ public class PhysicsThread extends ThreadPerso {
 	
 	private Ghost inky;
 	private MovingSpriteState inkyWantedState;	
+	
+	private InvincibleThread invTh; 
+	
 	private Sprites pacDots; 
 	private Sprites energizer;
 	private int score=0;
@@ -586,10 +589,14 @@ public class PhysicsThread extends ThreadPerso {
 	}
 	private boolean energizerCollision() {
 		synchronized(pacMan) {
+			
 			if(collisionWithE(energizer)) {
 				score=score+50;
 				StatusBarPanel.valueScore.setText(""+score);
 				System.out.println("collision energizer, showX : "+energizer.showX+ " showY : "+energizer.showY);
+				pacMan.setInvincible(true);
+				invTh=new InvincibleThread(pacMan);
+				invTh.start();
 				return true;
 			}
 			return false;

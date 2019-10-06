@@ -22,7 +22,7 @@ public abstract class TimerThread extends ThreadPerso{
 			finallyDoThat();
 		}
 	}
-	
+
 	/**
 	 * Do that more often.
 	 */
