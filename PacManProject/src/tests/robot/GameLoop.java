@@ -83,13 +83,6 @@ public class GameLoop extends ThreadPerso {
 	protected void doThatAtStop() {
 		physicsTh.stopThread();
 		animationTh.stopThread();
-		synchronized(physicsTh) {
-			do {
-				try {
-					physicsTh.join(100);
-				} catch (InterruptedException e) {}
-			}while(physicsTh.isRunning());
-		}
 	}
 
 	public void readyForArrowsEvents(JFrame window) {

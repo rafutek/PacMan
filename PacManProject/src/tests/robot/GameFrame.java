@@ -3,24 +3,12 @@ package tests.robot;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import resources.Maze;
-import sprites.Ghost;
-import sprites.PacMan;
-import sprites.Sprites;
-import threads.AnimationThread;
-import threads.PhysicsThread;
 
 
 public class GameFrame extends JFrame implements WindowListener{
@@ -35,6 +23,8 @@ public class GameFrame extends JFrame implements WindowListener{
 	
 	public GameFrame() throws IOException {
 		super("Minimized maze");
+		addWindowListener(this);
+		
 		panel.setBackground(Color.black);	
 		add(panel);
 		setPreferredSize(new Dimension(windowWidth, windowHeight)); 
@@ -56,47 +46,37 @@ public class GameFrame extends JFrame implements WindowListener{
 	public void stopGame() {
 		gameloopTh.stopThread();
 		synchronized(gameloopTh) {
-			do {
-				try {
-					gameloopTh.join(100);
-				} catch (InterruptedException e) {}
-			}while(gameloopTh.isRunning());
+			try {
+				gameloopTh.join(100);
+			} catch (InterruptedException e) {}
+			
+			if(gameloopTh.isRunning()) {
+				gameloopTh.interrupt();
+			}
 		}
 	}
 	
 
 	@Override
-	public void windowActivated(WindowEvent arg0) {}
-
-
+	public void windowOpened(WindowEvent arg0) {}
 	@Override
-	public void windowClosed(WindowEvent arg0) {
-		stopGame();
-	}
-
+	public void windowActivated(WindowEvent arg0) {}
+	@Override
+	public void windowDeactivated(WindowEvent arg0) {}
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {}
+	@Override
+	public void windowIconified(WindowEvent arg0) {}
+	@Override
+	public void windowClosed(WindowEvent arg0) {}
 
 	@Override
 	public void windowClosing(WindowEvent arg0) {
 		stopGame();
+		System.exit(0);
 	}
 
-
-	@Override
-	public void windowDeactivated(WindowEvent arg0) {}
-
-
-	@Override
-	public void windowDeiconified(WindowEvent arg0) {}
-
-
-	@Override
-	public void windowIconified(WindowEvent arg0) {}
-
-
-	@Override
-	public void windowOpened(WindowEvent arg0) {}
 	
-
 
 //------------------------------------------------------------------------------------
 	
