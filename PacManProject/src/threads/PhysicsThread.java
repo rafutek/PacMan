@@ -386,7 +386,7 @@ public class PhysicsThread extends ThreadPerso {
 			int nbLives = pacMan.getLife();
 			if(nbLives!=0 && nbLives<=4) {
 				resetAllSprites();
-				pacMan.setLife(nbLives--);
+				pacMan.setLife(nbLives-1);
 			}else if(nbLives==0) {
 				System.out.println("GAMEOVER");
 			}
@@ -708,6 +708,7 @@ public class PhysicsThread extends ThreadPerso {
 				int ghost_down = ghost.getCurrentPosition().getY() + ghost.getCurrentSize().height;		
 			
 				if( pacman_left < ghost_right && pacman_right > ghost_left && pacman_down > ghost_up && pacman_up < ghost_down ) {
+					
 					if (!soundMute) {
 						soundTh = new SoundThread("soundTh");
 						if(soundTh != null) {
@@ -733,22 +734,48 @@ public class PhysicsThread extends ThreadPerso {
 	}
 	
 	private void resetAllSprites() {
-		pacMan.setCurrentPosition(matrixToMazePosition(pacMan.getMatrixPosition(), gamePanel, mazeValues));
-		blinky.setCurrentPosition(matrixToMazePosition(blinky.getMatrixPosition(), gamePanel, mazeValues));
-		pinky.setCurrentPosition(matrixToMazePosition(pinky.getMatrixPosition(), gamePanel, mazeValues));
-		clyde.setCurrentPosition(matrixToMazePosition(clyde.getMatrixPosition(), gamePanel, mazeValues));
-		inky.setCurrentPosition(matrixToMazePosition(inky.getMatrixPosition(), gamePanel, mazeValues));
-		pinky.setInTheBox(true);
-		clyde.setInTheBox(true);
-		inky.setInTheBox(true);
+		if(pacMan != null) {
+			pacMan.setCurrentPosition(matrixToMazePosition(pacMan.getMatrixPosition(), gamePanel, mazeValues));
+		}
+		if(blinky != null) {
+			blinky.setCurrentPosition(matrixToMazePosition(blinky.getMatrixPosition(), gamePanel, mazeValues));
+		}
+		if(pinky != null) {
+			pinky.setCurrentPosition(matrixToMazePosition(pinky.getMatrixPosition(), gamePanel, mazeValues));
+		}
+		if(clyde != null) {
+			clyde.setCurrentPosition(matrixToMazePosition(clyde.getMatrixPosition(), gamePanel, mazeValues));
+		}
+		if(inky != null) {
+			inky.setCurrentPosition(matrixToMazePosition(inky.getMatrixPosition(), gamePanel, mazeValues));
+		}
+		if(pinky != null) {
+			pinky.setInTheBox(true);
+		}
+		if(clyde != null) {
+			clyde.setInTheBox(true);
+		}
+		if(inky != null) {
+			inky.setInTheBox(true);
+		}
 		GhostsExitBoxThread.clydeCanGoOut=true;
 		GhostsExitBoxThread.pinkyCanGoOut=true;
 		GhostsExitBoxThread.inkyCanGoOut=true;
-		clyde.setState(MovingSpriteState.STOP);
-		pinky.setState(MovingSpriteState.STOP);
-		inky.setState(MovingSpriteState.STOP);
-		clyde.stopDirectionThread();
-		inky.stopDirectionThread();
+		if(clyde != null) {
+			clyde.setState(MovingSpriteState.STOP);
+		}
+		if(pinky != null) {
+			pinky.setState(MovingSpriteState.STOP);
+		}
+		if(inky != null) {
+			inky.setState(MovingSpriteState.STOP);
+		}
+		if(clyde != null) {
+			clyde.stopDirectionThread();
+		}
+		if(inky != null) {
+			inky.stopDirectionThread();
+		}
 	}
 	
 	private void resetOneSprite(Ghost ghost) {
