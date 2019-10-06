@@ -8,7 +8,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class MusicThread extends AudioThread{
 	
-	private boolean invincible = false;
+	private static boolean invincible = false;
+	private boolean invincibleIsPlaying = false;
 
 	
 	public MusicThread(String threadName) {
@@ -39,10 +40,14 @@ public class MusicThread extends AudioThread{
 	protected void doThat() {
 		// TODO Auto-generated method stub
 		
-		if(!invincible) {
-			
 			try {
-				playAudio("beginning.wav");
+				if(!invincible) {
+					playAudio("beginning.wav");
+				} else if(isPlaying) {
+						InvinsibilityIsPlaying();
+						playAudio("intermission.wav");
+					
+				}
 			} catch (UnsupportedAudioFileException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -53,21 +58,7 @@ public class MusicThread extends AudioThread{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else {
-			try {
-				System.out.println("pacman est invinsible");
-				playAudio("intermission.wav");
-			} catch (UnsupportedAudioFileException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (LineUnavailableException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		
 		
 	}
 
@@ -77,8 +68,17 @@ public class MusicThread extends AudioThread{
 		
 	}
 	
-	public void setInvincibility(boolean b) {
-		this.invincible = b;
+	public static void setInvincibility(boolean b) {
+		invincible = b;
+	}
+	
+	public void InvinsibilityIsPlaying() {
+		if(!invincibleIsPlaying) {
+			audioClip.stop();
+			audioClip.close();
+			isPlaying = false;
+			this.invincibleIsPlaying = true;
+		}
 	}
 	
 //	public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {

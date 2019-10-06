@@ -61,6 +61,7 @@ public class PhysicsThread extends ThreadPerso {
 		this.inky = inky;
 		this.pacDots=pacDots;
 		this.energizer=energizer;
+		
 	}
 
 	@Override
@@ -505,6 +506,7 @@ public class PhysicsThread extends ThreadPerso {
 			if(collisionWithE(energizer)) {
 				score=score+50;
 				StatusBarPanel.valueScore.setText(""+score);
+				MusicThread.setInvincibility(true);
 				System.out.println("collision energizer, showX : "+energizer.showX+ " showY : "+energizer.showY);
 				f=false;
 				return true;
@@ -561,6 +563,7 @@ public class PhysicsThread extends ThreadPerso {
 							
 						}					
 					}
+					
 				}
 				energizer.showX=energizer.getSpriteNb(i).getCurrentPosition().getX();
 				energizer.showY=energizer.getSpriteNb(i).getCurrentPosition().getY();
