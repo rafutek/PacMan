@@ -553,7 +553,7 @@ public class PhysicsThread extends ThreadPerso {
 					if(soundTh != null) {
 						synchronized(soundTh) {
 								try {
-									soundTh.playAudio("extrapac.wav");
+									soundTh.playAudio("chomp.wav");
 								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
