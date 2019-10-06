@@ -25,6 +25,7 @@ public class Pinky extends Ghost {
 
 	}
 	
+	
 	@Override
 	protected void chooseInitialAnimation() {
 		animationOrder = goDownAnimation; // eyes to the ground for pinky
@@ -37,7 +38,10 @@ public class Pinky extends Ghost {
 		behaviorTh.setName("Pinky behavior");
 		behaviorTh.startThread();
 	}
-
+	@Override
+	public  void stopDirectionThread() {
+		behaviorTh.stopThread();
+	}
 
 	@Override
 	public boolean specificAvailable() {

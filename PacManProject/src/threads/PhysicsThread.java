@@ -3,6 +3,8 @@ package threads;
 import java.io.IOException;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JPanel;
@@ -35,7 +37,10 @@ public class PhysicsThread extends ThreadPerso {
 	private MovingSpriteState inkyWantedState;	
 	private Sprites pacDots; 
 	private Sprites energizer;
-	
+	private int score=0;
+	private int vie=3;
+	private boolean ScoreBonus=false;
+	private boolean collisionDone=true;
 	/**
 	 * Management of the sounds
 	 */
@@ -370,12 +375,44 @@ public class PhysicsThread extends ThreadPerso {
 			}			
 		}
 		
+		
 		// pac-man and ghosts collisions
 		if(ghostCollision()) {
-			//...
+			pacMan.setCurrentPosition(new Position(273, 405));
+			blinky.setCurrentPosition(new Position(272, 202));
+			pinky.setCurrentPosition(new Position(242, 253));
+			clyde.setCurrentPosition(new Position(273, 253));
+			inky.setCurrentPosition(new Position(301, 253));
+			pinky.setInTheBox(true);
+			clyde.setInTheBox(true);
+			inky.setInTheBox(true);
+			GhostsExitBoxThread.clydeCanGoOut=true;
+			GhostsExitBoxThread.pinkyCanGoOut=true;
+			GhostsExitBoxThread.inkyCanGoOut=true;
+			clyde.setState(MovingSpriteState.STOP);
+			pinky.setState(MovingSpriteState.STOP);
+			inky.setState(MovingSpriteState.STOP);
+			clyde.stopDirectionThread();
+			inky.stopDirectionThread();
+			if(vie!=0 && vie<=4) {
+				vie--;
+				StatusBarPanel.setImageLives(vie);
+				StatusBarPanel.livesImg.setIcon(new ImageIcon(StatusBarPanel.Lives));
+			}else if(vie==0) {
+				System.out.println("GAMEOVER");
+			}
 		}
 		pacDotsCollision(); 
-		energizerCollision();
+		if(energizerCollision()) {
+			
+		}
+		
+		if(score>=10000 && !ScoreBonus) {
+			vie=4;
+			StatusBarPanel.setImageLives(vie);
+			StatusBarPanel.livesImg.setIcon(new ImageIcon(StatusBarPanel.Lives));
+			ScoreBonus=true;
+		}
 	}
 	/**
 	 * Stop doing the actions defined in doThat() method.
@@ -512,7 +549,7 @@ public class PhysicsThread extends ThreadPerso {
 				int pacman_right = pacMan.getCurrentPosition().getX() + pacMan.getCurrentSize().width;
 				int pacman_up = pacMan.getCurrentPosition().getY();
 				int pacman_down = pacMan.getCurrentPosition().getY() + pacMan.getCurrentSize().height;
-				
+				collisionDone=false;
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky)) {
 					System.out.println("collision with blinky!");
 					return true;
@@ -545,21 +582,18 @@ public class PhysicsThread extends ThreadPerso {
 				
 		}
 	}
-	boolean f=true;
 	private boolean energizerCollision() {
 		synchronized(pacMan) {
 			if(collisionWithE(energizer)) {
 				score=score+50;
 				StatusBarPanel.valueScore.setText(""+score);
 				System.out.println("collision energizer, showX : "+energizer.showX+ " showY : "+energizer.showY);
-				f=false;
 				return true;
 			}
 			return false;
 				
 		}
 	}
-	int score=0;
 	private boolean collisionWith(Sprites pacDots) {
 		for(int i=0; i<pacDots.getSprites().size();i++){
 			int positionX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
