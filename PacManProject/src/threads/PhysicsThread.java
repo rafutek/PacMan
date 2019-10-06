@@ -89,36 +89,43 @@ public class PhysicsThread extends ThreadPerso {
 							adaptedCurrentPosX = pacMan.getCurrentPosition().getX() + pacMan.getCurrentSize().width/2;
 							adaptedCurrentPosY = pacMan.getCurrentPosition().getY();
 							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							if(currentMatrixPos.getX()-1 > 0) {
-								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
+							if(currentMatrixPos != null) {
+								if(currentMatrixPos.getX()-1 > 0) {
+									wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
+								}
+								else {
+									wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(mazeValues.get(0).size()-1); // opposite maze value
+								}								
 							}
-							else {
-								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(mazeValues.get(0).size()-1); // opposite maze value
-							}
-							
 						}
 						else if(pacManWantedState == MovingSpriteState.RIGHT) {
 							adaptedCurrentPosX = pacMan.getCurrentPosition().getX() - pacMan.getCurrentSize().width/2;
 							adaptedCurrentPosY = pacMan.getCurrentPosition().getY();
 							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							if(currentMatrixPos.getX()+1 < mazeValues.get(currentMatrixPos.getY()).size()) {
-								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
-							}
-							else {
-								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(0); // opposite maze value
+							if(currentMatrixPos != null) {
+								if(currentMatrixPos.getX()+1 < mazeValues.get(currentMatrixPos.getY()).size()) {
+									wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
+								}
+								else {
+									wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(0); // opposite maze value
+								}								
 							}
 						}
 						else if(pacManWantedState == MovingSpriteState.UP) {
 							adaptedCurrentPosX = pacMan.getCurrentPosition().getX();
 							adaptedCurrentPosY = pacMan.getCurrentPosition().getY() + pacMan.getCurrentSize().height/2;
 							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
+							if(currentMatrixPos != null) {
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
+							}
 						}
 						else if(pacManWantedState == MovingSpriteState.DOWN) {
 							adaptedCurrentPosX = pacMan.getCurrentPosition().getX();
 							adaptedCurrentPosY = pacMan.getCurrentPosition().getY() - pacMan.getCurrentSize().height/2;
 							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
+							if(currentMatrixPos != null) {
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
+							}
 						}
 						
 						if(PacMan.acceptedMazeValues.contains(wantedBoxValue)) {
