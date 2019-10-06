@@ -72,7 +72,8 @@ class TestRobotCollisions {
 	 */
 	@Test
 	void testPacManGhostCollision() {
-		assertTimeout((Duration.ofMillis(5000), () -> {
+		
+		assertTimeout(Duration.ofSeconds(5), () -> {
 			int yPosPacMan = window.getGameLoop().getPacMan().getCurrentPosition().getY();
 			int yPosGhost = window.getGameLoop().getBlinky().getCurrentPosition().getY();
 			assertEquals(yPosPacMan, yPosGhost, "pac-man and ghost must be at the same line for testing");
@@ -85,7 +86,14 @@ class TestRobotCollisions {
 			
 			robot.keyPress(KeyEvent.VK_RIGHT);	
 			
+			do {
+				xPosPacMan = window.getGameLoop().getPacMan().getCurrentPosition().getX();
+				xPosGhost = window.getGameLoop().getBlinky().getCurrentPosition().getX();				
+			}while(xPosPacMan < xPosGhost);
+			System.out.println("collision");
+
 	    });
+		
 	}
 	
 	

@@ -381,11 +381,11 @@ public class PhysicsThread extends ThreadPerso {
 		
 		// pac-man and ghosts collisions
 		if(ghostCollision()) {
-			pacMan.setCurrentPosition(new Position(273, 405));
-			blinky.setCurrentPosition(new Position(272, 202));
-			pinky.setCurrentPosition(new Position(242, 253));
-			clyde.setCurrentPosition(new Position(273, 253));
-			inky.setCurrentPosition(new Position(301, 253));
+			pacMan.setCurrentPosition(matrixToMazePosition(pacMan.getMatrixPosition(), gamePanel, mazeValues));
+			blinky.setCurrentPosition(matrixToMazePosition(blinky.getMatrixPosition(), gamePanel, mazeValues));
+			pinky.setCurrentPosition(matrixToMazePosition(pinky.getMatrixPosition(), gamePanel, mazeValues));
+			clyde.setCurrentPosition(matrixToMazePosition(clyde.getMatrixPosition(), gamePanel, mazeValues));
+			inky.setCurrentPosition(matrixToMazePosition(inky.getMatrixPosition(), gamePanel, mazeValues));
 			pinky.setInTheBox(true);
 			clyde.setInTheBox(true);
 			inky.setInTheBox(true);
@@ -525,11 +525,7 @@ public class PhysicsThread extends ThreadPerso {
 
 	}
 	
-	/**
-	 * 
-	 * @param 
-	 * @return 
-	 */
+
 	/**
 	 * Transform a game panel position in a maze matrix position.
 	 * @param panelPos is the position in the game panel.
@@ -546,6 +542,25 @@ public class PhysicsThread extends ThreadPerso {
 		}
 		return new Position(matPosX, matPosY);
 	}
+	
+	/**
+	 * Transform a matrix position in a game panel position.
+	 * @param matrixPos is the position in the matrix mazeValues.
+	 * @param panel is the game panel
+	 * @param mazeValues is the matrix numbers corresponding to the csv maze file.
+	 * @return the position in the game panel (in pixel).
+	 */
+	public static Position matrixToMazePosition(Position matrixPos, JPanel panel, List<List<Integer>> mazeValues) {
+		int panelPosX = (int)Math.round((matrixPos.getX() * panel.getWidth()) / (double)mazeValues.get(0).size());
+		int panelPosY = (int)Math.round((matrixPos.getY() * panel.getHeight()) / (double)mazeValues.size());
+		if(panelPosX >= panel.getWidth() || panelPosY >= panel.getHeight()) {
+			System.out.println("panel value out of the bounds !");
+			return null;
+		}
+		return new Position(panelPosX, panelPosY);
+	}
+	
+	
 
 	private boolean ghostCollision() {
 		synchronized(pacMan) {
@@ -675,18 +690,15 @@ public class PhysicsThread extends ThreadPerso {
 						soundTh = new SoundThread("soundTh");
 						if(soundTh != null) {
 							synchronized(soundTh) {
-									try {
-										soundTh.playAudio("death.wav");
-									} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									} // play sound
-								
+								try {
+									soundTh.playAudio("death.wav"); // play sound
+								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+									e.printStackTrace();
+								} 
 							}					
 						}
-
 					}
-										return true;
+					return true;
 				}
 				return false;
 			}			

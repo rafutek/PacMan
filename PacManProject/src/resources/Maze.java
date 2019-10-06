@@ -247,7 +247,6 @@ public class Maze {
 			pixelY = (position.getY() *originalMazeImg.getHeight()) / mazeValues.size();
 			pacDotsMazeImagePositions.add(new Position(pixelX, pixelY));
 		}
-		pacDotsMazeFilePositions.clear();		
 		
 		//energizers
 		for (Position position : energizersMazeFilePositions) {
@@ -255,7 +254,6 @@ public class Maze {
 			pixelY = (position.getY() *originalMazeImg.getHeight()) / mazeValues.size();
 			energizersMazeImagePositions.add(new Position(pixelX, pixelY));
 		}
-		energizersMazeFilePositions.clear();
 		
 		//pac-man
 		if(pacManMazeFilePosition != null) {
@@ -305,40 +303,49 @@ public class Maze {
 		System.out.println("Create sprites");
 		
 		//pac-dots
-		for (Position position : pacDotsMazeImagePositions) {
-			pacDots.add(new PacDot(position, tiles));
+		for (int i = 0; i < pacDotsMazeImagePositions.size(); i++) {
+			PacDot pacdot = new PacDot(pacDotsMazeImagePositions.get(i), tiles);
+			pacdot.setMatrixPosition(pacDotsMazeFilePositions.get(i)); // add matrix position for reposition at its initial position
+			pacDots.add(pacdot);
 		}
 		pacDotsMazeImagePositions.clear();
 		
 		//energizers
-		for (Position position : energizersMazeImagePositions) {
-			energizers.add(new Energizer(position, tiles));
+		for (int i = 0; i < energizersMazeImagePositions.size(); i++) {
+			Energizer energizer = new Energizer(energizersMazeImagePositions.get(i), tiles);
+			energizer.setMatrixPosition(energizersMazeFilePositions.get(i));
+			energizers.add(energizer);
 		}
 		energizersMazeImagePositions.clear();
 		
 		//pac-man
 		if(pacManMazeImagePosition != null) {
 			pacMan = new PacMan(pacManMazeImagePosition, tiles, gamePanel);
+			pacMan.setMatrixPosition(pacManMazeFilePosition);
 		}
 		
 		//blinky
 		if(blinkyMazeImagePosition != null) {
-			blinky = new Blinky(blinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);			
+			blinky = new Blinky(blinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);		
+			blinky.setMatrixPosition(blinkyMazeFilePosition);
 		}
 
 		//pinky
 		if(pinkyMazeImagePosition != null) {
 			pinky = new Pinky(pinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan); 
+			pinky.setMatrixPosition(pinkyMazeFilePosition);
 		}
 
 		//clyde
 		if(clydeMazeImagePosition != null) {
 			clyde = new Clyde(clydeMazeImagePosition, tiles, gamePanel, mazeValues, pacMan); 
+			clyde.setMatrixPosition(clydeMazeFilePosition);
 		}
 
 		//inky
 		if(inkyMazeImagePosition != null) {
 			inky = new Inky(inkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);
+			inky.setMatrixPosition(inkyMazeFilePosition);
 		}
 		
 		//door
