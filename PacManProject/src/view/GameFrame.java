@@ -123,7 +123,7 @@ public class GameFrame extends JFrame implements WindowListener
 	{ 
 		super.addNotify();   // creates the peer
 		layoutTh = new LayoutManagerThread(this);
-		renderTh = new RenderThread(period, gamePanel, statusBarPanel, soundTh);
+		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
 		musicTh = new MusicThread("musicTh");
 		
 		
