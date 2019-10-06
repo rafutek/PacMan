@@ -84,6 +84,7 @@ public abstract class Sprite {
 		// the original size of the sprite is the dimension of one of its full images
 		originalSize = new Dimension(spriteFullImages.getImagesList().get(0).getWidth(), 
 									spriteFullImages.getImagesList().get(0).getHeight());
+		currentSize = originalSize;
 	}
 	
 	

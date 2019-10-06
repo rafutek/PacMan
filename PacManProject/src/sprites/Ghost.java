@@ -152,7 +152,7 @@ public abstract class Ghost extends MovingSprite {
 		Position posGhost = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
 		Position posPacMan = PhysicsThread.mazeToMatrixPosition(pacMan.currentPosition, gamePanel, mazeValues);
 		
-		if (posGhost.getX() == posPacMan.getX()) {
+		if (posGhost != null && posPacMan != null && posGhost.getX() == posPacMan.getX()) {
 			if(wallInColumn(posGhost,posPacMan)) {
 				return false;
 			}
@@ -160,7 +160,7 @@ public abstract class Ghost extends MovingSprite {
 			return true;
 		}
 		
-		if (posGhost.getY() == posPacMan.getY()) {
+		if (posGhost != null && posPacMan != null && posGhost.getY() == posPacMan.getY()) {
 			if(wallInRow(posGhost,posPacMan)) {
 				return false;
 			}
