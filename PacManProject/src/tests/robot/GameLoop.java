@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 
 import resources.Maze;
 import sprites.Ghost;
+import sprites.MovingSpriteState;
 import sprites.PacMan;
 import sprites.Sprites;
 import threads.AnimationThread;
@@ -55,7 +56,7 @@ public class GameLoop extends ThreadPerso {
 	protected void doThatAtStart() {
 		
 		 try {
-			maze = new Maze(panel, "mazeProto.txt");
+			maze = new Maze(panel, "mazeProto.csv");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -121,6 +122,7 @@ public class GameLoop extends ThreadPerso {
 		}
 		
 		if(blinky != null) {
+			blinky.setState(MovingSpriteState.STOP);
 			blinky.updatePos();
 		}
 
