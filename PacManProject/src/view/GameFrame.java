@@ -26,6 +26,8 @@ public class GameFrame extends JFrame implements WindowListener
 	private static GridBagLayout gridbag;
 	private static GamePanel gamePanel;
 	private static PrincipalMenuPanel principalMenuPanel;
+	private static ControlsMenuPanel controlsMenuPanel;
+	private static AudioMenuPanel audioMenuPanel;
 	private StatusBarPanel statusBarPanel;
 	private JPanel leftPanel, rightPanel;
 	private JLabel direction;
@@ -37,6 +39,8 @@ public class GameFrame extends JFrame implements WindowListener
 	public RenderThread renderTh;
 	private LayoutManagerThread layoutTh;
 	private CheckPageThread checkPageThread;
+	
+	private int statutMenu = 0;
 	
 	private boolean gamePaused = false;
 
@@ -92,6 +96,26 @@ public class GameFrame extends JFrame implements WindowListener
 	}
 
 
+	public static ControlsMenuPanel getControlsMenuPanel() {
+		return controlsMenuPanel;
+	}
+
+
+	public static void setControlsMenuPanel(ControlsMenuPanel controlsMenuPanel) {
+		GameFrame.controlsMenuPanel = controlsMenuPanel;
+	}
+
+
+	public static AudioMenuPanel getAudioMenuPanel() {
+		return audioMenuPanel;
+	}
+
+
+	public static void setAudioMenuPanel(AudioMenuPanel audioMenuPanel) {
+		GameFrame.audioMenuPanel = audioMenuPanel;
+	}
+
+
 	public void setPrincipalMenuPanel(PrincipalMenuPanel principalMenuPanel) {
 		this.principalMenuPanel = principalMenuPanel;
 	}
@@ -119,9 +143,10 @@ public class GameFrame extends JFrame implements WindowListener
 		gridbag = new GridBagLayout();
 		setLayout(gridbag);
 		principalMenuPanel = new PrincipalMenuPanel();
+		controlsMenuPanel = new ControlsMenuPanel();
+		audioMenuPanel = new AudioMenuPanel();
 		gamePanel = new GamePanel();
-		statusBarPanel = new StatusBarPanel();
-		
+		statusBarPanel = new StatusBarPanel();	
 		leftPanel = new JPanel();
 		leftPanel.setBackground(Color.BLACK);
 		
@@ -150,6 +175,10 @@ public class GameFrame extends JFrame implements WindowListener
 				//addKeyListener(arg0);
 				}
 			}
+			add(controlsMenuPanel);
+			controlsMenuPanel.setVisible(false);
+			add(audioMenuPanel);
+			audioMenuPanel.setVisible(false);
 			add(gamePanel);
 			gamePanel.setVisible(false);
 			add(statusBarPanel);
@@ -194,7 +223,8 @@ public class GameFrame extends JFrame implements WindowListener
 					closeGame();
 				}if(keyCode == KeyEvent.VK_ESCAPE) {
 						page="PrincipalMenu";
-						checkPageThread= new CheckPageThread("CheckPageThread");
+						statutMenu = 1;
+						checkPageThread= new CheckPageThread("CheckPageThread");	
 					}
 				
 			}
@@ -280,6 +310,7 @@ public class GameFrame extends JFrame implements WindowListener
 				// listen for arrows events
 				if (keyCode == KeyEvent.VK_P) {
 					if(!gamePaused) {
+						statutMenu = 1;
 						System.out.println("Game paused");
 						gamePaused = true;
 						synchronized (renderTh) {
@@ -365,7 +396,17 @@ public class GameFrame extends JFrame implements WindowListener
 	
 	public void windowClosed(WindowEvent e) {}
 	
+	public int getStatutMenu() {
+		return statutMenu;
+	}
 
+
+	public void setStatutMenu(int statutMenu) {
+		this.statutMenu = statutMenu;
+	}
+
+
+	
 	
 	
 
