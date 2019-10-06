@@ -13,28 +13,26 @@ import org.junit.jupiter.api.Test;
 
 class TestRobotCollisions {
 	
-	static GameFrame window;
-	static Robot robot;
+	GameFrame window;
+	Robot robot;
 
 	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
-		robot = new Robot();
-		window = new GameFrame();
-		window.startGame();
-		Thread.sleep(1000);
-	}
-
+	static void setUpBeforeClass() throws Exception {}
 	@AfterAll
-	static void tearDownAfterClass() throws Exception {
-		window.stopGame();
-	}
+	static void tearDownAfterClass() throws Exception {}
 
 	@BeforeEach
 	void setUp() throws Exception {
+		robot = new Robot();
+		window = new GameFrame();
+		window.startGame();
+		sleepFor(500);
 	}
+	
 
 	@AfterEach
 	void tearDown() throws Exception {
+		window.stopGame();
 	}
 
 	
@@ -45,12 +43,32 @@ class TestRobotCollisions {
 	void testPacManMovement() {
 		int xPos1 = window.getGameLoop().getPacMan().getCurrentPosition().getX();
 		robot.keyPress(KeyEvent.VK_LEFT);
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {}
+		sleepFor(2000);
 		int xPos2 = window.getGameLoop().getPacMan().getCurrentPosition().getX();
+		assertTrue(xPos2 < xPos1 , "pacman did not go to left");
 		
-		assertTrue(xPos2 < xPos1 , "pacman current x position: "+xPos2+" should be < to initial x position: "+xPos1);
+		robot.keyPress(KeyEvent.VK_RIGHT);
+		sleepFor(2000);
+		int xPos3 = window.getGameLoop().getPacMan().getCurrentPosition().getX();
+		assertTrue(xPos3 > xPos2 , "pacman did not go to right");
+		
+		int yPos1 = window.getGameLoop().getPacMan().getCurrentPosition().getY();
+		robot.keyPress(KeyEvent.VK_UP);
+		sleepFor(2000);
+		int yPos2 = window.getGameLoop().getPacMan().getCurrentPosition().getY();
+		assertTrue(yPos2 < yPos1 , "pacman did not go up");
+		
+		robot.keyPress(KeyEvent.VK_DOWN);
+		sleepFor(2000);
+		int yPos3 = window.getGameLoop().getPacMan().getCurrentPosition().getY();
+		assertTrue(yPos3 > yPos2 , "pacman did not go down");
+		
+	}
+	
+	void sleepFor(int ms) {
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {}
 	}
 
 }
