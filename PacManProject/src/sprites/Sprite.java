@@ -23,7 +23,6 @@ public abstract class Sprite {
 		mazePosition = start_position;
 		currentPosition = mazePosition;
 		this.tiles = tiles;
-		
 		chooseTilesNumbers();
 		setImagesArray(tilesNumbers); // fill an image array with these tiles
 		createFullSpriteImages();

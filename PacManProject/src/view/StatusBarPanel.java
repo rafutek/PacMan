@@ -17,17 +17,17 @@ import resources.Tiles;
 public class StatusBarPanel extends JPanel {
 
 	Resources rsc = new Resources();
-	Tiles t;
+	static Tiles t;
 	private static final long serialVersionUID = 1L;
 	public Integer s = 0;
 	GridLayout g ;
 	JPanel Top;
 	JPanel Bottom;
 	public JLabel score;
-	JLabel lives;
+	private static JLabel lives;
 	JLabel direction;
 	JLabel statut;
-	JLabel livesImg;
+	public static JLabel livesImg;
 	JLabel level;
 	JLabel fps;
 	JLabel valueFps;
@@ -35,19 +35,17 @@ public class StatusBarPanel extends JPanel {
 	JLabel valueStatut;
 	public static JLabel valueScore;
 	JLabel valueLevel;
-	private BufferedImage Lives;
-	private int vie = 4;
+	public static BufferedImage Lives;
+	public static int vie =3;
 
 	
 	
 	public StatusBarPanel() {
-		
 		setLayout(new GridLayout(2,0));
 		TopPanel();
 		BottomPanel();
 		add(Top);
 		add(Bottom);
-		
 	}
 	
 	
@@ -89,7 +87,7 @@ public class StatusBarPanel extends JPanel {
 		lives.setIcon(new ImageIcon(LIVES));
 		
 		livesImg = new JLabel();
-		setImageLives();
+		setImageLives(vie);
 		livesImg.setIcon(new ImageIcon(Lives));
 		
 		
@@ -183,28 +181,28 @@ public class StatusBarPanel extends JPanel {
 		this.vie = vie;
 	}
 	
-	public void setImageLives() {
-		if(this.vie == 1) {
-			this.Lives = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
-			this.Lives = t.resize(Lives, new Dimension(18,18));
+	public static void setImageLives(int vie) {
+		if(vie == 1) {
+			Lives = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
+			Lives = t.resize(Lives, new Dimension(18,18));
 			
-		} else if (this.vie == 2) {
+		} else if (vie == 2) {
 			
 			BufferedImage L1 = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
-			this.Lives = t.joinToRight(L1, L1);
-			this.Lives = t.resize(Lives, new Dimension(36,18));
+			Lives = t.joinToRight(L1, L1);
+			Lives = t.resize(Lives, new Dimension(36,18));
 			
-		}else if (this.vie == 3) {
+		}else if (vie == 3) {
 			BufferedImage L1 = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
 			BufferedImage L2 = t.joinToRight(L1, L1);
-			this.Lives = t.joinToRight(L2, L1);
-			this.Lives = t.resize(Lives, new Dimension(54,18));
+			Lives = t.joinToRight(L2, L1);
+			Lives = t.resize(Lives, new Dimension(54,18));
 		}else{
 			BufferedImage L1 = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
 			BufferedImage L2 = t.joinToRight(L1, L1);
 			BufferedImage L3 = t.joinToRight(L2, L1);
-			this.Lives = t.joinToRight(L3, L1);
-			this.Lives = t.resize(Lives, new Dimension(72,18));
+			Lives = t.joinToRight(L3, L1);
+			Lives = t.resize(Lives, new Dimension(72,18));
 		}
 	}
 	

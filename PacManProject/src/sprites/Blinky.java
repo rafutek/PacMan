@@ -37,6 +37,10 @@ public class Blinky extends Ghost {
 		behaviorTh.setName("Blinky behavior");
 		behaviorTh.startThread();
 	}
+	@Override
+	public  void stopDirectionThread() {
+		behaviorTh.stopThread();
+	}
 
 	/**
 	 * Return true if pac-man is in the same corridor.

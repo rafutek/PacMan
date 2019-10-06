@@ -423,6 +423,8 @@ public class Maze {
 	 * @param lastDim
 	 * @param newDim
 	 */
+	
+	
 	private void repositionSpritesInMaze(boolean drawnOnce, Dimension lastDim, Dimension newDim) {
 		
 		int newX, newY;
@@ -450,6 +452,7 @@ public class Maze {
 			if(!drawnOnce) {
 				newX = (newDim.width * pacMan.getMazePosition().getX()) / originalMazeImg.getWidth() ;
 				newY = (newDim.height * pacMan.getMazePosition().getY()) / originalMazeImg.getHeight();			
+				
 			}else {
 				newX = (int)Math.round((newDim.width * pacMan.getCurrentPosition().getX()) / (double)lastDim.width) ;
 				newY = (int)Math.round((newDim.height * pacMan.getCurrentPosition().getY()) / (double)lastDim.height);				
@@ -462,6 +465,7 @@ public class Maze {
 			if(!drawnOnce) {
 				newX = (newDim.width * blinky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
 				newY = (newDim.height * blinky.getMazePosition().getY()) / originalMazeImg.getHeight();			
+				
 			}else {
 				newX = (int)Math.round((newDim.width * blinky.getCurrentPosition().getX()) / (double)lastDim.width) ;
 				newY = (int)Math.round((newDim.height * blinky.getCurrentPosition().getY()) / (double)lastDim.height);				
@@ -474,6 +478,7 @@ public class Maze {
 			if(!drawnOnce) {
 				newX = (newDim.width * pinky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
 				newY = (newDim.height * pinky.getMazePosition().getY()) / originalMazeImg.getHeight();			
+				
 			}else {
 				newX = (int)Math.round((newDim.width * pinky.getCurrentPosition().getX()) / (double)lastDim.width) ;
 				newY = (int)Math.round((newDim.height * pinky.getCurrentPosition().getY()) / (double)lastDim.height);				
@@ -486,6 +491,7 @@ public class Maze {
 			if(!drawnOnce) {
 				newX = (newDim.width * clyde.getMazePosition().getX()) / originalMazeImg.getWidth() ;
 				newY = (newDim.height * clyde.getMazePosition().getY()) / originalMazeImg.getHeight();			
+				
 			}else {
 				newX = (int)Math.round((newDim.width * clyde.getCurrentPosition().getX()) / (double)lastDim.width) ;
 				newY = (int)Math.round((newDim.height * clyde.getCurrentPosition().getY()) / (double)lastDim.height);				
@@ -498,6 +504,7 @@ public class Maze {
 			if(!drawnOnce) {
 				newX = (newDim.width * inky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
 				newY = (newDim.height * inky.getMazePosition().getY()) / originalMazeImg.getHeight();			
+				
 			}else {
 				newX = (int)Math.round((newDim.width * inky.getCurrentPosition().getX()) / (double)lastDim.width) ;
 				newY = (int)Math.round((newDim.height * inky.getCurrentPosition().getY()) / (double)lastDim.height);				
