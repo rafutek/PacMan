@@ -16,13 +16,14 @@ public abstract class Ghost extends MovingSprite {
 	
 	protected GhostBehaviorThread behaviorTh = new GhostBehaviorThread(this);
 
-	private boolean isInTheBox = true;
+	public  boolean isInTheBox = true;
 	
 	protected JPanel gamePanel;
 	protected List<List<Integer>> mazeValues;
 	protected MovingSprite pacMan;
 	
 	protected Position lastSeenPacManMatrixPos;
+	protected boolean goingToLastSeenPos, escaping;
 
 
 	public Ghost(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, MovingSprite pacMan) {
@@ -111,8 +112,9 @@ public abstract class Ghost extends MovingSprite {
 	}
 	
 	public abstract void startDirectionThread();
+	public abstract void stopDirectionThread();
 	
-	public synchronized GhostBehaviorThread getDirectionThread() {
+	public synchronized GhostBehaviorThread getBehaviorThread() {
 		return behaviorTh;
 	}
 	
@@ -151,8 +153,7 @@ public abstract class Ghost extends MovingSprite {
 		Position posGhost = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
 		Position posPacMan = PhysicsThread.mazeToMatrixPosition(pacMan.currentPosition, gamePanel, mazeValues);
 		
-		if (posGhost.getX() == posPacMan.getX()) {
-			System.out.println("pacman in same column");
+		if (posGhost != null && posPacMan != null && posGhost.getX() == posPacMan.getX()) {
 			if(wallInColumn(posGhost,posPacMan)) {
 				return false;
 			}
@@ -160,8 +161,7 @@ public abstract class Ghost extends MovingSprite {
 			return true;
 		}
 		
-		if (posGhost.getY() == posPacMan.getY()) {
-			System.out.println("pacman in same line");
+		if (posGhost != null && posPacMan != null && posGhost.getY() == posPacMan.getY()) {
 			if(wallInRow(posGhost,posPacMan)) {
 				return false;
 			}
@@ -194,6 +194,61 @@ public abstract class Ghost extends MovingSprite {
 			}
 			else {
 				setState(MovingSpriteState.UP);
+			}
+		}
+	}
+	
+	/**
+	 * If the ghost and the matrix position are on the same row or column, 
+	 * the ghost state is changed to escape from the matrix position.
+	 * @param matrixPos is the point in the matrix to escape from.
+	 */
+	protected void chooseDirectionToEscapeFrom(Position matrixPos) {
+		Position ghostMatrixPos = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
+		
+		if (ghostMatrixPos.getY() == matrixPos.getY()) {
+			if(ghostMatrixPos.getX() < matrixPos.getX()) {
+				setState(MovingSpriteState.LEFT);
+			}
+			else {
+				setState(MovingSpriteState.RIGHT);
+			}
+		}
+		else if(ghostMatrixPos.getX() == matrixPos.getX()) {
+			if(ghostMatrixPos.getY() < matrixPos.getY()) {
+				setState(MovingSpriteState.UP);
+			}
+			else {
+				setState(MovingSpriteState.DOWN);
+			}
+		}
+	}
+	
+	public boolean goingToLastSeenPosition() {
+		return goingToLastSeenPos;
+	}
+	
+	public void notGoingToLastSeenPosition() {
+		goingToLastSeenPos = false;
+	}
+	
+	public boolean escaping() {
+		return escaping;
+	}
+	
+	public void notEscape() {
+		escaping = false;
+	}
+	
+	/**
+	 * Check, if ghost is going to the last seen position,
+	 * if its current matrix position is the same as the last seen position of pac-man.
+	 */
+	public void checkAtLastSeenPosition() {
+		if(goingToLastSeenPos) {
+			Position currentMatrixPos = PhysicsThread.mazeToMatrixPosition(currentPosition, gamePanel, mazeValues);
+			if(currentMatrixPos.getX() == lastSeenPacManMatrixPos.getX() && currentMatrixPos.getY() == lastSeenPacManMatrixPos.getY()) {
+				goingToLastSeenPos = false;
 			}
 		}
 	}

@@ -35,32 +35,45 @@ public class AnimationThread extends TimerThread {
 		super(WAIT_TIME, NB_WAITS);
 		setName("Sprites Animation");
 		
-		this.energizers = energizers;
-		
-		this.pacMan = pacMan;
-		synchronized(pacMan) {
-			pacManLastState = pacMan.getState();
+		if(energizers.getSprites() != null && !energizers.getSprites().isEmpty()) {
+			this.energizers = energizers;
 		}
 		
-		this.blinky = blinky;
-		synchronized(blinky) {
-			blinkyLastState = blinky.getState();
+		if(pacMan != null) {
+			this.pacMan = pacMan;
+			synchronized(pacMan) {
+				pacManLastState = pacMan.getState();
+			}			
 		}
 		
-		this.pinky = pinky;
-		synchronized(pinky) {
-			pinkyLastState = pinky.getState();
+		if(blinky != null) {
+			this.blinky = blinky;
+			synchronized(blinky) {
+				blinkyLastState = blinky.getState();
+			}			
 		}
 		
-		this.clyde = clyde;
-		synchronized(clyde) {
-			clydeLastState = clyde.getState();
+		if(pinky != null) {
+			this.pinky = pinky;
+			synchronized(pinky) {
+				pinkyLastState = pinky.getState();
+			}			
 		}
-		
-		this.inky = inky;
-		synchronized(inky) {
-			inkyLastState = inky.getState();
+
+		if(clyde != null) {
+			this.clyde = clyde;
+			synchronized(clyde) {
+				clydeLastState = clyde.getState();
+			}			
 		}
+
+		if(inky != null) {
+			this.inky = inky;
+			synchronized(inky) {
+				inkyLastState = inky.getState();
+			}			
+		}
+
 	}
 
 	@Override
@@ -70,156 +83,183 @@ public class AnimationThread extends TimerThread {
 	protected void doThatWhileWaiting() {
 		
 		//pac-man
-		synchronized(pacMan) {
-			pacManCurrentState = pacMan.getState();
-			if(pacManCurrentState != pacManLastState) { // have to change the animation list to the new state
-				if(pacManCurrentState == MovingSpriteState.STOP) {
-					pacMan.setNoMovementAnimation();
-				}
-				if(pacManCurrentState == MovingSpriteState.LEFT) {
-					pacMan.setGoLeftAnimation();
-				}
-				else if(pacManCurrentState == MovingSpriteState.RIGHT) {
-					pacMan.setGoRightAnimation();
-				}
-				else if(pacManCurrentState == MovingSpriteState.UP) {
-					pacMan.setGoUpAnimation();
-				}
-				else if(pacManCurrentState == MovingSpriteState.DOWN) {
-					pacMan.setGoDownAnimation();
-				}
-				else if(pacManCurrentState == MovingSpriteState.DEATH) {
-					pacMan.setDeathAnimation();
-				}
-				pacManLastState = pacManCurrentState;
+		if(pacMan != null) {
+			synchronized(pacMan) {
+				pacManCurrentState = pacMan.getState();
+				if(pacManCurrentState != pacManLastState) { // have to change the animation list to the new state
+					if(pacManCurrentState == MovingSpriteState.STOP) {
+						pacMan.setNoMovementAnimation();
+					}
+					if(pacManCurrentState == MovingSpriteState.LEFT) {
+						pacMan.setGoLeftAnimation();
+					}
+					else if(pacManCurrentState == MovingSpriteState.RIGHT) {
+						pacMan.setGoRightAnimation();
+					}
+					else if(pacManCurrentState == MovingSpriteState.UP) {
+						pacMan.setGoUpAnimation();
+					}
+					else if(pacManCurrentState == MovingSpriteState.DOWN) {
+						pacMan.setGoDownAnimation();
+					}
+					else if(pacManCurrentState == MovingSpriteState.DEATH) {
+						pacMan.setDeathAnimation();
+					}
+					pacManLastState = pacManCurrentState;
+				}			
+			}
+						
+		}
+
+		//blinky
+		if(blinky != null) {
+			synchronized(blinky) {
+				blinkyCurrentState = blinky.getState();
+				if(blinkyCurrentState != blinkyLastState) { // have to change the animation list to the new state
+					if(blinkyCurrentState == MovingSpriteState.STOP) {
+						blinky.setNoMovementAnimation();
+					}
+					if(blinkyCurrentState == MovingSpriteState.LEFT) {
+						blinky.setGoLeftAnimation();
+					}
+					else if(blinkyCurrentState == MovingSpriteState.RIGHT) {
+						blinky.setGoRightAnimation();
+					}
+					else if(blinkyCurrentState == MovingSpriteState.UP) {
+						blinky.setGoUpAnimation();
+					}
+					else if(blinkyCurrentState == MovingSpriteState.DOWN) {
+						blinky.setGoDownAnimation();
+					}
+					else if(blinkyCurrentState == MovingSpriteState.DEATH) {
+						blinky.setDeathAnimation();
+
+					}
+					blinkyLastState = blinkyCurrentState;
+				}				
+			}
+		}
+
+		//pinky
+		if(pinky != null) {
+			synchronized(pinky) {
+				pinkyCurrentState = pinky.getState();
+				if(pinkyCurrentState != pinkyLastState) { // have to change the animation list to the new state
+					if(pinkyCurrentState == MovingSpriteState.STOP) {
+						pinky.setNoMovementAnimation();
+					}
+					if(pinkyCurrentState == MovingSpriteState.LEFT) {
+						pinky.setGoLeftAnimation();
+					}
+					else if(pinkyCurrentState == MovingSpriteState.RIGHT) {
+						pinky.setGoRightAnimation();
+					}
+					else if(pinkyCurrentState == MovingSpriteState.UP) {
+						pinky.setGoUpAnimation();
+					}
+					else if(pinkyCurrentState == MovingSpriteState.DOWN) {
+						pinky.setGoDownAnimation();
+					}
+					else if(pinkyCurrentState == MovingSpriteState.DEATH) {
+						pinky.setDeathAnimation();
+					}
+					pinkyLastState = pinkyCurrentState;
+				}				
 			}			
 		}
 		
-		//blinky
-		synchronized(blinky) {
-			blinkyCurrentState = blinky.getState();
-			if(blinkyCurrentState != blinkyLastState) { // have to change the animation list to the new state
-				if(blinkyCurrentState == MovingSpriteState.STOP) {
-					blinky.setNoMovementAnimation();
-				}
-				if(blinkyCurrentState == MovingSpriteState.LEFT) {
-					blinky.setGoLeftAnimation();
-				}
-				else if(blinkyCurrentState == MovingSpriteState.RIGHT) {
-					blinky.setGoRightAnimation();
-				}
-				else if(blinkyCurrentState == MovingSpriteState.UP) {
-					blinky.setGoUpAnimation();
-				}
-				else if(blinkyCurrentState == MovingSpriteState.DOWN) {
-					blinky.setGoDownAnimation();
-				}
-				else if(blinkyCurrentState == MovingSpriteState.DEATH) {
-					blinky.setDeathAnimation();
-				}
-				blinkyLastState = blinkyCurrentState;
-			}				
-		}
-		
-		//pinky
-		synchronized(pinky) {
-			pinkyCurrentState = pinky.getState();
-			if(pinkyCurrentState != pinkyLastState) { // have to change the animation list to the new state
-				if(pinkyCurrentState == MovingSpriteState.STOP) {
-					pinky.setNoMovementAnimation();
-				}
-				if(pinkyCurrentState == MovingSpriteState.LEFT) {
-					pinky.setGoLeftAnimation();
-				}
-				else if(pinkyCurrentState == MovingSpriteState.RIGHT) {
-					pinky.setGoRightAnimation();
-				}
-				else if(pinkyCurrentState == MovingSpriteState.UP) {
-					pinky.setGoUpAnimation();
-				}
-				else if(pinkyCurrentState == MovingSpriteState.DOWN) {
-					pinky.setGoDownAnimation();
-				}
-				else if(pinkyCurrentState == MovingSpriteState.DEATH) {
-					pinky.setDeathAnimation();
-				}
-				pinkyLastState = pinkyCurrentState;
-			}				
-		}
-		
 		//clyde
-		synchronized(clyde) {
-			clydeCurrentState = clyde.getState();
-			if(clydeCurrentState != clydeLastState) { // have to change the animation list to the new state
-				if(clydeCurrentState == MovingSpriteState.STOP) {
-					clyde.setNoMovementAnimation();
-				}
-				if(clydeCurrentState == MovingSpriteState.LEFT) {
-					clyde.setGoLeftAnimation();
-				}
-				else if(clydeCurrentState == MovingSpriteState.RIGHT) {
-					clyde.setGoRightAnimation();
-				}
-				else if(clydeCurrentState == MovingSpriteState.UP) {
-					clyde.setGoUpAnimation();
-				}
-				else if(clydeCurrentState == MovingSpriteState.DOWN) {
-					clyde.setGoDownAnimation();
-				}
-				else if(clydeCurrentState == MovingSpriteState.DEATH) {
-					clyde.setDeathAnimation();
-				}
-				clydeLastState = clydeCurrentState;
-			}				
+		if(clyde != null) {
+			synchronized(clyde) {
+				clydeCurrentState = clyde.getState();
+				if(clydeCurrentState != clydeLastState) { // have to change the animation list to the new state
+					if(clydeCurrentState == MovingSpriteState.STOP) {
+						clyde.setNoMovementAnimation();
+					}
+					if(clydeCurrentState == MovingSpriteState.LEFT) {
+						clyde.setGoLeftAnimation();
+					}
+					else if(clydeCurrentState == MovingSpriteState.RIGHT) {
+						clyde.setGoRightAnimation();
+					}
+					else if(clydeCurrentState == MovingSpriteState.UP) {
+						clyde.setGoUpAnimation();
+					}
+					else if(clydeCurrentState == MovingSpriteState.DOWN) {
+						clyde.setGoDownAnimation();
+					}
+					else if(clydeCurrentState == MovingSpriteState.DEATH) {
+						clyde.setDeathAnimation();
+					}
+					clydeLastState = clydeCurrentState;
+				}				
+			}		
 		}
+
 		
 		//inky
-		synchronized(clyde) {
-			inkyCurrentState = inky.getState();
-			if(inkyCurrentState != inkyLastState) { // have to change the animation list to the new state
-				if(inkyCurrentState == MovingSpriteState.STOP) {
-					inky.setNoMovementAnimation();
-				}
-				if(inkyCurrentState == MovingSpriteState.LEFT) {
-					inky.setGoLeftAnimation();
-				}
-				else if(inkyCurrentState == MovingSpriteState.RIGHT) {
-					inky.setGoRightAnimation();
-				}
-				else if(inkyCurrentState == MovingSpriteState.UP) {
-					inky.setGoUpAnimation();
-				}
-				else if(inkyCurrentState == MovingSpriteState.DOWN) {
-					inky.setGoDownAnimation();
-				}
-				else if(inkyCurrentState == MovingSpriteState.DEATH) {
-					inky.setDeathAnimation();
-				}
-				inkyLastState = inkyCurrentState;
-			}				
+		if(inky != null) {
+			synchronized(inky) {
+				inkyCurrentState = inky.getState();
+				if(inkyCurrentState != inkyLastState) { // have to change the animation list to the new state
+					if(inkyCurrentState == MovingSpriteState.STOP) {
+						inky.setNoMovementAnimation();
+					}
+					if(inkyCurrentState == MovingSpriteState.LEFT) {
+						inky.setGoLeftAnimation();
+					}
+					else if(inkyCurrentState == MovingSpriteState.RIGHT) {
+						inky.setGoRightAnimation();
+					}
+					else if(inkyCurrentState == MovingSpriteState.UP) {
+						inky.setGoUpAnimation();
+					}
+					else if(inkyCurrentState == MovingSpriteState.DOWN) {
+						inky.setGoDownAnimation();
+					}
+					else if(inkyCurrentState == MovingSpriteState.DEATH) {
+						inky.setDeathAnimation();
+					}
+					inkyLastState = inkyCurrentState;
+				}				
+			}
+		}			
 		}
-	}
+
 	
 	@Override
 	public void finallyDoThat() {
 		
 		// change the image of the animated sprites to display
-		energizers.updateImg();
-		synchronized(pacMan) {
-			pacMan.updateImg();
+		if(energizers != null && energizers.getSprites() != null && !energizers.getSprites().isEmpty()) {
+			energizers.updateImg();
 		}
-		synchronized(blinky) {
-			blinky.updateImg();
+		if(pacMan != null) {
+			synchronized(pacMan) {
+				pacMan.updateImg();
+			}			
 		}
-		synchronized(pinky) {
-			pinky.updateImg();
+		if(blinky != null) {
+			synchronized(blinky) {
+				blinky.updateImg();
+			}			
 		}
-		synchronized(clyde) {
-			clyde.updateImg();
+		if(pinky != null) {
+			synchronized(pinky) {
+				pinky.updateImg();
+			}			
 		}
-		synchronized(inky) {
-			inky.updateImg();
+		if(clyde != null) {
+			synchronized(clyde) {
+				clyde.updateImg();
+			}			
 		}
+		if(inky != null) {
+			synchronized(inky) {
+				inky.updateImg();
+			}			
+		}
+
 	}
 
 }

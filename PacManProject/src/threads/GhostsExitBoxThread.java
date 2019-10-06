@@ -12,8 +12,8 @@ public class GhostsExitBoxThread extends TimerThread {
 	
 	private Ghost blinky, pinky, clyde, inky;
 	private Maze maze;
-	private boolean ghostWantsToGoOut, blinkyWantsToGoOut, pinkyWantsToGoOut, clydeWantsToGoOut, inkyWantsToGoOut;
-	private boolean ghostCanGoOut, blinkyCanGoOut, pinkyCanGoOut, clydeCanGoOut, inkyCanGoOut;
+	private  boolean ghostWantsToGoOut, blinkyWantsToGoOut, pinkyWantsToGoOut, clydeWantsToGoOut, inkyWantsToGoOut;
+	public static  boolean ghostCanGoOut, blinkyCanGoOut, pinkyCanGoOut, clydeCanGoOut, inkyCanGoOut;
 	
 	public GhostsExitBoxThread(Ghost blinky, Ghost pinky, Ghost clyde, Ghost inky, Maze maze) {
 		super(WAIT_TIME, NB_WAITS);
@@ -30,7 +30,7 @@ public class GhostsExitBoxThread extends TimerThread {
 	
 	@Override
 	protected void doThatWhileWaiting() {
-		if(!ghostWantsToGoOut) {			
+		if(!ghostWantsToGoOut) {
 			if(blinky.isInTheBox()) {
 				ghostWantsToGoOut = true;
 				blinkyWantsToGoOut = ghostWantsToGoOut;
@@ -51,10 +51,7 @@ public class GhostsExitBoxThread extends TimerThread {
 				inkyWantsToGoOut = ghostWantsToGoOut;
 				counterWaits = 0; 
 			}
-			else {
-				// no ghost in the box
-				this.stopThread();
-			}
+			
 		}
 		else if(ghostCanGoOut){ 
 			if(blinkyCanGoOut) {
@@ -120,10 +117,10 @@ public class GhostsExitBoxThread extends TimerThread {
 				ghostWantsToGoOut = false;
 				ghostCanGoOut = false;
 				
-				if(ghost.getDirectionThread() == null || !ghost.getDirectionThread().isRunning()) {
+				if(ghost.getBehaviorThread() == null || !ghost.getBehaviorThread().isRunning()) {
 					ghost.startDirectionThread();
 				}
-				ghost.getDirectionThread().changeDirection();
+				ghost.getBehaviorThread().changeDirection();
 				
 				return true;
 			}

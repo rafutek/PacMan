@@ -25,7 +25,7 @@ public class Tiles {
 	public static final int NB_TILES_Y = 22;
 	private final int SPACE = 2; //px
 	
-	private ArrayList<List<BufferedImage>> tilesImages = new ArrayList<List<BufferedImage>>(); //create list for x
+	private static ArrayList<List<BufferedImage>> tilesImages = new ArrayList<List<BufferedImage>>(); //create list for x
 	
 
 	/**
@@ -103,7 +103,7 @@ public class Tiles {
 		}
 		int x = nb -1 - y*NB_TILES_X; 
 		
-		return getTileAt(x, y);
+		return this.getTileAt(x, y);
 		
 	}
 	
@@ -206,6 +206,24 @@ public class Tiles {
 		
 		Image img = original.getScaledInstance(newDim.width,newDim.height,Image.SCALE_SMOOTH);
 		return cast(img);
+	}
+	
+	/**
+	 * Takes four images in parameter and return the combined image, with the dimension of one.
+	 * The images must have the same dimension.
+	 * @param cornerTopLeft
+	 * @param cornerTopRight
+	 * @param cornerBottomLeft
+	 * @param cornerBottomRight
+	 * @return the combined image
+	 */
+	public BufferedImage createFullSpriteImage(BufferedImage cornerTopLeft, BufferedImage cornerTopRight,
+			BufferedImage cornerBottomLeft, BufferedImage cornerBottomRight) {
+		
+		BufferedImage imgTop = Tiles.joinToRight(cornerTopLeft, cornerTopRight);
+		BufferedImage imgBottom = Tiles.joinToRight(cornerBottomLeft, cornerBottomRight);
+		BufferedImage fullBigImg = Tiles.joinBelow(imgTop, imgBottom);
+		return Tiles.resize(fullBigImg, new Dimension(cornerTopLeft.getWidth(), cornerTopLeft.getHeight()));
 	}
 
 

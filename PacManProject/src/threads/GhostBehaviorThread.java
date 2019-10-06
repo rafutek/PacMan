@@ -26,12 +26,21 @@ public class GhostBehaviorThread extends TimerThread {
 	
 	@Override
 	protected void doThatWhileWaiting() {
-		if (ghost.specificAvailable()) {
-  			ghost.launchSpecific();
-  			counterWaits=0; //reset the timer so the direction will not be randomized
+		
+		if(ghost.goingToLastSeenPosition()) {
+			System.out.println("going to last seen position");
+			counterWaits=0;
+			ghost.checkAtLastSeenPosition();
+		}		
+		else if(ghost.escaping()) {
+			System.out.println("escaping");
+			counterWaits=0;
 		}
- 
- 
+		else if (ghost.specificAvailable()) {
+			counterWaits=0; //reset the timer so the direction will not be randomized
+  			ghost.launchSpecific();
+		}
+
 	}
 
 	@Override
@@ -49,13 +58,13 @@ public class GhostBehaviorThread extends TimerThread {
 
 	
 	public void changeDirection() {
-		if (ghost.specificAvailable()) {
-			ghost.launchSpecific();
-			counterWaits=0; //reset the timer so the direction will not be randomized
+		ghost.setRandomDirection(); // change direction at a random time
+		setRandomNbWaits();
+		if(ghost.goingToLastSeenPosition()) {
+			ghost.notGoingToLastSeenPosition();
 		}
-		else {
-			ghost.setRandomDirection(); // change direction at a random time
-			setRandomNbWaits();
+		if(ghost.escaping()) {
+			ghost.notEscape();
 		}
 	}
 	

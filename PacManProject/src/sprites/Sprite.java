@@ -23,7 +23,6 @@ public abstract class Sprite {
 		mazePosition = start_position;
 		currentPosition = mazePosition;
 		this.tiles = tiles;
-		
 		chooseTilesNumbers();
 		setImagesArray(tilesNumbers); // fill an image array with these tiles
 		createFullSpriteImages();
@@ -84,6 +83,7 @@ public abstract class Sprite {
 		// the original size of the sprite is the dimension of one of its full images
 		originalSize = new Dimension(spriteFullImages.getImagesList().get(0).getWidth(), 
 									spriteFullImages.getImagesList().get(0).getHeight());
+		currentSize = originalSize;
 	}
 	
 	
@@ -135,7 +135,9 @@ public abstract class Sprite {
 	 * @param g is the graphics where to draw the sprite.
 	 */
 	public synchronized void draw(Graphics g) {
-		g.drawImage(spriteFullImages.getImagesList().get(animationOrder.get(0)), 
-				currentPosition.getX(), currentPosition.getY(), currentSize.width, currentSize.height, null);
+		if(currentPosition != null && currentSize != null) {
+			g.drawImage(spriteFullImages.getImagesList().get(animationOrder.get(0)), 
+					currentPosition.getX(), currentPosition.getY(), currentSize.width, currentSize.height, null);			
+		}
 	}
 }
