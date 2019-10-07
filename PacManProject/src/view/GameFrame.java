@@ -7,6 +7,7 @@ import javax.swing.*;
 import main.Main;
 import threads.CheckPageThread;
 import threads.LayoutManagerThread;
+import threads.PhysicsThread;
 import threads.MusicThread;
 import threads.PhysicsThread;
 import threads.RenderThread;
@@ -34,9 +35,8 @@ public class GameFrame extends JFrame implements WindowListener
 	private StatusBarPanel statusBarPanel;
 	private JPanel leftPanel, rightPanel;
 	private JLabel statut;
-	
 	private static String page = "PrincipalMenu";
-	
+	private JLabel direction;
 	private boolean fullScreen = false;
 	public RenderThread renderTh;
 	private LayoutManagerThread layoutTh;

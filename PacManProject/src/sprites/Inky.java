@@ -36,6 +36,10 @@ public class Inky extends Ghost {
 		behaviorTh.setName("Inky behavior");
 		behaviorTh.startThread();
 	}
+	@Override
+	public  void stopDirectionThread() {
+		behaviorTh.stopThread();
+	}
 
 
 	/**

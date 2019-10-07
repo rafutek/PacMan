@@ -69,6 +69,7 @@ public class ThreeTwoOneThread extends TimerThread {
 	
 	private void setAnimationImagesArray() {
 		animationImages = new ListImages(tiles, tilesNumbers);
+		
 	}
 	
 	

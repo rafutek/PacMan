@@ -34,6 +34,12 @@ public class Clyde extends Ghost {
 		behaviorTh.setName("Clyde behavior");
 		behaviorTh.startThread();
 	}
+	@Override
+	public  void stopDirectionThread() {
+		behaviorTh.stopThread();
+	}
+	
+
 
 
 	@Override

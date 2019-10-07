@@ -16,7 +16,7 @@ public abstract class Ghost extends MovingSprite {
 	
 	protected GhostBehaviorThread behaviorTh = new GhostBehaviorThread(this);
 
-	private boolean isInTheBox = true;
+	public  boolean isInTheBox = true;
 	
 	protected JPanel gamePanel;
 	protected List<List<Integer>> mazeValues;
@@ -112,6 +112,7 @@ public abstract class Ghost extends MovingSprite {
 	}
 	
 	public abstract void startDirectionThread();
+	public abstract void stopDirectionThread();
 	
 	public synchronized GhostBehaviorThread getBehaviorThread() {
 		return behaviorTh;
