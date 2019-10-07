@@ -1,4 +1,4 @@
-package view;
+package view; 
 
 
 import javax.swing.*;
@@ -9,10 +9,10 @@ import threads.CheckPageThread;
 import threads.LayoutManagerThread;
 import threads.RenderThread;
 
-import java.awt.*;
+import java.awt.*; 
 import java.awt.event.*;
 
-
+ 
 public class GameFrame extends JFrame implements WindowListener
 {
 
