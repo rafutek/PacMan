@@ -79,7 +79,7 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 		
 		hightScores = new JLabel();
 		
-		BufferedImage hight_scors = t.createWord(t.getTileNumber(46),t.getTileNumber(47),t.getTileNumber(45),t.getTileNumber(46),t.getTileNumber(58),t.getTileNumber(352),t.getTileNumber(57),t.getTileNumber(41),t.getTileNumber(41),t.getTileNumber(53),t.getTileNumber(56),t.getTileNumber(57));
+		BufferedImage hight_scors = t.createWord(t.getTileNumber(46),t.getTileNumber(47),t.getTileNumber(45),t.getTileNumber(46),t.getTileNumber(352),t.getTileNumber(57),t.getTileNumber(41),t.getTileNumber(53),t.getTileNumber(56),t.getTileNumber(43),t.getTileNumber(57));
 		hight_scors = t.resize(hight_scors, new Dimension(300,50));
 		hightScores.setIcon(new ImageIcon(hight_scors));
 		hightScores.setBounds(160, 440, 300, 50);
@@ -158,11 +158,15 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 			}
 			if(getCoordY()==440) {
 				System.out.println("hightScores");
-				
+				System.out.println("start HighScoresMenu");	
+				Main.getGlobalFrame().setPage("HighScores");
+				System.out.println("page audio ................"+Main.getGlobalFrame().getPage());
+				System.out.println(Main.getGlobalFrame().getPage());
+				checkPageThread= new CheckPageThread("CheckPageThread");
 				
 			}if(getCoordY()==520) {
 				System.out.println("Quit Game");
-				Main.getGlobalFrame().dispose();
+				Main.getGlobalFrame().closeGame();
 				
 			}}
 			

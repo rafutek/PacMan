@@ -36,6 +36,8 @@ public class CheckPageThread extends ThreadPerso{
 			gameFrame.renderTh.pauseThread();
 			gameFrame.removeKeyListener(gameFrame.getControlsMenuPanel());
 			gameFrame.removeKeyListener(gameFrame.getAudioMenuPanel());
+			gameFrame.removeKeyListener(gameFrame.getHightScoresPanel());
+			gameFrame.removeKeyListener(gameFrame.getHightScoresPanel());
 			gameFrame.getGamePanel().setVisible(false);
 			gameFrame.getStatusBarPanel().setVisible(false);
 			gameFrame.getLeftPanel().setVisible(false);
@@ -56,6 +58,7 @@ public class CheckPageThread extends ThreadPerso{
 			gameFrame.removeKeyListener(gameFrame.getPrincipalMenuPanel());
 			gameFrame.removeKeyListener(gameFrame.getControlsMenuPanel());
 			gameFrame.removeKeyListener(gameFrame.getAudioMenuPanel());
+			gameFrame.removeKeyListener(gameFrame.getHightScoresPanel());
 			//gameFrame.readyForArrowsEvents();
 			renderThread = new RenderThread(period,gameFrame.getGamePanel() , gameFrame.getStatusBarPanel());
 			renderThread.startThread();
@@ -64,6 +67,7 @@ public class CheckPageThread extends ThreadPerso{
 			gameFrame.getPrincipalMenuPanel().setVisible(false);
 			gameFrame.getControlsMenuPanel().setVisible(false);
 			gameFrame.getAudioMenuPanel().setVisible(false);
+			gameFrame.getHightScoresPanel().setVisible(false);
 			//gameFrame.add(gameFrame.getGamePanel());
 			gameFrame.getGamePanel().setVisible(true);
 			//gameFrame.add(gameFrame.getStatusBarPanel());
@@ -89,7 +93,16 @@ public class CheckPageThread extends ThreadPerso{
 			gameFrame.getAudioMenuPanel().setVisible(true);
 			System.out.println("......................... menu controls is added.................");
 			gameFrame.addKeyListener(gameFrame.getAudioMenuPanel());
+		}else if(gameFrame.getPage()=="HighScores") {
+			gameFrame.removeKeyListener(gameFrame.getPrincipalMenuPanel());
+			gameFrame.renderTh.pauseThread();
+			gameFrame.getPrincipalMenuPanel().setVisible(false);
+			System.out.println("......................... menu controls is Visible.................");
+			gameFrame.getHightScoresPanel().setVisible(true);
+			System.out.println("......................... menu controls is added.................");
+			gameFrame.addKeyListener(gameFrame.getHightScoresPanel());
 		}
+		
 	}
 
 	@Override

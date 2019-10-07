@@ -12,6 +12,7 @@ import threads.PhysicsThread;
 import threads.RenderThread;
 import java.awt.*; 
 import java.awt.event.*;
+import java.io.IOException;
 
  
 public class GameFrame extends JFrame implements WindowListener
@@ -29,6 +30,7 @@ public class GameFrame extends JFrame implements WindowListener
 	private static PrincipalMenuPanel principalMenuPanel;
 	private static ControlsMenuPanel controlsMenuPanel;
 	private static AudioMenuPanel audioMenuPanel;
+	private static HightScoresPanel hightScoresPanel;
 	private StatusBarPanel statusBarPanel;
 	private JPanel leftPanel, rightPanel;
 	private JLabel statut;
@@ -117,6 +119,16 @@ public class GameFrame extends JFrame implements WindowListener
 	}
 
 
+	public static HightScoresPanel getHightScoresPanel() {
+		return hightScoresPanel;
+	}
+
+
+	public static void setHightScoresPanel(HightScoresPanel hightScoresPanel) {
+		GameFrame.hightScoresPanel = hightScoresPanel;
+	}
+
+
 	public void setPrincipalMenuPanel(PrincipalMenuPanel principalMenuPanel) {
 		this.principalMenuPanel = principalMenuPanel;
 	}
@@ -146,6 +158,12 @@ public class GameFrame extends JFrame implements WindowListener
 		principalMenuPanel = new PrincipalMenuPanel();
 		controlsMenuPanel = new ControlsMenuPanel();
 		audioMenuPanel = new AudioMenuPanel(this);
+		try {
+			hightScoresPanel = new HightScoresPanel();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		gamePanel = new GamePanel();
 		statusBarPanel = new StatusBarPanel();	
 		leftPanel = new JPanel();
@@ -180,6 +198,8 @@ public class GameFrame extends JFrame implements WindowListener
 			controlsMenuPanel.setVisible(false);
 			add(audioMenuPanel);
 			audioMenuPanel.setVisible(false);
+			add(hightScoresPanel);
+			hightScoresPanel.setVisible(false);
 			add(gamePanel);
 			gamePanel.setVisible(false);
 			add(statusBarPanel);
@@ -349,7 +369,7 @@ public class GameFrame extends JFrame implements WindowListener
 		});
 	}
 
-	private void closeGame() {
+	public void closeGame() {
 		
 		layoutTh.stopThread();		
 		renderTh.stopThread(); 
