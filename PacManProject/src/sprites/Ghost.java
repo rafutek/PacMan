@@ -1,8 +1,11 @@
 package sprites;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JPanel;
 
@@ -25,7 +28,7 @@ public abstract class Ghost extends MovingSprite {
 	protected PacMan pacMan;
 	
 	protected GhostBehaviorThread behaviorTh = new GhostBehaviorThread(this, pacMan);
-	
+	protected List<Integer> escapingAnimation = new ArrayList<Integer>();
 	private Position lastSeenPacManMatrixPos;
 	protected boolean goingToLastSeenPos, escaping;
 
@@ -36,6 +39,7 @@ public abstract class Ghost extends MovingSprite {
 		this.gamePanel = gamePanel;
 		this.mazeValues = mazeValues;
 		this.pacMan = pacMan;
+		createEscapingAnimation();
 	}
 	
 	@Override
@@ -103,6 +107,20 @@ public abstract class Ghost extends MovingSprite {
 		goDownAnimation.add(3);
 	}
 
+	protected void createEscapingAnimation() {
+		escapingAnimation.add(8);
+		escapingAnimation.add(9);
+		escapingAnimation.add(10);
+		escapingAnimation.add(11);
+		for (Integer integer : escapingAnimation) {
+			System.out.println(integer);
+		}
+	}
+	
+	public synchronized void setEscapingAnimation() {
+		setAnimationOrder(escapingAnimation);
+	}
+	
 	@Override
 	protected void createDeathAnimation() {
 		deathAnimation = goLeftAnimation; //no animation for death

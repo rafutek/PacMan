@@ -1,7 +1,11 @@
 package threads;
 
-import sprites.MovingSprite;
+import sprites.Blinky;
+import sprites.Clyde;
+import sprites.Inky;
 import sprites.MovingSpriteState;
+import sprites.PacMan;
+import sprites.Pinky;
 import sprites.Sprites;
 
 public class AnimationThread extends TimerThread {
@@ -10,20 +14,20 @@ public class AnimationThread extends TimerThread {
 	private static final int NB_WAITS = 20;
 	
 	private Sprites energizers;
-	
-	private MovingSprite pacMan;
+	private boolean wasEscaping=false;
+	private PacMan pacMan;
 	private MovingSpriteState pacManLastState, pacManCurrentState;
 
-	private MovingSprite blinky;
+	private Blinky blinky;
 	private MovingSpriteState blinkyLastState, blinkyCurrentState;
 	
-	private MovingSprite pinky;
+	private Pinky pinky;
 	private MovingSpriteState pinkyLastState, pinkyCurrentState;
 	
-	private MovingSprite clyde;
+	private Clyde clyde;
 	private MovingSpriteState clydeLastState, clydeCurrentState;
 	
-	private MovingSprite inky;
+	private Inky inky;
 	private MovingSpriteState inkyLastState, inkyCurrentState;
 	
 	/**
@@ -31,7 +35,7 @@ public class AnimationThread extends TimerThread {
 	 * thus the render thread will display another image so it will create the animation.
 	 * @param energizers
 	 */
-	public AnimationThread(Sprites energizers, MovingSprite pacMan, MovingSprite blinky, MovingSprite pinky, MovingSprite clyde, MovingSprite inky) {
+	public AnimationThread(Sprites energizers, PacMan pacMan, Blinky blinky, Pinky pinky, Clyde clyde, Inky inky) {
 		super(WAIT_TIME, NB_WAITS);
 		setName("Sprites Animation");
 		
@@ -114,35 +118,48 @@ public class AnimationThread extends TimerThread {
 		//blinky
 		if(blinky != null) {
 			synchronized(blinky) {
-				blinkyCurrentState = blinky.getState();
-				if(blinkyCurrentState != blinkyLastState) { // have to change the animation list to the new state
-					if(blinkyCurrentState == MovingSpriteState.STOP) {
-						blinky.setNoMovementAnimation();
-					}
-					if(blinkyCurrentState == MovingSpriteState.LEFT) {
-						blinky.setGoLeftAnimation();
-					}
-					else if(blinkyCurrentState == MovingSpriteState.RIGHT) {
-						blinky.setGoRightAnimation();
-					}
-					else if(blinkyCurrentState == MovingSpriteState.UP) {
-						blinky.setGoUpAnimation();
-					}
-					else if(blinkyCurrentState == MovingSpriteState.DOWN) {
-						blinky.setGoDownAnimation();
-					}
-					else if(blinkyCurrentState == MovingSpriteState.DEATH) {
-						blinky.setDeathAnimation();
+				if (blinky.escaping()) {
+					blinky.setEscapingAnimation();
+					wasEscaping =true;
+				}
+				
+				else {
+					blinkyCurrentState = blinky.getState();
+					if(blinkyCurrentState != blinkyLastState) { // have to change the animation list to the new state
+						if(blinkyCurrentState == MovingSpriteState.STOP) {
+							blinky.setNoMovementAnimation();
+						}
+						if(blinkyCurrentState == MovingSpriteState.LEFT) {
+							blinky.setGoLeftAnimation();
+						}
+						else if(blinkyCurrentState == MovingSpriteState.RIGHT) {
+							blinky.setGoRightAnimation();
+						}
+						else if(blinkyCurrentState == MovingSpriteState.UP) {
+							blinky.setGoUpAnimation();
+						}
+						else if(blinkyCurrentState == MovingSpriteState.DOWN) {
+							blinky.setGoDownAnimation();
+						}
+						else if(blinkyCurrentState == MovingSpriteState.DEATH) {
+							blinky.setDeathAnimation();
 
-					}
-					blinkyLastState = blinkyCurrentState;
-				}				
+						}
+						blinkyLastState = blinkyCurrentState;
+					}				
+				}
+				
 			}
+			
 		}
 
 		//pinky
 		if(pinky != null) {
 			synchronized(pinky) {
+				if (pinky.escaping()) {
+					pinky.setEscapingAnimation();
+					wasEscaping =true;
+				}
 				pinkyCurrentState = pinky.getState();
 				if(pinkyCurrentState != pinkyLastState) { // have to change the animation list to the new state
 					if(pinkyCurrentState == MovingSpriteState.STOP) {
@@ -171,6 +188,10 @@ public class AnimationThread extends TimerThread {
 		//clyde
 		if(clyde != null) {
 			synchronized(clyde) {
+				if (clyde.escaping()) {
+					clyde.setEscapingAnimation();
+					wasEscaping =true;
+				}
 				clydeCurrentState = clyde.getState();
 				if(clydeCurrentState != clydeLastState) { // have to change the animation list to the new state
 					if(clydeCurrentState == MovingSpriteState.STOP) {
@@ -200,6 +221,10 @@ public class AnimationThread extends TimerThread {
 		//inky
 		if(inky != null) {
 			synchronized(inky) {
+				if (blinky.escaping()) {
+					inky.setEscapingAnimation();
+					wasEscaping =true;
+				}
 				inkyCurrentState = inky.getState();
 				if(inkyCurrentState != inkyLastState) { // have to change the animation list to the new state
 					if(inkyCurrentState == MovingSpriteState.STOP) {

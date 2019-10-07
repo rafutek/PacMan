@@ -149,9 +149,9 @@ public class PacMan extends MovingSprite {
 	}
 
 
-	public void setInvincible(boolean invincible) {
+	public synchronized void setInvincible(boolean invincible) {
 		this.invincible = invincible;
-		System.out.println("PacMan est invincible");
+		//System.out.println("PacMan est invincible");
 	}
 
 }

@@ -72,12 +72,12 @@ public class Blinky extends Ghost {
 	}
 
 
-	public static void main(String[] args) throws IOException {
+	/*public static void main(String[] args) throws IOException {
 		Blinky b = new Blinky(null,new Tiles(),null,null,null);
 		for (int i = 0; i < b.spriteFullImages.getImagesList().size(); i++) {
 			Tiles.displayImg(b.spriteFullImages.getImagesList().get(i));
 			System.out.println("yo!");
 		}
-	}
+	}*/
 
 }

@@ -145,4 +145,5 @@ public abstract class MovingSprite extends Sprite{
 	public synchronized void setDeathAnimation() {
 		setAnimationOrder(deathAnimation);
 	}
+	
 }

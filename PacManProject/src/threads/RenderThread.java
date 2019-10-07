@@ -11,9 +11,13 @@ import java.text.DecimalFormat;
 import javax.swing.JLabel;
 
 import resources.Maze;
+import sprites.Blinky;
+import sprites.Clyde;
 import sprites.Ghost;
+import sprites.Inky;
 import sprites.MovingSprite;
 import sprites.PacMan;
+import sprites.Pinky;
 import sprites.Sprites;
 import view.GamePanel;
 import view.StatusBarPanel;
@@ -86,10 +90,10 @@ public class RenderThread extends ThreadPerso{
 	private Sprites energizers;
 	private Sprites pacDots;
 	private PacMan pacMan;
-	private Ghost blinky;
-	private Ghost pinky;
-	private Ghost clyde;
-	private Ghost inky;
+	private Blinky blinky;
+	private Pinky pinky;
+	private Clyde clyde;
+	private Inky inky;
 	
 	//animations
 	private AnimationThread animationTh;
