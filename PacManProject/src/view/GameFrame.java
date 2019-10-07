@@ -10,8 +10,6 @@ import threads.LayoutManagerThread;
 import threads.MusicThread;
 import threads.PhysicsThread;
 import threads.RenderThread;
-import threads.SoundThread;
-
 import java.awt.*; 
 import java.awt.event.*;
 
@@ -40,7 +38,6 @@ public class GameFrame extends JFrame implements WindowListener
 	private boolean fullScreen = false;
 	public RenderThread renderTh;
 	private LayoutManagerThread layoutTh;
-	private CheckPageThread checkPageThread;
 	private MusicThread musicTh;
 	
 	private int statutMenu = 0;
@@ -148,7 +145,7 @@ public class GameFrame extends JFrame implements WindowListener
 		setLayout(gridbag);
 		principalMenuPanel = new PrincipalMenuPanel();
 		controlsMenuPanel = new ControlsMenuPanel();
-		audioMenuPanel = new AudioMenuPanel();
+		audioMenuPanel = new AudioMenuPanel(this);
 		gamePanel = new GamePanel();
 		statusBarPanel = new StatusBarPanel();	
 		leftPanel = new JPanel();
@@ -339,19 +336,13 @@ public class GameFrame extends JFrame implements WindowListener
 					if(!gameMute) {
 						System.out.println("Sound mute");
 						gameMute = true;
-						synchronized (musicTh) {
-							musicTh.setMute(true);
-							PhysicsThread.setSoundMute(true);
-						}
+						setAllSoundsMute(true);
 						
 					}
 					else if(gameMute) {
 						System.out.println("Sound on");
 						gameMute = false;
-						synchronized (musicTh) {
-							musicTh.setMute(false);
-							PhysicsThread.setSoundMute(false);
-						}
+						setAllSoundsMute(false);
 					}
 				} 
 			}
@@ -386,12 +377,7 @@ public class GameFrame extends JFrame implements WindowListener
 		synchronized (layoutTh){
 			layoutTh.resumeThread();
 		}
-		if (!gameMute) {
-			synchronized (musicTh){
-				musicTh.setMute(false);
-			}
-		}
-		
+		setAllSoundsMute(false);
 		}
 	}
 	
@@ -405,12 +391,7 @@ public class GameFrame extends JFrame implements WindowListener
 		synchronized (layoutTh){
 			layoutTh.pauseThread();
 		}
-		
-		if (!gameMute) {
-			synchronized (musicTh){
-				musicTh.setMute(true);
-			}
-		}
+		setAllSoundsMute(true);
 		}
 	}
 	
@@ -435,6 +416,21 @@ public class GameFrame extends JFrame implements WindowListener
 
 	public void setStatutMenu(int statutMenu) {
 		this.statutMenu = statutMenu;
+	}
+	
+	public void setMusicMute(boolean b) {
+		synchronized (musicTh){
+				musicTh.setMute(b);
+			}
+	}
+	
+	public void setSoundMute(boolean b) {
+		PhysicsThread.setSoundMute(b);
+	}
+	
+	public void setAllSoundsMute(boolean b) {
+		setMusicMute(b);
+		setSoundMute(b);
 	}
 
 

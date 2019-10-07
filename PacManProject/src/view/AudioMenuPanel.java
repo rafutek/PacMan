@@ -37,10 +37,12 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 	private int coordY= 200;
 	
 	private CheckPageThread checkPageThread;
+	private GameFrame gf;
 	
 	Tiles t;
 	
-	public  AudioMenuPanel() {
+	public  AudioMenuPanel(GameFrame GF) {
+		this.gf=GF;
 		setBackground(Color.BLACK);
 		setLayout(null);
 		try {
@@ -232,37 +234,42 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 			if(getCoordX()==70) {
 				if(getCoordY()==200) {
 					//add on audio event
-					System.out.println("add on audio event");
+					System.out.println("audio on");
+					gf.setAllSoundsMute(false);
 				}
 				if(getCoordY()==260) {
 					//add up audio event
-					System.out.println("add up audio event");
+					System.out.println("audio up");
+					
 				}
 				if(getCoordY()==450) {
 					//add on music event
-					System.out.println("add on music event");
+					System.out.println("music on");
+					gf.setMusicMute(false);
 				}
 				if(getCoordY()==520) {
 					//add up music event
-					System.out.println("add up music event");
+					System.out.println("music up");
 				}
 			}
 			else if(getCoordX()==270) {
 				if(getCoordY()==200) {
 					//add on audio event
-					System.out.println("add off audio event");
+					System.out.println("audio off");
+					gf.setAllSoundsMute(true);
 				}
 				if(getCoordY()==260) {
 					//add up audio event
-					System.out.println("add down audio event");
+					System.out.println("audio down");
 				}
 				if(getCoordY()==450) {
 					//add on music event
-					System.out.println("add off music event");
+					System.out.println("music off");
+					gf.setMusicMute(true);
 				}
 				if(getCoordY()==520) {
 					//add up music event
-					System.out.println("add down music event");
+					System.out.println("music down");
 				}
 			}else{
 				System.out.println("start principal menu");	
