@@ -1,5 +1,6 @@
 package sprites;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -17,13 +18,14 @@ public class Blinky extends Ghost {
 		wantedState = state;
 	}
 	
-
 	@Override
-	public void chooseTilesNumbers() {
+	protected void chooseSpecificGhostTiles() {
 		for (int tile_nb = 193; tile_nb < 225; tile_nb++) {
 			tilesNumbers.add(tile_nb); // add blinky tiles numbers
 		}
+		
 	}
+
 	
 	@Override
 	protected void chooseInitialAnimation() {
@@ -60,7 +62,7 @@ public class Blinky extends Ghost {
 	@Override
 	public void launchSpecific() {
 		goingToLastSeenPos = true;
-		chooseDirectionToGoTo(lastSeenPacManMatrixPos);
+		chooseDirectionToGoTo(lastSeenPacManMatrixPos());
 	}
 
 	@Override

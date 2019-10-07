@@ -32,7 +32,10 @@ public class GhostBehaviorThread extends TimerThread {
 		
 		if (ghost.escaping()) {
 			System.out.println("escaping");
-			counterWaits=0;
+			if (ghost.sameCorridor()) {
+				ghost.chooseDirectionToEscapeFrom(ghost.lastSeenPacManMatrixPos());
+				counterWaits=0;
+			}			
 		}
 		else if(ghost.goingToLastSeenPosition()) {
 			System.out.println("going to last seen position");

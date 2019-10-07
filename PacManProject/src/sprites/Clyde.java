@@ -12,14 +12,14 @@ public class Clyde extends Ghost {
 	public Clyde(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, PacMan pacMan) {
 		super(start_position, tiles, gamePanel, mazeValues, pacMan);
 	}
-	
+
 
 	@Override
-	public void chooseTilesNumbers() {
+	protected void chooseSpecificGhostTiles() {
 		for (int tile_nb = 257; tile_nb < 289; tile_nb++) {
 			tilesNumbers.add(tile_nb); // add clyde tiles numbers
 		}
-
+		
 	}
 	
 	@Override
@@ -59,5 +59,8 @@ public class Clyde extends Ghost {
 		// TODO Auto-generated method stub
 		this.setCurrentPosition(new Position(273, 253));
 	}
+
+
+
 
 }
