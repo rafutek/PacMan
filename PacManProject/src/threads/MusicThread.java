@@ -10,7 +10,7 @@ public class MusicThread extends AudioThread{
 	
 	private static boolean invincible = false;
 	private boolean invincibleIsPlaying = false;
-	private float vol = 1;
+	private float vol = (float) 0.5;
 
 	
 	public MusicThread(String threadName) {
@@ -44,9 +44,13 @@ public class MusicThread extends AudioThread{
 			try {
 				if(!invincible) {
 					playAudio("beginning.wav");
+					setVolume(vol);
+
 				} else if(isPlaying) {
 						InvinsibilityIsPlaying();
 						playAudio("intermission.wav");
+						setVolume(vol);
+
 					
 				}
 			} catch (UnsupportedAudioFileException e) {

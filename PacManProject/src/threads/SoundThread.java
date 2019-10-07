@@ -7,7 +7,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class SoundThread extends AudioThread {
 	
-	private float vol = 1;
+	private float vol = (float) 0.5;
 	
 
 	public SoundThread(String threadName) {
