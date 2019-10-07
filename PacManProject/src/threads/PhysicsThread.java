@@ -1,6 +1,10 @@
 package threads;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JPanel;
 
 import sprites.Ghost;
@@ -33,6 +37,12 @@ public class PhysicsThread extends ThreadPerso {
 	private Sprites energizer;
 	
 	/**
+	 * Management of the sounds
+	 */
+	private SoundThread soundTh;
+	private static boolean soundMute = false;
+	
+	/**
 	 * The class needs the maze number matrix, the game panel size and of course the moving sprites,
 	 * in order to locate them in the matrix.
 	 * The location of each sprite in the matrix allow them to go or not in the wanted direction.
@@ -51,6 +61,7 @@ public class PhysicsThread extends ThreadPerso {
 		this.inky = inky;
 		this.pacDots=pacDots;
 		this.energizer=energizer;
+		
 	}
 
 	@Override
@@ -481,6 +492,7 @@ public class PhysicsThread extends ThreadPerso {
 	private boolean pacDotsCollision() {
 		synchronized(pacMan) {
 			if(collisionWith(pacDots)) {
+				
 				System.out.println("collision pacDot, showX : "+pacDots.showX+ " showY : "+pacDots.showY);
 				return true;
 			}
@@ -491,9 +503,10 @@ public class PhysicsThread extends ThreadPerso {
 	boolean f=true;
 	private boolean energizerCollision() {
 		synchronized(pacMan) {
-			if(collisionWith(energizer)) {
+			if(collisionWithE(energizer)) {
 				score=score+50;
 				StatusBarPanel.valueScore.setText(""+score);
+				MusicThread.setInvincibility(true);
 				System.out.println("collision energizer, showX : "+energizer.showX+ " showY : "+energizer.showY);
 				f=false;
 				return true;
@@ -508,6 +521,20 @@ public class PhysicsThread extends ThreadPerso {
 			int positionX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
 			int positionY= pacDots.getSpriteNb(i).getCurrentPosition().getY();
 			if(pacMan.getCurrentPosition().getX()<=positionX+(13/2) && pacMan.getCurrentPosition().getX()>= positionX-(13/2)  && pacMan.getCurrentPosition().getY()<=positionY+(12/2) && pacMan.getCurrentPosition().getY()>= positionY-(12/2) )  {
+				if (!soundMute) {
+					soundTh = new SoundThread("soundTh");
+					if(soundTh != null) {
+						synchronized(soundTh) {
+								try {
+									soundTh.playAudio("chomp.wav");
+								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} // play sound
+							
+						}					
+					}
+				}
 				pacDots.showX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
 				pacDots.showY=pacDots.getSpriteNb(i).getCurrentPosition().getY();
 				pacDots.removeSpriteNb(i);
@@ -523,6 +550,21 @@ public class PhysicsThread extends ThreadPerso {
 			int positionX=energizer.getSpriteNb(i).getCurrentPosition().getX();
 			int positionY= energizer.getSpriteNb(i).getCurrentPosition().getY();
 			if(pacMan.getCurrentPosition().getX()<=positionX+(13/2) && pacMan.getCurrentPosition().getX()>= positionX-(13/2)  && pacMan.getCurrentPosition().getY()<=positionY+(12/2) && pacMan.getCurrentPosition().getY()>= positionY-(12/2) )  {
+				if (!soundMute) {
+					soundTh = new SoundThread("soundTh");
+					if(soundTh != null) {
+						synchronized(soundTh) {
+								try {
+									soundTh.playAudio("chomp.wav");
+								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} // play sound
+							
+						}					
+					}
+					
+				}
 				energizer.showX=energizer.getSpriteNb(i).getCurrentPosition().getX();
 				energizer.showY=energizer.getSpriteNb(i).getCurrentPosition().getY();
 				energizer.removeSpriteNb(i);
@@ -543,12 +585,31 @@ public class PhysicsThread extends ThreadPerso {
 				int ghost_down = ghost.getCurrentPosition().getY() + ghost.getCurrentSize().height;		
 			
 				if( pacman_left < ghost_right && pacman_right > ghost_left && pacman_down > ghost_up && pacman_up < ghost_down ) {
-					return true;
+					if (!soundMute) {
+						soundTh = new SoundThread("soundTh");
+						if(soundTh != null) {
+							synchronized(soundTh) {
+									try {
+										soundTh.playAudio("death.wav");
+									} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									} // play sound
+								
+							}					
+						}
+
+					}
+										return true;
 				}
 				return false;
 			}			
 		}
 		return false;
+	}
+	
+	public static void setSoundMute(boolean Mute) {
+		soundMute = Mute;
 	}
 	
 

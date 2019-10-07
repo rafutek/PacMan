@@ -7,7 +7,10 @@ import javax.swing.*;
 import main.Main;
 import threads.CheckPageThread;
 import threads.LayoutManagerThread;
+import threads.MusicThread;
+import threads.PhysicsThread;
 import threads.RenderThread;
+import threads.SoundThread;
 
 import java.awt.*; 
 import java.awt.event.*;
@@ -30,7 +33,6 @@ public class GameFrame extends JFrame implements WindowListener
 	private static AudioMenuPanel audioMenuPanel;
 	private StatusBarPanel statusBarPanel;
 	private JPanel leftPanel, rightPanel;
-	private JLabel direction;
 	private JLabel statut;
 	
 	private static String page = "PrincipalMenu";
@@ -39,10 +41,12 @@ public class GameFrame extends JFrame implements WindowListener
 	public RenderThread renderTh;
 	private LayoutManagerThread layoutTh;
 	private CheckPageThread checkPageThread;
+	private MusicThread musicTh;
 	
 	private int statutMenu = 0;
 	
 	private boolean gamePaused = false;
+	private boolean gameMute = false;
 
 	public GameFrame(int period)
 	{ 
@@ -63,7 +67,7 @@ public class GameFrame extends JFrame implements WindowListener
 		readyForFullScreen();
 		readyForArrowsEvents();
 		readyForPause();
-
+		readyForMute();
 	}  
 	
 	
@@ -202,9 +206,11 @@ public class GameFrame extends JFrame implements WindowListener
 		super.addNotify();   // creates the peer
 		layoutTh = new LayoutManagerThread(this);
 		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
+		musicTh = new MusicThread("musicTh");
 		//checkPageThread = new CheckPageThread("CheckPageThread");
 		layoutTh.startThread();
-		renderTh.startThread();	
+		renderTh.startThread();
+		musicTh.startThread();
 		//checkPageThread.startThread();
 	}
 	
@@ -242,7 +248,7 @@ public class GameFrame extends JFrame implements WindowListener
 				// listen for f to go on full screen or normal sized window
 				if (keyCode == KeyEvent.VK_F) {
 					if(!fullScreen) {
-						fullScreen = true;				
+						fullScreen = true;
 						setExtendedState(JFrame.MAXIMIZED_BOTH);
 					}
 					else {
@@ -264,35 +270,22 @@ public class GameFrame extends JFrame implements WindowListener
 				// listen for arrows events
 				if (keyCode == KeyEvent.VK_LEFT) {
 					synchronized(renderTh) {
-						renderTh.getPacMan().wantToGoLeft();
-						direction = statusBarPanel.getDirection();
-						direction.setText("LEFT");
-						statusBarPanel.setDirection(direction);
-						
+						renderTh.getPacMan().wantToGoLeft();						
 					}
 				}
 				else if(keyCode == KeyEvent.VK_RIGHT){
 					synchronized(renderTh) {
 						renderTh.getPacMan().wantToGoRight();
-						direction = statusBarPanel.getDirection();
-						direction.setText("RIGHT");
-						statusBarPanel.setDirection(direction);
 					}
 				}
 				else if(keyCode == KeyEvent.VK_UP){
 					synchronized(renderTh) {
 						renderTh.getPacMan().wantToGoUp();
-						direction = statusBarPanel.getDirection();
-						direction.setText("UP");
-						statusBarPanel.setDirection(direction);
 					}
 				}
 				else if(keyCode == KeyEvent.VK_DOWN){
 					synchronized(renderTh) {
 						renderTh.getPacMan().wantToGoDown();
-						direction = statusBarPanel.getDirection();
-						direction.setText("DOWN");
-						statusBarPanel.setDirection(direction);
 					}
 				}
 				}
@@ -316,9 +309,6 @@ public class GameFrame extends JFrame implements WindowListener
 						synchronized (renderTh) {
 							renderTh.pauseThread();
 						}
-						direction = statusBarPanel.getDirection();
-						direction.setText("STOP");
-						statusBarPanel.setDirection(direction);
 						statut = statusBarPanel.getStatut();
 						statut.setText("Paused");
 						statusBarPanel.setStatut(statut);
@@ -334,6 +324,36 @@ public class GameFrame extends JFrame implements WindowListener
 						statusBarPanel.setStatut(statut);
 					}
 				}
+			}
+		});
+	}
+	
+	private void readyForMute() {
+		addKeyListener( new KeyAdapter() {
+			public void keyPressed(KeyEvent e)
+			{ 
+				int keyCode = e.getKeyCode();
+				
+				// listen for arrows events
+				if (keyCode == KeyEvent.VK_M) {
+					if(!gameMute) {
+						System.out.println("Sound mute");
+						gameMute = true;
+						synchronized (musicTh) {
+							musicTh.setMute(true);
+							PhysicsThread.setSoundMute(true);
+						}
+						
+					}
+					else if(gameMute) {
+						System.out.println("Sound on");
+						gameMute = false;
+						synchronized (musicTh) {
+							musicTh.setMute(false);
+							PhysicsThread.setSoundMute(false);
+						}
+					}
+				} 
 			}
 		});
 	}
@@ -366,6 +386,12 @@ public class GameFrame extends JFrame implements WindowListener
 		synchronized (layoutTh){
 			layoutTh.resumeThread();
 		}
+		if (!gameMute) {
+			synchronized (musicTh){
+				musicTh.setMute(false);
+			}
+		}
+		
 		}
 	}
 	
@@ -378,6 +404,12 @@ public class GameFrame extends JFrame implements WindowListener
 		}
 		synchronized (layoutTh){
 			layoutTh.pauseThread();
+		}
+		
+		if (!gameMute) {
+			synchronized (musicTh){
+				musicTh.setMute(true);
+			}
 		}
 		}
 	}

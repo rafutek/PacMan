@@ -336,6 +336,8 @@ public class RenderThread extends ThreadPerso{
 		synchronized(inky) {
 			inky.updatePos();
 		}
+		
+		statusBarPanel.getDirection().setText(pacMan.getState().toString());
 	}
 
 	/**
@@ -474,7 +476,7 @@ public class RenderThread extends ThreadPerso{
 			prevStatsTime = timeNow;
 			statsInterval = 0L;   // reset
 			JLabel f= statusBarPanel.getFps();
-			f.setText(Double.toString(averageFPS));
+			f.setText(Integer.toString((int)averageFPS));
 			statusBarPanel.setFps(f);
 		}
 	}  // end of storeStats()
