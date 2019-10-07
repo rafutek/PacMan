@@ -251,6 +251,7 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 				if(getCoordY()==520) {
 					//add up music event
 					System.out.println("music up");
+					gf.setMusicVolumeUp();
 				}
 			}
 			else if(getCoordX()==270) {
@@ -272,6 +273,7 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 				if(getCoordY()==520) {
 					//add up music event
 					System.out.println("music down");
+					gf.setMusicVolumeDown();
 				}
 			}else{
 				System.out.println("start principal menu");	
