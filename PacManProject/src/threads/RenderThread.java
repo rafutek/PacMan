@@ -95,8 +95,6 @@ public class RenderThread extends ThreadPerso{
 	//animations
 	private AnimationThread animationTh;
 	private ThreeTwoOneThread threeTwoOneTh;
-	
-	
 
 	//physics
 	private PhysicsThread physicsTh;
@@ -134,7 +132,6 @@ public class RenderThread extends ThreadPerso{
 		pinky = maze.getPinky();
 		clyde = maze.getClyde();
 		inky = maze.getInky();
-		
 		
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
 		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers );

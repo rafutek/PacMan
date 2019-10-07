@@ -35,6 +35,8 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 	public JLabel goBack;
 	private int coordX=70;
 	private int coordY= 200;
+	private int xup = 0;
+	private int xdown = 0;
 	
 	private CheckPageThread checkPageThread;
 	private GameFrame gf;
@@ -240,7 +242,8 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 				if(getCoordY()==260) {
 					//add up audio event
 					System.out.println("audio up");
-					gf.setVolumeUp();
+					xup++;
+					gf.setVolumeUp(xup);
 					
 				}
 				if(getCoordY()==450) {
@@ -263,7 +266,8 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 				if(getCoordY()==260) {
 					//add up audio event
 					System.out.println("audio down");
-					gf.setVolumeDown();
+					xdown++;
+					gf.setVolumeDown(xdown);
 				}
 				if(getCoordY()==450) {
 					//add on music event
@@ -276,6 +280,8 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 					gf.setMusicVolumeDown();
 				}
 			}else{
+				xup = 0;
+				xdown =0;
 				System.out.println("start principal menu");	
 				Main.getGlobalFrame().setPage("PrincipalMenu");
 				System.out.println(Main.getGlobalFrame().getPage());

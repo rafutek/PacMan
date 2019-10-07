@@ -44,6 +44,7 @@ public class GameFrame extends JFrame implements WindowListener
 	
 	private boolean gamePaused = false;
 	private boolean gameMute = false;
+	private int n =1;
 
 	public GameFrame(int period)
 	{ 
@@ -433,20 +434,22 @@ public class GameFrame extends JFrame implements WindowListener
 		setSoundMute(b);
 	}
 	
-	public void setVolumeUp() {
-		
+	public void setVolumeUp(int x) {
+		setMusicVolumeUp();
+		PhysicsThread.setVUp(x);
 	}
 	
-	public void setVolumeDown() {
-		
+	public void setVolumeDown(int x) {
+		setMusicVolumeDown();
+		PhysicsThread.setVDown(x);
 	}
 	
 	public void setMusicVolumeUp() {
-		musicTh.volumeUp();
+		musicTh.volumeUp(0);
 	}
 	
 	public void setMusicVolumeDown() {
-		musicTh.volumeDown();
+		musicTh.volumeDown(0);
 	}
 
 
