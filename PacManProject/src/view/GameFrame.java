@@ -4,6 +4,7 @@ package view;
 import javax.swing.*;
 
 import threads.LayoutManagerThread;
+import threads.PhysicsThread;
 import threads.RenderThread;
 
 import java.awt.*;
@@ -25,9 +26,7 @@ public class GameFrame extends JFrame implements WindowListener
 	private StatusBarPanel statusBarPanel;
 	private JPanel leftPanel, rightPanel;
 	private JLabel direction;
-	private JLabel statut;
-	
-	
+	private JLabel statut;	
 	private boolean fullScreen = false;
 	public RenderThread renderTh;
 	private LayoutManagerThread layoutTh;
@@ -97,13 +96,14 @@ public class GameFrame extends JFrame implements WindowListener
 		
 		rightPanel = new JPanel();
 		rightPanel.setBackground(Color.darkGray);	
-		
 
-		
 		add(gamePanel);
 		add(statusBarPanel);
 		add(leftPanel);
 		add(rightPanel);
+		
+		
+		
 
 		setPreferredSize(new Dimension(windowWidth, windowHeight)); // set window size
 		

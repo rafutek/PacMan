@@ -18,7 +18,7 @@ import sprites.PacMan;
 public class StatusBarPanel extends JPanel {
 	PacMan pacman;
 	Resources rsc = new Resources();
-	static Tiles t;
+	public static Tiles t;
 	private static final long serialVersionUID = 1L;
 	public Integer s = 0;
 	GridLayout g ;
@@ -48,7 +48,7 @@ public class StatusBarPanel extends JPanel {
 		add(Top);
 		add(Bottom);
 	}
-	public void chargerPanelGameOver() {
+	public BufferedImage chargerPanelGameOver() {
 		gameover= new JLabel();
 		BufferedImage g = t.getTileNumber(45);
 		BufferedImage ga = t.joinToRight(g , t.getTileNumber(39));
@@ -60,8 +60,12 @@ public class StatusBarPanel extends JPanel {
 		BufferedImage game_ove = t.joinToRight(game_ov ,t.getTileNumber(43));
 		gameOver = t.joinToRight(game_ove ,t.getTileNumber(56));
 		gameOver = t.resize(Lives, new Dimension(72,18));
-		gameover.setIcon(new ImageIcon(gameOver));
+		//gameover.setIcon(new ImageIcon(gameOver));
+		return gameOver;
 	}
+	
+	
+	
 	
 	public void gameOverPanel() {
 		chargerPanelGameOver();

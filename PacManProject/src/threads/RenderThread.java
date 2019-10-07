@@ -16,6 +16,7 @@ import sprites.Ghost;
 import sprites.MovingSprite;
 import sprites.MovingSpriteState;
 import sprites.PacMan;
+import sprites.Position;
 import sprites.Sprites;
 import view.GamePanel;
 import view.StatusBarPanel;
@@ -96,6 +97,7 @@ public class RenderThread extends ThreadPerso{
 	//animations
 	private AnimationThread animationTh;
 	private ThreeTwoOneThread threeTwoOneTh;
+	private GameOverThread gameOverTh;
 	
 	//physics
 	private PhysicsThread physicsTh;
@@ -105,7 +107,6 @@ public class RenderThread extends ThreadPerso{
 	private GhostsExitBoxThread ghostExitThread;
 	
 	private int lastLife = 0;
-	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
 		super("Render");
 				
@@ -383,6 +384,19 @@ public class RenderThread extends ThreadPerso{
 			}
 			synchronized (inky) {
 				inky.draw(dbg);		
+			}
+			if(physicsTh.gameOver) {
+				gameOverTh = new GameOverThread(maze.getTiles(), gamePanel);
+				gameOverTh.startThread();
+				this.pauseThread();
+				do {
+					try {
+					Thread.sleep(100);
+					} catch (InterruptedException e) {}
+				}while(gameOverTh.isRunning());
+				
+				physicsTh.gameOver=false;
+				this.resumeThread();
 			}
 			
 			if(pacMan.getLife()!=lastLife) {

@@ -37,6 +37,7 @@ public class PhysicsThread extends ThreadPerso {
 	private boolean ScoreBonus=false;
 	private boolean collisionDone=true;
 	public static boolean timerstarted=false;
+	public static boolean gameOver=false;
 	/**
 	 * The class needs the maze number matrix, the game panel size and of course the moving sprites,
 	 * in order to locate them in the matrix.
@@ -373,9 +374,9 @@ public class PhysicsThread extends ThreadPerso {
 			if(pacMan.getLife()!=0 && pacMan.getLife()<=4) {
 				int life=pacMan.getLife()-1;
 				pacMan.setLife(life);
-
 				if(life==0) {
 					System.out.println("GAMEOVER");
+					gameOver=true;
 				}
 			}
 		}
@@ -383,7 +384,6 @@ public class PhysicsThread extends ThreadPerso {
 		if(energizerCollision()) {
 			
 		}
-		
 		if(score>=10000 && !ScoreBonus && pacMan.getLife()==3) {
 			pacMan.setLife(4);
 			StatusBarPanel.setImageLives(4);
