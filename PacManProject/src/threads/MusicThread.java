@@ -10,7 +10,7 @@ public class MusicThread extends AudioThread{
 	
 	private static boolean invincible = false;
 	private boolean invincibleIsPlaying = false;
-	private int vol = 1;
+	private float vol = 1;
 
 	
 	public MusicThread(String threadName) {
@@ -69,11 +69,11 @@ public class MusicThread extends AudioThread{
 		
 	}
 	
-	public static void setInvincibility(boolean b) {
+	public synchronized static void setInvincibility(boolean b) {
 		invincible = b;
 	}
 	
-	public void InvinsibilityIsPlaying() {
+	public synchronized void InvinsibilityIsPlaying() {
 		if(!invincibleIsPlaying) {
 			audioClip.stop();
 			audioClip.close();
@@ -83,7 +83,7 @@ public class MusicThread extends AudioThread{
 	}
 
 	@Override
-	public void volumeUp(int x) {
+	public synchronized void volumeUp(int x) {
 		// TODO Auto-generated method stub
 		if(!mute) {
 			if(vol <= 0.9) {
@@ -95,10 +95,10 @@ public class MusicThread extends AudioThread{
 	}
 
 	@Override
-	public void volumeDown(int x) {
+	public synchronized void volumeDown(int x) {
 		// TODO Auto-generated method stub
 		if(!mute) {
-			if(vol <= 0.9) {
+			if(vol >= 0.1) {
 				vol -= 0.1;
 			}
 			System.out.println("Volume: " + vol);	

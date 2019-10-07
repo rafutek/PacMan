@@ -16,7 +16,7 @@ public class SoundThread extends AudioThread {
 	}
 	
 	@Override
-	public void volumeUp(int x) {
+	public synchronized void volumeUp(int x) {
 		if(!mute) {
 			for (int i=1;i<=x;i++) {
 				if(vol <= 0.9) {
@@ -29,7 +29,7 @@ public class SoundThread extends AudioThread {
 	}
 	
 	@Override
-	public void volumeDown(int x) {
+	public synchronized void volumeDown(int x) {
 		if(!mute) {
 				if(vol >= x*0.1) {
 					vol = (float) (vol -x*0.1);

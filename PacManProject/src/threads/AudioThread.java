@@ -116,7 +116,7 @@ public abstract class AudioThread extends ThreadPerso{
 	 
 	protected abstract void volumeDown(int x);
 	
-	protected void setVolume(float volume)
+	protected synchronized void setVolume(float volume)
 	{
 		if (audioClip != null) {
 			if (audioClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {

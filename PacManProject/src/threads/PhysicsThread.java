@@ -610,16 +610,16 @@ public class PhysicsThread extends ThreadPerso {
 		}
 	}
 	
-	public static void setSoundMute(boolean Mute) {
+	public synchronized static void setSoundMute(boolean Mute) {
 		soundMute = Mute;
 	}
 	
-	public static void setVUp(int x) {
+	public synchronized static void setVUp(int x) {
 		soundUp = true;
 		n = x;
 	}
 	
-	public static void setVDown(int x) {
+	public synchronized static void setVDown(int x) {
 		soundDown = true;
 		System.out.println("x setVDown ="+x);
 		n = x;
