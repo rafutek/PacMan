@@ -15,6 +15,7 @@ import sprites.Ghost;
 import sprites.MovingSprite;
 import sprites.PacMan;
 import sprites.Sprites;
+import view.GameFrame;
 import view.GamePanel;
 import view.StatusBarPanel;
 
@@ -94,7 +95,7 @@ public class RenderThread extends ThreadPerso{
 	//animations
 	private AnimationThread animationTh;
 	private ThreeTwoOneThread threeTwoOneTh;
-	
+
 	//physics
 	private PhysicsThread physicsTh;
 	private boolean animationDone = false;
@@ -131,7 +132,6 @@ public class RenderThread extends ThreadPerso{
 		pinky = maze.getPinky();
 		clyde = maze.getClyde();
 		inky = maze.getInky();
-		
 		
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
 		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers );
@@ -271,7 +271,7 @@ public class RenderThread extends ThreadPerso{
 //			}while(threeTwoOneTh.isRunning());
 //			
 //			animationDone = true;
-			
+			if(GameFrame.getPage()=="Game") {
 			initStats = false;
 			paused = false;
 			if(!animationTh.isRunning()) {
@@ -290,7 +290,8 @@ public class RenderThread extends ThreadPerso{
 				ghostExitThread.startThread();
 			}else {
 				ghostExitThread.resumeThread();
-			}			
+			}	
+			}
 		}
 
 	}
@@ -393,7 +394,7 @@ public class RenderThread extends ThreadPerso{
 	 */
 	private void paintScreen()
 	// use active rendering to put the buffered image on-screen
-	{ 
+	{ if(GameFrame.getPage()=="Game") {
 		Graphics g;
 		try {
 			g = gamePanel.getGraphics();
@@ -402,8 +403,10 @@ public class RenderThread extends ThreadPerso{
 			Toolkit.getDefaultToolkit().sync();  // sync the display on some systems
 			g.dispose();
 		}
+		
 		catch (Exception e)
 		{ System.out.println("Graphics error: " + e);  }
+	}
 	}
 
 
@@ -483,6 +486,37 @@ public class RenderThread extends ThreadPerso{
 		System.out.println("Average UPS: " + df.format(averageUPS));
 		System.out.println("Time Spent: " + timeSpentInGame + " secs");
 	}  // end of printStats()
+	public AnimationThread getAnimationTh() {
+		return animationTh;
+	}
+
+	public void setAnimationTh(AnimationThread animationTh) {
+		this.animationTh = animationTh;
+	}
+
+	public ThreeTwoOneThread getThreeTwoOneTh() {
+		return threeTwoOneTh;
+	}
+
+	public void setThreeTwoOneTh(ThreeTwoOneThread threeTwoOneTh) {
+		this.threeTwoOneTh = threeTwoOneTh;
+	}
+
+	public PhysicsThread getPhysicsTh() {
+		return physicsTh;
+	}
+
+	public void setPhysicsTh(PhysicsThread physicsTh) {
+		this.physicsTh = physicsTh;
+	}
+
+	public GhostsExitBoxThread getGhostExitThread() {
+		return ghostExitThread;
+	}
+
+	public void setGhostExitThread(GhostsExitBoxThread ghostExitThread) {
+		this.ghostExitThread = ghostExitThread;
+	}
 
 
 

@@ -1,18 +1,19 @@
-package view;
+package view; 
 
 
 import javax.swing.*;
 
+
+import main.Main;
+import threads.CheckPageThread;
 import threads.LayoutManagerThread;
 import threads.MusicThread;
 import threads.PhysicsThread;
 import threads.RenderThread;
-import threads.SoundThread;
-
-import java.awt.*;
+import java.awt.*; 
 import java.awt.event.*;
 
-
+ 
 public class GameFrame extends JFrame implements WindowListener
 {
 
@@ -23,20 +24,27 @@ public class GameFrame extends JFrame implements WindowListener
 	private int windowWidth = 620;   
 	private int windowHeight = 700; 
 	
-	private GridBagLayout gridbag;
-	private GamePanel gamePanel;
+	private static GridBagLayout gridbag;
+	private static GamePanel gamePanel;
+	private static PrincipalMenuPanel principalMenuPanel;
+	private static ControlsMenuPanel controlsMenuPanel;
+	private static AudioMenuPanel audioMenuPanel;
 	private StatusBarPanel statusBarPanel;
 	private JPanel leftPanel, rightPanel;
 	private JLabel statut;
 	
+	private static String page = "PrincipalMenu";
 	
 	private boolean fullScreen = false;
 	public RenderThread renderTh;
 	private LayoutManagerThread layoutTh;
 	private MusicThread musicTh;
 	
+	private int statutMenu = 0;
+	
 	private boolean gamePaused = false;
 	private boolean gameMute = false;
+	private int n =1;
 
 	public GameFrame(int period)
 	{ 
@@ -45,6 +53,7 @@ public class GameFrame extends JFrame implements WindowListener
 		
 		makeGUI();
 		addWindowListener(this);
+		
 
 		pack();
 		setResizable(true);
@@ -65,7 +74,7 @@ public class GameFrame extends JFrame implements WindowListener
 	}
 
 
-	public synchronized GamePanel getGamePanel() {
+	public synchronized static GamePanel getGamePanel() {
 		return gamePanel;
 	}
 
@@ -84,32 +93,102 @@ public class GameFrame extends JFrame implements WindowListener
 		return rightPanel;
 	}
 	
+	public static PrincipalMenuPanel getPrincipalMenuPanel() {
+		return principalMenuPanel;
+	}
+
+
+	public static ControlsMenuPanel getControlsMenuPanel() {
+		return controlsMenuPanel;
+	}
+
+
+	public static void setControlsMenuPanel(ControlsMenuPanel controlsMenuPanel) {
+		GameFrame.controlsMenuPanel = controlsMenuPanel;
+	}
+
+
+	public static AudioMenuPanel getAudioMenuPanel() {
+		return audioMenuPanel;
+	}
+
+
+	public static void setAudioMenuPanel(AudioMenuPanel audioMenuPanel) {
+		GameFrame.audioMenuPanel = audioMenuPanel;
+	}
+
+
+	public void setPrincipalMenuPanel(PrincipalMenuPanel principalMenuPanel) {
+		this.principalMenuPanel = principalMenuPanel;
+	}
+	
+
+	public static String getPage() {
+		return page;
+	}
+
+
+	public static void setPage(String page4) {
+		page = page4;
+	}
+
+
+
+	
 
 	/**
 	 * Create game and status bar panels, and the rendering thread
 	 * @param period
 	 */
-	private void makeGUI()
+	public void makeGUI()
 	{
 		gridbag = new GridBagLayout();
 		setLayout(gridbag);
-		
+		principalMenuPanel = new PrincipalMenuPanel();
+		controlsMenuPanel = new ControlsMenuPanel();
+		audioMenuPanel = new AudioMenuPanel(this);
 		gamePanel = new GamePanel();
-		statusBarPanel = new StatusBarPanel();
-		
+		statusBarPanel = new StatusBarPanel();	
 		leftPanel = new JPanel();
-		leftPanel.setBackground(Color.CYAN);
+		leftPanel.setBackground(Color.BLACK);
 		
 		rightPanel = new JPanel();
-		rightPanel.setBackground(Color.darkGray);	
+		rightPanel.setBackground(Color.BLACK);	
 		
 
 		
-		add(gamePanel);
-		add(statusBarPanel);
-		add(leftPanel);
-		add(rightPanel);
-
+			if(Main.getGlobalFrame().getPage()=="PrincipalMenu") {
+				principalMenuPanel.setVisible(true);
+				System.out.println("......................... menu is Visible.................");
+				add(principalMenuPanel);
+				addKeyListener(principalMenuPanel);
+			} else {
+				Main.getGlobalFrame();
+				if(GameFrame.getPage()=="Game"){
+				principalMenuPanel.setVisible(false);
+				add(gamePanel);
+				gamePanel.setVisible(true);
+				add(statusBarPanel);
+				statusBarPanel.setVisible(true);
+				add(leftPanel);
+				leftPanel.setVisible(true);
+				add(rightPanel);
+				rightPanel.setVisible(true);
+				//addKeyListener(arg0);
+				}
+			}
+			add(controlsMenuPanel);
+			controlsMenuPanel.setVisible(false);
+			add(audioMenuPanel);
+			audioMenuPanel.setVisible(false);
+			add(gamePanel);
+			gamePanel.setVisible(false);
+			add(statusBarPanel);
+			statusBarPanel.setVisible(false);
+			add(leftPanel);
+			leftPanel.setVisible(false);
+			add(rightPanel);
+			rightPanel.setVisible(false);
 		setPreferredSize(new Dimension(windowWidth, windowHeight)); // set window size
 		
 	} 
@@ -121,15 +200,16 @@ public class GameFrame extends JFrame implements WindowListener
 	 */
 	public void addNotify()
 	{ 
+		
 		super.addNotify();   // creates the peer
 		layoutTh = new LayoutManagerThread(this);
 		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
 		musicTh = new MusicThread("musicTh");
-		
-		
+		//checkPageThread = new CheckPageThread("CheckPageThread");
 		layoutTh.startThread();
 		renderTh.startThread();
 		musicTh.startThread();
+		//checkPageThread.startThread();
 	}
 	
 	private void readyForTermination()
@@ -141,11 +221,16 @@ public class GameFrame extends JFrame implements WindowListener
 				
 				// listen for esc, q, end, ctrl-c on the canvas to
 				// allow a convenient exit from the full screen configuration
-				if ((keyCode == KeyEvent.VK_ESCAPE) || (keyCode == KeyEvent.VK_Q) ||
+				if ((keyCode == KeyEvent.VK_Q) ||
 						(keyCode == KeyEvent.VK_END) ||
 						((keyCode == KeyEvent.VK_C) && e.isControlDown()) ) {
 					closeGame();
-				}
+				}if(keyCode == KeyEvent.VK_ESCAPE) {
+						page="PrincipalMenu";
+						statutMenu = 1;
+						new CheckPageThread("CheckPageThread");	
+					}
+				
 			}
 		});
 	} 
@@ -173,10 +258,11 @@ public class GameFrame extends JFrame implements WindowListener
 		});
 	}
 	
-	private void readyForArrowsEvents() {
+	public void readyForArrowsEvents() {
 		addKeyListener( new KeyAdapter() {
 			public void keyPressed(KeyEvent e)
 			{ 
+				if(page=="Game") {
 				int keyCode = e.getKeyCode();
 				
 				// listen for arrows events
@@ -200,6 +286,7 @@ public class GameFrame extends JFrame implements WindowListener
 						renderTh.getPacMan().wantToGoDown();
 					}
 				}
+				}
 				
 			}
 		});
@@ -214,6 +301,7 @@ public class GameFrame extends JFrame implements WindowListener
 				// listen for arrows events
 				if (keyCode == KeyEvent.VK_P) {
 					if(!gamePaused) {
+						statutMenu = 1;
 						System.out.println("Game paused");
 						gamePaused = true;
 						synchronized (renderTh) {
@@ -249,19 +337,13 @@ public class GameFrame extends JFrame implements WindowListener
 					if(!gameMute) {
 						System.out.println("Sound mute");
 						gameMute = true;
-						synchronized (musicTh) {
-							musicTh.setMute(true);
-							PhysicsThread.setSoundMute(true);
-						}
+						setAllSoundsMute(true);
 						
 					}
 					else if(gameMute) {
 						System.out.println("Sound on");
 						gameMute = false;
-						synchronized (musicTh) {
-							musicTh.setMute(false);
-							PhysicsThread.setSoundMute(false);
-						}
+						setAllSoundsMute(false);
 					}
 				} 
 			}
@@ -289,34 +371,28 @@ public class GameFrame extends JFrame implements WindowListener
 	public void windowActivated(WindowEvent e) 
 	{ 
 		System.out.println("window activated");
+		if(page=="Game") {
 		synchronized (renderTh){
 			renderTh.resumeThread();
 		}
 		synchronized (layoutTh){
 			layoutTh.resumeThread();
 		}
-		if (!gameMute) {
-			synchronized (musicTh){
-				musicTh.setMute(false);
-			}
+		setAllSoundsMute(false);
 		}
-		
 	}
 	
 	public void windowDeactivated(WindowEvent e) 
 	{  
 		System.out.println("window deactivated");
+		if(page=="Game") {
 		synchronized (renderTh){
 			renderTh.pauseThread();
 		}
 		synchronized (layoutTh){
 			layoutTh.pauseThread();
 		}
-		
-		if (!gameMute) {
-			synchronized (musicTh){
-				musicTh.setMute(true);
-			}
+		setAllSoundsMute(true);
 		}
 	}
 	
@@ -333,9 +409,54 @@ public class GameFrame extends JFrame implements WindowListener
 	}
 	
 	public void windowClosed(WindowEvent e) {}
+	
+	public int getStatutMenu() {
+		return statutMenu;
+	}
 
+
+	public void setStatutMenu(int statutMenu) {
+		this.statutMenu = statutMenu;
+	}
+	
+	public void setMusicMute(boolean b) {
+		synchronized (musicTh){
+				musicTh.setMute(b);
+			}
+	}
+	
+	public void setSoundMute(boolean b) {
+		PhysicsThread.setSoundMute(b);
+	}
+	
+	public void setAllSoundsMute(boolean b) {
+		setMusicMute(b);
+		setSoundMute(b);
+	}
+	
+	public void setVolumeUp(int x) {
+		setMusicVolumeUp();
+		PhysicsThread.setVUp(x);
+	}
+	
+	public void setVolumeDown(int x) {
+		setMusicVolumeDown();
+		PhysicsThread.setVDown(x);
+	}
+	
+	public void setMusicVolumeUp() {
+		musicTh.volumeUp(0);
+	}
+	
+	public void setMusicVolumeDown() {
+		musicTh.volumeDown(0);
+	}
+
+
+	
 	
 	
 
 
 } 
+
