@@ -227,7 +227,7 @@ public class GameFrame extends JFrame implements WindowListener
 				}if(keyCode == KeyEvent.VK_ESCAPE) {
 						page="PrincipalMenu";
 						statutMenu = 1;
-						checkPageThread= new CheckPageThread("CheckPageThread");	
+						new CheckPageThread("CheckPageThread");	
 					}
 				
 			}
@@ -431,6 +431,22 @@ public class GameFrame extends JFrame implements WindowListener
 	public void setAllSoundsMute(boolean b) {
 		setMusicMute(b);
 		setSoundMute(b);
+	}
+	
+	public void setVolumeUp() {
+		
+	}
+	
+	public void setVolumeDown() {
+		
+	}
+	
+	public void setMusicVolumeUp() {
+		musicTh.volumeUp();
+	}
+	
+	public void setMusicVolumeDown() {
+		musicTh.volumeDown();
 	}
 
 

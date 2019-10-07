@@ -612,6 +612,13 @@ public class PhysicsThread extends ThreadPerso {
 		soundMute = Mute;
 	}
 	
+	private void setVolumeUp(SoundThread soundth) {
+		soundth.volumeUp();
+	}
+	
+	private void setVolumeDown(SoundThread soundth) {
+		soundth.volumeDown();
+	}	
 
 	
 }

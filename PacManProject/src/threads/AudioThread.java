@@ -117,7 +117,8 @@ public abstract class AudioThread extends ThreadPerso{
 			if(vol <= 0.9) {
 				vol += 0.1;
 			}
-			System.out.println("Volume: " + vol);			
+			System.out.println("Volume: " + vol);	
+			setVolume(vol);
 		}
 	}
 	 
@@ -126,7 +127,8 @@ public abstract class AudioThread extends ThreadPerso{
 			if(vol >= 0.1) {
 				vol -= 0.1;
 			}
-			System.out.println("Volume: " + vol);			
+			System.out.println("Volume: " + vol);
+			setVolume(vol);
 		}
 	}
 	
