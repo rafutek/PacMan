@@ -7,14 +7,39 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class SoundThread extends AudioThread {
 	
-
+	private float vol = 1;
 	
 
 	public SoundThread(String threadName) {
 		super(threadName);
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	@Override
+	public void volumeUp(int x) {
+		if(!mute) {
+			for (int i=1;i<=x;i++) {
+				if(vol <= 0.9) {
+					vol += 0.1;
+				}
+				System.out.println("Volume: " + vol);	
+				setVolume(vol);
+			}
+		}
+	}
+	
+	@Override
+	public void volumeDown(int x) {
+		if(!mute) {
+				if(vol >= x*0.1) {
+					vol = (float) (vol -x*0.1);
+				}
+				System.out.println("Volume: " + vol);	
+				setVolume(vol);
+			}
+		}
+	
+	
 	@Override
 	protected void settings() {
 		// TODO Auto-generated method stub

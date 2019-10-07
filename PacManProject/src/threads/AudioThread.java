@@ -27,7 +27,7 @@ public abstract class AudioThread extends ThreadPerso{
 	protected boolean isPlaying;
 	private float vol = 1;
 	private float volBefore = vol;
-	private boolean mute = false;
+	protected boolean mute = false;
 	
 	
 	public AudioThread(String threadName) {
@@ -112,27 +112,11 @@ public abstract class AudioThread extends ThreadPerso{
 		}
 	}	 
 	 
-	public synchronized void volumeUp() {
-		if(!mute) {
-			if(vol <= 0.9) {
-				vol += 0.1;
-			}
-			System.out.println("Volume: " + vol);	
-			setVolume(vol);
-		}
-	}
+	protected abstract void volumeUp(int x);
 	 
-	public synchronized void volumeDown() {
-		if(!mute) {
-			if(vol >= 0.1) {
-				vol -= 0.1;
-			}
-			System.out.println("Volume: " + vol);
-			setVolume(vol);
-		}
-	}
+	protected abstract void volumeDown(int x);
 	
-	private void setVolume(float volume)
+	protected void setVolume(float volume)
 	{
 		if (audioClip != null) {
 			if (audioClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
