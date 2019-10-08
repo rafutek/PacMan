@@ -234,18 +234,22 @@ public abstract class Ghost extends MovingSprite {
 		
 		if (ghostMatrixPos.getY() == matrixPos.getY()) {
 			if(ghostMatrixPos.getX() < matrixPos.getX()) {
-				setState(MovingSpriteState.RIGHT);
+				wantToGoRight();
+				setState(getWantedState());
 			}
 			else {
-				setState(MovingSpriteState.LEFT);
+				wantToGoLeft();
+				setState(getWantedState());
 			}
 		}
 		else if(ghostMatrixPos.getX() == matrixPos.getX()) {
 			if(ghostMatrixPos.getY() < matrixPos.getY()) {
-				setState(MovingSpriteState.DOWN);
+				wantToGoDown();
+				setState(getWantedState());
 			}
 			else {
-				setState(MovingSpriteState.UP);
+				wantToGoUp();
+				setState(getWantedState());
 			}
 		}
 	}
@@ -261,21 +265,17 @@ public abstract class Ghost extends MovingSprite {
 		if (ghostMatrixPos.getY() == matrixPos.getY()) {
 			if(ghostMatrixPos.getX() < matrixPos.getX()) {
 				wantToGoLeft();
-				//setState(MovingSpriteState.LEFT);
 			}
 			else {
 				wantToGoRight();
-				//setState(MovingSpriteState.RIGHT);
 			}
 		}
 		else if(ghostMatrixPos.getX() == matrixPos.getX()) {
 			if(ghostMatrixPos.getY() < matrixPos.getY()) {
 				wantToGoUp();
-				//setState(MovingSpriteState.UP);
 			}
 			else {
 				wantToGoDown();
-				//setState(MovingSpriteState.DOWN);
 			}
 		}
 	}
