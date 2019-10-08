@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 
 import resources.Tiles;
 import threads.GhostBehaviorThread;
-import threads.PhysicsThread;
 
 public class Inky extends Ghost {
 
@@ -16,13 +15,14 @@ public class Inky extends Ghost {
 	}
 	
 
+
 	@Override
-	public void chooseTilesNumbers() {
+	protected void chooseSpecificGhostTiles() {
 		for (int tile_nb = 289; tile_nb < 321; tile_nb++) {
 			tilesNumbers.add(tile_nb); // add inky tiles numbers
 		}
-
 	}
+
 	
 	@Override
 	protected void chooseInitialAnimation() {
@@ -64,15 +64,18 @@ public class Inky extends Ghost {
 		if(ThreadLocalRandom.current().nextInt(0, 100 + 1) < 50)
 		{
 			System.out.println("inky choose to follow pac-man");
-			chooseDirectionToGoTo(lastSeenPacManMatrixPos);
+			chooseDirectionToGoTo(lastSeenPacManMatrixPos());
 			goingToLastSeenPos = true;
 		}
 		else {
 			System.out.println("inky choose to go in the opposite direction");
-			chooseDirectionToEscapeFrom(lastSeenPacManMatrixPos);
+			chooseDirectionToEscapeFrom(lastSeenPacManMatrixPos());
 			escaping = true;
 		}
 	}
+
+
+
 
 
 }

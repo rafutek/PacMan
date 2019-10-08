@@ -14,15 +14,19 @@ public class InvincibleThread extends TimerThread {
 
 	@Override
 	protected void doThatWhileWaiting() {
+		synchronized(pacMan) {
 		pacMan.setInvincible(true);
-		// TODO Auto-generated method stub
+		}
 	}
 
 	@Override
 	protected void finallyDoThat() {
+		synchronized(pacMan){
 		pacMan.setInvincible(false);
+		pacMan.setSpeed(1);
+		pacMan.setEatenFantom(0);
+		}
 		stopThread();
-		
 	}
 
 	@Override

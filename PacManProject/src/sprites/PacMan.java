@@ -17,6 +17,7 @@ public class PacMan extends MovingSprite {
 	
 	private boolean invincible = false;
 	
+	private int eatenFantom=0;
 	
 	public PacMan(Position start_position, Tiles tiles, JPanel gamePanel) {
 		super(start_position, tiles, gamePanel);
@@ -157,9 +158,20 @@ public class PacMan extends MovingSprite {
 	}
 
 
-	public void setInvincible(boolean invincible) {
+	public synchronized void setInvincible(boolean invincible) {
 		this.invincible = invincible;
-		System.out.println("PacMan est invincible");
+		this.setSpeed(2);
+		//System.out.println("PacMan est invincible");
 	}
 
+
+	public synchronized int eatenFantom() {
+		
+		return (eatenFantom);
+	}
+
+	public synchronized void setEatenFantom(int eatenFantom) {
+		this.eatenFantom=eatenFantom;
+	}
+	
 }

@@ -1,8 +1,12 @@
 package threads;
 
 import resources.Maze;
+import sprites.Blinky;
+import sprites.Clyde;
 import sprites.Ghost;
+import sprites.Inky;
 import sprites.MovingSpriteState;
+import sprites.Pinky;
 import sprites.Position;
 
 public class GhostsExitBoxThread extends TimerThread {
@@ -10,12 +14,15 @@ public class GhostsExitBoxThread extends TimerThread {
 	private static final int WAIT_TIME = 10;
 	private static final int NB_WAITS = 100; 
 	
-	private Ghost blinky, pinky, clyde, inky;
+	private Blinky blinky;
+	private Pinky pinky;
+	private Clyde clyde;
+	private Inky inky;
 	private Maze maze;
 	private  boolean ghostWantsToGoOut, blinkyWantsToGoOut, pinkyWantsToGoOut, clydeWantsToGoOut, inkyWantsToGoOut;
 	public static  boolean ghostCanGoOut, blinkyCanGoOut, pinkyCanGoOut, clydeCanGoOut, inkyCanGoOut;
 	
-	public GhostsExitBoxThread(Ghost blinky, Ghost pinky, Ghost clyde, Ghost inky, Maze maze) {
+	public GhostsExitBoxThread(Blinky blinky, Pinky pinky, Clyde clyde, Inky inky, Maze maze) {
 		super(WAIT_TIME, NB_WAITS);
 		setName("Ghosts Exit");
 		this.blinky = blinky;

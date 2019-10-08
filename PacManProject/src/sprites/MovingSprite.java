@@ -22,7 +22,7 @@ public abstract class MovingSprite extends Sprite{
 
 	protected MovingSpriteState state = MovingSpriteState.STOP; // initially stopped
 	protected MovingSpriteState wantedState = state;
-	protected int speed = 1;
+	private int speed = 1;
 	
 
 	/**
@@ -78,26 +78,26 @@ public abstract class MovingSprite extends Sprite{
 	public synchronized void updatePos() {
 		if(state != MovingSpriteState.STOP && state != MovingSpriteState.DEATH) {
 			if(state == MovingSpriteState.LEFT) {
-				if(currentPosition.getX()-speed >= 0) {
-					currentPosition.setX(currentPosition.getX()-speed);
+				if(currentPosition.getX()-speed() >= 0) {
+					currentPosition.setX(currentPosition.getX()-speed());
 				}
 				else {
 					currentPosition.setX(gamePanel.getWidth()-10);
 				}			
 			}
 			else if(state == MovingSpriteState.RIGHT) {
-				if(currentPosition.getX()+speed <= gamePanel.getWidth()-10) {
-					currentPosition.setX(currentPosition.getX()+speed);
+				if(currentPosition.getX()+speed() <= gamePanel.getWidth()-10) {
+					currentPosition.setX(currentPosition.getX()+speed());
 				}
 				else {
 					currentPosition.setX(0);
 				}
 			}
 			else if(state == MovingSpriteState.UP) {
-				currentPosition.setY(currentPosition.getY()-speed);
+				currentPosition.setY(currentPosition.getY()-speed());
 			}
 			else if(state == MovingSpriteState.DOWN) {
-				currentPosition.setY(currentPosition.getY()+speed);
+				currentPosition.setY(currentPosition.getY()+speed());
 			}
 		}
 	}
@@ -145,4 +145,13 @@ public abstract class MovingSprite extends Sprite{
 	public synchronized void setDeathAnimation() {
 		setAnimationOrder(deathAnimation);
 	}
+
+	public int speed() {
+		return speed;
+	}
+
+	public void setSpeed(int speed) {
+		this.speed = speed;
+	}
+	
 }

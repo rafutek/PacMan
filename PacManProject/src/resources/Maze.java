@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import sprites.Blinky;
 import sprites.Clyde;
 import sprites.Energizer;
-import sprites.Ghost;
 import sprites.Inky;
 import sprites.PacDot;
 import sprites.PacMan;
@@ -48,19 +47,19 @@ public class Maze {
 	
 	private Position blinkyMazeFilePosition;
 	private Position blinkyMazeImagePosition;	
-	private Ghost blinky;
+	private Blinky blinky;
 	
 	private Position pinkyMazeFilePosition;
 	private Position pinkyMazeImagePosition;	
-	private Ghost pinky;
+	private Pinky pinky;
 	
 	private Position clydeMazeFilePosition;
 	private Position clydeMazeImagePosition;	
-	private Ghost clyde;
+	private Clyde clyde;
 	
 	private Position inkyMazeFilePosition;
 	private Position inkyMazeImagePosition;	
-	private Ghost inky;
+	private Inky inky;
 	
 	private JPanel gamePanel;
 	
@@ -388,19 +387,19 @@ public class Maze {
 		return pacMan;
 	}
 
-	public Ghost getBlinky() {
+	public Blinky getBlinky() {
 		return blinky;
 	}
 	
-	public Ghost getPinky() {
+	public Pinky getPinky() {
 		return pinky;
 	}
 	
-	public Ghost getClyde() {
+	public Clyde getClyde() {
 		return clyde;
 	}
 	
-	public Ghost getInky() {
+	public Inky getInky() {
 		return inky;
 	}
 	

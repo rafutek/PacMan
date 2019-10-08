@@ -15,16 +15,15 @@ public class Pinky extends Ghost {
 	public Pinky(Position start_position, Tiles tiles, JPanel gamePanel,  List<List<Integer>> mazeValues, PacMan pacMan) {
 		super(start_position, tiles, gamePanel, mazeValues, pacMan);
 	}
+		
 	
-
 	@Override
-	public void chooseTilesNumbers() {
+	protected void chooseSpecificGhostTiles() {
 		for (int tile_nb = 225; tile_nb < 257; tile_nb++) {
 			tilesNumbers.add(tile_nb); // add pinky tiles numbers
 		}
-
-	}
-	
+		
+	}	
 	
 	@Override
 	protected void chooseInitialAnimation() {

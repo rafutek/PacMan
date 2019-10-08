@@ -564,6 +564,8 @@ public class PhysicsThread extends ThreadPerso {
 				collisionDone=false;
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky) && pacMan.invincible()) {
 					System.out.println("collision with blinky!");
+					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
+					pacMan.setEatenFantom(pacMan.eatenFantom()+1);
 					resetOneSprite(blinky);
 					return false;
 				}
@@ -577,6 +579,8 @@ public class PhysicsThread extends ThreadPerso {
 				
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky) && pacMan.invincible()) {
 					System.out.println("collision with pinky!");
+					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
+					pacMan.setEatenFantom(pacMan.eatenFantom()+1);
 					resetOneSprite(pinky);
 					return false;
 				}		
@@ -589,6 +593,8 @@ public class PhysicsThread extends ThreadPerso {
 				
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde) && pacMan.invincible()) {
 					System.out.println("collision with clyde!");
+					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
+					pacMan.setEatenFantom(pacMan.eatenFantom()+1);
 					resetOneSprite(clyde);
 					return false;
 				}
@@ -601,6 +607,8 @@ public class PhysicsThread extends ThreadPerso {
 				
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky) && pacMan.invincible()) {
 					System.out.println("collision with inky!");
+					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
+					pacMan.setEatenFantom(pacMan.eatenFantom()+1);
 					resetOneSprite(inky);
 					return false;
 				}

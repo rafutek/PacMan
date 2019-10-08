@@ -1,7 +1,11 @@
 package sprites;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JPanel;
 
@@ -15,6 +19,7 @@ public abstract class Ghost extends MovingSprite {
 	public static List<Integer> acceptedMazeValues;
 	
 	
+	
 
 	public  boolean isInTheBox = true;
 	
@@ -23,8 +28,8 @@ public abstract class Ghost extends MovingSprite {
 	protected PacMan pacMan;
 	
 	protected GhostBehaviorThread behaviorTh = new GhostBehaviorThread(this, pacMan);
-	
-	protected Position lastSeenPacManMatrixPos;
+	protected List<Integer> escapingAnimation = new ArrayList<Integer>();
+	private Position lastSeenPacManMatrixPos;
 	protected boolean goingToLastSeenPos, escaping;
 
 
@@ -34,8 +39,22 @@ public abstract class Ghost extends MovingSprite {
 		this.gamePanel = gamePanel;
 		this.mazeValues = mazeValues;
 		this.pacMan = pacMan;
+		createEscapingAnimation();
 	}
 	
+	@Override
+	public void chooseTilesNumbers() {
+		chooseSpecificGhostTiles();
+		for (int i=169; i<=175; i+=2) {
+			tilesNumbers.add(i);
+			tilesNumbers.add(i+1);
+			tilesNumbers.add(i+16);
+			tilesNumbers.add(i+17);
+		}
+	}
+	
+	protected  abstract void chooseSpecificGhostTiles();
+		
 	@Override
 	protected void createFullSpriteImages() {
 		spriteFullImages = new ListImages();
@@ -49,6 +68,14 @@ public abstract class Ghost extends MovingSprite {
 			img = createFullSpriteImage(cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight);
 			spriteFullImages.add(img);			
 		}
+		for (int i = spriteImages.getImagesList().size()-16; i < spriteImages.getImagesList().size()-3; i+=4) {
+			cornerTopLeft = spriteImages.getImagesList().get(i);
+			cornerTopRight = spriteImages.getImagesList().get(i+1);
+			cornerBottomLeft = spriteImages.getImagesList().get(i+2);
+			cornerBottomRight = spriteImages.getImagesList().get(i+3);
+			img = createFullSpriteImage(cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight);
+			spriteFullImages.add(img);	
+		} 
 	}
 
 	@Override
@@ -80,6 +107,20 @@ public abstract class Ghost extends MovingSprite {
 		goDownAnimation.add(3);
 	}
 
+	protected void createEscapingAnimation() {
+		escapingAnimation.add(8);
+		escapingAnimation.add(9);
+		escapingAnimation.add(10);
+		escapingAnimation.add(11);
+		for (Integer integer : escapingAnimation) {
+			System.out.println(integer);
+		}
+	}
+	
+	public synchronized void setEscapingAnimation() {
+		setAnimationOrder(escapingAnimation);
+	}
+	
 	@Override
 	protected void createDeathAnimation() {
 		deathAnimation = goLeftAnimation; //no animation for death
@@ -152,7 +193,7 @@ public abstract class Ghost extends MovingSprite {
 		return false;
 	}
 	
-	protected boolean sameCorridor() {
+	public boolean sameCorridor() {
 		Position posGhost = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
 		Position posPacMan = PhysicsThread.mazeToMatrixPosition(pacMan.currentPosition, gamePanel, mazeValues);
 		
@@ -160,7 +201,7 @@ public abstract class Ghost extends MovingSprite {
 			if(wallInColumn(posGhost,posPacMan)) {
 				return false;
 			}
-			lastSeenPacManMatrixPos = new Position(posPacMan.getX(),posPacMan.getY());
+			setLastSeenPacManMatrixPos(new Position(posPacMan.getX(),posPacMan.getY()));
 			return true;
 		}
 		
@@ -168,7 +209,7 @@ public abstract class Ghost extends MovingSprite {
 			if(wallInRow(posGhost,posPacMan)) {
 				return false;
 			}
-			lastSeenPacManMatrixPos = new Position(posPacMan.getX(),posPacMan.getY());
+			setLastSeenPacManMatrixPos(new Position(posPacMan.getX(),posPacMan.getY()));
 			return true;
 		}
 		
@@ -206,7 +247,7 @@ public abstract class Ghost extends MovingSprite {
 	 * the ghost state is changed to escape from the matrix position.
 	 * @param matrixPos is the point in the matrix to escape from.
 	 */
-	protected void chooseDirectionToEscapeFrom(Position matrixPos) {
+	public void chooseDirectionToEscapeFrom(Position matrixPos) {
 		Position ghostMatrixPos = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
 		
 		if (ghostMatrixPos.getY() == matrixPos.getY()) {
@@ -239,8 +280,11 @@ public abstract class Ghost extends MovingSprite {
 		if (pacMan.invincible()){
 			this.escaping = true;
 		}
+		else {
+			this.escaping = false;
+		}
 		return escaping;
-	}
+	}	
 	
 	public void notEscape() {
 		escaping = false;
@@ -253,9 +297,17 @@ public abstract class Ghost extends MovingSprite {
 	public void checkAtLastSeenPosition() {
 		if(goingToLastSeenPos) {
 			Position currentMatrixPos = PhysicsThread.mazeToMatrixPosition(currentPosition, gamePanel, mazeValues);
-			if(currentMatrixPos.getX() == lastSeenPacManMatrixPos.getX() && currentMatrixPos.getY() == lastSeenPacManMatrixPos.getY()) {
+			if(currentMatrixPos.getX() == lastSeenPacManMatrixPos().getX() && currentMatrixPos.getY() == lastSeenPacManMatrixPos().getY()) {
 				goingToLastSeenPos = false;
 			}
 		}
+	}
+
+	public Position lastSeenPacManMatrixPos() {
+		return lastSeenPacManMatrixPos;
+	}
+
+	public void setLastSeenPacManMatrixPos(Position lastSeenPacManMatrixPos) {
+		this.lastSeenPacManMatrixPos = lastSeenPacManMatrixPos;
 	}
 }
