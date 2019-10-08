@@ -103,6 +103,10 @@ public abstract class AudioThread extends ThreadPerso{
 	 * Methods to set up volume and mute
 	 * @param vol2
 	 */
+	public boolean getMute() {
+		return mute;
+	}
+	
 	public void setMute(boolean mute) {
 		this.mute = mute;
 		if(audioClip != null) {

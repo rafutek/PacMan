@@ -773,7 +773,7 @@ public class PhysicsThread extends ThreadPerso {
 		for(int i=0; i<pacDots.getSprites().size();i++){
 			int positionX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
 			int positionY= pacDots.getSpriteNb(i).getCurrentPosition().getY();
-			if(pacMan.getCurrentPosition().getX()<=positionX+(13/2) && pacMan.getCurrentPosition().getX()>= positionX-(13/2)  && pacMan.getCurrentPosition().getY()<=positionY+(12/2) && pacMan.getCurrentPosition().getY()>= positionY-(12/2) )  {
+			if(pacMan.getCurrentPosition().getX()<=positionX+(20/2) && pacMan.getCurrentPosition().getX()>= positionX-(20/2)  && pacMan.getCurrentPosition().getY()<=positionY+(20/2) && pacMan.getCurrentPosition().getY()>= positionY-(20/2) )  {
 				if (!soundMute) {
 					playSound("chomp.wav");
 				}
