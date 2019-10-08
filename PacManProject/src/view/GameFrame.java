@@ -237,11 +237,11 @@ public class GameFrame extends JFrame implements WindowListener
 		super.addNotify();   // creates the peer
 		layoutTh = new LayoutManagerThread(this);
 		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
-		musicTh = new MusicThread("musicTh");
+		//musicTh = new MusicThread("musicTh");
 		//checkPageThread = new CheckPageThread("CheckPageThread");
 		layoutTh.startThread();
 		renderTh.startThread();
-		musicTh.startThread();
+		//musicTh.startThread();
 		//checkPageThread.startThread();
 	}
 	
