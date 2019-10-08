@@ -265,7 +265,7 @@ public class Maze {
 		if(blinkyMazeFilePosition != null) {
 			pixelX = (blinkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
 			pixelY = (blinkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
-			blinkyMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 					
+			blinkyMazeImagePosition = new Position(pixelX, pixelY); 					
 		}
 
 		//pinky
@@ -279,7 +279,7 @@ public class Maze {
 		if(clydeMazeFilePosition != null) {
 			pixelX = (clydeMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
 			pixelY = (clydeMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
-			clydeMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 			
+			clydeMazeImagePosition = new Position(pixelX, pixelY); 			
 		}
 	
 		//inky

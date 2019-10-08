@@ -143,7 +143,7 @@ public class RenderThread extends ThreadPerso{
 		musicTh = new MusicThread("musicTh");
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
 		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers, musicTh );
-		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze);
+		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze, pacMan);
 		this.paused = true;
 	}
 	

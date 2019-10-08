@@ -6,6 +6,7 @@ import sprites.Clyde;
 import sprites.Ghost;
 import sprites.Inky;
 import sprites.MovingSpriteState;
+import sprites.PacMan;
 import sprites.Pinky;
 import sprites.Position;
 
@@ -19,10 +20,11 @@ public class GhostsExitBoxThread extends TimerThread {
 	private Clyde clyde;
 	private Inky inky;
 	private Maze maze;
+	private PacMan pacMan;
 	private  boolean ghostWantsToGoOut, blinkyWantsToGoOut, pinkyWantsToGoOut, clydeWantsToGoOut, inkyWantsToGoOut;
-	public static  boolean ghostCanGoOut, blinkyCanGoOut, pinkyCanGoOut, clydeCanGoOut, inkyCanGoOut;
+	public  boolean ghostCanGoOut, blinkyCanGoOut, pinkyCanGoOut, clydeCanGoOut, inkyCanGoOut;
 	
-	public GhostsExitBoxThread(Blinky blinky, Pinky pinky, Clyde clyde, Inky inky, Maze maze) {
+	public GhostsExitBoxThread(Blinky blinky, Pinky pinky, Clyde clyde, Inky inky, Maze maze, PacMan pacMan) {
 		super(WAIT_TIME, NB_WAITS);
 		setName("Ghosts Exit");
 		this.blinky = blinky;
@@ -30,6 +32,7 @@ public class GhostsExitBoxThread extends TimerThread {
 		this.clyde = clyde;
 		this.inky = inky;
 		this.maze = maze;
+		this.pacMan = pacMan;
 	}
 	
 	@Override
@@ -37,55 +40,58 @@ public class GhostsExitBoxThread extends TimerThread {
 	
 	@Override
 	protected void doThatWhileWaiting() {
-		if(!ghostWantsToGoOut) {
-			if(blinky.isInTheBox()) {
-				ghostWantsToGoOut = true;
-				blinkyWantsToGoOut = ghostWantsToGoOut;
-				counterWaits = 0; // reset the timer to make the ghost wait until...
+		if(!pacMan.invincible()) {
+			if(!ghostWantsToGoOut) {
+				if(blinky.isInTheBox()) {
+					ghostWantsToGoOut = true;
+					blinkyWantsToGoOut = ghostWantsToGoOut;
+					counterWaits = 0; // reset the timer to make the ghost wait until...
+				}
+				else if(pinky.isInTheBox()) {
+					ghostWantsToGoOut = true;
+					pinkyWantsToGoOut = ghostWantsToGoOut;
+					counterWaits = 0;
+				}
+				else if(clyde.isInTheBox()) {
+					ghostWantsToGoOut = true;
+					clydeWantsToGoOut = ghostWantsToGoOut;
+					counterWaits = 0; 
+				}
+				else if(inky.isInTheBox()) {
+					ghostWantsToGoOut = true;
+					inkyWantsToGoOut = ghostWantsToGoOut;
+					counterWaits = 0; 
+				}
+				
 			}
-			else if(pinky.isInTheBox()) {
-				ghostWantsToGoOut = true;
-				pinkyWantsToGoOut = ghostWantsToGoOut;
-				counterWaits = 0;
-			}
-			else if(clyde.isInTheBox()) {
-				ghostWantsToGoOut = true;
-				clydeWantsToGoOut = ghostWantsToGoOut;
-				counterWaits = 0; 
-			}
-			else if(inky.isInTheBox()) {
-				ghostWantsToGoOut = true;
-				inkyWantsToGoOut = ghostWantsToGoOut;
-				counterWaits = 0; 
-			}
-			
+			else if(ghostCanGoOut){ 
+				if(blinkyCanGoOut) {
+					if(manageGhostExit(blinky)) {
+						blinkyWantsToGoOut = false;
+						blinkyCanGoOut = false;
+					}
+				}
+				else if(pinkyCanGoOut) {
+					if(manageGhostExit(pinky)) {
+						pinkyWantsToGoOut = false;
+						pinkyCanGoOut = false;
+					}
+				}
+				else if(clydeCanGoOut) {
+					if(manageGhostExit(clyde)) {
+						clydeWantsToGoOut = false;
+						clydeCanGoOut = false;
+					}
+				}
+				else if(inkyCanGoOut) {
+					if(manageGhostExit(inky)) {
+						inkyWantsToGoOut = false;
+						inkyCanGoOut = false;
+					}
+				}
+			}			
 		}
-		else if(ghostCanGoOut){ 
-			if(blinkyCanGoOut) {
-				if(manageGhostExit(blinky)) {
-					blinkyWantsToGoOut = false;
-					blinkyCanGoOut = false;
-				}
-			}
-			else if(pinkyCanGoOut) {
-				if(manageGhostExit(pinky)) {
-					pinkyWantsToGoOut = false;
-					pinkyCanGoOut = false;
-				}
-			}
-			else if(clydeCanGoOut) {
-				if(manageGhostExit(clyde)) {
-					clydeWantsToGoOut = false;
-					clydeCanGoOut = false;
-				}
-			}
-			else if(inkyCanGoOut) {
-				if(manageGhostExit(inky)) {
-					inkyWantsToGoOut = false;
-					inkyCanGoOut = false;
-				}
-			}
-		}
+
 	}
 
 	@Override

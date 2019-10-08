@@ -756,11 +756,11 @@ public class PhysicsThread extends ThreadPerso {
 		if(pacMan != null) {
 			pacMan.setCurrentPosition(matrixToMazePosition(pacMan.getMatrixPosition(), gamePanel, mazeValues));
 		}
-		if(blinky != null) {
-			blinky.setCurrentPosition(matrixToMazePosition(blinky.getMatrixPosition(), gamePanel, mazeValues));
-		}
 		
 		// stop the ghost that are replaced in the box before replacing them
+		if(blinky != null) {
+			blinky.setState(MovingSpriteState.STOP);
+		}		
 		if(pinky != null) {
 			pinky.setState(MovingSpriteState.STOP);
 		}		
@@ -771,6 +771,9 @@ public class PhysicsThread extends ThreadPerso {
 			inky.setState(MovingSpriteState.STOP);
 		}
 		
+		if(blinky != null) {
+			blinky.setCurrentPosition(matrixToMazePosition(blinky.getMatrixPosition(), gamePanel, mazeValues));
+		}
 		if(pinky != null) {
 			pinky.setCurrentPosition(matrixToMazePosition(pinky.getMatrixPosition(), gamePanel, mazeValues));
 		}
@@ -782,6 +785,9 @@ public class PhysicsThread extends ThreadPerso {
 		}
 		
 		//finally say that they are in the box, so that ghost exit box thread does its job
+		if(blinky != null) {
+			blinky.setInTheBox(true);
+		}
 		if(pinky != null) {
 			pinky.setInTheBox(true);
 		}
