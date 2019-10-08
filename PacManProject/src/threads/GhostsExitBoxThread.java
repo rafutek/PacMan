@@ -13,7 +13,7 @@ import sprites.Position;
 public class GhostsExitBoxThread extends TimerThread {
 
 	private static final int WAIT_TIME = 10;
-	private static final int NB_WAITS = 100; 
+	private static final int NB_WAITS = 20;//30 get out faster to avoid bugs 
 	
 	private Blinky blinky;
 	private Pinky pinky;
@@ -94,6 +94,12 @@ public class GhostsExitBoxThread extends TimerThread {
 				}
 			}			
 		}
+		else {
+			checkGhostOutsideBox(blinky);
+			checkGhostOutsideBox(pinky);
+			checkGhostOutsideBox(clyde);
+			checkGhostOutsideBox(inky);
+		}
 
 	}
 
@@ -124,30 +130,43 @@ public class GhostsExitBoxThread extends TimerThread {
 	 * @return true if the ghost is out
 	 */
 	private boolean manageGhostExit(Ghost ghost) {
-		Position doorPosition = maze.getDoorPosition();
-		if(ghost.getCurrentPosition().getX() > doorPosition.getX() - 5 && ghost.getCurrentPosition().getX() < doorPosition.getX() + 5) {
-			ghost.setState(MovingSpriteState.UP);
-			if(ghost.getCurrentPosition().getY() < doorPosition.getY()-maze.tileDim.height/2){        // if the ghost is out, start its direction thread
-				
-				ghost.setInTheBox(false);
-				ghostWantsToGoOut = false;
-				ghostCanGoOut = false;
-				
-				if(ghost.getBehaviorThread() == null || !ghost.getBehaviorThread().isRunning()) {
-					ghost.startBehaviorThread();
+		if(!pacMan.invincible()) {
+			Position doorPosition = maze.getDoorPosition();
+			if(ghost.getCurrentPosition().getX() > doorPosition.getX() - 5 && ghost.getCurrentPosition().getX() < doorPosition.getX() + 5) {
+				ghost.setWantedState(MovingSpriteState.UP);
+				ghost.setState(ghost.getWantedState());
+				if(ghost.getCurrentPosition().getY() < doorPosition.getY()-maze.tileDim.height/2){        // if the ghost is out, start its direction thread
+
+					ghost.setInTheBox(false);
+					ghostWantsToGoOut = false;
+					ghostCanGoOut = false;
+
+					if(ghost.getBehaviorThread() == null || !ghost.getBehaviorThread().isRunning()) {
+						ghost.startBehaviorThread();
+					}
+					ghost.getBehaviorThread().changeDirection();
+
+					return true;
 				}
-				ghost.getBehaviorThread().changeDirection();
-				
-				return true;
 			}
+			else if(ghost.getCurrentPosition().getX() < doorPosition.getX()) {
+				ghost.setWantedState(MovingSpriteState.RIGHT);
+				ghost.setState(ghost.getWantedState());
+			}
+			else if(ghost.getCurrentPosition().getX() > doorPosition.getX()) {
+				ghost.setWantedState(MovingSpriteState.LEFT);
+				ghost.setState(ghost.getWantedState());
+			}			
 		}
-		else if(ghost.getCurrentPosition().getX() < doorPosition.getX()) {
-			ghost.setState(MovingSpriteState.RIGHT);
-		}
-		else if(ghost.getCurrentPosition().getX() > doorPosition.getX()) {
-			ghost.setState(MovingSpriteState.LEFT);
-		}
-		return false;			
+		return false;
+	}
+
+	private void checkGhostOutsideBox(Ghost ghost) {
+		Position doorPosition = maze.getDoorPosition();
+
+		if(ghost.getCurrentPosition().getY() < doorPosition.getY()-maze.tileDim.height/2){ 
+			ghost.setInTheBox(false);
+		}		
 	}
 
 }
