@@ -53,7 +53,7 @@ public class GameFrame extends JFrame implements WindowListener
 	{ 
 		super("PacMan");
 		this.period = period;
-		
+		this.setBackground(Color.BLACK);
 		makeGUI();
 		addWindowListener(this);
 		
