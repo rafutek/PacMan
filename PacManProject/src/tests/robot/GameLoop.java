@@ -66,13 +66,13 @@ public class GameLoop extends ThreadPerso {
 		 energizers = maze.getEnergizers();
 		 pacDots = maze.getPacDots();
 		 pacMan = maze.getPacMan();
-		 blinky = maze.getBlinky(); blinky.setState(MovingSpriteState.STOP);
+		 blinky = maze.getBlinky(); blinky.setWantedState(MovingSpriteState.STOP); blinky.setState(blinky.getWantedState());
 		 pinky = maze.getPinky();
 		 clyde = maze.getClyde();
 		 inky = maze.getInky();
 		 
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
-		physicsTh = new PhysicsThread(maze.getMazeValues(), panel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers);
+		physicsTh = new PhysicsThread(maze.getMazeValues(), panel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers, null);
 		animationTh.startThread();
 		physicsTh.startThread();
 	}
