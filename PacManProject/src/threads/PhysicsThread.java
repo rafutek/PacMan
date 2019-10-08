@@ -50,6 +50,10 @@ public class PhysicsThread extends ThreadPerso {
 	 */
 	private SoundThread soundTh;
 	private static boolean soundMute = false;
+	private static boolean soundUp = false;
+	private static boolean soundDown = false;
+	private static int n = 1;
+
 	
 	/**
 	 * The class needs the maze number matrix, the game panel size and of course the moving sprites,
@@ -645,18 +649,7 @@ public class PhysicsThread extends ThreadPerso {
 			int positionY= pacDots.getSpriteNb(i).getCurrentPosition().getY();
 			if(pacMan.getCurrentPosition().getX()<=positionX+(13/2) && pacMan.getCurrentPosition().getX()>= positionX-(13/2)  && pacMan.getCurrentPosition().getY()<=positionY+(12/2) && pacMan.getCurrentPosition().getY()>= positionY-(12/2) )  {
 				if (!soundMute) {
-					soundTh = new SoundThread("soundTh");
-					if(soundTh != null) {
-						synchronized(soundTh) {
-								try {
-									soundTh.playAudio("chomp.wav");
-								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} // play sound
-							
-						}					
-					}
+					playSound("chomp.wav");
 				}
 				pacDots.showX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
 				pacDots.showY=pacDots.getSpriteNb(i).getCurrentPosition().getY();
@@ -674,19 +667,7 @@ public class PhysicsThread extends ThreadPerso {
 			int positionY= energizer.getSpriteNb(i).getCurrentPosition().getY();
 			if(pacMan.getCurrentPosition().getX()<=positionX+(13/2) && pacMan.getCurrentPosition().getX()>= positionX-(13/2)  && pacMan.getCurrentPosition().getY()<=positionY+(12/2) && pacMan.getCurrentPosition().getY()>= positionY-(12/2) )  {
 				if (!soundMute) {
-					soundTh = new SoundThread("soundTh");
-					if(soundTh != null) {
-						synchronized(soundTh) {
-								try {
-									soundTh.playAudio("chomp.wav");
-								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} // play sound
-							
-						}					
-					}
-					
+					playSound("chomp.wav");
 				}
 				energizer.showX=energizer.getSpriteNb(i).getCurrentPosition().getX();
 				energizer.showY=energizer.getSpriteNb(i).getCurrentPosition().getY();
@@ -710,16 +691,7 @@ public class PhysicsThread extends ThreadPerso {
 				if( pacman_left < ghost_right && pacman_right > ghost_left && pacman_down > ghost_up && pacman_up < ghost_down ) {
 					
 					if (!soundMute) {
-						soundTh = new SoundThread("soundTh");
-						if(soundTh != null) {
-							synchronized(soundTh) {
-								try {
-									soundTh.playAudio("death.wav"); // play sound
-								} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-									e.printStackTrace();
-								} 
-							}					
-						}
+						playSound("death.wav");
 					}
 					return true;
 				}
@@ -729,7 +701,40 @@ public class PhysicsThread extends ThreadPerso {
 		return false;
 	}
 	
-	public static void setSoundMute(boolean Mute) {
+	private void playSound(String sound) {
+		soundTh = new SoundThread("soundTh");
+		if(soundTh != null) {
+			synchronized(soundTh) {
+				if (soundUp) {
+					try {
+						soundTh.playAudio(sound);
+						soundTh.volumeUp(n);
+					} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} // play sound
+				} else if (soundDown) {
+					try {
+						soundTh.playAudio(sound);
+						soundTh.volumeDown(n);
+					} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} // play sound
+				} else {
+					try {
+						soundTh.playAudio(sound);
+					} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} // play sound
+				}
+					
+			}
+		}
+	}
+	
+	public synchronized static void setSoundMute(boolean Mute) {
 		soundMute = Mute;
 	}
 	
@@ -786,5 +791,16 @@ public class PhysicsThread extends ThreadPerso {
 		
 	}
 
+	public synchronized static void setVUp(int x) {
+		soundUp = true;
+		n = x;
+	}
+	
+	public synchronized static void setVDown(int x) {
+		soundDown = true;
+		System.out.println("x setVDown ="+x);
+		n = x;
+		
+	}
 	
 }

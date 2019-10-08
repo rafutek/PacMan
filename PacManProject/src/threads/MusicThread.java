@@ -10,6 +10,7 @@ public class MusicThread extends AudioThread{
 	
 	private static boolean invincible = false;
 	private boolean invincibleIsPlaying = false;
+	private float vol = (float) 0.5;
 
 	
 	public MusicThread(String threadName) {
@@ -43,9 +44,13 @@ public class MusicThread extends AudioThread{
 			try {
 				if(!invincible) {
 					playAudio("beginning.wav");
+					setVolume(vol);
+
 				} else if(isPlaying) {
 						InvinsibilityIsPlaying();
 						playAudio("intermission.wav");
+						setVolume(vol);
+
 					
 				}
 			} catch (UnsupportedAudioFileException e) {
@@ -68,16 +73,40 @@ public class MusicThread extends AudioThread{
 		
 	}
 	
-	public static void setInvincibility(boolean b) {
+	public synchronized static void setInvincibility(boolean b) {
 		invincible = b;
 	}
 	
-	public void InvinsibilityIsPlaying() {
+	public synchronized void InvinsibilityIsPlaying() {
 		if(!invincibleIsPlaying) {
 			audioClip.stop();
 			audioClip.close();
 			isPlaying = false;
 			this.invincibleIsPlaying = true;
+		}
+	}
+
+	@Override
+	public synchronized void volumeUp(int x) {
+		// TODO Auto-generated method stub
+		if(!mute) {
+			if(vol <= 0.9) {
+				vol += 0.1;
+			}
+			System.out.println("Volume: " + vol);	
+			setVolume(vol);
+		}
+	}
+
+	@Override
+	public synchronized void volumeDown(int x) {
+		// TODO Auto-generated method stub
+		if(!mute) {
+			if(vol >= 0.1) {
+				vol -= 0.1;
+			}
+			System.out.println("Volume: " + vol);	
+			setVolume(vol);
 		}
 	}
 	
