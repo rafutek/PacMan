@@ -13,7 +13,7 @@ import sprites.Position;
 public class GhostsExitBoxThread extends TimerThread {
 
 	private static final int WAIT_TIME = 10;
-	private static final int NB_WAITS = 100; 
+	private static final int NB_WAITS = 20;//30 get out faster to avoid bugs 
 	
 	private Blinky blinky;
 	private Pinky pinky;

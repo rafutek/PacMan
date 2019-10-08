@@ -14,7 +14,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
- 
+
 public class GameFrame extends JFrame implements WindowListener
 {
 
@@ -41,7 +41,7 @@ public class GameFrame extends JFrame implements WindowListener
 	private boolean fullScreen = false;
 	public RenderThread renderTh;
 	private LayoutManagerThread layoutTh;
-	private MusicThread musicTh;
+	//private MusicThread musicTh;
 	
 	private int statutMenu = 0;
 	
@@ -452,38 +452,30 @@ public class GameFrame extends JFrame implements WindowListener
 		this.statutMenu = statutMenu;
 	}
 	
-	public void setMusicMute(boolean b) {
-		synchronized (musicTh){
-				musicTh.setMute(b);
-			}
-	}
-	
-	public void setSoundMute(boolean b) {
-		PhysicsThread.setSoundMute(b);
-	}
+
 	
 	public void setAllSoundsMute(boolean b) {
-		setMusicMute(b);
-		setSoundMute(b);
+		renderTh.setMusicMute(b);
+		renderTh.setSoundMute(b);
 	}
 	
 	public void setVolumeUp(int x) {
-		setMusicVolumeUp();
+		//setMusicVolumeUp();
 		PhysicsThread.setVUp(x);
 	}
 	
 	public void setVolumeDown(int x) {
-		setMusicVolumeDown();
+		//setMusicVolumeDown();
 		PhysicsThread.setVDown(x);
 	}
 	
-	public void setMusicVolumeUp() {
+	/*public void setMusicVolumeUp() {
 		musicTh.volumeUp(0);
 	}
 	
 	public void setMusicVolumeDown() {
 		musicTh.volumeDown(0);
-	}
+	}*/
 
 
 	

@@ -861,7 +861,7 @@ public class PhysicsThread extends ThreadPerso {
 		}
 	}
 	
-	public synchronized static void setSoundMute(boolean Mute) {
+	public synchronized void setSoundMute(boolean Mute) {
 		soundMute = Mute;
 	}
 	
