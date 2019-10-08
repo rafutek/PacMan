@@ -32,13 +32,13 @@ public class Pinky extends Ghost {
 	
 	
 	@Override
-	public void startDirectionThread() {
+	public void startBehaviorThread() {
 		behaviorTh = new GhostBehaviorThread(this,pacMan);
 		behaviorTh.setName("Pinky behavior");
 		behaviorTh.startThread();
 	}
 	@Override
-	public  void stopDirectionThread() {
+	public  void stopBehaviorThread() {
 		behaviorTh.stopThread();
 	}
 
@@ -65,7 +65,7 @@ public class Pinky extends Ghost {
 		int upBoxValue;
 		int downBoxValue;
 		
-		nextState = getState();
+		nextState = getWantedState();
 		
 		if(pacMan.getState() == MovingSpriteState.LEFT || pacMan.getState() == MovingSpriteState.RIGHT) {
 			if(this.currentPosition.getX() < pacMan.getCurrentPosition().getX()) { // want to go to right
@@ -102,7 +102,7 @@ public class Pinky extends Ghost {
 
 	@Override
 	public void launchSpecific() {
-		this.setState(nextState);
+		this.setWantedState(nextState);
 		
 	}
 

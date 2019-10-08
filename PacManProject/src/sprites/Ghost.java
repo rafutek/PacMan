@@ -42,7 +42,7 @@ public abstract class Ghost extends MovingSprite {
 	@Override
 	public void chooseTilesNumbers() {
 		chooseSpecificGhostTiles();
-		for (int i=169; i<=175; i+=2) {
+		for (int i=169; i<=175; i+=2) { // add escaping tiles for animation 
 			tilesNumbers.add(i);
 			tilesNumbers.add(i+1);
 			tilesNumbers.add(i+16);
@@ -133,26 +133,34 @@ public abstract class Ghost extends MovingSprite {
 	
 
 	/**
-	 * Set ghost state to a random direction state.
+	 * Set ghost state to a random wanted direction state.
 	 */
 	public void setRandomDirection() {
 		int randomNum = ThreadLocalRandom.current().nextInt(0, 3 + 1);		
 		if(randomNum == 0) {
-			setState(MovingSpriteState.LEFT);
+//			setWantedState(MovingSpriteState.LEFT);
+//			//setState();
+			wantToGoLeft();
 		}
 		else if(randomNum == 1) {
-			setState(MovingSpriteState.RIGHT);
+//			setWantedState(MovingSpriteState.RIGHT);
+//			//setState(MovingSpriteState.RIGHT);
+			wantToGoRight();
 		}
 		else if(randomNum == 2) {
-			setState(MovingSpriteState.UP);
+//			setWantedState(MovingSpriteState.UP);
+//			//setState(MovingSpriteState.UP);
+			wantToGoUp();
 		}
 		else if(randomNum == 3) {
-			setState(MovingSpriteState.DOWN);
+//			setWantedState(MovingSpriteState.DOWN);
+//			//
+			wantToGoDown();
 		}
 	}
 	
-	public abstract void startDirectionThread();
-	public abstract void stopDirectionThread();
+	public abstract void startBehaviorThread();
+	public abstract void stopBehaviorThread();
 	
 	public synchronized GhostBehaviorThread getBehaviorThread() {
 		return behaviorTh;
@@ -249,18 +257,22 @@ public abstract class Ghost extends MovingSprite {
 		
 		if (ghostMatrixPos.getY() == matrixPos.getY()) {
 			if(ghostMatrixPos.getX() < matrixPos.getX()) {
-				setState(MovingSpriteState.LEFT);
+				wantToGoLeft();
+				//setState(MovingSpriteState.LEFT);
 			}
 			else {
-				setState(MovingSpriteState.RIGHT);
+				wantToGoRight();
+				//setState(MovingSpriteState.RIGHT);
 			}
 		}
 		else if(ghostMatrixPos.getX() == matrixPos.getX()) {
 			if(ghostMatrixPos.getY() < matrixPos.getY()) {
-				setState(MovingSpriteState.UP);
+				wantToGoUp();
+				//setState(MovingSpriteState.UP);
 			}
 			else {
-				setState(MovingSpriteState.DOWN);
+				wantToGoDown();
+				//setState(MovingSpriteState.DOWN);
 			}
 		}
 	}

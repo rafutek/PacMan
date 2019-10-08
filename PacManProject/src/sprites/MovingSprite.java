@@ -127,6 +127,10 @@ public abstract class MovingSprite extends Sprite{
 		return wantedState;
 	}
 	
+	public synchronized void setWantedState(MovingSpriteState wantedState) {
+		this.wantedState = wantedState;
+	}
+	
 	public synchronized void setNoMovementAnimation() {
 		setAnimationOrder(noMovementAnimation);
 	}

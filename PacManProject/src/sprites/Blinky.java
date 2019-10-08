@@ -31,13 +31,13 @@ public class Blinky extends Ghost {
 	
 	
 	@Override
-	public void startDirectionThread() {
+	public void startBehaviorThread() {
 		behaviorTh = new GhostBehaviorThread(this, pacMan);
 		behaviorTh.setName("Blinky behavior");
 		behaviorTh.startThread();
 	}
 	@Override
-	public  void stopDirectionThread() {
+	public  void stopBehaviorThread() {
 		behaviorTh.stopThread();
 	}
 

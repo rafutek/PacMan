@@ -12,19 +12,25 @@ public class InvincibleThread extends TimerThread {
 		this.pacMan=pacMan;
 	}
 
+	/**
+	 * Set pac-man to invincible while thread is running.
+	 */
 	@Override
 	protected void doThatWhileWaiting() {
 		synchronized(pacMan) {
-		pacMan.setInvincible(true);
+			pacMan.setInvincible(true);
 		}
 	}
 
+	/**
+	 * Reset normal pac-man mode.
+	 */
 	@Override
 	protected void finallyDoThat() {
 		synchronized(pacMan){
-		pacMan.setInvincible(false);
-		pacMan.setSpeed(1);
-		pacMan.setEatenFantom(0);
+			pacMan.setInvincible(false);
+			pacMan.setSpeed(1);
+			pacMan.setEatenFantom(0);
 		}
 		stopThread();
 	}

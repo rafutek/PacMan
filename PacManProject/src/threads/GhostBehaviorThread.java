@@ -10,7 +10,7 @@ public class GhostBehaviorThread extends TimerThread {
 	
 	private static final int WAIT_TIME = 10;
 	
-	private int random_min = 100;
+	private int random_min = 100; // change random direction between delays of 1 to 5 seconds
 	private int random_max = 500;
 	protected PacMan pacMan;
 	private Ghost ghost;
@@ -30,7 +30,6 @@ public class GhostBehaviorThread extends TimerThread {
 	protected void doThatWhileWaiting() {
 		
 		if (ghost.escaping()) {
-			//System.out.println("escaping");
 			if (ghost.sameCorridor()) {
 				ghost.chooseDirectionToEscapeFrom(ghost.lastSeenPacManMatrixPos());
 				counterWaits=0;

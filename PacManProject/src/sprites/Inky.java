@@ -31,13 +31,13 @@ public class Inky extends Ghost {
 	
 	
 	@Override
-	public void startDirectionThread() {
+	public void startBehaviorThread() {
 		behaviorTh = new GhostBehaviorThread(this,pacMan);
 		behaviorTh.setName("Inky behavior");
 		behaviorTh.startThread();
 	}
 	@Override
-	public  void stopDirectionThread() {
+	public  void stopBehaviorThread() {
 		behaviorTh.stopThread();
 	}
 

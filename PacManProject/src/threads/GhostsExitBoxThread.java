@@ -125,7 +125,7 @@ public class GhostsExitBoxThread extends TimerThread {
 				ghostCanGoOut = false;
 				
 				if(ghost.getBehaviorThread() == null || !ghost.getBehaviorThread().isRunning()) {
-					ghost.startDirectionThread();
+					ghost.startBehaviorThread();
 				}
 				ghost.getBehaviorThread().changeDirection();
 				

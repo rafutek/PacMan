@@ -13,7 +13,6 @@ import sprites.Ghost;
 import sprites.MovingSpriteState;
 import sprites.PacMan;
 import sprites.Position;
-import sprites.Sprite;
 import sprites.Sprites;
 import view.StatusBarPanel;
 
@@ -43,7 +42,6 @@ public class PhysicsThread extends ThreadPerso {
 	private Sprites energizer;
 	private int score=0;
 	private boolean ScoreBonus=false;
-	private boolean collisionDone=true;
 	public static boolean timerstarted=false;
 	/**
 	 * Management of the sounds
@@ -163,170 +161,175 @@ public class PhysicsThread extends ThreadPerso {
 		//blinky
 		if(blinky != null) {
 			synchronized(blinky) {
-				if(blinky.getCurrentPosition() != null && blinky.getCurrentSize() != null) {
-					blinkyWantedState = blinky.getState();
-					if(blinkyWantedState != MovingSpriteState.STOP) {
-						
-						// we need to use a little bit changed position 
-						// so that pac-man can go a little bit farther in the maze
-						int adaptedCurrentPosX;
-						int adaptedCurrentPosY;
-						Position currentMatrixPos; // the position of the sprite in the matrix
-						int wantedBoxValue = -1; // the next box value where pac-man wants to go
-						
-						if(blinkyWantedState == MovingSpriteState.LEFT) {
-							adaptedCurrentPosX = blinky.getCurrentPosition().getX() + blinky.getCurrentSize().width/2;
-							adaptedCurrentPosY = blinky.getCurrentPosition().getY();
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							if(currentMatrixPos != null) {
-								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
-							}
-						}
-						else if(blinkyWantedState == MovingSpriteState.RIGHT) {
-							adaptedCurrentPosX = blinky.getCurrentPosition().getX() - blinky.getCurrentSize().width/2;
-							adaptedCurrentPosY = blinky.getCurrentPosition().getY();
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							if(currentMatrixPos != null) {
-								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
-							}
-						}
-						else if(blinkyWantedState == MovingSpriteState.UP) {
-							adaptedCurrentPosX = blinky.getCurrentPosition().getX();
-							adaptedCurrentPosY = blinky.getCurrentPosition().getY() + blinky.getCurrentSize().height/2;
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							if(currentMatrixPos != null) {
-								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
-							}
-						}
-						else if(blinkyWantedState == MovingSpriteState.DOWN) {
-							adaptedCurrentPosX = blinky.getCurrentPosition().getX();
-							adaptedCurrentPosY = blinky.getCurrentPosition().getY() - blinky.getCurrentSize().height/2;
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							if(currentMatrixPos != null) {
-								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
-							}
-						}
-						
-						
-						if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || blinky.isInTheBox()) {
-							blinky.setState(blinkyWantedState);
-						}else {					
-							if(blinky.getBehaviorThread() == null || !blinky.getBehaviorThread().isRunning()) {
-								blinky.startDirectionThread();
-							}
-							// blinky set another possible direction
-							blinky.getBehaviorThread().changeDirection();
-						}
-					}			
-				}			
-			}
+				if(!blinky.isInTheBox()) {
+					if(blinky.getCurrentPosition() != null && blinky.getCurrentSize() != null) {
+						blinkyWantedState = blinky.getWantedState();
+						if(blinkyWantedState != MovingSpriteState.STOP) {
 
+							// we need to use a little bit changed position 
+							// so that pac-man can go a little bit farther in the maze
+							int adaptedCurrentPosX;
+							int adaptedCurrentPosY;
+							Position currentMatrixPos; // the position of the sprite in the matrix
+							int wantedBoxValue = -1; // the next box value where pac-man wants to go
+
+							if(blinkyWantedState == MovingSpriteState.LEFT) {
+								adaptedCurrentPosX = blinky.getCurrentPosition().getX() + blinky.getCurrentSize().width/2;
+								adaptedCurrentPosY = blinky.getCurrentPosition().getY();
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								if(currentMatrixPos != null) {
+									wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
+								}
+							}
+							else if(blinkyWantedState == MovingSpriteState.RIGHT) {
+								adaptedCurrentPosX = blinky.getCurrentPosition().getX() - blinky.getCurrentSize().width/2;
+								adaptedCurrentPosY = blinky.getCurrentPosition().getY();
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								if(currentMatrixPos != null) {
+									wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
+								}
+							}
+							else if(blinkyWantedState == MovingSpriteState.UP) {
+								adaptedCurrentPosX = blinky.getCurrentPosition().getX();
+								adaptedCurrentPosY = blinky.getCurrentPosition().getY() + blinky.getCurrentSize().height/2;
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								if(currentMatrixPos != null) {
+									wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
+								}
+							}
+							else if(blinkyWantedState == MovingSpriteState.DOWN) {
+								adaptedCurrentPosX = blinky.getCurrentPosition().getX();
+								adaptedCurrentPosY = blinky.getCurrentPosition().getY() - blinky.getCurrentSize().height/2;
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								if(currentMatrixPos != null) {
+									wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
+								}
+							}
+
+
+							if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || blinky.isInTheBox()) {
+								blinky.setState(blinkyWantedState);
+							}else {					
+								if(blinky.getBehaviorThread() == null || !blinky.getBehaviorThread().isRunning()) {
+									blinky.startBehaviorThread();
+								}
+								// blinky set another possible direction
+								blinky.getBehaviorThread().changeDirection();
+							}
+						}			
+					}							
+				}
+			}
 		}
 
 		
 		//pinky
 		if(pinky != null) {
 			synchronized(pinky) {
-				if(pinky.getCurrentPosition() != null && pinky.getCurrentSize() != null) {
-					pinkyWantedState = pinky.getState();
-					if(pinkyWantedState != MovingSpriteState.STOP) {
-						
-						// we need to use a little bit changed position 
-						// so that pac-man can go a little bit farther in the maze
-						int adaptedCurrentPosX;
-						int adaptedCurrentPosY;
-						Position currentMatrixPos; // the position of the sprite in the matrix
-						int wantedBoxValue = -1; // the next box value where pac-man wants to go
-						
-						if(pinkyWantedState == MovingSpriteState.LEFT) {
-							adaptedCurrentPosX = pinky.getCurrentPosition().getX() + pinky.getCurrentSize().width/2;
-							adaptedCurrentPosY = pinky.getCurrentPosition().getY();
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
-						}
-						else if(pinkyWantedState == MovingSpriteState.RIGHT) {
-							adaptedCurrentPosX = pinky.getCurrentPosition().getX() - pinky.getCurrentSize().width/2;
-							adaptedCurrentPosY = pinky.getCurrentPosition().getY();
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
-						}
-						else if(pinkyWantedState == MovingSpriteState.UP) {
-							adaptedCurrentPosX = pinky.getCurrentPosition().getX();
-							adaptedCurrentPosY = pinky.getCurrentPosition().getY() + pinky.getCurrentSize().height/2;
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
-						}
-						else if(pinkyWantedState == MovingSpriteState.DOWN) {
-							adaptedCurrentPosX = pinky.getCurrentPosition().getX();
-							adaptedCurrentPosY = pinky.getCurrentPosition().getY() - pinky.getCurrentSize().height/2;
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
-						}
-						
-						if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || pinky.isInTheBox()) {
-							pinky.setState(pinkyWantedState);
-						}else {					
-							if(pinky.getBehaviorThread() == null || !pinky.getBehaviorThread().isRunning()) {
-								pinky.startDirectionThread();
+				if(!pinky.isInTheBox()) {
+					if(pinky.getCurrentPosition() != null && pinky.getCurrentSize() != null) {
+						pinkyWantedState = pinky.getWantedState();
+						if(pinkyWantedState != MovingSpriteState.STOP) {
+
+							// we need to use a little bit changed position 
+							// so that pac-man can go a little bit farther in the maze
+							int adaptedCurrentPosX;
+							int adaptedCurrentPosY;
+							Position currentMatrixPos; // the position of the sprite in the matrix
+							int wantedBoxValue = -1; // the next box value where pac-man wants to go
+
+							if(pinkyWantedState == MovingSpriteState.LEFT) {
+								adaptedCurrentPosX = pinky.getCurrentPosition().getX() + pinky.getCurrentSize().width/2;
+								adaptedCurrentPosY = pinky.getCurrentPosition().getY();
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
 							}
-							// pinky set another possible direction
-							pinky.getBehaviorThread().changeDirection();
-						}
-					}			
-				}			
+							else if(pinkyWantedState == MovingSpriteState.RIGHT) {
+								adaptedCurrentPosX = pinky.getCurrentPosition().getX() - pinky.getCurrentSize().width/2;
+								adaptedCurrentPosY = pinky.getCurrentPosition().getY();
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
+							}
+							else if(pinkyWantedState == MovingSpriteState.UP) {
+								adaptedCurrentPosX = pinky.getCurrentPosition().getX();
+								adaptedCurrentPosY = pinky.getCurrentPosition().getY() + pinky.getCurrentSize().height/2;
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
+							}
+							else if(pinkyWantedState == MovingSpriteState.DOWN) {
+								adaptedCurrentPosX = pinky.getCurrentPosition().getX();
+								adaptedCurrentPosY = pinky.getCurrentPosition().getY() - pinky.getCurrentSize().height/2;
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
+							}
+
+							if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || pinky.isInTheBox()) {
+								pinky.setState(pinkyWantedState);
+							}else {					
+								if(pinky.getBehaviorThread() == null || !pinky.getBehaviorThread().isRunning()) {
+									pinky.startBehaviorThread();
+								}
+								// pinky set another possible direction
+								pinky.getBehaviorThread().changeDirection();
+							}
+						}			
+					}							
+				}
 			}			
 		}
 		
 		//clyde
 		if(clyde != null) {
 			synchronized(clyde) {
-				if(clyde.getCurrentPosition() != null && clyde.getCurrentSize() != null) {
-					clydeWantedState = clyde.getState();
-					if(clydeWantedState != MovingSpriteState.STOP) {
-						
-						// we need to use a little bit changed position 
-						// so that pac-man can go a little bit farther in the maze
-						int adaptedCurrentPosX;
-						int adaptedCurrentPosY;
-						Position currentMatrixPos; // the position of the sprite in the matrix
-						int wantedBoxValue = -1; // the next box value where pac-man wants to go
-						
-						if(clydeWantedState == MovingSpriteState.LEFT) {
-							adaptedCurrentPosX = clyde.getCurrentPosition().getX() + clyde.getCurrentSize().width/2;
-							adaptedCurrentPosY = clyde.getCurrentPosition().getY();
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
-						}
-						else if(clydeWantedState == MovingSpriteState.RIGHT) {
-							adaptedCurrentPosX = clyde.getCurrentPosition().getX() - clyde.getCurrentSize().width/2;
-							adaptedCurrentPosY = clyde.getCurrentPosition().getY();
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
-						}
-						else if(clydeWantedState == MovingSpriteState.UP) {
-							adaptedCurrentPosX = clyde.getCurrentPosition().getX();
-							adaptedCurrentPosY = clyde.getCurrentPosition().getY() + clyde.getCurrentSize().height/2;
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
-						}
-						else if(clydeWantedState == MovingSpriteState.DOWN) {
-							adaptedCurrentPosX = clyde.getCurrentPosition().getX();
-							adaptedCurrentPosY = clyde.getCurrentPosition().getY() - clyde.getCurrentSize().height/2;
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
-						}
-						
-						if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || clyde.isInTheBox()) {
-							clyde.setState(clydeWantedState);
-						}else {					
-							if(clyde.getBehaviorThread() == null || !clyde.getBehaviorThread().isRunning()) {
-								clyde.startDirectionThread();
+				if(!clyde.isInTheBox()) {
+					if(clyde.getCurrentPosition() != null && clyde.getCurrentSize() != null) {
+						clydeWantedState = clyde.getWantedState();
+						if(clydeWantedState != MovingSpriteState.STOP) {
+
+							// we need to use a little bit changed position 
+							// so that pac-man can go a little bit farther in the maze
+							int adaptedCurrentPosX;
+							int adaptedCurrentPosY;
+							Position currentMatrixPos; // the position of the sprite in the matrix
+							int wantedBoxValue = -1; // the next box value where pac-man wants to go
+
+							if(clydeWantedState == MovingSpriteState.LEFT) {
+								adaptedCurrentPosX = clyde.getCurrentPosition().getX() + clyde.getCurrentSize().width/2;
+								adaptedCurrentPosY = clyde.getCurrentPosition().getY();
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
 							}
-							// clyde set another possible direction
-							clyde.getBehaviorThread().changeDirection();
-						}
-					}			
-				}			
+							else if(clydeWantedState == MovingSpriteState.RIGHT) {
+								adaptedCurrentPosX = clyde.getCurrentPosition().getX() - clyde.getCurrentSize().width/2;
+								adaptedCurrentPosY = clyde.getCurrentPosition().getY();
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
+							}
+							else if(clydeWantedState == MovingSpriteState.UP) {
+								adaptedCurrentPosX = clyde.getCurrentPosition().getX();
+								adaptedCurrentPosY = clyde.getCurrentPosition().getY() + clyde.getCurrentSize().height/2;
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
+							}
+							else if(clydeWantedState == MovingSpriteState.DOWN) {
+								adaptedCurrentPosX = clyde.getCurrentPosition().getX();
+								adaptedCurrentPosY = clyde.getCurrentPosition().getY() - clyde.getCurrentSize().height/2;
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
+							}
+
+							if( Ghost.acceptedMazeValues.contains(wantedBoxValue)) {
+								clyde.setState(clydeWantedState);
+							}else {					
+								if(clyde.getBehaviorThread() == null || !clyde.getBehaviorThread().isRunning()) {
+									clyde.startBehaviorThread();
+								}
+								// clyde set another possible direction
+								clyde.getBehaviorThread().changeDirection();
+							}
+						}			
+					}				
+				}
 			}
 		}
 
@@ -334,53 +337,55 @@ public class PhysicsThread extends ThreadPerso {
 		//inky
 		if(inky != null) {
 			synchronized(inky) {
-				if(inky.getCurrentPosition() != null && inky.getCurrentSize() != null) {
-					inkyWantedState = inky.getState();
-					if(inkyWantedState != MovingSpriteState.STOP) {
-						
-						// we need to use a little bit changed position 
-						// so that pac-man can go a little bit farther in the maze
-						int adaptedCurrentPosX;
-						int adaptedCurrentPosY;
-						Position currentMatrixPos; // the position of the sprite in the matrix
-						int wantedBoxValue = -1; // the next box value where pac-man wants to go
-						
-						if(inkyWantedState == MovingSpriteState.LEFT) {
-							adaptedCurrentPosX = inky.getCurrentPosition().getX() + inky.getCurrentSize().width/2;
-							adaptedCurrentPosY = inky.getCurrentPosition().getY();
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
-						}
-						else if(inkyWantedState == MovingSpriteState.RIGHT) {
-							adaptedCurrentPosX = inky.getCurrentPosition().getX() - inky.getCurrentSize().width/2;
-							adaptedCurrentPosY = inky.getCurrentPosition().getY();
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
-						}
-						else if(inkyWantedState == MovingSpriteState.UP) {
-							adaptedCurrentPosX = inky.getCurrentPosition().getX();
-							adaptedCurrentPosY = inky.getCurrentPosition().getY() + inky.getCurrentSize().height/2;
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
-						}
-						else if(inkyWantedState == MovingSpriteState.DOWN) {
-							adaptedCurrentPosX = inky.getCurrentPosition().getX();
-							adaptedCurrentPosY = inky.getCurrentPosition().getY() - inky.getCurrentSize().height/2;
-							currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
-							wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
-						}
-						
-						if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || inky.isInTheBox()) {
-							inky.setState(inkyWantedState); // pac-man can be in that state
-						}else {					
-							if(inky.getBehaviorThread() == null || !inky.getBehaviorThread().isRunning()) {
-								inky.startDirectionThread();
+				if(!inky.isInTheBox()) {
+					if(inky.getCurrentPosition() != null && inky.getCurrentSize() != null) {
+						inkyWantedState = inky.getWantedState();
+						if(inkyWantedState != MovingSpriteState.STOP) {
+
+							// we need to use a little bit changed position 
+							// so that pac-man can go a little bit farther in the maze
+							int adaptedCurrentPosX;
+							int adaptedCurrentPosY;
+							Position currentMatrixPos; // the position of the sprite in the matrix
+							int wantedBoxValue = -1; // the next box value where pac-man wants to go
+
+							if(inkyWantedState == MovingSpriteState.LEFT) {
+								adaptedCurrentPosX = inky.getCurrentPosition().getX() + inky.getCurrentSize().width/2;
+								adaptedCurrentPosY = inky.getCurrentPosition().getY();
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()-1);
 							}
-							// inky set another possible direction
-							inky.getBehaviorThread().changeDirection();
-						}
-					}			
-				}		
+							else if(inkyWantedState == MovingSpriteState.RIGHT) {
+								adaptedCurrentPosX = inky.getCurrentPosition().getX() - inky.getCurrentSize().width/2;
+								adaptedCurrentPosY = inky.getCurrentPosition().getY();
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()).get(currentMatrixPos.getX()+1);
+							}
+							else if(inkyWantedState == MovingSpriteState.UP) {
+								adaptedCurrentPosX = inky.getCurrentPosition().getX();
+								adaptedCurrentPosY = inky.getCurrentPosition().getY() + inky.getCurrentSize().height/2;
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()-1).get(currentMatrixPos.getX());
+							}
+							else if(inkyWantedState == MovingSpriteState.DOWN) {
+								adaptedCurrentPosX = inky.getCurrentPosition().getX();
+								adaptedCurrentPosY = inky.getCurrentPosition().getY() - inky.getCurrentSize().height/2;
+								currentMatrixPos = mazeToMatrixPosition(new Position(adaptedCurrentPosX, adaptedCurrentPosY), gamePanel, mazeValues);
+								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
+							}
+
+							if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || inky.isInTheBox()) {
+								inky.setState(inkyWantedState); // pac-man can be in that state
+							}else {					
+								if(inky.getBehaviorThread() == null || !inky.getBehaviorThread().isRunning()) {
+									inky.startBehaviorThread();
+								}
+								// inky set another possible direction
+								inky.getBehaviorThread().changeDirection();
+							}
+						}			
+					}						
+				}
 			}			
 		}
 		
@@ -561,7 +566,6 @@ public class PhysicsThread extends ThreadPerso {
 				int pacman_right = pacMan.getCurrentPosition().getX() + pacMan.getCurrentSize().width;
 				int pacman_up = pacMan.getCurrentPosition().getY();
 				int pacman_down = pacMan.getCurrentPosition().getY() + pacMan.getCurrentSize().height;
-				collisionDone=false;
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky) && pacMan.invincible()) {
 					System.out.println("collision with blinky!");
 					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
@@ -747,12 +751,25 @@ public class PhysicsThread extends ThreadPerso {
 	}
 	
 	private void resetAllSprites() {
+		
 		if(pacMan != null) {
 			pacMan.setCurrentPosition(matrixToMazePosition(pacMan.getMatrixPosition(), gamePanel, mazeValues));
 		}
 		if(blinky != null) {
 			blinky.setCurrentPosition(matrixToMazePosition(blinky.getMatrixPosition(), gamePanel, mazeValues));
 		}
+		
+		// stop the ghost that are replaced in the box before replacing them
+		if(pinky != null) {
+			pinky.setState(MovingSpriteState.STOP);
+		}		
+		if(clyde != null) {
+			clyde.setState(MovingSpriteState.STOP);
+		}
+		if(inky != null) {
+			inky.setState(MovingSpriteState.STOP);
+		}
+		
 		if(pinky != null) {
 			pinky.setCurrentPosition(matrixToMazePosition(pinky.getMatrixPosition(), gamePanel, mazeValues));
 		}
@@ -762,6 +779,8 @@ public class PhysicsThread extends ThreadPerso {
 		if(inky != null) {
 			inky.setCurrentPosition(matrixToMazePosition(inky.getMatrixPosition(), gamePanel, mazeValues));
 		}
+		
+		//finally say that they are in the box, so that ghost exit box thread does its job
 		if(pinky != null) {
 			pinky.setInTheBox(true);
 		}
@@ -771,32 +790,12 @@ public class PhysicsThread extends ThreadPerso {
 		if(inky != null) {
 			inky.setInTheBox(true);
 		}
-		GhostsExitBoxThread.clydeCanGoOut=true;
-		GhostsExitBoxThread.pinkyCanGoOut=true;
-		GhostsExitBoxThread.inkyCanGoOut=true;
-		if(clyde != null) {
-			clyde.setState(MovingSpriteState.STOP);
-		}
-		if(pinky != null) {
-			pinky.setState(MovingSpriteState.STOP);
-		}
-		if(inky != null) {
-			inky.setState(MovingSpriteState.STOP);
-		}
-		if(clyde != null) {
-			clyde.stopDirectionThread();
-		}
-		if(inky != null) {
-			inky.stopDirectionThread();
-		}
 	}
 	
 	private void resetOneSprite(Ghost ghost) {
 		ghost.setCurrentPosition(matrixToMazePosition(ghost.getMatrixPosition(), gamePanel, mazeValues));
 		ghost.setInTheBox(true);
 		ghost.setState(MovingSpriteState.STOP);
-		ghost.stopDirectionThread();
-		
 	}
 
 	public synchronized static void setVUp(int x) {
