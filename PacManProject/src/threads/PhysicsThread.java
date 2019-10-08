@@ -54,6 +54,7 @@ public class PhysicsThread extends ThreadPerso {
 	private static boolean soundDown = false;
 	private static int n = 1;
 	private boolean gameOver=false;
+	
 	private static  int scoreLevelI=1;
 	private int scoreLevel=0;
 	private boolean Level=false;
