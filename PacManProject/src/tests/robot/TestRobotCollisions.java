@@ -12,6 +12,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import sprites.MovingSpriteState;
+import sprites.Position;
+
 class TestRobotCollisions {
 	
 	GameFrame window;
@@ -92,7 +95,30 @@ class TestRobotCollisions {
 	}
 	
 	
-	
+	/**
+	 * Test that invincible pac-man kills a ghost replacing it at its initial position.
+	 */
+	@Test
+	void testInvinciblePacManGhostCollision() {
+		
+		int yPosPacMan = window.getGameLoop().getPacMan().getCurrentPosition().getY();
+		int yPosGhost = window.getGameLoop().getBlinky().getCurrentPosition().getY();
+		assertEquals(yPosPacMan, yPosGhost, "pac-man and ghost must be at the same line for testing");
+		
+		int xPosPacMan = window.getGameLoop().getPacMan().getCurrentPosition().getX();
+		int xPosGhost = window.getGameLoop().getBlinky().getCurrentPosition().getX();
+		assertTrue(xPosPacMan < xPosGhost, "pac-man must be at the left of ghost for testing");
+		
+		window.getGameLoop().getPacMan().setInvincible(true);
+		
+		window.getGameLoop().getBlinky().setState(MovingSpriteState.LEFT);
+		sleepFor(3500);
+		
+		int xPosGhost2 = window.getGameLoop().getBlinky().getCurrentPosition().getX();
+		int yPosGhost2 = window.getGameLoop().getBlinky().getCurrentPosition().getY();
+		System.out.println(xPosGhost+" "+yPosGhost+" -> "+xPosGhost2+" "+yPosGhost2);
+		assertTrue(xPosGhost== xPosGhost2 && yPosGhost== yPosGhost2,"ghost must be replaced at its initial position"); // error because the position is quite different
+	}
 	
 	
 	

@@ -779,7 +779,7 @@ public class PhysicsThread extends ThreadPerso {
 	}
 	
 	private void resetOneSprite(Ghost ghost) {
-		ghost.replacementOnDeath();
+		ghost.setCurrentPosition(matrixToMazePosition(ghost.getMatrixPosition(), gamePanel, mazeValues));
 		ghost.setInTheBox(true);
 		ghost.setState(MovingSpriteState.STOP);
 		ghost.stopDirectionThread();

@@ -54,10 +54,4 @@ public class Clyde extends Ghost {
 	}
 
 
-	@Override
-	public void replacementOnDeath() {
-		// TODO Auto-generated method stub
-		this.setCurrentPosition(new Position(273, 253));
-	}
-
 }

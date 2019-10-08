@@ -126,7 +126,7 @@ public abstract class Ghost extends MovingSprite {
 	 */
 	public abstract boolean specificAvailable();
 	public abstract void launchSpecific();
-	public abstract void replacementOnDeath();
+
 	
 	private boolean wallInRow(Position pos1, Position pos2) {
 		int petit= Math.min(pos1.getX(),pos2.getX());

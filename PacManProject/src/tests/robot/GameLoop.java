@@ -63,7 +63,7 @@ public class GameLoop extends ThreadPerso {
 		 energizers = maze.getEnergizers();
 		 pacDots = maze.getPacDots();
 		 pacMan = maze.getPacMan();
-		 blinky = maze.getBlinky();
+		 blinky = maze.getBlinky(); blinky.setState(MovingSpriteState.STOP);
 		 pinky = maze.getPinky();
 		 clyde = maze.getClyde();
 		 inky = maze.getInky();
@@ -122,7 +122,6 @@ public class GameLoop extends ThreadPerso {
 		}
 		
 		if(blinky != null) {
-			blinky.setState(MovingSpriteState.STOP);
 			blinky.updatePos();
 		}
 
