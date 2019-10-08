@@ -158,11 +158,16 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 			}
 			if(getCoordY()==440) {
 				System.out.println("hightScores");
+				System.out.println("start HighScoresMenu");	
+				Main.getGlobalFrame().setPage("HighScores");
+				System.out.println("page audio ................"+Main.getGlobalFrame().getPage());
+				System.out.println(Main.getGlobalFrame().getPage());
+				checkPageThread= new CheckPageThread("CheckPageThread");
 				
 				
 			}if(getCoordY()==520) {
 				System.out.println("Quit Game");
-				Main.getGlobalFrame().dispose();
+				Main.getGlobalFrame().closeGame();
 				
 			}}
 			

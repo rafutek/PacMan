@@ -40,9 +40,10 @@ public class PhysicsThread extends ThreadPerso {
 	
 	private Sprites pacDots; 
 	private Sprites energizer;
-	private int score=0;
+	private static int score=0;
 	private boolean ScoreBonus=false;
 	public static boolean timerstarted=false;
+	private static int scoreInvGhost;
 	/**
 	 * Management of the sounds
 	 */
@@ -52,7 +53,13 @@ public class PhysicsThread extends ThreadPerso {
 	private static boolean soundUp = false;
 	private static boolean soundDown = false;
 	private static int n = 1;
-
+	private boolean gameOver=false;
+	private static  int scoreLevelI=1;
+	private int scoreLevel=0;
+	private boolean Level=false;
+	private boolean nextLevel=false;
+	private static boolean collPacManGhostInv=false;
+	
 	
 	/**
 	 * The class needs the maze number matrix, the game panel size and of course the moving sprites,
@@ -75,6 +82,85 @@ public class PhysicsThread extends ThreadPerso {
 		this.energizer=energizer;
 		this.musicTh = musicTh;
 		
+	}
+	public static boolean isCollPacManGhostInv() {
+		return collPacManGhostInv;
+	}
+	public void setCollPacManGhostInv(boolean collPacManGhostInv) {
+		this.collPacManGhostInv = collPacManGhostInv;
+	}
+	public boolean isLevel() {
+		return Level;
+	}
+
+	public void setLevel(boolean level) {
+		Level = level;
+	}
+	
+	public Sprites getPacDots() {
+		return pacDots;
+	}
+
+
+
+	public void setPacDots(Sprites pacDots) {
+		this.pacDots = pacDots;
+	}
+
+
+
+	public Sprites getEnergizer() {
+		return energizer;
+	}
+
+
+
+	public void setEnergizer(Sprites energizer) {
+		this.energizer = energizer;
+	}
+
+
+
+	public static int getScore() {
+		return score;
+	}
+
+
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+
+
+	public static int getScoreLevelI() {
+		return scoreLevelI;
+	}
+
+
+
+	public void setScoreLevelI(int scoreLevelI) {
+		this.scoreLevelI = scoreLevelI;
+	}
+
+	public static int getScoreInvGhost() {
+		return scoreInvGhost;
+	}
+	public static void setScoreInvGhost(int scoreInvGhost) {
+		PhysicsThread.scoreInvGhost = scoreInvGhost;
+	}
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
+	}
+	public  InvincibleThread getInvTh() {
+		return invTh;
+	}
+	public void setInvTh(InvincibleThread invTh) {
+		this.invTh = invTh;
 	}
 
 	@Override
@@ -392,30 +478,41 @@ public class PhysicsThread extends ThreadPerso {
 		}
 		
 		
-		// pac-man and ghosts collisions
 		if(ghostCollision()) {
-			int nbLives = pacMan.getLife();
-			if(nbLives!=0 && nbLives<=4) {
-				resetAllSprites();
-				pacMan.setLife(nbLives-1);
-			}else if(nbLives==0) {
-				System.out.println("GAMEOVER");
+			pinky.setInTheBox(true);
+			clyde.setInTheBox(true);
+			inky.setInTheBox(true);
+			GhostsExitBoxThread.clydeCanGoOut=true;
+			GhostsExitBoxThread.pinkyCanGoOut=true;
+			GhostsExitBoxThread.inkyCanGoOut=true;
+			clyde.setState(MovingSpriteState.STOP);
+			pinky.setState(MovingSpriteState.STOP);
+			inky.setState(MovingSpriteState.STOP);
+			
+			timerstarted=true;
+			if(pacMan.getLife()!=0 && pacMan.getLife()<=4) {
+				int life=pacMan.getLife()-1;
+				pacMan.setLife(life);
+				if(life==0) {
+					System.out.println("GAMEOVER");
+					gameOver=true;
+				}
 			}
 		}
-		pacDotsCollision(); 
+		if(pacDotsCollision()){
+			
+			
+		}
 		if(energizerCollision()) {
 			
 		}
-		
-		if(score>=10000 && !ScoreBonus && pacMan.getLife()==3) {
-			pacMan.setLife(4);
-			StatusBarPanel.setImageLives(4);
+		if(score>=10000 && !ScoreBonus ) {
+			pacMan.setLife(pacMan.getLife()+1);
+			StatusBarPanel.setImageLives(pacMan.getLife()+1);
 			StatusBarPanel.livesImg.setIcon(new ImageIcon(StatusBarPanel.Lives));
 			ScoreBonus=true;
 		}
 	}
-	
-
 	
 	
 	/**
@@ -561,20 +658,27 @@ public class PhysicsThread extends ThreadPerso {
 	
 	
 
-	private boolean ghostCollision() {
+	public boolean ghostCollision() {
 		synchronized(pacMan) {
 			if(pacMan.getCurrentPosition() != null && pacMan.getCurrentSize() != null) {
 				int pacman_left = pacMan.getCurrentPosition().getX();
 				int pacman_right = pacMan.getCurrentPosition().getX() + pacMan.getCurrentSize().width;
 				int pacman_up = pacMan.getCurrentPosition().getY();
 				int pacman_down = pacMan.getCurrentPosition().getY() + pacMan.getCurrentSize().height;
+				
+				
+				
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky) && pacMan.invincible()) {
 					System.out.println("collision with blinky!");
 					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
+					setScoreInvGhost(200*(int)Math.pow(2,pacMan.eatenFantom()));
+					StatusBarPanel.valueScore.setText(""+score);
 					pacMan.setEatenFantom(pacMan.eatenFantom()+1);
+					setCollPacManGhostInv(true);
 					resetOneSprite(blinky);
 					return false;
 				}
+				
 				
 				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky)) {
 					System.out.println("collision with blinky!");
@@ -586,7 +690,10 @@ public class PhysicsThread extends ThreadPerso {
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky) && pacMan.invincible()) {
 					System.out.println("collision with pinky!");
 					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
+					StatusBarPanel.valueScore.setText(""+score);
+					setScoreInvGhost(200*(int)Math.pow(2,pacMan.eatenFantom()));
 					pacMan.setEatenFantom(pacMan.eatenFantom()+1);
+					setCollPacManGhostInv(true);
 					resetOneSprite(pinky);
 					return false;
 				}		
@@ -600,7 +707,10 @@ public class PhysicsThread extends ThreadPerso {
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde) && pacMan.invincible()) {
 					System.out.println("collision with clyde!");
 					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
+					StatusBarPanel.valueScore.setText(""+score);
+					setScoreInvGhost(200*(int)Math.pow(2,pacMan.eatenFantom()));
 					pacMan.setEatenFantom(pacMan.eatenFantom()+1);
+					setCollPacManGhostInv(true);
 					resetOneSprite(clyde);
 					return false;
 				}
@@ -614,7 +724,10 @@ public class PhysicsThread extends ThreadPerso {
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky) && pacMan.invincible()) {
 					System.out.println("collision with inky!");
 					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
+					StatusBarPanel.valueScore.setText(""+score);
+					setScoreInvGhost(200*(int)Math.pow(2,pacMan.eatenFantom()));
 					pacMan.setEatenFantom(pacMan.eatenFantom()+1);
+					setCollPacManGhostInv(true);
 					resetOneSprite(inky);
 					return false;
 				}
@@ -632,8 +745,7 @@ public class PhysicsThread extends ThreadPerso {
 	private boolean pacDotsCollision() {
 		synchronized(pacMan) {
 			if(collisionWith(pacDots)) {
-				
-				System.out.println("collision pacDot, showX : "+pacDots.showX+ " showY : "+pacDots.showY);
+				System.out.println("collision pacDot ");
 				return true;
 			}
 			return false;
@@ -656,6 +768,7 @@ public class PhysicsThread extends ThreadPerso {
 				
 		}
 	}
+	
 	private boolean collisionWith(Sprites pacDots) {
 		for(int i=0; i<pacDots.getSprites().size();i++){
 			int positionX=pacDots.getSpriteNb(i).getCurrentPosition().getX();

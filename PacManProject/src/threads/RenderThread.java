@@ -9,8 +9,11 @@ import java.text.DecimalFormat;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
+import main.Main;
 import resources.Maze;
+import resources.Tiles;
 import sprites.Blinky;
 import sprites.Clyde;
 import sprites.Inky;
@@ -20,6 +23,9 @@ import sprites.Pinky;
 import sprites.Sprites;
 import view.GameFrame;
 import view.GamePanel;
+import view.HightScoresPanel;
+import view.NewHighScorePanel;
+import view.PrincipalMenuPanel;
 import view.StatusBarPanel;
 
 public class RenderThread extends ThreadPerso{
@@ -78,7 +84,11 @@ public class RenderThread extends ThreadPerso{
 	// window panels to render content into
 	private GamePanel gamePanel;
 	private StatusBarPanel statusBarPanel;
+	private HightScoresPanel hightScoresPanel;
 
+	private int finalScore=0;
+	private int newhightScore=0;
+	private int newPosition=0;
 	
 	//maze
 	private Maze maze;
@@ -101,9 +111,11 @@ public class RenderThread extends ThreadPerso{
 
 	//physics
 	private PhysicsThread physicsTh;
-	
+	private CheckPageThread checkPageThread ;
 	//exit the ghost of the box
 	private GhostsExitBoxThread ghostExitThread;
+	private GameOverThread gameOverTh;
+	private ScoreInvicibiltyGhostThread scoreInvicibiltyGhostThread;
 	
 	//sounds
 	private MusicThread musicTh;
@@ -115,7 +127,12 @@ public class RenderThread extends ThreadPerso{
 				
 		this.gamePanel = gamePanel;
 		this.statusBarPanel = statusBarPanel;
-		
+		try {
+			hightScoresPanel = new HightScoresPanel();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		// initialize timing elements
 		this.period = period;
 		fpsStore = new double[NUM_FPS];
@@ -397,6 +414,66 @@ public class RenderThread extends ThreadPerso{
 				inky.draw(dbg);		
 			}
 			
+			if(physicsTh.isCollPacManGhostInv()) {
+				scoreInvicibiltyGhostThread= new ScoreInvicibiltyGhostThread( maze.getTiles(), gamePanel);
+				scoreInvicibiltyGhostThread.setPosX(pacMan.getCurrentPosition().getX()-20);
+				scoreInvicibiltyGhostThread.setPosY(pacMan.getCurrentPosition().getY()-20);
+				scoreInvicibiltyGhostThread.startThread();
+				this.pauseThread();
+				physicsTh.getInvTh().pauseThread();
+				do {
+					try {
+					Thread.sleep(100);
+					} catch (InterruptedException e) {}
+				}while(scoreInvicibiltyGhostThread.isRunning());
+				this.resumeThread();
+				physicsTh.getInvTh().resumeThread();
+				physicsTh.setCollPacManGhostInv(false);
+			}
+			
+			if(physicsTh.isGameOver()) {
+				gameOverTh = new GameOverThread(maze.getTiles(), gamePanel);
+				gameOverTh.startThread();
+				this.pauseThread();
+				do {
+					try {
+					Thread.sleep(100);
+					} catch (InterruptedException e) {}
+				}while(gameOverTh.isRunning());
+				
+				physicsTh.setGameOver(false);
+				
+				finalScore = PhysicsThread.getScore();
+				compareWithHightScores();
+				
+
+				if(newPosition == 0) {
+					
+				this.stopThread();
+				Main.getGlobalFrame().setStatutMenu(0);
+				Main.getGlobalFrame().setPage("PrincipalMenu");
+				System.out.println(Main.getGlobalFrame().getPage()+"...........");
+				checkPageThread = new CheckPageThread("CheckPageThread");
+				System.out.println("Score ..................."+finalScore);
+				}else {
+					this.stopThread();
+					Main.getGlobalFrame().setStatutMenu(0);
+					Main.getGlobalFrame().setPage("NewHighScore");
+					System.out.println(Main.getGlobalFrame().getPage()+"...........");
+					NewHighScorePanel h = Main.getGlobalFrame().getNewHighScorePanel();
+					h.setNewHightScore(finalScore);
+					h.setNewPosition(newPosition);
+					System.out.println(".............test ............"+h.getNewHightScore());
+					h.getNewScore().setText("New score "+h.getNewHightScore());
+					h.setVisible(true);
+					checkPageThread = new CheckPageThread("CheckPageThread");
+					System.out.println("Score ..................."+finalScore);
+					
+				}
+				
+				
+			}
+			
 			if(pacMan.getLife()!=lastLife) {
 				StatusBarPanel.setImageLives(pacMan.getLife());
 				StatusBarPanel.livesImg.setIcon(new ImageIcon(StatusBarPanel.Lives));
@@ -510,6 +587,37 @@ public class RenderThread extends ThreadPerso{
 		System.out.println("Average UPS: " + df.format(averageUPS));
 		System.out.println("Time Spent: " + timeSpentInGame + " secs");
 	}  // end of printStats()
+	
+	public void compareWithHightScores(){
+		String[] h = hightScoresPanel.getScore() ;
+		Integer[] hightScores = new Integer[5];
+		for(int i =0; i<5;i++) {
+			hightScores[i]= Integer.parseInt(h[i]);
+		}
+		if(finalScore>hightScores[0] || finalScore==hightScores[0]) {
+			newhightScore = finalScore;
+			newPosition =1;
+			System.out.println("position 1.......................");
+		}else if((finalScore<hightScores[0] && finalScore>hightScores[1])|| finalScore==hightScores[1]) {
+			newhightScore = finalScore;
+			newPosition =2;
+			System.out.println("position 2.......................");
+		}else if((finalScore<hightScores[1] && finalScore>hightScores[2])|| finalScore==hightScores[2]) {
+			newhightScore = finalScore;
+			newPosition =3;
+			System.out.println("position 3.......................");
+		}else if((finalScore<hightScores[2] && finalScore>hightScores[3])|| finalScore==hightScores[3]) {
+			newhightScore = finalScore;
+			newPosition =4;
+			System.out.println("position 4.......................");
+		}else if((finalScore<hightScores[3] && finalScore>hightScores[4])|| finalScore==hightScores[4]) {
+			newhightScore = finalScore;
+			newPosition =5;
+			System.out.println("position 5.......................");
+		}
+		
+	}
+	
 	public AnimationThread getAnimationTh() {
 		return animationTh;
 	}

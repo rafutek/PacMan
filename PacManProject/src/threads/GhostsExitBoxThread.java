@@ -22,7 +22,10 @@ public class GhostsExitBoxThread extends TimerThread {
 	private Maze maze;
 	private PacMan pacMan;
 	private  boolean ghostWantsToGoOut, blinkyWantsToGoOut, pinkyWantsToGoOut, clydeWantsToGoOut, inkyWantsToGoOut;
-	public  boolean ghostCanGoOut, blinkyCanGoOut, pinkyCanGoOut, clydeCanGoOut, inkyCanGoOut;
+	public  boolean ghostCanGoOut, blinkyCanGoOut;
+	public static boolean pinkyCanGoOut;
+	public static boolean clydeCanGoOut;
+	public static boolean inkyCanGoOut;
 	
 	public GhostsExitBoxThread(Blinky blinky, Pinky pinky, Clyde clyde, Inky inky, Maze maze, PacMan pacMan) {
 		super(WAIT_TIME, NB_WAITS);

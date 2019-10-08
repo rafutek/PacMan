@@ -1,5 +1,6 @@
 package sprites;
 
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +64,7 @@ public abstract class Ghost extends MovingSprite {
 			cornerBottomLeft = spriteImages.getImagesList().get(i+16);
 			cornerBottomRight = spriteImages.getImagesList().get(i+16+1);
 			img = createFullSpriteImage(cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight);
+			img = tiles.resize(img, new Dimension(50, 50));
 			spriteFullImages.add(img);			
 		}
 		for (int i = spriteImages.getImagesList().size()-16; i < spriteImages.getImagesList().size()-3; i+=4) {
@@ -71,6 +73,7 @@ public abstract class Ghost extends MovingSprite {
 			cornerBottomLeft = spriteImages.getImagesList().get(i+2);
 			cornerBottomRight = spriteImages.getImagesList().get(i+3);
 			img = createFullSpriteImage(cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight);
+			img = tiles.resize(img, new Dimension(50, 50));
 			spriteFullImages.add(img);	
 		} 
 	}

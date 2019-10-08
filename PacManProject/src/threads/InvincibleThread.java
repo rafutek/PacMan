@@ -7,6 +7,7 @@ public class InvincibleThread extends TimerThread {
 	PacMan pacMan;
 	private MusicThread musicTh;
 	
+	
 	public InvincibleThread(PacMan pacMan , MusicThread musicTh) {
 		super(10,800);
 		setName("Invincibilite");
