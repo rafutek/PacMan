@@ -280,6 +280,9 @@ public abstract class Ghost extends MovingSprite {
 		if (pacMan.invincible()){
 			this.escaping = true;
 		}
+		else {
+			this.escaping = false;
+		}
 		return escaping;
 	}	
 	

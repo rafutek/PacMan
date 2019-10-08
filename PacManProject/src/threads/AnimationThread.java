@@ -14,7 +14,7 @@ public class AnimationThread extends TimerThread {
 	private static final int NB_WAITS = 20;
 	
 	private Sprites energizers;
-	private boolean wasEscaping=false;
+	//private boolean wasEscaping=false;
 	private PacMan pacMan;
 	private MovingSpriteState pacManLastState, pacManCurrentState;
 
@@ -120,7 +120,7 @@ public class AnimationThread extends TimerThread {
 			synchronized(blinky) {
 				if (blinky.escaping()) {
 					blinky.setEscapingAnimation();
-					wasEscaping =true;
+					//wasEscaping =true;
 				}
 				
 				else {
@@ -158,31 +158,33 @@ public class AnimationThread extends TimerThread {
 			synchronized(pinky) {
 				if (pinky.escaping()) {
 					pinky.setEscapingAnimation();
-					wasEscaping =true;
+					//wasEscaping =true;
 				}
-				pinkyCurrentState = pinky.getState();
-				if(pinkyCurrentState != pinkyLastState) { // have to change the animation list to the new state
-					if(pinkyCurrentState == MovingSpriteState.STOP) {
-						pinky.setNoMovementAnimation();
-					}
-					if(pinkyCurrentState == MovingSpriteState.LEFT) {
-						pinky.setGoLeftAnimation();
-					}
-					else if(pinkyCurrentState == MovingSpriteState.RIGHT) {
-						pinky.setGoRightAnimation();
-					}
-					else if(pinkyCurrentState == MovingSpriteState.UP) {
-						pinky.setGoUpAnimation();
-					}
-					else if(pinkyCurrentState == MovingSpriteState.DOWN) {
-						pinky.setGoDownAnimation();
-					}
-					else if(pinkyCurrentState == MovingSpriteState.DEATH) {
-						pinky.setDeathAnimation();
-					}
-					pinkyLastState = pinkyCurrentState;
-				}				
-			}			
+				else {
+					pinkyCurrentState = pinky.getState();
+					if(pinkyCurrentState != pinkyLastState) { // have to change the animation list to the new state
+						if(pinkyCurrentState == MovingSpriteState.STOP) {
+							pinky.setNoMovementAnimation();
+						}
+						if(pinkyCurrentState == MovingSpriteState.LEFT) {
+							pinky.setGoLeftAnimation();
+						}
+						else if(pinkyCurrentState == MovingSpriteState.RIGHT) {
+							pinky.setGoRightAnimation();
+						}
+						else if(pinkyCurrentState == MovingSpriteState.UP) {
+							pinky.setGoUpAnimation();
+						}
+						else if(pinkyCurrentState == MovingSpriteState.DOWN) {
+							pinky.setGoDownAnimation();
+						}
+						else if(pinkyCurrentState == MovingSpriteState.DEATH) {
+							pinky.setDeathAnimation();
+						}
+						pinkyLastState = pinkyCurrentState;
+					}				
+				}
+			}
 		}
 		
 		//clyde
@@ -190,31 +192,33 @@ public class AnimationThread extends TimerThread {
 			synchronized(clyde) {
 				if (clyde.escaping()) {
 					clyde.setEscapingAnimation();
-					wasEscaping =true;
+					//wasEscaping =true;
 				}
-				clydeCurrentState = clyde.getState();
-				if(clydeCurrentState != clydeLastState) { // have to change the animation list to the new state
-					if(clydeCurrentState == MovingSpriteState.STOP) {
-						clyde.setNoMovementAnimation();
-					}
-					if(clydeCurrentState == MovingSpriteState.LEFT) {
-						clyde.setGoLeftAnimation();
-					}
-					else if(clydeCurrentState == MovingSpriteState.RIGHT) {
-						clyde.setGoRightAnimation();
-					}
-					else if(clydeCurrentState == MovingSpriteState.UP) {
-						clyde.setGoUpAnimation();
-					}
-					else if(clydeCurrentState == MovingSpriteState.DOWN) {
-						clyde.setGoDownAnimation();
-					}
-					else if(clydeCurrentState == MovingSpriteState.DEATH) {
-						clyde.setDeathAnimation();
-					}
-					clydeLastState = clydeCurrentState;
-				}				
-			}		
+				else {
+					clydeCurrentState = clyde.getState();
+					if(clydeCurrentState != clydeLastState) { // have to change the animation list to the new state
+						if(clydeCurrentState == MovingSpriteState.STOP) {
+							clyde.setNoMovementAnimation();
+						}
+						if(clydeCurrentState == MovingSpriteState.LEFT) {
+							clyde.setGoLeftAnimation();
+						}
+						else if(clydeCurrentState == MovingSpriteState.RIGHT) {
+							clyde.setGoRightAnimation();
+						}
+						else if(clydeCurrentState == MovingSpriteState.UP) {
+							clyde.setGoUpAnimation();
+						}
+						else if(clydeCurrentState == MovingSpriteState.DOWN) {
+							clyde.setGoDownAnimation();
+						}
+						else if(clydeCurrentState == MovingSpriteState.DEATH) {
+							clyde.setDeathAnimation();
+						}
+						clydeLastState = clydeCurrentState;
+					}				
+				}	
+			}
 		}
 
 		
@@ -223,30 +227,32 @@ public class AnimationThread extends TimerThread {
 			synchronized(inky) {
 				if (blinky.escaping()) {
 					inky.setEscapingAnimation();
-					wasEscaping =true;
+					//wasEscaping =true;
 				}
-				inkyCurrentState = inky.getState();
-				if(inkyCurrentState != inkyLastState) { // have to change the animation list to the new state
-					if(inkyCurrentState == MovingSpriteState.STOP) {
-						inky.setNoMovementAnimation();
-					}
-					if(inkyCurrentState == MovingSpriteState.LEFT) {
-						inky.setGoLeftAnimation();
-					}
-					else if(inkyCurrentState == MovingSpriteState.RIGHT) {
-						inky.setGoRightAnimation();
-					}
-					else if(inkyCurrentState == MovingSpriteState.UP) {
-						inky.setGoUpAnimation();
-					}
-					else if(inkyCurrentState == MovingSpriteState.DOWN) {
-						inky.setGoDownAnimation();
-					}
-					else if(inkyCurrentState == MovingSpriteState.DEATH) {
-						inky.setDeathAnimation();
-					}
-					inkyLastState = inkyCurrentState;
-				}				
+				else {
+					inkyCurrentState = inky.getState();
+					if(inkyCurrentState != inkyLastState) { // have to change the animation list to the new state
+						if(inkyCurrentState == MovingSpriteState.STOP) {
+							inky.setNoMovementAnimation();
+						}
+						if(inkyCurrentState == MovingSpriteState.LEFT) {
+							inky.setGoLeftAnimation();
+						}
+						else if(inkyCurrentState == MovingSpriteState.RIGHT) {
+							inky.setGoRightAnimation();
+						}
+						else if(inkyCurrentState == MovingSpriteState.UP) {
+							inky.setGoUpAnimation();
+						}
+						else if(inkyCurrentState == MovingSpriteState.DOWN) {
+							inky.setGoDownAnimation();
+						}
+						else if(inkyCurrentState == MovingSpriteState.DEATH) {
+							inky.setDeathAnimation();
+						}
+						inkyLastState = inkyCurrentState;
+					}				
+				}
 			}
 		}			
 		}
