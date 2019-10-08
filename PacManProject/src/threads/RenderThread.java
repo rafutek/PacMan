@@ -11,7 +11,6 @@ import java.text.DecimalFormat;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import main.Main;
 import resources.Maze;
 import resources.Tiles;
@@ -133,7 +132,6 @@ public class RenderThread extends ThreadPerso{
 		try {
 			hightScoresPanel = new HightScoresPanel();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		// initialize timing elements
@@ -161,13 +159,13 @@ public class RenderThread extends ThreadPerso{
 		
 		statusBarPanel.setPacman(pacMan);
 		musicTh = new MusicThread("musicTh");
+		soundTh = new SoundThread("soundTh");
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
-		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers, musicTh );
+		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers, musicTh , soundTh);
 		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze, pacMan);
 		try {
 			writeLetter = new WriteLetter();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.paused = true;
@@ -283,6 +281,7 @@ public class RenderThread extends ThreadPerso{
 	public synchronized void pauseThread() {
 		paused = true;
 		musicTh.pauseThread();
+		soundTh.pauseThread();
 		animationTh.pauseThread();
 		physicsTh.pauseThread();
 		ghostExitThread.pauseThread();
@@ -293,20 +292,7 @@ public class RenderThread extends ThreadPerso{
 	 */
 	public synchronized void resumeThread() {
 		if(paused) {
-			
-//			animationDone = false;
-//			if(threeTwoOneTh != null && threeTwoOneTh.isRunning()) {
-//				threeTwoOneTh.stopThread();
-//			}
-//			threeTwoOneTh = new ThreeTwoOneThread(maze.getTiles(), gamePanel);
-//			threeTwoOneTh.startThread();
-//			do {
-//				try {
-//					Thread.sleep(100);
-//				} catch (InterruptedException e) {}
-//			}while(threeTwoOneTh.isRunning());
-//			
-//			animationDone = true;
+
 			if(GameFrame.getPage()=="Game") {
 			initStats = false;
 			paused = false;
@@ -315,6 +301,11 @@ public class RenderThread extends ThreadPerso{
 				musicTh.startThread();
 			}else {
 				musicTh.resumeThread();
+			}
+			if(!soundTh.isRunning()) {
+				soundTh.startThread();
+			}else {
+				soundTh.resumeThread();
 			}
 			
 			if(!animationTh.isRunning()) {
@@ -347,6 +338,7 @@ public class RenderThread extends ThreadPerso{
 		physicsTh.stopThread();
 		ghostExitThread.stopThread();
 		musicTh.stopThread();
+		soundTh.stopThread();
 		running = false;
 	}
 	
@@ -678,15 +670,40 @@ public class RenderThread extends ThreadPerso{
 		this.ghostExitThread = ghostExitThread;
 	}
 
-	public void setMusicMute(boolean b) {
+	public synchronized void setMusicMute(boolean b) {
 		synchronized (musicTh){
 			musicTh.setMute(b);
 		}
 	}
 
-	public void setSoundMute(boolean b) {
+	public synchronized void setSoundMute(boolean b) {
 		synchronized(physicsTh) {
 			physicsTh.setSoundMute(b);
+		}
+	}
+	
+	public synchronized void setAudioUp() {
+		synchronized(soundTh) {
+			soundTh.volumeUp();
+		}
+	}
+	
+	public synchronized void setAudioDown() {
+		synchronized(soundTh) {
+			soundTh.volumeDown();
+		}
+		
+	}
+	
+	public synchronized void setMusicUp() {
+		synchronized (musicTh) {
+			musicTh.volumeUp();
+		}
+	}
+	
+	public synchronized void setMusicDown() {
+		synchronized (musicTh) {
+			musicTh.volumeDown();
 		}
 	}
 

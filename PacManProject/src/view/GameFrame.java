@@ -168,7 +168,7 @@ public class GameFrame extends JFrame implements WindowListener
 		setLayout(gridbag);
 		principalMenuPanel = new PrincipalMenuPanel();
 		controlsMenuPanel = new ControlsMenuPanel();
-		audioMenuPanel = new AudioMenuPanel(this);
+		audioMenuPanel = new AudioMenuPanel(renderTh);
 		try {
 			hightScoresPanel = new HightScoresPanel();
 			newHighScorePanel = new NewHighScorePanel();
@@ -340,6 +340,7 @@ public class GameFrame extends JFrame implements WindowListener
 						synchronized (renderTh) {
 							renderTh.pauseThread();
 						}
+						setAllSoundsMute(true);
 						statut = statusBarPanel.getStatut();
 						statut.setText("Paused");
 						statusBarPanel.setStatut(statut);
@@ -350,6 +351,7 @@ public class GameFrame extends JFrame implements WindowListener
 						synchronized (renderTh) {
 							renderTh.resumeThread();
 						}
+						setAllSoundsMute(false);
 						statut = statusBarPanel.getStatut();
 						statut.setText("Resumed");
 						statusBarPanel.setStatut(statut);
@@ -458,24 +460,6 @@ public class GameFrame extends JFrame implements WindowListener
 		renderTh.setMusicMute(b);
 		renderTh.setSoundMute(b);
 	}
-	
-	public void setVolumeUp(int x) {
-		//setMusicVolumeUp();
-		PhysicsThread.setVUp(x);
-	}
-	
-	public void setVolumeDown(int x) {
-		//setMusicVolumeDown();
-		PhysicsThread.setVDown(x);
-	}
-	
-	/*public void setMusicVolumeUp() {
-		musicTh.volumeUp(0);
-	}
-	
-	public void setMusicVolumeDown() {
-		musicTh.volumeDown(0);
-	}*/
 
 
 	
