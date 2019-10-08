@@ -1,5 +1,6 @@
 package sprites;
 
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,9 +12,13 @@ import resources.ListImages;
 import resources.Tiles;
 
 public class PacMan extends MovingSprite {
-	
+	private int life=3;
 	public static List<Integer> acceptedMazeValues = new ArrayList<Integer>();
 	private boolean isInTunnel = false;
+	
+	private boolean invincible = false;
+	
+	private int eatenFantom=0;
 	
 	public PacMan(Position start_position, Tiles tiles, JPanel gamePanel) {
 		super(start_position, tiles, gamePanel);
@@ -21,6 +26,14 @@ public class PacMan extends MovingSprite {
 			PacMan.acceptedMazeValues.add(integer);
 		}
 		PacMan.acceptedMazeValues.add(352); // tunnel
+	}
+	public int getLife() {
+		return life;
+	}
+
+
+	public void setLife(int life) {
+		this.life = life;
 	}
 	
 
@@ -66,6 +79,7 @@ public class PacMan extends MovingSprite {
 			cornerBottomLeft = spriteImages.getImagesList().get(i+interval);
 			cornerBottomRight = spriteImages.getImagesList().get(i+interval+1);
 			img = createFullSpriteImage(cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight);
+			img = tiles.resize(img, new Dimension(60, 60));
 			spriteFullImages.add(img);
 			
 			tile_nb+=2;
@@ -124,7 +138,7 @@ public class PacMan extends MovingSprite {
 
 	//-------------------------------------------------------
 	
-	
+	/*
 	public static void main(String[] args) throws IOException, InterruptedException {
 		PacMan pac = new PacMan(new Position(0, 0), new Tiles(), null);
 		
@@ -138,6 +152,28 @@ public class PacMan extends MovingSprite {
 //		Tiles.displayImg(pac.spriteImages.getSpriteImages().get(0));
 //		Thread.sleep(1000);
 //		Tiles.displayImg(pac.spriteImages.getSpriteImages().get(pac.spriteImages.getSpriteImages().size()-1));
+	}*/
+
+
+	public boolean invincible() {
+		return invincible;
 	}
 
+
+	public synchronized void setInvincible(boolean invincible) {
+		this.invincible = invincible;
+		this.setSpeed(2);
+		//System.out.println("PacMan est invincible");
+	}
+
+
+	public synchronized int eatenFantom() {
+		
+		return (eatenFantom);
+	}
+
+	public synchronized void setEatenFantom(int eatenFantom) {
+		this.eatenFantom=eatenFantom;
+	}
+	
 }

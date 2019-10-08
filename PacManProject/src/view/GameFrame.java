@@ -12,8 +12,9 @@ import threads.PhysicsThread;
 import threads.RenderThread;
 import java.awt.*; 
 import java.awt.event.*;
+import java.io.IOException;
 
- 
+
 public class GameFrame extends JFrame implements WindowListener
 {
 
@@ -29,6 +30,8 @@ public class GameFrame extends JFrame implements WindowListener
 	private static PrincipalMenuPanel principalMenuPanel;
 	private static ControlsMenuPanel controlsMenuPanel;
 	private static AudioMenuPanel audioMenuPanel;
+	private static HightScoresPanel hightScoresPanel;
+	private static NewHighScorePanel newHighScorePanel;
 	private StatusBarPanel statusBarPanel;
 	private JPanel leftPanel, rightPanel;
 	private JLabel statut;
@@ -38,7 +41,7 @@ public class GameFrame extends JFrame implements WindowListener
 	private boolean fullScreen = false;
 	public RenderThread renderTh;
 	private LayoutManagerThread layoutTh;
-	private MusicThread musicTh;
+	//private MusicThread musicTh;
 	
 	private int statutMenu = 0;
 	
@@ -50,7 +53,7 @@ public class GameFrame extends JFrame implements WindowListener
 	{ 
 		super("PacMan");
 		this.period = period;
-		
+		this.setBackground(Color.BLACK);
 		makeGUI();
 		addWindowListener(this);
 		
@@ -106,6 +109,25 @@ public class GameFrame extends JFrame implements WindowListener
 	public static void setControlsMenuPanel(ControlsMenuPanel controlsMenuPanel) {
 		GameFrame.controlsMenuPanel = controlsMenuPanel;
 	}
+	
+	public static HightScoresPanel getHightScoresPanel() {
+		return hightScoresPanel;
+	}
+
+
+	public static void setHightScoresPanel(HightScoresPanel hightScoresPanel) {
+		GameFrame.hightScoresPanel = hightScoresPanel;
+	}
+
+
+	public static NewHighScorePanel getNewHighScorePanel() {
+		return newHighScorePanel;
+	}
+
+
+	public static void setNewHighScorePanel(NewHighScorePanel newHighScorePanel) {
+		GameFrame.newHighScorePanel = newHighScorePanel;
+	}
 
 
 	public static AudioMenuPanel getAudioMenuPanel() {
@@ -147,6 +169,13 @@ public class GameFrame extends JFrame implements WindowListener
 		principalMenuPanel = new PrincipalMenuPanel();
 		controlsMenuPanel = new ControlsMenuPanel();
 		audioMenuPanel = new AudioMenuPanel(this);
+		try {
+			hightScoresPanel = new HightScoresPanel();
+			newHighScorePanel = new NewHighScorePanel();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		gamePanel = new GamePanel();
 		statusBarPanel = new StatusBarPanel();	
 		leftPanel = new JPanel();
@@ -181,6 +210,10 @@ public class GameFrame extends JFrame implements WindowListener
 			controlsMenuPanel.setVisible(false);
 			add(audioMenuPanel);
 			audioMenuPanel.setVisible(false);
+			add(hightScoresPanel);
+			hightScoresPanel.setVisible(false);
+			add(newHighScorePanel);
+			newHighScorePanel.setVisible(false);
 			add(gamePanel);
 			gamePanel.setVisible(false);
 			add(statusBarPanel);
@@ -204,11 +237,11 @@ public class GameFrame extends JFrame implements WindowListener
 		super.addNotify();   // creates the peer
 		layoutTh = new LayoutManagerThread(this);
 		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
-		musicTh = new MusicThread("musicTh");
+		//musicTh = new MusicThread("musicTh");
 		//checkPageThread = new CheckPageThread("CheckPageThread");
 		layoutTh.startThread();
 		renderTh.startThread();
-		musicTh.startThread();
+		//musicTh.startThread();
 		//checkPageThread.startThread();
 	}
 	
@@ -350,7 +383,7 @@ public class GameFrame extends JFrame implements WindowListener
 		});
 	}
 
-	private void closeGame() {
+	public void closeGame() {
 		
 		layoutTh.stopThread();		
 		renderTh.stopThread(); 
@@ -419,38 +452,30 @@ public class GameFrame extends JFrame implements WindowListener
 		this.statutMenu = statutMenu;
 	}
 	
-	public void setMusicMute(boolean b) {
-		synchronized (musicTh){
-				musicTh.setMute(b);
-			}
-	}
-	
-	public void setSoundMute(boolean b) {
-		PhysicsThread.setSoundMute(b);
-	}
+
 	
 	public void setAllSoundsMute(boolean b) {
-		setMusicMute(b);
-		setSoundMute(b);
+		renderTh.setMusicMute(b);
+		renderTh.setSoundMute(b);
 	}
 	
 	public void setVolumeUp(int x) {
-		setMusicVolumeUp();
+		//setMusicVolumeUp();
 		PhysicsThread.setVUp(x);
 	}
 	
 	public void setVolumeDown(int x) {
-		setMusicVolumeDown();
+		//setMusicVolumeDown();
 		PhysicsThread.setVDown(x);
 	}
 	
-	public void setMusicVolumeUp() {
+	/*public void setMusicVolumeUp() {
 		musicTh.volumeUp(0);
 	}
 	
 	public void setMusicVolumeDown() {
 		musicTh.volumeDown(0);
-	}
+	}*/
 
 
 	

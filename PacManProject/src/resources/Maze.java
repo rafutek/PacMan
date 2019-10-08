@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import sprites.Blinky;
 import sprites.Clyde;
 import sprites.Energizer;
-import sprites.Ghost;
 import sprites.Inky;
 import sprites.PacDot;
 import sprites.PacMan;
@@ -48,19 +47,19 @@ public class Maze {
 	
 	private Position blinkyMazeFilePosition;
 	private Position blinkyMazeImagePosition;	
-	private Ghost blinky;
+	private Blinky blinky;
 	
 	private Position pinkyMazeFilePosition;
 	private Position pinkyMazeImagePosition;	
-	private Ghost pinky;
+	private Pinky pinky;
 	
 	private Position clydeMazeFilePosition;
 	private Position clydeMazeImagePosition;	
-	private Ghost clyde;
+	private Clyde clyde;
 	
 	private Position inkyMazeFilePosition;
 	private Position inkyMazeImagePosition;	
-	private Ghost inky;
+	private Inky inky;
 	
 	private JPanel gamePanel;
 	
@@ -247,7 +246,6 @@ public class Maze {
 			pixelY = (position.getY() *originalMazeImg.getHeight()) / mazeValues.size();
 			pacDotsMazeImagePositions.add(new Position(pixelX, pixelY));
 		}
-		pacDotsMazeFilePositions.clear();		
 		
 		//energizers
 		for (Position position : energizersMazeFilePositions) {
@@ -255,7 +253,6 @@ public class Maze {
 			pixelY = (position.getY() *originalMazeImg.getHeight()) / mazeValues.size();
 			energizersMazeImagePositions.add(new Position(pixelX, pixelY));
 		}
-		energizersMazeFilePositions.clear();
 		
 		//pac-man
 		if(pacManMazeFilePosition != null) {
@@ -268,7 +265,7 @@ public class Maze {
 		if(blinkyMazeFilePosition != null) {
 			pixelX = (blinkyMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
 			pixelY = (blinkyMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
-			blinkyMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 					
+			blinkyMazeImagePosition = new Position(pixelX, pixelY); 					
 		}
 
 		//pinky
@@ -282,7 +279,7 @@ public class Maze {
 		if(clydeMazeFilePosition != null) {
 			pixelX = (clydeMazeFilePosition.getX() * originalMazeImg.getWidth()) / mazeValues.get(0).size();
 			pixelY = (clydeMazeFilePosition.getY() *originalMazeImg.getHeight()) / mazeValues.size();
-			clydeMazeImagePosition = new Position(pixelX+(tileDim.width/2), pixelY); 			
+			clydeMazeImagePosition = new Position(pixelX, pixelY); 			
 		}
 	
 		//inky
@@ -305,31 +302,50 @@ public class Maze {
 		System.out.println("Create sprites");
 		
 		//pac-dots
-		for (Position position : pacDotsMazeImagePositions) {
-			pacDots.add(new PacDot(position, tiles));
+		for (int i = 0; i < pacDotsMazeImagePositions.size(); i++) {
+			PacDot pacdot = new PacDot(pacDotsMazeImagePositions.get(i), tiles);
+			pacdot.setMatrixPosition(pacDotsMazeFilePositions.get(i)); // add matrix position for reposition at its initial position
+			pacDots.add(pacdot);
 		}
 		pacDotsMazeImagePositions.clear();
 		
 		//energizers
-		for (Position position : energizersMazeImagePositions) {
-			energizers.add(new Energizer(position, tiles));
+		for (int i = 0; i < energizersMazeImagePositions.size(); i++) {
+			Energizer energizer = new Energizer(energizersMazeImagePositions.get(i), tiles);
+			energizer.setMatrixPosition(energizersMazeFilePositions.get(i));
+			energizers.add(energizer);
 		}
 		energizersMazeImagePositions.clear();
 		
 		//pac-man
-		pacMan = new PacMan(pacManMazeImagePosition, tiles, gamePanel);
+		if(pacManMazeImagePosition != null) {
+			pacMan = new PacMan(pacManMazeImagePosition, tiles, gamePanel);
+			pacMan.setMatrixPosition(pacManMazeFilePosition);
+		}
 		
 		//blinky
-		blinky = new Blinky(blinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);
+		if(blinkyMazeImagePosition != null) {
+			blinky = new Blinky(blinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);		
+			blinky.setMatrixPosition(blinkyMazeFilePosition);
+		}
 
 		//pinky
-		pinky = new Pinky(pinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan); 
+		if(pinkyMazeImagePosition != null) {
+			pinky = new Pinky(pinkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan); 
+			pinky.setMatrixPosition(pinkyMazeFilePosition);
+		}
 
 		//clyde
-		clyde = new Clyde(clydeMazeImagePosition, tiles, gamePanel, mazeValues, pacMan); 
+		if(clydeMazeImagePosition != null) {
+			clyde = new Clyde(clydeMazeImagePosition, tiles, gamePanel, mazeValues, pacMan); 
+			clyde.setMatrixPosition(clydeMazeFilePosition);
+		}
 
 		//inky
-		inky = new Inky(inkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);
+		if(inkyMazeImagePosition != null) {
+			inky = new Inky(inkyMazeImagePosition, tiles, gamePanel, mazeValues, pacMan);
+			inky.setMatrixPosition(inkyMazeFilePosition);
+		}
 		
 		//door
 		computeDoorPosition();
@@ -371,19 +387,19 @@ public class Maze {
 		return pacMan;
 	}
 
-	public Ghost getBlinky() {
+	public Blinky getBlinky() {
 		return blinky;
 	}
 	
-	public Ghost getPinky() {
+	public Pinky getPinky() {
 		return pinky;
 	}
 	
-	public Ghost getClyde() {
+	public Clyde getClyde() {
 		return clyde;
 	}
 	
-	public Ghost getInky() {
+	public Inky getInky() {
 		return inky;
 	}
 	
@@ -423,6 +439,8 @@ public class Maze {
 	 * @param lastDim
 	 * @param newDim
 	 */
+	
+	
 	private void repositionSpritesInMaze(boolean drawnOnce, Dimension lastDim, Dimension newDim) {
 		
 		int newX, newY;
@@ -450,6 +468,7 @@ public class Maze {
 			if(!drawnOnce) {
 				newX = (newDim.width * pacMan.getMazePosition().getX()) / originalMazeImg.getWidth() ;
 				newY = (newDim.height * pacMan.getMazePosition().getY()) / originalMazeImg.getHeight();			
+				
 			}else {
 				newX = (int)Math.round((newDim.width * pacMan.getCurrentPosition().getX()) / (double)lastDim.width) ;
 				newY = (int)Math.round((newDim.height * pacMan.getCurrentPosition().getY()) / (double)lastDim.height);				
@@ -462,6 +481,7 @@ public class Maze {
 			if(!drawnOnce) {
 				newX = (newDim.width * blinky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
 				newY = (newDim.height * blinky.getMazePosition().getY()) / originalMazeImg.getHeight();			
+				
 			}else {
 				newX = (int)Math.round((newDim.width * blinky.getCurrentPosition().getX()) / (double)lastDim.width) ;
 				newY = (int)Math.round((newDim.height * blinky.getCurrentPosition().getY()) / (double)lastDim.height);				
@@ -474,6 +494,7 @@ public class Maze {
 			if(!drawnOnce) {
 				newX = (newDim.width * pinky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
 				newY = (newDim.height * pinky.getMazePosition().getY()) / originalMazeImg.getHeight();			
+				
 			}else {
 				newX = (int)Math.round((newDim.width * pinky.getCurrentPosition().getX()) / (double)lastDim.width) ;
 				newY = (int)Math.round((newDim.height * pinky.getCurrentPosition().getY()) / (double)lastDim.height);				
@@ -486,6 +507,7 @@ public class Maze {
 			if(!drawnOnce) {
 				newX = (newDim.width * clyde.getMazePosition().getX()) / originalMazeImg.getWidth() ;
 				newY = (newDim.height * clyde.getMazePosition().getY()) / originalMazeImg.getHeight();			
+				
 			}else {
 				newX = (int)Math.round((newDim.width * clyde.getCurrentPosition().getX()) / (double)lastDim.width) ;
 				newY = (int)Math.round((newDim.height * clyde.getCurrentPosition().getY()) / (double)lastDim.height);				
@@ -498,6 +520,7 @@ public class Maze {
 			if(!drawnOnce) {
 				newX = (newDim.width * inky.getMazePosition().getX()) / originalMazeImg.getWidth() ;
 				newY = (newDim.height * inky.getMazePosition().getY()) / originalMazeImg.getHeight();			
+				
 			}else {
 				newX = (int)Math.round((newDim.width * inky.getCurrentPosition().getX()) / (double)lastDim.width) ;
 				newY = (int)Math.round((newDim.height * inky.getCurrentPosition().getY()) / (double)lastDim.height);				
@@ -543,6 +566,7 @@ public class Maze {
 			newWidth = (newDim.width * pacMan.getOriginalSize().width) / originalMazeImg.getWidth() ;
 			newHeight = (newDim.height * pacMan.getOriginalSize().height) / originalMazeImg.getHeight();
 			pacMan.setCurrentSize(new Dimension(newWidth, newHeight));
+			System.out.println("set current pacman size to "+pacMan.getCurrentSize());
 		}
 		
 		//blinky

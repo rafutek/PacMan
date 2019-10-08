@@ -12,7 +12,8 @@ import resources.Tiles;
 public abstract class Sprite {
 
 	protected List<Integer> tilesNumbers = new ArrayList<Integer>();	
-	protected Position mazePosition, currentPosition;
+	protected Position matrixPos;
+	protected Position initialPosition, currentPosition;
 	protected Dimension originalSize, currentSize;
 	protected ListImages spriteImages, spriteFullImages;
 	protected Tiles tiles;
@@ -20,15 +21,22 @@ public abstract class Sprite {
 	
 	
 	public Sprite(Position start_position, Tiles tiles) {
-		mazePosition = start_position;
-		currentPosition = mazePosition;
+		initialPosition = start_position;
+		currentPosition = initialPosition;
 		this.tiles = tiles;
-		
 		chooseTilesNumbers();
 		setImagesArray(tilesNumbers); // fill an image array with these tiles
 		createFullSpriteImages();
 		setOriginalSize();
 		createAnimationOrderList();
+	}
+	
+	public void setMatrixPosition(Position matrixPos) {
+		this.matrixPos = matrixPos;
+	}
+	
+	public Position getMatrixPosition() {
+		return matrixPos;
 	}
 	
 	/**
@@ -41,7 +49,7 @@ public abstract class Sprite {
 	}
 	
 	public synchronized Position getMazePosition() {
-		return mazePosition;
+		return initialPosition;
 	}
 
 	public synchronized Position getCurrentPosition() {
@@ -84,6 +92,7 @@ public abstract class Sprite {
 		// the original size of the sprite is the dimension of one of its full images
 		originalSize = new Dimension(spriteFullImages.getImagesList().get(0).getWidth(), 
 									spriteFullImages.getImagesList().get(0).getHeight());
+		currentSize = originalSize;
 	}
 	
 	

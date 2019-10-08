@@ -12,18 +12,18 @@ public class Pinky extends Ghost {
 	
 	MovingSpriteState nextState;
 
-	public Pinky(Position start_position, Tiles tiles, JPanel gamePanel,  List<List<Integer>> mazeValues, MovingSprite pacMan) {
+	public Pinky(Position start_position, Tiles tiles, JPanel gamePanel,  List<List<Integer>> mazeValues, PacMan pacMan) {
 		super(start_position, tiles, gamePanel, mazeValues, pacMan);
 	}
+		
 	
-
 	@Override
-	public void chooseTilesNumbers() {
+	protected void chooseSpecificGhostTiles() {
 		for (int tile_nb = 225; tile_nb < 257; tile_nb++) {
 			tilesNumbers.add(tile_nb); // add pinky tiles numbers
 		}
-
-	}
+		
+	}	
 	
 	@Override
 	protected void chooseInitialAnimation() {
@@ -32,12 +32,15 @@ public class Pinky extends Ghost {
 	
 	
 	@Override
-	public void startDirectionThread() {
-		behaviorTh = new GhostBehaviorThread(this);
+	public void startBehaviorThread() {
+		behaviorTh = new GhostBehaviorThread(this,pacMan);
 		behaviorTh.setName("Pinky behavior");
 		behaviorTh.startThread();
 	}
-
+	@Override
+	public  void stopBehaviorThread() {
+		behaviorTh.stopThread();
+	}
 
 	@Override
 	public boolean specificAvailable() {
@@ -62,7 +65,7 @@ public class Pinky extends Ghost {
 		int upBoxValue;
 		int downBoxValue;
 		
-		nextState = getState();
+		nextState = getWantedState();
 		
 		if(pacMan.getState() == MovingSpriteState.LEFT || pacMan.getState() == MovingSpriteState.RIGHT) {
 			if(this.currentPosition.getX() < pacMan.getCurrentPosition().getX()) { // want to go to right
@@ -99,7 +102,8 @@ public class Pinky extends Ghost {
 
 	@Override
 	public void launchSpecific() {
-		this.setState(nextState);
+		this.setWantedState(nextState);
 		
 	}
+
 }
