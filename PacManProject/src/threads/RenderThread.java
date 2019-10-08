@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
@@ -14,6 +15,7 @@ import javax.swing.JPanel;
 import main.Main;
 import resources.Maze;
 import resources.Tiles;
+import resources.WriteLetter;
 import sprites.Blinky;
 import sprites.Clyde;
 import sprites.Inky;
@@ -85,7 +87,7 @@ public class RenderThread extends ThreadPerso{
 	private GamePanel gamePanel;
 	private StatusBarPanel statusBarPanel;
 	private HightScoresPanel hightScoresPanel;
-
+	private WriteLetter writeLetter;
 	private int finalScore=0;
 	private int newhightScore=0;
 	private int newPosition=0;
@@ -161,6 +163,12 @@ public class RenderThread extends ThreadPerso{
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
 		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers, musicTh );
 		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze, pacMan);
+		try {
+			writeLetter = new WriteLetter();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.paused = true;
 	}
 	
@@ -464,7 +472,26 @@ public class RenderThread extends ThreadPerso{
 					h.setNewHightScore(finalScore);
 					h.setNewPosition(newPosition);
 					System.out.println(".............test ............"+h.getNewHightScore());
-					h.getNewScore().setText("New score "+h.getNewHightScore());
+					
+					BufferedImage img = maze.getTiles().getTileNumber(352);
+					String letter ="0";
+					
+					BufferedImage hightScore1Img = maze.getTiles().createWord(img);
+					letter =h.getNewHightScore()+"";
+					for(int i=0;i<letter.length();i++) {
+						Character c = letter.charAt(i);
+						String cs = c.toString();
+						writeLetter.setLetter(cs);
+						System.out.println("letter ______________________"+cs);
+						writeLetter.setL(img);
+						writeLetter.write();
+						img=writeLetter.getL();
+						cs=writeLetter.getLetter();
+						hightScore1Img = maze.getTiles().createWord(hightScore1Img,img);
+						
+					}
+					hightScore1Img = maze.getTiles().resize(hightScore1Img, new Dimension(150, 50));
+					h.getNewScore().setIcon(new ImageIcon(hightScore1Img));
 					h.setVisible(true);
 					checkPageThread = new CheckPageThread("CheckPageThread");
 					System.out.println("Score ..................."+finalScore);
