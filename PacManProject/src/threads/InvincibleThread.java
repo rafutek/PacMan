@@ -23,6 +23,8 @@ public class InvincibleThread extends TimerThread {
 	protected void finallyDoThat() {
 		synchronized(pacMan){
 		pacMan.setInvincible(false);
+		pacMan.setSpeed(1);
+		pacMan.setEatenFantom(0);
 		}
 		stopThread();
 	}
