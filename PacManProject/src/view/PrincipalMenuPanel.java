@@ -30,7 +30,7 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 	private JLabel audio;
 	private JLabel exitGame;
 	private JLabel controls;
-	private JLabel hightScores;
+	private JLabel highScores;
 	private JLabel pacManIcon;
 	private int coordX=100;
 	private int coordY= 200;
@@ -77,12 +77,12 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 		controls.setIcon(new ImageIcon(controlsImage));
 		controls.setBounds(160, 360, 300, 50);
 		
-		hightScores = new JLabel();
+		highScores = new JLabel();
 		
-		BufferedImage hight_scors = t.createWord(t.getTileNumber(46),t.getTileNumber(47),t.getTileNumber(45),t.getTileNumber(46),t.getTileNumber(58),t.getTileNumber(352),t.getTileNumber(57),t.getTileNumber(41),t.getTileNumber(53),t.getTileNumber(56),t.getTileNumber(57));
-		hight_scors = t.resize(hight_scors, new Dimension(300,50));
-		hightScores.setIcon(new ImageIcon(hight_scors));
-		hightScores.setBounds(160, 440, 300, 50);
+		BufferedImage high_scores = t.createWord(t.getTileNumber(46),t.getTileNumber(47),t.getTileNumber(45),t.getTileNumber(46),t.getTileNumber(352),t.getTileNumber(57),t.getTileNumber(41),t.getTileNumber(53),t.getTileNumber(56),t.getTileNumber(43),t.getTileNumber(57));
+		high_scores = t.resize(high_scores, new Dimension(300,50));
+		highScores.setIcon(new ImageIcon(high_scores));
+		highScores.setBounds(160, 440, 300, 50);
 		
 		exitGame = new JLabel();
 		BufferedImage quit = t.createWord(t.getTileNumber(55),t.getTileNumber(59),t.getTileNumber(47),t.getTileNumber(58));
@@ -98,7 +98,7 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 		pacManIcon.setBounds(coordX, coordY, 50, 50);
 		
 		add(pacManTitle);
-		add(hightScores);
+		add(highScores);
 		add(exitGame);
 		add(controls);
 		add(pacManIcon);
