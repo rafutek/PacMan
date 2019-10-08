@@ -3,7 +3,6 @@ package threads;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import sprites.Clyde;
 import sprites.Ghost;
 import sprites.PacMan;
 
@@ -13,7 +12,7 @@ public class GhostBehaviorThread extends TimerThread {
 	
 	private int random_min = 100;
 	private int random_max = 500;
-	private PacMan pacMan;
+	protected PacMan pacMan;
 	private Ghost ghost;
 
 	public GhostBehaviorThread(Ghost ghost, PacMan pacMan) {

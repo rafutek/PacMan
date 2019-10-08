@@ -1,6 +1,5 @@
 package threads;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -14,10 +13,8 @@ import javax.swing.JLabel;
 import resources.Maze;
 import sprites.Blinky;
 import sprites.Clyde;
-import sprites.Ghost;
 import sprites.Inky;
 import sprites.MovingSprite;
-import sprites.MovingSpriteState;
 import sprites.PacMan;
 import sprites.Pinky;
 import sprites.Sprites;
@@ -104,7 +101,6 @@ public class RenderThread extends ThreadPerso{
 
 	//physics
 	private PhysicsThread physicsTh;
-	private boolean animationDone = false;
 	
 	//exit the ghost of the box
 	private GhostsExitBoxThread ghostExitThread;
@@ -190,11 +186,6 @@ public class RenderThread extends ThreadPerso{
 
 	@Override
 	protected void doThat() {
-		if(physicsTh.timerstarted) {
-			pacMan.setState(MovingSpriteState.DEATH);
-			physicsTh.timerstarted=false;
-		}
-		
 		
 		if(!initStats) {
 			initializeStats();

@@ -11,9 +11,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import resources.Maze;
-import sprites.Ghost;
+import sprites.Blinky;
+import sprites.Clyde;
+import sprites.Inky;
 import sprites.MovingSpriteState;
 import sprites.PacMan;
+import sprites.Pinky;
 import sprites.Sprites;
 import threads.AnimationThread;
 import threads.PhysicsThread;
@@ -31,10 +34,10 @@ public class GameLoop extends ThreadPerso {
 	private Sprites energizers;
 	private Sprites pacDots;
 	private PacMan pacMan;
-	private Ghost blinky;
-	private Ghost pinky;
-	private Ghost clyde;
-	private Ghost inky;
+	private Blinky blinky;
+	private Pinky pinky;
+	private Clyde clyde;
+	private Inky inky;
 	
 	//sprites animation
 	private AnimationThread animationTh;
@@ -206,7 +209,7 @@ public class GameLoop extends ThreadPerso {
 		return pacMan;
 	}
 	
-	public Ghost getBlinky() {
+	public Blinky getBlinky() {
 		return blinky;
 	}
 	

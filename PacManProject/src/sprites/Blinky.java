@@ -1,13 +1,10 @@
 package sprites;
 
-import java.io.IOException;
 import java.util.List;
-
 import javax.swing.JPanel;
 
 import resources.Tiles;
 import threads.GhostBehaviorThread;
-import threads.PhysicsThread;
 
 public class Blinky extends Ghost {
 	
