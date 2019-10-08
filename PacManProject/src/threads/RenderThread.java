@@ -105,6 +105,9 @@ public class RenderThread extends ThreadPerso{
 	//exit the ghost of the box
 	private GhostsExitBoxThread ghostExitThread;
 	
+	//sounds
+	private MusicThread musicTh;
+	
 	private int lastLife = 0;
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
@@ -137,8 +140,9 @@ public class RenderThread extends ThreadPerso{
 		inky = maze.getInky();
 		
 		statusBarPanel.setPacman(pacMan);
+		musicTh = new MusicThread("musicTh");
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
-		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers );
+		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers, musicTh );
 		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze);
 		this.paused = true;
 	}
@@ -252,6 +256,7 @@ public class RenderThread extends ThreadPerso{
 	 */
 	public synchronized void pauseThread() {
 		paused = true;
+		musicTh.pauseThread();
 		animationTh.pauseThread();
 		physicsTh.pauseThread();
 		ghostExitThread.pauseThread();
@@ -279,6 +284,13 @@ public class RenderThread extends ThreadPerso{
 			if(GameFrame.getPage()=="Game") {
 			initStats = false;
 			paused = false;
+			
+			if(!musicTh.isRunning()) {
+				musicTh.startThread();
+			}else {
+				musicTh.resumeThread();
+			}
+			
 			if(!animationTh.isRunning()) {
 				animationTh.startThread();
 			}else {
@@ -308,6 +320,7 @@ public class RenderThread extends ThreadPerso{
 		animationTh.stopThread();
 		physicsTh.stopThread();
 		ghostExitThread.stopThread();
+		musicTh.stopThread();
 		running = false;
 	}
 	

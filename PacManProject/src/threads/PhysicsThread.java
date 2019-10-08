@@ -49,6 +49,7 @@ public class PhysicsThread extends ThreadPerso {
 	 * Management of the sounds
 	 */
 	private SoundThread soundTh;
+	private MusicThread musicTh;
 	private static boolean soundMute = false;
 	private static boolean soundUp = false;
 	private static boolean soundDown = false;
@@ -63,7 +64,7 @@ public class PhysicsThread extends ThreadPerso {
 	 * @param gamePanel
 	 * @param pacMan
 	 */
-	public PhysicsThread(List<List<Integer>> mazeValues, JPanel gamePanel, PacMan pacMan, Ghost blinky,  Ghost pinky,  Ghost clyde,  Ghost inky, Sprites pacDots, Sprites energizer) {
+	public PhysicsThread(List<List<Integer>> mazeValues, JPanel gamePanel, PacMan pacMan, Ghost blinky,  Ghost pinky,  Ghost clyde,  Ghost inky, Sprites pacDots, Sprites energizer, MusicThread musicTh) {
 		super("Physics");
 		this.mazeValues = mazeValues;
 		this.gamePanel = gamePanel;
@@ -74,6 +75,7 @@ public class PhysicsThread extends ThreadPerso {
 		this.inky = inky;
 		this.pacDots=pacDots;
 		this.energizer=energizer;
+		this.musicTh = musicTh;
 		
 	}
 
@@ -640,10 +642,9 @@ public class PhysicsThread extends ThreadPerso {
 			if(collisionWithE(energizer)) {
 				score=score+50;
 				StatusBarPanel.valueScore.setText(""+score);
-				MusicThread.setInvincibility(true);
 				System.out.println("collision energizer, showX : "+energizer.showX+ " showY : "+energizer.showY);
 				pacMan.setInvincible(true);
-				invTh=new InvincibleThread(pacMan);
+				invTh=new InvincibleThread(pacMan , musicTh);
 				invTh.start();
 				return true;
 			}
