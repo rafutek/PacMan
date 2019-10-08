@@ -249,12 +249,12 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 				if(getCoordY()==450) {
 					//add on music event
 					System.out.println("music on");
-					gf.setMusicMute(false);
+					//gf.setMusicMute(false);
 				}
 				if(getCoordY()==520) {
 					//add up music event
 					System.out.println("music up");
-					gf.setMusicVolumeUp();
+					//gf.setMusicVolumeUp();
 				}
 			}
 			else if(getCoordX()==270) {
@@ -272,12 +272,12 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 				if(getCoordY()==450) {
 					//add on music event
 					System.out.println("music off");
-					gf.setMusicMute(true);
+					//gf.setMusicMute(true);
 				}
 				if(getCoordY()==520) {
 					//add up music event
 					System.out.println("music down");
-					gf.setMusicVolumeDown();
+					//gf.setMusicVolumeDown();
 				}
 			}else{
 				xup = 0;

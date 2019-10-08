@@ -121,6 +121,7 @@ public class RenderThread extends ThreadPerso{
 	
 	//sounds
 	private MusicThread musicTh;
+	private SoundThread soundTh;
 	
 	private int lastLife = 0;
 	
@@ -677,6 +678,17 @@ public class RenderThread extends ThreadPerso{
 		this.ghostExitThread = ghostExitThread;
 	}
 
+	public void setMusicMute(boolean b) {
+		synchronized (musicTh){
+			musicTh.setMute(b);
+		}
+	}
+
+	public void setSoundMute(boolean b) {
+		synchronized(physicsTh) {
+			physicsTh.setSoundMute(b);
+		}
+	}
 
 
 

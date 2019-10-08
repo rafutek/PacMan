@@ -99,6 +99,8 @@ public class CheckPageThread extends ThreadPerso{
 			gameFrame.addKeyListener(gameFrame.getAudioMenuPanel());
 		}else if(gameFrame.getPage()=="HighScores") {
 			gameFrame.removeKeyListener(gameFrame.getPrincipalMenuPanel());
+			gameFrame.removeKeyListener(gameFrame.getControlsMenuPanel());
+			gameFrame.removeKeyListener(gameFrame.getAudioMenuPanel());
 			gameFrame.renderTh.pauseThread();
 			gameFrame.getPrincipalMenuPanel().setVisible(false);
 			gameFrame.getControlsMenuPanel().setVisible(false);
