@@ -25,7 +25,7 @@ public class CheckPageThread extends ThreadPerso{
 		super(threadName);
 		setName("CheckPageThread");
 		try {
-			t = new Tiles();
+			t = new Tiles(); 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -60,7 +60,7 @@ public class CheckPageThread extends ThreadPerso{
 			gameFrame.removeKeyListener(gameFrame.getAudioMenuPanel());
 			gameFrame.removeKeyListener(gameFrame.getHightScoresPanel());
 			//gameFrame.readyForArrowsEvents();
-			renderThread = new RenderThread(period,gameFrame.getGamePanel() , gameFrame.getStatusBarPanel());
+			renderThread = new RenderThread(period,gameFrame.getGamePanel() , gameFrame.getStatusBarPanel(), gameFrame.getMusicTh(), gameFrame.getSoundTh());
 			renderThread.startThread();
 			layoutManagerThread = new LayoutManagerThread(gameFrame);
 			layoutManagerThread.startThread();
