@@ -808,7 +808,7 @@ public class PhysicsThread extends ThreadPerso {
 				System.out.println("collision energizer, showX : "+energizer.showX+ " showY : "+energizer.showY);
 				if (!soundMute) {
 					synchronized(soundTh) {
-						soundTh.addEatGomme();
+						soundTh.addEatEnergizer();
 					}
 				}
 				pacMan.setInvincible(true);
@@ -865,27 +865,10 @@ public class PhysicsThread extends ThreadPerso {
 				}
 				return false;
 			}			
-		}
+		} 
 		return false;
 	}
-	
-	private void playSound(String sound) {
-		soundTh = new SoundThread("soundTh");
-		if(soundTh != null) {
-			synchronized(soundTh) {
-					try {
-						soundTh.playAudio(sound);
-					} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} // play sound
-			}
-		}
-	}
-	
-	public synchronized void setSoundMute(boolean Mute) {
-		soundMute = Mute;
-	}
+
 	
 	private void resetAllSprites() {
 		

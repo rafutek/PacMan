@@ -8,7 +8,9 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class SoundThread extends AudioThread {
 	
+	private static final long SLEEP_TIME = 780;
 	private ArrayList<Boolean> eatGomme = new ArrayList<Boolean>();
+	private ArrayList<Boolean> eatEnergizer = new ArrayList<Boolean>();
 	private ArrayList<Boolean> death = new ArrayList<Boolean>();
 	private ArrayList<Boolean> eatGhost = new ArrayList<Boolean>();
 	private ArrayList<Boolean> life = new ArrayList<Boolean>();
@@ -30,6 +32,10 @@ public class SoundThread extends AudioThread {
 	
 	public synchronized void addEatGhost() {
 		eatGhost.add(true);
+	}
+	
+	public synchronized void addEatEnergizer() {
+		eatEnergizer.add(true);
 	}
 	
 	public synchronized void addLife() {
@@ -90,9 +96,18 @@ public class SoundThread extends AudioThread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}else if (eatEnergizer.size()>0) {
+			try {
+				isPlaying = false;
+				playAudio("chomp.wav");
+				setVolume(vol);
+			} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		try {
-			sleep(1000);
+			sleep(SLEEP_TIME);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

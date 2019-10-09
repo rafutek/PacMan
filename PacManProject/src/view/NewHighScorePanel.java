@@ -195,10 +195,10 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 			System.out.println("position .........."+getNewPosition());
 			System.out.println("score........."+getNewHightScore());
 			if(newPosition!=0) {
-				updateHightScoreFile();
+				updateHightScoreFile("hightScores.txt");
 				System.out.println("start principal menu");	
 				try {
-					Main.getGlobalFrame().getHightScoresPanel().readHightScoresFile();
+					Main.getGlobalFrame().getHightScoresPanel().readHightScoresFile("hightScores.txt");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -219,16 +219,16 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		
-	}
-	public void updateHightScoreFile() {
-		 try {
+	} 
+	public void updateHightScoreFile(String path) {
+		 try { 
 		        String searchText = Integer.toString(newPosition);
-		        Path p = Paths.get("src/resources/highScores/hightScores.txt");
+		        Path p = Paths.get("src/resources/highScores/"+path);
 		        Path tempFile = Files.createTempFile(p.getParent(), "usersTemp", ".txt");
 		        try (BufferedReader reader = Files.newBufferedReader(p);
 		                BufferedWriter writer = Files.newBufferedWriter(tempFile)) {
 		            String line;
-
+ 
 		            // copy everything until the id is found
 		            while ((line = reader.readLine()) != null) {
 		                String[] fields = line.split("[:]");
@@ -278,5 +278,17 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 	public void setNewScore(JLabel newScore) {
 		this.newScore = newScore;
 	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	
 
 }

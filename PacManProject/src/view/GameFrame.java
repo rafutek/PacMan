@@ -182,7 +182,7 @@ public class GameFrame extends JFrame implements WindowListener
 		controlsMenuPanel = new ControlsMenuPanel();
 		audioMenuPanel = new AudioMenuPanel(renderTh , musicTh ,soundTh);
 		try {
-			hightScoresPanel = new HightScoresPanel();
+			hightScoresPanel = new HightScoresPanel("hightScores.txt");
 			newHighScorePanel = new NewHighScorePanel();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -502,8 +502,8 @@ public class GameFrame extends JFrame implements WindowListener
 
 	
 	public void setAllSoundsMute(boolean b) {
-		renderTh.setMusicMute(b);
-		renderTh.setSoundMute(b);
+		soundTh.setMute(b);
+		musicTh.setMute(b);
 	}
 
 

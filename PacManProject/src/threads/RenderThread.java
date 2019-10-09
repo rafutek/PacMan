@@ -130,7 +130,7 @@ public class RenderThread extends ThreadPerso{
 		this.gamePanel = gamePanel;
 		this.statusBarPanel = statusBarPanel;
 		try {
-			hightScoresPanel = new HightScoresPanel();
+			hightScoresPanel = new HightScoresPanel("hightScores.txt");
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -653,44 +653,5 @@ public class RenderThread extends ThreadPerso{
 	public void setGhostExitThread(GhostsExitBoxThread ghostExitThread) {
 		this.ghostExitThread = ghostExitThread;
 	}
-
-	public synchronized void setMusicMute(boolean b) {
-		synchronized (musicTh){
-			musicTh.setMute(b);
-		}
-	}
-
-	public synchronized void setSoundMute(boolean b) {
-		synchronized(physicsTh) {
-			physicsTh.setSoundMute(b);
-		}
-	}
-	
-	public synchronized void setAudioUp() {
-		synchronized(soundTh) {
-			soundTh.volumeUp();
-		}
-	}
-	
-	public synchronized void setAudioDown() {
-		synchronized(soundTh) {
-			soundTh.volumeDown();
-		}
-		
-	}
-	
-	public synchronized void setMusicUp() {
-		synchronized (musicTh) {
-			musicTh.volumeUp();
-		}
-	}
-	
-	public synchronized void setMusicDown() {
-		synchronized (musicTh) {
-			musicTh.volumeDown();
-		}
-	}
-
-
 
 }
