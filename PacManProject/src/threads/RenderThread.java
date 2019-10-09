@@ -34,7 +34,7 @@ public class RenderThread extends ThreadPerso{
 
 	
 	// record stats every 1 second (roughly)
-	private static long MAX_STATS_INTERVAL = 1000L;
+	private static long MAX_STATS_INTERVAL = 1000L; 
 
 	/* Number of frames with a delay of 0 ms before the animation thread yields
   	to other running threads. */
@@ -124,7 +124,7 @@ public class RenderThread extends ThreadPerso{
 	
 	private int lastLife = 0;
 	
-	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
+	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel, MusicThread musicTh, SoundThread soundTh) {
 		super("Render");
 				
 		this.gamePanel = gamePanel;
@@ -158,8 +158,8 @@ public class RenderThread extends ThreadPerso{
 		inky = maze.getInky();
 		
 		statusBarPanel.setPacman(pacMan);
-		musicTh = new MusicThread("musicTh");
-		soundTh = new SoundThread("soundTh");
+		this.musicTh = musicTh;
+		this.soundTh = soundTh;
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
 		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers, musicTh , soundTh);
 		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze, pacMan);
@@ -280,8 +280,6 @@ public class RenderThread extends ThreadPerso{
 	 */
 	public synchronized void pauseThread() {
 		paused = true;
-		musicTh.pauseThread();
-		soundTh.pauseThread();
 		animationTh.pauseThread();
 		physicsTh.pauseThread();
 		ghostExitThread.pauseThread();
@@ -295,19 +293,7 @@ public class RenderThread extends ThreadPerso{
 
 			if(GameFrame.getPage()=="Game") {
 			initStats = false;
-			paused = false;
-			
-			if(!musicTh.isRunning()) {
-				musicTh.startThread();
-			}else {
-				musicTh.resumeThread();
-			}
-			if(!soundTh.isRunning()) {
-				soundTh.startThread();
-			}else {
-				soundTh.resumeThread();
-			}
-			
+			paused = false;			
 			if(!animationTh.isRunning()) {
 				animationTh.startThread();
 			}else {
@@ -337,8 +323,6 @@ public class RenderThread extends ThreadPerso{
 		animationTh.stopThread();
 		physicsTh.stopThread();
 		ghostExitThread.stopThread();
-		musicTh.stopThread();
-		soundTh.stopThread();
 		running = false;
 	}
 	

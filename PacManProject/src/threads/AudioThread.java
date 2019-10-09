@@ -116,7 +116,7 @@ public abstract class AudioThread extends ThreadPerso{
 		}
 	}	 
 	 
-	protected synchronized void volumeUp() {
+	public synchronized void volumeUp() {
 		if(!mute) {
 			if(vol <= 0.9) {
 				vol += 0.1;
@@ -126,7 +126,7 @@ public abstract class AudioThread extends ThreadPerso{
 		
 	}
 	 
-	protected synchronized void volumeDown() {
+	public synchronized void volumeDown() {
 		if(!mute) {
 			if(vol >=0.1) {
 				vol -= 0.1;

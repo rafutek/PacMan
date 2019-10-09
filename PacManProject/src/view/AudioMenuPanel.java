@@ -15,7 +15,9 @@ import javax.swing.JPanel;
 import main.Main;
 import resources.Tiles;
 import threads.CheckPageThread;
+import threads.MusicThread;
 import threads.RenderThread;
+import threads.SoundThread;
 
 public class AudioMenuPanel extends JPanel implements KeyListener{
 
@@ -38,11 +40,13 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 	private int coordY= 200;
 	
 	private CheckPageThread checkPageThread;
-	private RenderThread renderTh;
+	private MusicThread musicTh;
+	private SoundThread soundTh;
 	Tiles t;
 	
-	public  AudioMenuPanel(RenderThread renderTh) {
-		this.renderTh = renderTh;
+	public  AudioMenuPanel(RenderThread renderTh, MusicThread musicTh, SoundThread soundTh) {
+		this.musicTh = musicTh;
+		this.soundTh = soundTh;
 		setBackground(Color.BLACK);
 		setLayout(null);
 		try {
@@ -235,15 +239,15 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 				if(getCoordY()==200) {
 					//add on audio event
 					System.out.println("audio on");
-					synchronized (renderTh) {
-						renderTh.setSoundMute(false);
+					synchronized (soundTh) {
+						soundTh.setMute(false);
 					}
 				}
 				if(getCoordY()==260) {
 					//add up audio event
 					System.out.println("audio up");
-					synchronized (renderTh) {
-						renderTh.setAudioUp();
+					synchronized (soundTh) {
+						soundTh.volumeUp();
 					}
 					
 					
@@ -251,16 +255,16 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 				if(getCoordY()==450) {
 					//add on music event
 					System.out.println("music on");
-					synchronized (renderTh) {
-						renderTh.setMusicMute(false);
+					synchronized (musicTh) {
+						musicTh.setMute(false);
 					}
 					
 				}
 				if(getCoordY()==520) {
 					//add up music event
 					System.out.println("music up");
-					synchronized (renderTh) {
-						renderTh.setMusicUp();
+					synchronized (musicTh) {
+						musicTh.volumeUp();
 					}
 					
 				}
@@ -269,32 +273,32 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 				if(getCoordY()==200) {
 					//add on audio event
 					System.out.println("audio off");
-					synchronized (renderTh) {
-						renderTh.setSoundMute(true);
+					synchronized (soundTh) {
+						soundTh.setMute(true);
 					}
 					
 				}
 				if(getCoordY()==260) {
 					//add up audio event
 					System.out.println("audio down");
-					synchronized (renderTh) {
-						renderTh.setAudioDown();
+					synchronized (soundTh) {
+						soundTh.volumeDown();
 					}
 					
 				}
 				if(getCoordY()==450) {
 					//add on music event
 					System.out.println("music off");
-					synchronized (renderTh) {
-						renderTh.setMusicMute(true);
+					synchronized (musicTh) {
+						musicTh.setMute(true);
 					}
 					
 				}
 				if(getCoordY()==520) {
 					//add up music event
 					System.out.println("music down");
-					synchronized (renderTh) {
-						renderTh.setMusicDown();
+					synchronized (musicTh) {
+						musicTh.volumeDown();
 					}
 					
 				}
