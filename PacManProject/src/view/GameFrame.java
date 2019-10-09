@@ -10,6 +10,8 @@ import threads.LayoutManagerThread;
 import threads.MusicThread;
 import threads.PhysicsThread;
 import threads.RenderThread;
+import threads.SoundThread;
+
 import java.awt.*; 
 import java.awt.event.*;
 import java.io.IOException;
@@ -45,6 +47,11 @@ public class GameFrame extends JFrame implements WindowListener
 	
 	private int statutMenu = 0;
 	
+	/**
+	 * sound and music management
+	 */
+	private SoundThread soundTh;
+	private MusicThread musicTh;
 	private boolean gamePaused = false;
 	private boolean gameMute = false;
 	private int n =1;
@@ -70,6 +77,7 @@ public class GameFrame extends JFrame implements WindowListener
 		readyForPause();
 		readyForMute();
 	}  
+	
 	
 	
 	public synchronized GridBagLayout getGridbag() {
@@ -166,9 +174,13 @@ public class GameFrame extends JFrame implements WindowListener
 	{
 		gridbag = new GridBagLayout();
 		setLayout(gridbag);
+		musicTh = new MusicThread("musicTh");
+		soundTh = new SoundThread("soundTh");
+		musicTh.startThread();
+		soundTh.startThread();
 		principalMenuPanel = new PrincipalMenuPanel();
 		controlsMenuPanel = new ControlsMenuPanel();
-		audioMenuPanel = new AudioMenuPanel(this);
+		audioMenuPanel = new AudioMenuPanel(renderTh , musicTh ,soundTh);
 		try {
 			hightScoresPanel = new HightScoresPanel();
 			newHighScorePanel = new NewHighScorePanel();
@@ -236,15 +248,48 @@ public class GameFrame extends JFrame implements WindowListener
 		
 		super.addNotify();   // creates the peer
 		layoutTh = new LayoutManagerThread(this);
-		renderTh = new RenderThread(period, gamePanel, statusBarPanel);
+		renderTh = new RenderThread(period, gamePanel, statusBarPanel, musicTh, soundTh);
 		//musicTh = new MusicThread("musicTh");
 		//checkPageThread = new CheckPageThread("CheckPageThread");
+
 		layoutTh.startThread();
 		renderTh.startThread();
 		//musicTh.startThread();
 		//checkPageThread.startThread();
 	}
 	
+	/**
+	 * @return the soundTh
+	 */
+	public SoundThread getSoundTh() {
+		return soundTh;
+	}
+
+
+	/**
+	 * @param soundTh the soundTh to set
+	 */
+	public void setSoundTh(SoundThread soundTh) {
+		this.soundTh = soundTh;
+	}
+
+
+	/**
+	 * @return the musicTh
+	 */
+	public MusicThread getMusicTh() {
+		return musicTh;
+	}
+
+
+	/**
+	 * @param musicTh the musicTh to set
+	 */
+	public void setMusicTh(MusicThread musicTh) {
+		this.musicTh = musicTh;
+	}
+
+
 	private void readyForTermination()
 	{
 		addKeyListener( new KeyAdapter() {
@@ -340,6 +385,7 @@ public class GameFrame extends JFrame implements WindowListener
 						synchronized (renderTh) {
 							renderTh.pauseThread();
 						}
+						setAllSoundsMute(true);
 						statut = statusBarPanel.getStatut();
 						statut.setText("Paused");
 						statusBarPanel.setStatut(statut);
@@ -350,6 +396,7 @@ public class GameFrame extends JFrame implements WindowListener
 						synchronized (renderTh) {
 							renderTh.resumeThread();
 						}
+						setAllSoundsMute(false);
 						statut = statusBarPanel.getStatut();
 						statut.setText("Resumed");
 						statusBarPanel.setStatut(statut);
@@ -458,24 +505,6 @@ public class GameFrame extends JFrame implements WindowListener
 		renderTh.setMusicMute(b);
 		renderTh.setSoundMute(b);
 	}
-	
-	public void setVolumeUp(int x) {
-		//setMusicVolumeUp();
-		PhysicsThread.setVUp(x);
-	}
-	
-	public void setVolumeDown(int x) {
-		//setMusicVolumeDown();
-		PhysicsThread.setVDown(x);
-	}
-	
-	/*public void setMusicVolumeUp() {
-		musicTh.volumeUp(0);
-	}
-	
-	public void setMusicVolumeDown() {
-		musicTh.volumeDown(0);
-	}*/
 
 
 	

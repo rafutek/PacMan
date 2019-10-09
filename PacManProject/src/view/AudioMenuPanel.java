@@ -15,6 +15,9 @@ import javax.swing.JPanel;
 import main.Main;
 import resources.Tiles;
 import threads.CheckPageThread;
+import threads.MusicThread;
+import threads.RenderThread;
+import threads.SoundThread;
 
 public class AudioMenuPanel extends JPanel implements KeyListener{
 
@@ -35,16 +38,15 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 	public JLabel goBack;
 	private int coordX=70;
 	private int coordY= 200;
-	private int xup = 0;
-	private int xdown = 0;
 	
 	private CheckPageThread checkPageThread;
-	private GameFrame gf;
-	
+	private MusicThread musicTh;
+	private SoundThread soundTh;
 	Tiles t;
 	
-	public  AudioMenuPanel(GameFrame GF) {
-		this.gf=GF;
+	public  AudioMenuPanel(RenderThread renderTh, MusicThread musicTh, SoundThread soundTh) {
+		this.musicTh = musicTh;
+		this.soundTh = soundTh;
 		setBackground(Color.BLACK);
 		setLayout(null);
 		try {
@@ -237,51 +239,70 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 				if(getCoordY()==200) {
 					//add on audio event
 					System.out.println("audio on");
-					gf.setAllSoundsMute(false);
+					synchronized (soundTh) {
+						soundTh.setMute(false);
+					}
 				}
 				if(getCoordY()==260) {
 					//add up audio event
 					System.out.println("audio up");
-					xup++;
-					gf.setVolumeUp(xup);
+					synchronized (soundTh) {
+						soundTh.volumeUp();
+					}
+					
 					
 				}
 				if(getCoordY()==450) {
 					//add on music event
 					System.out.println("music on");
-					//gf.setMusicMute(false);
+					synchronized (musicTh) {
+						musicTh.setMute(false);
+					}
+					
 				}
 				if(getCoordY()==520) {
 					//add up music event
 					System.out.println("music up");
-					//gf.setMusicVolumeUp();
+					synchronized (musicTh) {
+						musicTh.volumeUp();
+					}
+					
 				}
 			}
 			else if(getCoordX()==270) {
 				if(getCoordY()==200) {
 					//add on audio event
 					System.out.println("audio off");
-					gf.setAllSoundsMute(true);
+					synchronized (soundTh) {
+						soundTh.setMute(true);
+					}
+					
 				}
 				if(getCoordY()==260) {
 					//add up audio event
 					System.out.println("audio down");
-					xdown++;
-					gf.setVolumeDown(xdown);
+					synchronized (soundTh) {
+						soundTh.volumeDown();
+					}
+					
 				}
 				if(getCoordY()==450) {
 					//add on music event
 					System.out.println("music off");
-					//gf.setMusicMute(true);
+					synchronized (musicTh) {
+						musicTh.setMute(true);
+					}
+					
 				}
 				if(getCoordY()==520) {
 					//add up music event
 					System.out.println("music down");
-					//gf.setMusicVolumeDown();
+					synchronized (musicTh) {
+						musicTh.volumeDown();
+					}
+					
 				}
 			}else{
-				xup = 0;
-				xdown =0;
 				System.out.println("start principal menu");	
 				Main.getGlobalFrame().setPage("PrincipalMenu");
 				System.out.println(Main.getGlobalFrame().getPage());
