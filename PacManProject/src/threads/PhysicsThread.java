@@ -70,7 +70,7 @@ public class PhysicsThread extends ThreadPerso {
 	 * @param gamePanel
 	 * @param pacMan
 	 */
-	public PhysicsThread(List<List<Integer>> mazeValues, JPanel gamePanel, PacMan pacMan, Ghost blinky,  Ghost pinky,  Ghost clyde,  Ghost inky, Sprites pacDots, Sprites energizer, MusicThread musicTh) {
+	public PhysicsThread(List<List<Integer>> mazeValues, JPanel gamePanel, PacMan pacMan, Ghost blinky,  Ghost pinky,  Ghost clyde,  Ghost inky, Sprites pacDots, Sprites energizer, MusicThread musicTh, SoundThread soundTh) {
 		super("Physics");
 		this.mazeValues = mazeValues;
 		this.gamePanel = gamePanel;
@@ -82,6 +82,7 @@ public class PhysicsThread extends ThreadPerso {
 		this.pacDots=pacDots;
 		this.energizer=energizer;
 		this.musicTh = musicTh;
+		this.soundTh = soundTh;
 		
 	}
 	public static boolean isCollPacManGhostInv() {
@@ -671,6 +672,11 @@ public class PhysicsThread extends ThreadPerso {
 				
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky) && pacMan.invincible()) {
 					System.out.println("collision with blinky!");
+					if (!soundMute) {
+						synchronized(soundTh) {
+							soundTh.addEatGhost();
+						}
+					}
 					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
 					setScoreInvGhost(200*(int)Math.pow(2,pacMan.eatenFantom()));
 					StatusBarPanel.valueScore.setText(""+score);
@@ -683,6 +689,11 @@ public class PhysicsThread extends ThreadPerso {
 				
 				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky)) {
 					System.out.println("collision with blinky!");
+					if (!soundMute) {
+						synchronized(soundTh) {
+							soundTh.addDeath();
+						}
+					}
 					resetAllSprites();
 					return true;
 				}
@@ -690,6 +701,11 @@ public class PhysicsThread extends ThreadPerso {
 				
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky) && pacMan.invincible()) {
 					System.out.println("collision with pinky!");
+					if (!soundMute) {
+						synchronized(soundTh) {
+							soundTh.addEatGhost();
+						}
+					}
 					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
 					StatusBarPanel.valueScore.setText(""+score);
 					setScoreInvGhost(200*(int)Math.pow(2,pacMan.eatenFantom()));
@@ -701,12 +717,22 @@ public class PhysicsThread extends ThreadPerso {
 				
 				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky)) {
 					System.out.println("collision with pinky!");
+					if (!soundMute) {
+						synchronized(soundTh) {
+							soundTh.addDeath();
+						}
+					}
 					resetAllSprites();
 					return true;
 				}
 				
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde) && pacMan.invincible()) {
 					System.out.println("collision with clyde!");
+					if (!soundMute) {
+						synchronized(soundTh) {
+							soundTh.addEatGhost();
+						}
+					}
 					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
 					StatusBarPanel.valueScore.setText(""+score);
 					setScoreInvGhost(200*(int)Math.pow(2,pacMan.eatenFantom()));
@@ -718,12 +744,22 @@ public class PhysicsThread extends ThreadPerso {
 				
 				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde)) {
 					System.out.println("collision with clyde!");
+					if (!soundMute) {
+						synchronized(soundTh) {
+							soundTh.addDeath();
+						}
+					}
 					resetAllSprites();
 					return true;
 				}
 				
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky) && pacMan.invincible()) {
 					System.out.println("collision with inky!");
+					if (!soundMute) {
+						synchronized(soundTh) {
+							soundTh.addEatGhost();
+						}
+					}
 					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
 					StatusBarPanel.valueScore.setText(""+score);
 					setScoreInvGhost(200*(int)Math.pow(2,pacMan.eatenFantom()));
@@ -735,6 +771,11 @@ public class PhysicsThread extends ThreadPerso {
 				
 				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky)) {
 					System.out.println("collision with inky!");
+					if (!soundMute) {
+						synchronized(soundTh) {
+							soundTh.addDeath();
+						}
+					}
 					resetAllSprites();
 					return true;
 				}
@@ -747,6 +788,11 @@ public class PhysicsThread extends ThreadPerso {
 		synchronized(pacMan) {
 			if(collisionWith(pacDots)) {
 				System.out.println("collision pacDot ");
+				if (!soundMute) {
+					synchronized(soundTh) {
+						soundTh.addEatGomme();
+					}
+				}
 				return true;
 			}
 			return false;
@@ -760,6 +806,11 @@ public class PhysicsThread extends ThreadPerso {
 				score=score+50;
 				StatusBarPanel.valueScore.setText(""+score);
 				System.out.println("collision energizer, showX : "+energizer.showX+ " showY : "+energizer.showY);
+				if (!soundMute) {
+					synchronized(soundTh) {
+						soundTh.addEatGomme();
+					}
+				}
 				pacMan.setInvincible(true);
 				invTh=new InvincibleThread(pacMan , musicTh);
 				invTh.start();
@@ -775,9 +826,6 @@ public class PhysicsThread extends ThreadPerso {
 			int positionX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
 			int positionY= pacDots.getSpriteNb(i).getCurrentPosition().getY();
 			if(pacMan.getCurrentPosition().getX()<=positionX+(20/2) && pacMan.getCurrentPosition().getX()>= positionX-(20/2)  && pacMan.getCurrentPosition().getY()<=positionY+(20/2) && pacMan.getCurrentPosition().getY()>= positionY-(20/2) )  {
-				if (!soundMute) {
-					playSound("chomp.wav");
-				}
 				pacDots.showX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
 				pacDots.showY=pacDots.getSpriteNb(i).getCurrentPosition().getY();
 				pacDots.removeSpriteNb(i);
@@ -793,9 +841,6 @@ public class PhysicsThread extends ThreadPerso {
 			int positionX=energizer.getSpriteNb(i).getCurrentPosition().getX();
 			int positionY= energizer.getSpriteNb(i).getCurrentPosition().getY();
 			if(pacMan.getCurrentPosition().getX()<=positionX+(20/2) && pacMan.getCurrentPosition().getX()>= positionX-(20/2)  && pacMan.getCurrentPosition().getY()<=positionY+(20/2) && pacMan.getCurrentPosition().getY()>= positionY-(20/2) )  {
-				if (!soundMute) {
-					playSound("chomp.wav");
-				}
 				energizer.showX=energizer.getSpriteNb(i).getCurrentPosition().getX();
 				energizer.showY=energizer.getSpriteNb(i).getCurrentPosition().getY();
 				energizer.removeSpriteNb(i);
@@ -816,10 +861,6 @@ public class PhysicsThread extends ThreadPerso {
 				int ghost_down = ghost.getCurrentPosition().getY() + ghost.getCurrentSize().height;		
 			
 				if( pacman_left < ghost_right && pacman_right > ghost_left && pacman_down > ghost_up && pacman_up < ghost_down ) {
-					
-					if (!soundMute) {
-						playSound("death.wav");
-					}
 					return true;
 				}
 				return false;
@@ -832,31 +873,12 @@ public class PhysicsThread extends ThreadPerso {
 		soundTh = new SoundThread("soundTh");
 		if(soundTh != null) {
 			synchronized(soundTh) {
-				if (soundUp) {
-					try {
-						soundTh.playAudio(sound);
-						soundTh.volumeUp(n);
-					} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} // play sound
-				} else if (soundDown) {
-					try {
-						soundTh.playAudio(sound);
-						soundTh.volumeDown(n);
-					} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} // play sound
-				} else {
 					try {
 						soundTh.playAudio(sound);
 					} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} // play sound
-				}
-					
 			}
 		}
 	}
@@ -917,18 +939,6 @@ public class PhysicsThread extends ThreadPerso {
 		ghost.setCurrentPosition(matrixToMazePosition(ghost.getMatrixPosition(), gamePanel, mazeValues));
 		ghost.setInTheBox(true);
 		ghost.setState(MovingSpriteState.STOP);
-	}
-
-	public synchronized static void setVUp(int x) {
-		soundUp = true;
-		n = x;
-	}
-	
-	public synchronized static void setVDown(int x) {
-		soundDown = true;
-		System.out.println("x setVDown ="+x);
-		n = x;
-		
 	}
 	
 }
