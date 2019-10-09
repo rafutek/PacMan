@@ -14,7 +14,7 @@ import view.GameFrame;
 
 public class CheckPageThread extends ThreadPerso{
 	private static int DEFAULT_FPS = 50;
-	int fps = DEFAULT_FPS;
+	int fps = DEFAULT_FPS; 
 	int period = (int) 1000.0/fps;
 	GameFrame gameFrame;
 	RenderThread renderThread;
@@ -34,7 +34,7 @@ public class CheckPageThread extends ThreadPerso{
 		if(gameFrame.getPage()=="PrincipalMenu") {
 			System.out.println("..................................."+gameFrame.getStatutMenu());
 			gameFrame.renderTh.pauseThread();
-			gameFrame.removeKeyListener(gameFrame.getControlsMenuPanel());
+			gameFrame.removeKeyListener(gameFrame.getControlsMenuPanel()); 
 			gameFrame.removeKeyListener(gameFrame.getAudioMenuPanel());
 			gameFrame.removeKeyListener(gameFrame.getHightScoresPanel());
 			gameFrame.removeKeyListener(gameFrame.getHightScoresPanel());

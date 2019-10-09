@@ -652,6 +652,6 @@ public class RenderThread extends ThreadPerso{
 
 	public void setGhostExitThread(GhostsExitBoxThread ghostExitThread) {
 		this.ghostExitThread = ghostExitThread;
-	}
+	} 
 
 }

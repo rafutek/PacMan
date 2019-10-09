@@ -393,9 +393,9 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		return score;
 	}
 	
-//	public String[] getName() {
-//		return Name;
-//	}
+	public String[] getname() {
+		return Name;
+	}
 	
 
 	
