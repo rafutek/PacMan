@@ -682,6 +682,8 @@ public class PhysicsThread extends ThreadPerso {
 						synchronized(soundTh) {
 							soundTh.addDeath();
 						}
+						soundTh.setPacmanIsDead(true);
+
 					}
 					resetAllSprites();
 					return true;
@@ -693,6 +695,7 @@ public class PhysicsThread extends ThreadPerso {
 						synchronized(soundTh) {
 							soundTh.addEatGhost();
 						}
+						
 					}
 					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
 					StatusBarPanel.valueScore.setText(""+score);
@@ -708,6 +711,8 @@ public class PhysicsThread extends ThreadPerso {
 						synchronized(soundTh) {
 							soundTh.addDeath();
 						}
+						soundTh.setPacmanIsDead(true);
+
 					}
 					resetAllSprites();
 					return true;
@@ -733,6 +738,8 @@ public class PhysicsThread extends ThreadPerso {
 						synchronized(soundTh) {
 							soundTh.addDeath();
 						}
+						soundTh.setPacmanIsDead(true);
+
 					}
 					resetAllSprites();
 					return true;
@@ -758,6 +765,7 @@ public class PhysicsThread extends ThreadPerso {
 						synchronized(soundTh) {
 							soundTh.addDeath();
 						}
+						soundTh.setPacmanIsDead(true);
 					}
 					resetAllSprites();
 					return true;
@@ -791,7 +799,7 @@ public class PhysicsThread extends ThreadPerso {
 				StatusBarPanel.valueScore.setText(""+score);
 				if (!soundMute) {
 					synchronized(soundTh) {
-						soundTh.addEatGomme();
+						soundTh.addEatEnergizer();
 					}
 				}
 				pacMan.setInvincible(true);
@@ -853,14 +861,10 @@ public class PhysicsThread extends ThreadPerso {
 				}
 				return false;
 			}			
-		}
+		} 
 		return false;
 	}
-	
-	
-	public synchronized void setSoundMute(boolean Mute) {
-		soundMute = Mute;
-	}
+
 	
 	private void resetAllSprites() {
 		

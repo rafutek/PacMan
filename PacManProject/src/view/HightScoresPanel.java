@@ -24,9 +24,10 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 	private static final long serialVersionUID = 1L;
 	
 	private String position[];
-	private String name[]; 
+	private String Name[]; 
 	private String score[];
 	private String[] hightScors;
+
 	private Tiles t;
 	public JLabel pacManTitle;
 	public JLabel pacManIcon;
@@ -41,7 +42,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 	private WriteLetter writeLetter;
 	
 	public HightScoresPanel() throws IOException {
-		readHightScoresFile();
+		readHightScoresFile("hightScores.txt");
 		fillArrays();
 		
 		setBackground(Color.black);	
@@ -79,7 +80,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		letter=writeLetter.getLetter();
 		BufferedImage hightScore1Img = Tiles.createWord(img,t.getTileNumber(352));
 		BufferedImage img2 = t.getTileNumber(39);
-		String letter2 =name[0];
+		String letter2 =Name[0];
 		for(int i=0;i<letter2.length();i++) {
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
@@ -120,7 +121,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		letter=writeLetter.getLetter();
 		hightScore1Img = Tiles.createWord(img,t.getTileNumber(352));
 		img2 = t.getTileNumber(39);
-		letter2 =name[1];
+		letter2 =Name[1];
 		for(int i=0;i<letter2.length();i++) {
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
@@ -159,7 +160,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		letter=writeLetter.getLetter();
 		hightScore1Img = Tiles.createWord(img,t.getTileNumber(352));
 		img2 = t.getTileNumber(39);
-		letter2 =name[2];
+		letter2 =Name[2];
 		for(int i=0;i<letter2.length();i++) {
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
@@ -198,7 +199,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		letter=writeLetter.getLetter();
 		hightScore1Img = Tiles.createWord(img,t.getTileNumber(352));
 		img2 = t.getTileNumber(39);
-		letter2 =name[3];
+		letter2 =Name[3];
 		for(int i=0;i<letter2.length();i++) {
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
@@ -237,7 +238,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		letter=writeLetter.getLetter();
 		hightScore1Img = Tiles.createWord(img,t.getTileNumber(352));
 		img2 = t.getTileNumber(39);
-		letter2 =name[4];
+		letter2 =Name[4];
 		for(int i=0;i<letter2.length();i++) {
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
@@ -291,15 +292,15 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 	}
 	
 	//this methode reads the values of the file hightScores and puts them in the array hightScors 
-		public void readHightScoresFile() throws IOException {
+		public void readHightScoresFile(String path) throws IOException {
 			hightScors = new String[16];
 			position = new String[5];
-			name = new String[5];
+			Name = new String[5];
 			score = new String[5];
 			Scanner s = null; 
 			try { 
-				s = new Scanner(new BufferedReader(new FileReader("src/resources/highScores/hightScores.txt")));
-				s.useDelimiter(":");
+				s = new Scanner(new BufferedReader(new FileReader("src/resources/highScores/"+path)));
+				s.useDelimiter(":"); 
 				int i =0;
 				while (s.hasNext()) {
 					hightScors[i]=s.next();
@@ -307,9 +308,8 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 				}
 				} finally { 
 					if (s != null) s.close(); 
-				} 
-			
-		}
+				}
+		} 
 		//this methodes fills the arrays name , score and position 
 		public void fillArrays() {
 			int j=0;
@@ -321,7 +321,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 				}
 				//fill the array names
 				if(i==1||i==4||i==7||i==10||i==13) {
-					name[j] = hightScors[i];
+					Name[j] = hightScors[i];
 					j++;
 				}
 				//fill the array score
@@ -351,7 +351,26 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 	public String[] getScore() {
 		return score;
 	}
+	
+	public String[] getname() {
+		return Name;
+	}
+	
+	public String[] getHightScors() {
+		return hightScors;
+	}
 
+	public void setHightScors(String[] hightScors) {
+		this.hightScors = hightScors;
+	}
+
+	public String[] getPosition() {
+		return position;
+	}
+
+	public void setPosition(String[] position) {
+		this.position = position;
+	}
 	
 
 }
