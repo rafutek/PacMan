@@ -25,7 +25,7 @@ public abstract class AudioThread extends ThreadPerso{
 	
 	protected boolean isRunning;
 	protected boolean isPlaying;
-	private float vol = 1;
+	protected float vol = 1;
 	private float volBefore = vol;
 	protected boolean mute = false;
 	
@@ -103,6 +103,10 @@ public abstract class AudioThread extends ThreadPerso{
 	 * Methods to set up volume and mute
 	 * @param vol2
 	 */
+	public boolean getMute() {
+		return mute;
+	}
+	
 	public void setMute(boolean mute) {
 		this.mute = mute;
 		if(audioClip != null) {
@@ -112,11 +116,27 @@ public abstract class AudioThread extends ThreadPerso{
 		}
 	}	 
 	 
-	protected abstract void volumeUp(int x);
+	public synchronized void volumeUp() {
+		if(!mute) {
+			if(vol <= 0.9) {
+				vol += 0.1;
+			}
+			System.out.println("Volume: " + vol);	
+		}
+		
+	}
 	 
-	protected abstract void volumeDown(int x);
+	public synchronized void volumeDown() {
+		if(!mute) {
+			if(vol >=0.1) {
+				vol -= 0.1;
+			}
+			System.out.println("Volume: " + vol);	
+		}
+	}
 	
-	protected void setVolume(float volume)
+	
+	protected synchronized void setVolume(float volume)
 	{
 		if (audioClip != null) {
 			if (audioClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {

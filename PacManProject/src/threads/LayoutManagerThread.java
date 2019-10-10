@@ -16,6 +16,7 @@ public class LayoutManagerThread extends ThreadPerso {
 	private Double controlsmenuPanelScale = null;
 	private Double audioMenuPanelScale = null;
 	private Double hightScoresMenuPanelScale = null;
+	private Double newHighScorePanelScale = null;
 	private double gamePanelWeightX = 1; //initial weight (percentage) of game panel width in the window
 	private double gamePanelWeightY;
 	private double menuPanelWeightX = 1; //initial weight (percentage) of game panel width in the window
@@ -26,6 +27,8 @@ public class LayoutManagerThread extends ThreadPerso {
 	private double audioMenuPanelWeightY =1;
 	private double hightScoresPanelWeightX = 1; //initial weight (percentage) of game panel width in the window
 	private double hightScoresPanelWeightY =1;
+	private double newHighScorePanelWeightX = 1; //initial weight (percentage) of game panel width in the window
+	private double newHighScorePanelWeightY =1;
 	private double statusBarPanelWeightX ;
 	private double statusBarPanelWeightY;
 	private double leftPanelWeightX;
@@ -64,7 +67,8 @@ public class LayoutManagerThread extends ThreadPerso {
 				controlsmenuPanelScale = getPanelScale(window.getControlsMenuPanel()); // get the original panel scale
 				audioMenuPanelScale = getPanelScale(window.getAudioMenuPanel()); // get the original panel scale
 				hightScoresMenuPanelScale = getPanelScale(window.getHightScoresPanel()); // get the original panel scale
-
+				newHighScorePanelScale = getPanelScale(window.getNewHighScorePanel()); // get the original panel scale
+			
 			}
 		}else {
 			adaptPanels(); // adapt the panels in the window to maintain the game panel scale
@@ -98,6 +102,8 @@ public class LayoutManagerThread extends ThreadPerso {
 		audioMenuPanelWeightY = 1;
 		hightScoresPanelWeightX = 1;
 		hightScoresPanelWeightY = 1;
+		newHighScorePanelWeightX = 1;
+		newHighScorePanelWeightY = 1;
 	}
 
 	/**
@@ -140,7 +146,8 @@ public class LayoutManagerThread extends ThreadPerso {
 			setPanelLayout(window.getPrincipalMenuPanel(), 1, 0, 2, menuPanelWeightX, menuPanelWeightY);
 			setPanelLayout(window.getControlsMenuPanel(), 1, 0, 2, controlsmenuPanelWeightX, controlsmenuPanelWeightY);
 			setPanelLayout(window.getAudioMenuPanel(), 1, 0, 2, audioMenuPanelWeightX, audioMenuPanelWeightY);		
-			setPanelLayout(window.getHightScoresPanel(), 1, 0, 2, hightScoresPanelWeightX, hightScoresPanelWeightY);		
+			setPanelLayout(window.getHightScoresPanel(), 1, 0, 2, hightScoresPanelWeightX, hightScoresPanelWeightY);
+			setPanelLayout(window.getNewHighScorePanel(), 1, 0, 2, newHighScorePanelWeightX, newHighScorePanelWeightY);
 		
 		}
 	}

@@ -1,21 +1,33 @@
 package threads;
 
 import resources.Maze;
+import sprites.Blinky;
+import sprites.Clyde;
 import sprites.Ghost;
+import sprites.Inky;
 import sprites.MovingSpriteState;
+import sprites.PacMan;
+import sprites.Pinky;
 import sprites.Position;
 
 public class GhostsExitBoxThread extends TimerThread {
 
 	private static final int WAIT_TIME = 10;
-	private static final int NB_WAITS = 100; 
+	private static final int NB_WAITS = 20;//30 get out faster to avoid bugs 
 	
-	private Ghost blinky, pinky, clyde, inky;
+	private Blinky blinky;
+	private Pinky pinky;
+	private Clyde clyde;
+	private Inky inky;
 	private Maze maze;
+	private PacMan pacMan;
 	private  boolean ghostWantsToGoOut, blinkyWantsToGoOut, pinkyWantsToGoOut, clydeWantsToGoOut, inkyWantsToGoOut;
-	public static  boolean ghostCanGoOut, blinkyCanGoOut, pinkyCanGoOut, clydeCanGoOut, inkyCanGoOut;
+	public  boolean ghostCanGoOut, blinkyCanGoOut;
+	public static boolean pinkyCanGoOut;
+	public static boolean clydeCanGoOut;
+	public static boolean inkyCanGoOut;
 	
-	public GhostsExitBoxThread(Ghost blinky, Ghost pinky, Ghost clyde, Ghost inky, Maze maze) {
+	public GhostsExitBoxThread(Blinky blinky, Pinky pinky, Clyde clyde, Inky inky, Maze maze, PacMan pacMan) {
 		super(WAIT_TIME, NB_WAITS);
 		setName("Ghosts Exit");
 		this.blinky = blinky;
@@ -23,6 +35,7 @@ public class GhostsExitBoxThread extends TimerThread {
 		this.clyde = clyde;
 		this.inky = inky;
 		this.maze = maze;
+		this.pacMan = pacMan;
 	}
 	
 	@Override
@@ -30,55 +43,58 @@ public class GhostsExitBoxThread extends TimerThread {
 	
 	@Override
 	protected void doThatWhileWaiting() {
-		if(!ghostWantsToGoOut) {
-			if(blinky.isInTheBox()) {
-				ghostWantsToGoOut = true;
-				blinkyWantsToGoOut = ghostWantsToGoOut;
-				counterWaits = 0; // reset the timer to make the ghost wait until...
+		if(!pacMan.invincible()) {
+			if(!ghostWantsToGoOut) {
+				if(blinky.isInTheBox()) {
+					ghostWantsToGoOut = true;
+					blinkyWantsToGoOut = ghostWantsToGoOut;
+					counterWaits = 0; // reset the timer to make the ghost wait until...
+				}
+				else if(pinky.isInTheBox()) {
+					ghostWantsToGoOut = true;
+					pinkyWantsToGoOut = ghostWantsToGoOut;
+					counterWaits = 0;
+				}
+				else if(clyde.isInTheBox()) {
+					ghostWantsToGoOut = true;
+					clydeWantsToGoOut = ghostWantsToGoOut;
+					counterWaits = 0; 
+				}
+				else if(inky.isInTheBox()) {
+					ghostWantsToGoOut = true;
+					inkyWantsToGoOut = ghostWantsToGoOut;
+					counterWaits = 0; 
+				}
+				
 			}
-			else if(pinky.isInTheBox()) {
-				ghostWantsToGoOut = true;
-				pinkyWantsToGoOut = ghostWantsToGoOut;
-				counterWaits = 0;
-			}
-			else if(clyde.isInTheBox()) {
-				ghostWantsToGoOut = true;
-				clydeWantsToGoOut = ghostWantsToGoOut;
-				counterWaits = 0; 
-			}
-			else if(inky.isInTheBox()) {
-				ghostWantsToGoOut = true;
-				inkyWantsToGoOut = ghostWantsToGoOut;
-				counterWaits = 0; 
-			}
-			
+			else if(ghostCanGoOut){ 
+				if(blinkyCanGoOut) {
+					if(manageGhostExit(blinky)) {
+						blinkyWantsToGoOut = false;
+						blinkyCanGoOut = false;
+					}
+				}
+				else if(pinkyCanGoOut) {
+					if(manageGhostExit(pinky)) {
+						pinkyWantsToGoOut = false;
+						pinkyCanGoOut = false;
+					}
+				}
+				else if(clydeCanGoOut) {
+					if(manageGhostExit(clyde)) {
+						clydeWantsToGoOut = false;
+						clydeCanGoOut = false;
+					}
+				}
+				else if(inkyCanGoOut) {
+					if(manageGhostExit(inky)) {
+						inkyWantsToGoOut = false;
+						inkyCanGoOut = false;
+					}
+				}
+			}			
 		}
-		else if(ghostCanGoOut){ 
-			if(blinkyCanGoOut) {
-				if(manageGhostExit(blinky)) {
-					blinkyWantsToGoOut = false;
-					blinkyCanGoOut = false;
-				}
-			}
-			else if(pinkyCanGoOut) {
-				if(manageGhostExit(pinky)) {
-					pinkyWantsToGoOut = false;
-					pinkyCanGoOut = false;
-				}
-			}
-			else if(clydeCanGoOut) {
-				if(manageGhostExit(clyde)) {
-					clydeWantsToGoOut = false;
-					clydeCanGoOut = false;
-				}
-			}
-			else if(inkyCanGoOut) {
-				if(manageGhostExit(inky)) {
-					inkyWantsToGoOut = false;
-					inkyCanGoOut = false;
-				}
-			}
-		}
+
 	}
 
 	@Override
@@ -118,7 +134,7 @@ public class GhostsExitBoxThread extends TimerThread {
 				ghostCanGoOut = false;
 				
 				if(ghost.getBehaviorThread() == null || !ghost.getBehaviorThread().isRunning()) {
-					ghost.startDirectionThread();
+					ghost.startBehaviorThread();
 				}
 				ghost.getBehaviorThread().changeDirection();
 				

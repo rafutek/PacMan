@@ -1,6 +1,8 @@
 package sprites;
 
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JPanel;
@@ -14,26 +16,43 @@ public abstract class Ghost extends MovingSprite {
 	
 	public static List<Integer> acceptedMazeValues;
 	
-	protected GhostBehaviorThread behaviorTh = new GhostBehaviorThread(this);
+	
+	
 
 	public  boolean isInTheBox = true;
 	
 	protected JPanel gamePanel;
 	protected List<List<Integer>> mazeValues;
-	protected MovingSprite pacMan;
+	protected PacMan pacMan;
 	
-	protected Position lastSeenPacManMatrixPos;
+	protected GhostBehaviorThread behaviorTh = new GhostBehaviorThread(this, pacMan);
+	protected List<Integer> escapingAnimation = new ArrayList<Integer>();
+	private Position lastSeenPacManMatrixPos;
 	protected boolean goingToLastSeenPos, escaping;
 
 
-	public Ghost(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, MovingSprite pacMan) {
+	public Ghost(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, PacMan pacMan) {
 		super(start_position, tiles, gamePanel);
 		Ghost.acceptedMazeValues = super.acceptedMazeValues;
 		this.gamePanel = gamePanel;
 		this.mazeValues = mazeValues;
 		this.pacMan = pacMan;
+		createEscapingAnimation();
 	}
 	
+	@Override
+	public void chooseTilesNumbers() {
+		chooseSpecificGhostTiles();
+		for (int i=169; i<=175; i+=2) { // add escaping tiles for animation 
+			tilesNumbers.add(i);
+			tilesNumbers.add(i+1);
+			tilesNumbers.add(i+16);
+			tilesNumbers.add(i+17);
+		}
+	}
+	
+	protected  abstract void chooseSpecificGhostTiles();
+		
 	@Override
 	protected void createFullSpriteImages() {
 		spriteFullImages = new ListImages();
@@ -45,8 +64,18 @@ public abstract class Ghost extends MovingSprite {
 			cornerBottomLeft = spriteImages.getImagesList().get(i+16);
 			cornerBottomRight = spriteImages.getImagesList().get(i+16+1);
 			img = createFullSpriteImage(cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight);
+			img = tiles.resize(img, new Dimension(50, 50));
 			spriteFullImages.add(img);			
 		}
+		for (int i = spriteImages.getImagesList().size()-16; i < spriteImages.getImagesList().size()-3; i+=4) {
+			cornerTopLeft = spriteImages.getImagesList().get(i);
+			cornerTopRight = spriteImages.getImagesList().get(i+1);
+			cornerBottomLeft = spriteImages.getImagesList().get(i+2);
+			cornerBottomRight = spriteImages.getImagesList().get(i+3);
+			img = createFullSpriteImage(cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight);
+			img = tiles.resize(img, new Dimension(50, 50));
+			spriteFullImages.add(img);	
+		} 
 	}
 
 	@Override
@@ -78,6 +107,20 @@ public abstract class Ghost extends MovingSprite {
 		goDownAnimation.add(3);
 	}
 
+	protected void createEscapingAnimation() {
+		escapingAnimation.add(8);
+		escapingAnimation.add(9);
+		escapingAnimation.add(10);
+		escapingAnimation.add(11);
+		for (Integer integer : escapingAnimation) {
+			System.out.println(integer);
+		}
+	}
+	
+	public synchronized void setEscapingAnimation() {
+		setAnimationOrder(escapingAnimation);
+	}
+	
 	@Override
 	protected void createDeathAnimation() {
 		deathAnimation = goLeftAnimation; //no animation for death
@@ -93,26 +136,34 @@ public abstract class Ghost extends MovingSprite {
 	
 
 	/**
-	 * Set ghost state to a random direction state.
+	 * Set ghost state to a random wanted direction state.
 	 */
 	public void setRandomDirection() {
 		int randomNum = ThreadLocalRandom.current().nextInt(0, 3 + 1);		
 		if(randomNum == 0) {
-			setState(MovingSpriteState.LEFT);
+//			setWantedState(MovingSpriteState.LEFT);
+//			//setState();
+			wantToGoLeft();
 		}
 		else if(randomNum == 1) {
-			setState(MovingSpriteState.RIGHT);
+//			setWantedState(MovingSpriteState.RIGHT);
+//			//setState(MovingSpriteState.RIGHT);
+			wantToGoRight();
 		}
 		else if(randomNum == 2) {
-			setState(MovingSpriteState.UP);
+//			setWantedState(MovingSpriteState.UP);
+//			//setState(MovingSpriteState.UP);
+			wantToGoUp();
 		}
 		else if(randomNum == 3) {
-			setState(MovingSpriteState.DOWN);
+//			setWantedState(MovingSpriteState.DOWN);
+//			//
+			wantToGoDown();
 		}
 	}
 	
-	public abstract void startDirectionThread();
-	public abstract void stopDirectionThread();
+	public abstract void startBehaviorThread();
+	public abstract void stopBehaviorThread();
 	
 	public synchronized GhostBehaviorThread getBehaviorThread() {
 		return behaviorTh;
@@ -124,6 +175,7 @@ public abstract class Ghost extends MovingSprite {
 	 */
 	public abstract boolean specificAvailable();
 	public abstract void launchSpecific();
+
 	
 	private boolean wallInRow(Position pos1, Position pos2) {
 		int petit= Math.min(pos1.getX(),pos2.getX());
@@ -149,23 +201,23 @@ public abstract class Ghost extends MovingSprite {
 		return false;
 	}
 	
-	protected boolean sameCorridor() {
+	public boolean sameCorridor() {
 		Position posGhost = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
 		Position posPacMan = PhysicsThread.mazeToMatrixPosition(pacMan.currentPosition, gamePanel, mazeValues);
 		
-		if (posGhost.getX() == posPacMan.getX()) {
+		if (posGhost != null && posPacMan != null && posGhost.getX() == posPacMan.getX()) {
 			if(wallInColumn(posGhost,posPacMan)) {
 				return false;
 			}
-			lastSeenPacManMatrixPos = new Position(posPacMan.getX(),posPacMan.getY());
+			setLastSeenPacManMatrixPos(new Position(posPacMan.getX(),posPacMan.getY()));
 			return true;
 		}
 		
-		if (posGhost.getY() == posPacMan.getY()) {
+		if (posGhost != null && posPacMan != null && posGhost.getY() == posPacMan.getY()) {
 			if(wallInRow(posGhost,posPacMan)) {
 				return false;
 			}
-			lastSeenPacManMatrixPos = new Position(posPacMan.getX(),posPacMan.getY());
+			setLastSeenPacManMatrixPos(new Position(posPacMan.getX(),posPacMan.getY()));
 			return true;
 		}
 		
@@ -182,18 +234,22 @@ public abstract class Ghost extends MovingSprite {
 		
 		if (ghostMatrixPos.getY() == matrixPos.getY()) {
 			if(ghostMatrixPos.getX() < matrixPos.getX()) {
-				setState(MovingSpriteState.RIGHT);
+				wantToGoRight();
+				setState(getWantedState());
 			}
 			else {
-				setState(MovingSpriteState.LEFT);
+				wantToGoLeft();
+				setState(getWantedState());
 			}
 		}
 		else if(ghostMatrixPos.getX() == matrixPos.getX()) {
 			if(ghostMatrixPos.getY() < matrixPos.getY()) {
-				setState(MovingSpriteState.DOWN);
+				wantToGoDown();
+				setState(getWantedState());
 			}
 			else {
-				setState(MovingSpriteState.UP);
+				wantToGoUp();
+				setState(getWantedState());
 			}
 		}
 	}
@@ -203,23 +259,23 @@ public abstract class Ghost extends MovingSprite {
 	 * the ghost state is changed to escape from the matrix position.
 	 * @param matrixPos is the point in the matrix to escape from.
 	 */
-	protected void chooseDirectionToEscapeFrom(Position matrixPos) {
+	public void chooseDirectionToEscapeFrom(Position matrixPos) {
 		Position ghostMatrixPos = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
 		
 		if (ghostMatrixPos.getY() == matrixPos.getY()) {
 			if(ghostMatrixPos.getX() < matrixPos.getX()) {
-				setState(MovingSpriteState.LEFT);
+				wantToGoLeft();
 			}
 			else {
-				setState(MovingSpriteState.RIGHT);
+				wantToGoRight();
 			}
 		}
 		else if(ghostMatrixPos.getX() == matrixPos.getX()) {
 			if(ghostMatrixPos.getY() < matrixPos.getY()) {
-				setState(MovingSpriteState.UP);
+				wantToGoUp();
 			}
 			else {
-				setState(MovingSpriteState.DOWN);
+				wantToGoDown();
 			}
 		}
 	}
@@ -233,8 +289,14 @@ public abstract class Ghost extends MovingSprite {
 	}
 	
 	public boolean escaping() {
+		if (pacMan.invincible()){
+			this.escaping = true;
+		}
+		else {
+			this.escaping = false;
+		}
 		return escaping;
-	}
+	}	
 	
 	public void notEscape() {
 		escaping = false;
@@ -247,9 +309,17 @@ public abstract class Ghost extends MovingSprite {
 	public void checkAtLastSeenPosition() {
 		if(goingToLastSeenPos) {
 			Position currentMatrixPos = PhysicsThread.mazeToMatrixPosition(currentPosition, gamePanel, mazeValues);
-			if(currentMatrixPos.getX() == lastSeenPacManMatrixPos.getX() && currentMatrixPos.getY() == lastSeenPacManMatrixPos.getY()) {
+			if(currentMatrixPos.getX() == lastSeenPacManMatrixPos().getX() && currentMatrixPos.getY() == lastSeenPacManMatrixPos().getY()) {
 				goingToLastSeenPos = false;
 			}
 		}
+	}
+
+	public Position lastSeenPacManMatrixPos() {
+		return lastSeenPacManMatrixPos;
+	}
+
+	public void setLastSeenPacManMatrixPos(Position lastSeenPacManMatrixPos) {
+		this.lastSeenPacManMatrixPos = lastSeenPacManMatrixPos;
 	}
 }

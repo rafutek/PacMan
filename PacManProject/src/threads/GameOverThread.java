@@ -53,17 +53,7 @@ public class GameOverThread extends TimerThread {
 	
 
 	public BufferedImage chargerPanelGameOver() {
-		
-		BufferedImage g = tiles.getTileNumber(45);
-		BufferedImage ga = tiles.joinToRight(g , tiles.getTileNumber(39));
-		BufferedImage gam = Tiles.joinToRight(ga , tiles.getTileNumber(51));
-		BufferedImage game= tiles.joinToRight(gam , tiles.getTileNumber(43));
-		BufferedImage game_ = tiles.joinToRight(game ,tiles.getTileNumber(352));
-		BufferedImage game_o = tiles.joinToRight(game_ ,tiles.getTileNumber(53));
-		BufferedImage game_ov = tiles.joinToRight(game_o ,tiles.getTileNumber(60));
-		BufferedImage game_ove = tiles.joinToRight(game_ov ,tiles.getTileNumber(43));
-		BufferedImage gameOver = tiles.joinToRight(game_ove ,tiles.getTileNumber(56));
-				
+		BufferedImage gameOver = tiles.createWord(tiles.getTileNumber(45),tiles.getTileNumber(39),tiles.getTileNumber(51),tiles.getTileNumber(43),tiles.getTileNumber(352),tiles.getTileNumber(53),tiles.getTileNumber(60),tiles.getTileNumber(43),tiles.getTileNumber(56));		
 		return gameOver;
 	}
 

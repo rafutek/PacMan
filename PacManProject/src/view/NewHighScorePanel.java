@@ -2,16 +2,20 @@ package view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,8 +24,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import main.Main;
 import resources.ChangeLetter;
 import resources.Tiles;
+import threads.CheckPageThread;
+import threads.PhysicsThread;
 
 public class NewHighScorePanel extends JPanel implements KeyListener{
 	
@@ -47,13 +54,15 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 	private int newPosition=0;
 	private int newHightScore=0;
 	
+	private CheckPageThread checkPageThread;
+	
 	
 	public NewHighScorePanel() throws IOException {
 		setBackground(Color.black);	
 		setLayout(null);
 		
 		t = new Tiles();
-		
+		 
 		changeLetter = new ChangeLetter();
 		pacManTitle = new JLabel("");		
 		BufferedImage p1 = t.createWord(t.getTileNumber(73), t.getTileNumber(74),t.getTileNumber(75),t.getTileNumber(76),t.getTileNumber(77),t.getTileNumber(78),t.getTileNumber(79),t.getTileNumber(80));
@@ -68,6 +77,11 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 		hightScores = t.resize(hightScores, new Dimension(350,50));
 		newHighScore.setIcon(new ImageIcon(hightScores));
 		newHighScore.setBounds(130, 120, 350, 50);
+		
+		newScore = new JLabel();
+		newScore.setFont(new Font("Tw Cen MT", Font.BOLD, 40));
+		newScore.setForeground(Color.white);
+		newScore.setBounds(160, 220, 350, 50);
 		
 		save = new JLabel();
 		BufferedImage saveImg = t.createWord(t.getTileNumber(57),t.getTileNumber(39),t.getTileNumber(60),t.getTileNumber(43));
@@ -94,6 +108,7 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 		letter3 = new JLabel("");
 		letter3.setIcon(new ImageIcon (t.getTileNumber(39)));
 		letter3.setBounds(150, 300, 400, 100);
+		add(newScore);
 		add(pacManTitle);
 		add(newHighScore);
 		add(save);
@@ -184,9 +199,33 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 			System.out.println("position .........."+getNewPosition());
 			System.out.println("score........."+getNewHightScore());
 			if(newPosition!=0) {
-				updateHightScoreFile();
-
-				System.out.println("Saaave");
+			Integer[] hightScores = new Integer[5];
+			for(int i =0; i<5;i++) {
+				hightScores[i]= Integer.parseInt(HightScoresPanel.getScore()[i]);
+				int [] highScoresI = new int[3];
+			}
+			if(Arrays.stream(hightScores).anyMatch(new Integer(PhysicsThread.getScore())::equals)) {
+				updateHightScoreFileIfEqual("hightScores.txt");
+				try {
+					eraseLast();
+					updatePositionHightScoreFileIfEqual("hightScores.txt");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+			}else {
+				updateHightScoreFile("hightScores.txt");
+			}
+				System.out.println("start principal menu");	
+				try {
+					Main.getGlobalFrame().getHightScoresPanel().readHightScoresFile("hightScores.txt");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				Main.getGlobalFrame().closeGame();
 			}
 		}
 		
@@ -202,16 +241,16 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		
-	}
-	public void updateHightScoreFile() {
-		 try {
+	} 
+	public void updateHightScoreFile(String path) {
+		 try { 
 		        String searchText = Integer.toString(newPosition);
-		        Path p = Paths.get("src/resources/hightScores.txt");
+		        Path p = Paths.get("src/resources/highScores/"+path);
 		        Path tempFile = Files.createTempFile(p.getParent(), "usersTemp", ".txt");
 		        try (BufferedReader reader = Files.newBufferedReader(p);
 		                BufferedWriter writer = Files.newBufferedWriter(tempFile)) {
 		            String line;
-
+ 
 		            // copy everything until the id is found
 		            while ((line = reader.readLine()) != null) {
 		                String[] fields = line.split("[:]");
@@ -234,11 +273,92 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 		        Files.copy(tempFile, p, StandardCopyOption.REPLACE_EXISTING);
 		        Files.delete(tempFile);
 		    } catch (IOException ex) {
-		        //Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+		        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		    }
 	}
+	public void eraseLast() throws IOException
+	{
+		RandomAccessFile f = new RandomAccessFile("src/resources/highScores/hightScores.txt", "rw");
+		long length = f.length() - 1;
+		 byte b;
+		do {                     
+		  length -= 1;
+		  f.seek(length);
+		  b = f.readByte();
+		} while(b != 10);
+		f.setLength(length+1);
+		f.close();
+		System.out.println("last line erased");
+	}
 	
-	
+	public void updateHightScoreFileIfEqual(String path) {
+		try { 
+	        String searchText = Integer.toString(newPosition);
+	        Path p = Paths.get("src/resources/highScores/"+path);
+	        Path tempFile = Files.createTempFile(p.getParent(), "usersTemp", ".txt");
+	        try (BufferedReader reader = Files.newBufferedReader(p);
+	                BufferedWriter writer = Files.newBufferedWriter(tempFile)) {
+	            String line;
+	            // copy everything until the id is found
+	            while ((line = reader.readLine()) != null) {
+	                String[] fields = line.split("[:]");
+	                if (searchText.equals(fields[0])) {
+	                	writer.write(newPosition+":"+name+":"+Integer.toString(newHightScore)+":\n");
+	                }
+	                writer.write(String.join(":", fields));
+	                writer.write(":");
+	                writer.newLine();
+	            }
+	        }
+
+	        // copy new file & delete temporary file
+	        Files.copy(tempFile, p, StandardCopyOption.REPLACE_EXISTING);
+	        Files.delete(tempFile);
+	    } catch (IOException ex) {
+	        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+	    }
+	}
+	public void updatePositionHightScoreFileIfEqual(String path) throws FileNotFoundException {
+		try { 
+	        String searchText = Integer.toString(newPosition);
+	        String searchText1 = Integer.toString(newPosition+1);
+	        String searchText2= Integer.toString(newPosition+2);
+	        String searchText3 = Integer.toString(newPosition+3);
+	        Boolean isFirst =true;
+	        Path p = Paths.get("src/resources/highScores/"+path);
+	        Path tempFile = Files.createTempFile(p.getParent(), "usersTemp", ".txt");
+	        try (BufferedReader reader = Files.newBufferedReader(p);
+	                BufferedWriter writer = Files.newBufferedWriter(tempFile)) {
+	            String line;
+	            // copy everything until the id is found
+	            while ((line = reader.readLine()) != null) {
+	                String[] fields = line.split("[:]");
+	                if (searchText.equals(fields[0]) && isFirst==true) {
+	                	System.out.println("hereee i aammm");
+	                	isFirst=false;
+	                }else if(searchText.equals(fields[0]) && isFirst==false) {
+	                	fields[0] = Integer.toString(newPosition+1);
+	                }else if(searchText1.equals(fields[0])){
+	                	fields[0] = Integer.toString(newPosition+2);
+	                }else if(searchText2.equals(fields[0])){
+	                	fields[0] = Integer.toString(newPosition+3);
+	                }else if(searchText3.equals(fields[0])){
+	                	fields[0] = Integer.toString(newPosition+4);
+	                }
+	                writer.write(String.join(":", fields));
+	                writer.write(":");
+	                writer.newLine();
+	            }
+	        }
+
+	        // copy new file & delete temporary file
+	        Files.copy(tempFile, p, StandardCopyOption.REPLACE_EXISTING);
+	        Files.delete(tempFile);
+	    } catch (IOException ex) {
+	        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+	    }
+
+	}
 	public int getNewPosition() {
 		return newPosition;
 	}
@@ -261,13 +381,17 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 	public void setNewScore(JLabel newScore) {
 		this.newScore = newScore;
 	}
-	public static void main(String[] args) throws IOException {
-		JFrame f = new JFrame();
-		NewHighScorePanel p = new NewHighScorePanel();
-		f.setSize(620, 700);
-		f.add(p);
-		f.addKeyListener(p);
-		f.setVisible(true);
+
+
+	public String getName() {
+		return name;
 	}
 
-}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	
+
+	}

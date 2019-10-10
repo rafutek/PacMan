@@ -9,17 +9,17 @@ import threads.GhostBehaviorThread;
 
 public class Clyde extends Ghost {
 
-	public Clyde(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, MovingSprite pacMan) {
+	public Clyde(Position start_position, Tiles tiles, JPanel gamePanel, List<List<Integer>> mazeValues, PacMan pacMan) {
 		super(start_position, tiles, gamePanel, mazeValues, pacMan);
 	}
-	
+
 
 	@Override
-	public void chooseTilesNumbers() {
+	protected void chooseSpecificGhostTiles() {
 		for (int tile_nb = 257; tile_nb < 289; tile_nb++) {
 			tilesNumbers.add(tile_nb); // add clyde tiles numbers
 		}
-
+		
 	}
 	
 	@Override
@@ -29,13 +29,13 @@ public class Clyde extends Ghost {
 	
 	
 	@Override
-	public void startDirectionThread() {
-		behaviorTh = new GhostBehaviorThread(this);
+	public void startBehaviorThread() {
+		behaviorTh = new GhostBehaviorThread(this,pacMan);
 		behaviorTh.setName("Clyde behavior");
 		behaviorTh.startThread();
 	}
 	@Override
-	public  void stopDirectionThread() {
+	public  void stopBehaviorThread() {
 		behaviorTh.stopThread();
 	}
 	
@@ -52,5 +52,6 @@ public class Clyde extends Ghost {
 	public void launchSpecific() {
 		System.out.println("Launch Clyde Specific behavior");		
 	}
+
 
 }

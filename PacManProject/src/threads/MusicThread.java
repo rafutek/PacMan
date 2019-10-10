@@ -10,7 +10,6 @@ public class MusicThread extends AudioThread{
 	
 	private static boolean invincible = false;
 	private boolean invincibleIsPlaying = false;
-	private int vol = 1;
 
 	
 	public MusicThread(String threadName) {
@@ -43,11 +42,13 @@ public class MusicThread extends AudioThread{
 		
 			try {
 				if(!invincible) {
+					IsPlaying();
 					playAudio("beginning.wav");
+					setVolume(vol);
 				} else if(isPlaying) {
 						InvinsibilityIsPlaying();
 						playAudio("intermission.wav");
-					
+						setVolume(vol);					
 				}
 			} catch (UnsupportedAudioFileException e) {
 				// TODO Auto-generated catch block
@@ -69,11 +70,11 @@ public class MusicThread extends AudioThread{
 		
 	}
 	
-	public static void setInvincibility(boolean b) {
+	public synchronized void setInvincibility(boolean b) {
 		invincible = b;
 	}
 	
-	public void InvinsibilityIsPlaying() {
+	public synchronized void InvinsibilityIsPlaying() {
 		if(!invincibleIsPlaying) {
 			audioClip.stop();
 			audioClip.close();
@@ -81,49 +82,13 @@ public class MusicThread extends AudioThread{
 			this.invincibleIsPlaying = true;
 		}
 	}
-
-	@Override
-	public void volumeUp(int x) {
-		// TODO Auto-generated method stub
-		if(!mute) {
-			if(vol <= 0.9) {
-				vol += 0.1;
-			}
-			System.out.println("Volume: " + vol);	
-			setVolume(vol);
-		}
-	}
-
-	@Override
-	public void volumeDown(int x) {
-		// TODO Auto-generated method stub
-		if(!mute) {
-			if(vol <= 0.9) {
-				vol -= 0.1;
-			}
-			System.out.println("Volume: " + vol);	
-			setVolume(vol);
-		}
-	}
 	
-//	public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
-//		
-//
-//		int wait_delay = 10000, join_delay = 100;
-//		
-//		MusicThread musicth = new MusicThread("music");
-//		musicth.start();
-//		
-//		synchronized(musicth) {
-//			//musicth.playAudio("chomp.wav");
-//			musicth.wait(wait_delay);
-//			musicth.stopThread();
-//			musicth.stopAudioThread();
-//			//thread should be down now
-//			musicth.wait(join_delay);
-//			if(musicth.isAlive()) {
-//				musicth.interrupt();
-//			}
-//		}
-//	}
+	public synchronized void IsPlaying() {
+		if(invincibleIsPlaying) {
+			audioClip.stop();
+			audioClip.close();
+			isPlaying = false;
+			this.invincibleIsPlaying = false;
+		}
+	}
 }

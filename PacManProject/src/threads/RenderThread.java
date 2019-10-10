@@ -1,25 +1,33 @@
 package threads;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-
+import javax.swing.JPanel;
+import main.Main;
 import resources.Maze;
-import sprites.Ghost;
+import resources.Tiles;
+import resources.WriteLetter;
+import sprites.Blinky;
+import sprites.Clyde;
+import sprites.Inky;
 import sprites.MovingSprite;
-import sprites.MovingSpriteState;
 import sprites.PacMan;
+import sprites.Pinky;
 import sprites.Position;
 import sprites.Sprites;
 import view.GameFrame;
 import view.GamePanel;
+import view.HightScoresPanel;
+import view.NewHighScorePanel;
+import view.PrincipalMenuPanel;
 import view.StatusBarPanel;
 
 public class RenderThread extends ThreadPerso{
@@ -27,7 +35,7 @@ public class RenderThread extends ThreadPerso{
 
 	
 	// record stats every 1 second (roughly)
-	private static long MAX_STATS_INTERVAL = 1000L;
+	private static long MAX_STATS_INTERVAL = 1000L; 
 
 	/* Number of frames with a delay of 0 ms before the animation thread yields
   	to other running threads. */
@@ -39,7 +47,7 @@ public class RenderThread extends ThreadPerso{
 
 	// number of FPS values stored to get an average
 	private static int NUM_FPS = 10;
-
+ 
 
 	// used for gathering statistics
 	private long statsInterval = 0L;    // in ms
@@ -78,7 +86,11 @@ public class RenderThread extends ThreadPerso{
 	// window panels to render content into
 	private GamePanel gamePanel;
 	private StatusBarPanel statusBarPanel;
-
+	private HightScoresPanel hightScoresPanel;
+	private WriteLetter writeLetter;
+	private int finalScore=0;
+	private int newhightScore=0;
+	private int newPosition=0;
 	
 	//maze
 	private Maze maze;
@@ -90,30 +102,39 @@ public class RenderThread extends ThreadPerso{
 	private Sprites energizers;
 	private Sprites pacDots;
 	private PacMan pacMan;
-	private Ghost blinky;
-	private Ghost pinky;
-	private Ghost clyde;
-	private Ghost inky;
+	private Blinky blinky;
+	private Pinky pinky;
+	private Clyde clyde;
+	private Inky inky;
 	
 	//animations
 	private AnimationThread animationTh;
 	private ThreeTwoOneThread threeTwoOneTh;
-	private GameOverThread gameOverTh;
 	
 	//physics
 	private PhysicsThread physicsTh;
-	private boolean animationDone = false;
-	
+	private CheckPageThread checkPageThread ;
 	//exit the ghost of the box
 	private GhostsExitBoxThread ghostExitThread;
+	private GameOverThread gameOverTh;
+	private ScoreInvicibiltyGhostThread scoreInvicibiltyGhostThread;
+	
+	//sounds
+	private MusicThread musicTh;
+	private SoundThread soundTh;
 	
 	private int lastLife = 0;
-	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel) {
+	
+	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel, MusicThread musicTh, SoundThread soundTh) {
 		super("Render");
 				
 		this.gamePanel = gamePanel;
 		this.statusBarPanel = statusBarPanel;
-		
+		try {
+			hightScoresPanel = new HightScoresPanel("hightScores.txt");
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		// initialize timing elements
 		this.period = period;
 		fpsStore = new double[NUM_FPS];
@@ -125,7 +146,7 @@ public class RenderThread extends ThreadPerso{
 		
 		//create maze image and sprites from the maze file
 		try {
-			maze = new Maze(gamePanel, "maze.txt");
+			maze = new Maze(gamePanel, "maze.csv");
 		} catch (IOException e) {e.printStackTrace();}
 		
 		//get sprites
@@ -138,9 +159,16 @@ public class RenderThread extends ThreadPerso{
 		inky = maze.getInky();
 		
 		statusBarPanel.setPacman(pacMan);
+		this.musicTh = musicTh;
+		this.soundTh = soundTh;
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
-		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers );
-		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze);
+		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers, musicTh , soundTh);
+		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze, pacMan);
+		try {
+			writeLetter = new WriteLetter();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		this.paused = true;
 	}
 	
@@ -187,11 +215,6 @@ public class RenderThread extends ThreadPerso{
 
 	@Override
 	protected void doThat() {
-		if(physicsTh.timerstarted) {
-			pacMan.setState(MovingSpriteState.DEATH);
-			physicsTh.timerstarted=false;
-		}
-		
 		
 		if(!initStats) {
 			initializeStats();
@@ -268,23 +291,10 @@ public class RenderThread extends ThreadPerso{
 	 */
 	public synchronized void resumeThread() {
 		if(paused) {
-			
-//			animationDone = false;
-//			if(threeTwoOneTh != null && threeTwoOneTh.isRunning()) {
-//				threeTwoOneTh.stopThread();
-//			}
-//			threeTwoOneTh = new ThreeTwoOneThread(maze.getTiles(), gamePanel);
-//			threeTwoOneTh.startThread();
-//			do {
-//				try {
-//					Thread.sleep(100);
-//				} catch (InterruptedException e) {}
-//			}while(threeTwoOneTh.isRunning());
-//			
-//			animationDone = true;
+
 			if(GameFrame.getPage()=="Game") {
 			initStats = false;
-			paused = false;
+			paused = false;			
 			if(!animationTh.isRunning()) {
 				animationTh.startThread();
 			}else {
@@ -399,8 +409,71 @@ public class RenderThread extends ThreadPerso{
 					} catch (InterruptedException e) {}
 				}while(gameOverTh.isRunning());
 				
-				physicsTh.gameOver=false;
+				physicsTh.setGameOver(false);
+				System.out.println("Game oveeeeeeeeeeeeeeeeeeeeer");
+				finalScore = PhysicsThread.getScore();
+				compareWithHightScores();
+				
+
+				if(newPosition == 0) {
+					
+				this.stopThread();
+				Main.getGlobalFrame().setStatutMenu(0);
+				Main.getGlobalFrame().setPage("PrincipalMenu");
+				System.out.println(Main.getGlobalFrame().getPage()+"...........");
+				checkPageThread = new CheckPageThread("CheckPageThread");
+				System.out.println("Score ..................."+finalScore);
+				}else {
+					this.stopThread();
+					Main.getGlobalFrame().setStatutMenu(0);
+					Main.getGlobalFrame().setPage("NewHighScore");
+					System.out.println(Main.getGlobalFrame().getPage()+"...........");
+					NewHighScorePanel h = Main.getGlobalFrame().getNewHighScorePanel();
+					h.setNewHightScore(finalScore);
+					h.setNewPosition(newPosition);
+					System.out.println(".............test ............"+h.getNewHightScore());
+					
+					BufferedImage img = maze.getTiles().getTileNumber(352);
+					String letter ="0";
+					
+					BufferedImage hightScore1Img = maze.getTiles().createWord(img);
+					letter =h.getNewHightScore()+"";
+					for(int i=0;i<letter.length();i++) {
+						Character c = letter.charAt(i);
+						String cs = c.toString();
+						writeLetter.setLetter(cs);
+						System.out.println("letter ______________________"+cs);
+						writeLetter.setL(img);
+						writeLetter.write();
+						img=writeLetter.getL();
+						cs=writeLetter.getLetter();
+						hightScore1Img = maze.getTiles().createWord(hightScore1Img,img);
+						
+					}
+					hightScore1Img = maze.getTiles().resize(hightScore1Img, new Dimension(150, 50));
+					h.getNewScore().setIcon(new ImageIcon(hightScore1Img));
+					h.setVisible(true);
+					checkPageThread = new CheckPageThread("CheckPageThread");
+					System.out.println("Score ..................."+finalScore);
+					
+				}
+			}
+			
+			if(physicsTh.isCollPacManGhostInv()) {
+				scoreInvicibiltyGhostThread= new ScoreInvicibiltyGhostThread( maze.getTiles(), gamePanel);
+				scoreInvicibiltyGhostThread.setPosX(pacMan.getCurrentPosition().getX()-20);
+				scoreInvicibiltyGhostThread.setPosY(pacMan.getCurrentPosition().getY()-20);
+				scoreInvicibiltyGhostThread.startThread();
+				this.pauseThread();
+				physicsTh.getInvTh().pauseThread();
+				do {
+					try {
+					Thread.sleep(100);
+					} catch (InterruptedException e) {}
+				}while(scoreInvicibiltyGhostThread.isRunning());
 				this.resumeThread();
+				physicsTh.getInvTh().resumeThread();
+				physicsTh.setCollPacManGhostInv(false);
 			}
 			
 			if(pacMan.getLife()!=lastLife) {
@@ -516,6 +589,37 @@ public class RenderThread extends ThreadPerso{
 		System.out.println("Average UPS: " + df.format(averageUPS));
 		System.out.println("Time Spent: " + timeSpentInGame + " secs");
 	}  // end of printStats()
+	
+	public void compareWithHightScores(){
+		String[] h = hightScoresPanel.getScore() ;
+		Integer[] hightScores = new Integer[5];
+		for(int i =0; i<5;i++) {
+			hightScores[i]= Integer.parseInt(h[i]);
+		}
+		if(finalScore>hightScores[0] ) {
+			newhightScore = finalScore;
+			newPosition =1;
+			System.out.println("position 1.......................");
+		}else if((finalScore<hightScores[0] && finalScore>hightScores[1])|| finalScore==hightScores[1]) {
+			newhightScore = finalScore;
+			newPosition =2;
+			System.out.println("position 2.......................");
+		}else if((finalScore<hightScores[1] && finalScore>hightScores[2])|| finalScore==hightScores[2]) {
+			newhightScore = finalScore;
+			newPosition =3;
+			System.out.println("position 3.......................");
+		}else if((finalScore<hightScores[2] && finalScore>hightScores[3])|| finalScore==hightScores[3]) {
+			newhightScore = finalScore;
+			newPosition =4;
+			System.out.println("position 4.......................");
+		}else if((finalScore<hightScores[3] && finalScore>hightScores[4])|| finalScore==hightScores[4]) {
+			newhightScore = finalScore;
+			newPosition =5;
+			System.out.println("position 5.......................");
+		}
+		
+	}
+	
 	public AnimationThread getAnimationTh() {
 		return animationTh;
 	}
@@ -547,8 +651,5 @@ public class RenderThread extends ThreadPerso{
 	public void setGhostExitThread(GhostsExitBoxThread ghostExitThread) {
 		this.ghostExitThread = ghostExitThread;
 	}
-
-
-
 
 }

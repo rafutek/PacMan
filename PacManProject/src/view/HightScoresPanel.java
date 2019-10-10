@@ -20,16 +20,18 @@ import javax.swing.JPanel;
 import javax.swing.text.ChangedCharSetException;
 
 import main.Main;
+import resources.ChangeLetter;
 import resources.Tiles;
+import resources.WriteLetter;
 import threads.CheckPageThread;
 
 public class HightScoresPanel extends JPanel implements KeyListener{
 	private static final long serialVersionUID = 1L;
 	
 	private String strLine;
-	private String position[];
-	private String name[]; 
-	private String score[];
+	private String[] position;
+	private String[] Name; 
+	private static String[] score;
 	private String[] hightScors;
 	private FileInputStream fstream ;
 	private BufferedReader br ;
@@ -45,20 +47,23 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 	public JLabel hightScore5;
 	public JLabel goBack;
 	
+	private WriteLetter writeLetter;
+	
 	private CheckPageThread checkPageThread;
 	
-	public HightScoresPanel() throws IOException {
-		readHightScoresFile();
-		fillArrays();
+	public HightScoresPanel(String path) throws IOException { 
+		readHightScoresFile(path);
+		fillArrays(); 
 		
 		setBackground(Color.black);	
 		setLayout(null);
+		
 		try {
 			t = new Tiles();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		writeLetter = new WriteLetter();
 		pacManTitle = new JLabel("");		
 		BufferedImage p1 = t.createWord(t.getTileNumber(73), t.getTileNumber(74),t.getTileNumber(75),t.getTileNumber(76),t.getTileNumber(77),t.getTileNumber(78),t.getTileNumber(79),t.getTileNumber(80));
 		BufferedImage p2 = t.createWord(t.getTileNumber(89),t.getTileNumber(90),t.getTileNumber(91), t.getTileNumber(92), t.getTileNumber(93), t.getTileNumber(94),t.getTileNumber(95), t.getTileNumber(96));
@@ -76,32 +81,218 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		hightScore1 = new JLabel();
 		hightScore1.setFont(new Font("Tw Cen MT", Font.BOLD, 40));
 		hightScore1.setForeground(Color.WHITE);
-		hightScore1.setText(position[0]+" - "+name[0]+" : "+score[0]);
-		hightScore1.setBounds(180, 220, 250, 50);
+		BufferedImage img = t.getTileNumber(39);
+		String letter =position[0];
+		writeLetter.setLetter(letter);
+		writeLetter.setL(img);
+		writeLetter.write();
+		img=writeLetter.getL();
+		letter=writeLetter.getLetter();
+		BufferedImage hightScore1Img = t.createWord(img,t.getTileNumber(352));
+		BufferedImage img2 = t.getTileNumber(39);
+		String letter2 =Name[0];
+		for(int i=0;i<letter2.length();i++) {
+			Character c = letter2.charAt(i);
+			String cs = c.toString();
+			writeLetter.setLetter(cs);
+			//System.out.println("letter ______________________"+cs);
+			writeLetter.setL(img2);
+			writeLetter.write();
+			img2=writeLetter.getL();
+			cs=writeLetter.getLetter();
+			hightScore1Img = t.createWord(hightScore1Img,img2);
+			
+		}
+		hightScore1Img = t.createWord(hightScore1Img,t.getTileNumber(352));
+		letter2 =score[0];
+		for(int i=0;i<letter2.length();i++) {
+			Character c = letter2.charAt(i);
+			String cs = c.toString();
+			writeLetter.setLetter(cs);
+			//System.out.println("letter ______________________"+cs);
+			writeLetter.setL(img2);
+			writeLetter.write();
+			img2=writeLetter.getL();
+			cs=writeLetter.getLetter();
+			hightScore1Img = t.createWord(hightScore1Img,img2);
+			
+		}
+		
+		
+		/*BufferedImage hightScore1Img1 = writeLetter.getL();
+		writeLetter.setLetter(name[0]);
+		writeLetter.write();
+		BufferedImage hightScore1Img2 = writeLetter.getL();
+		writeLetter.setLetter(score[0]);
+		writeLetter.write();
+		BufferedImage hightScore1Img3 = writeLetter.getL();*/
+		
+		hightScore1Img = t.resize(hightScore1Img, new Dimension(300, 50));
+		hightScore1.setIcon(new ImageIcon(hightScore1Img));
+		hightScore1.setBounds(100, 220, 500, 50);
 		
 		hightScore2 = new JLabel();
-		hightScore2.setFont(new Font("Tw Cen MT", Font.BOLD, 40));
-		hightScore2.setForeground(Color.WHITE);
-		hightScore2.setText(position[1]+" - "+name[1]+" : "+score[1]);
-		hightScore2.setBounds(180, 270, 250, 50);
+		img = t.getTileNumber(39);
+		letter =position[1];
+		writeLetter.setLetter(letter);
+		writeLetter.setL(img);
+		writeLetter.write();
+		img=writeLetter.getL();
+		letter=writeLetter.getLetter();
+		hightScore1Img = t.createWord(img,t.getTileNumber(352));
+		img2 = t.getTileNumber(39);
+		letter2 =Name[1];
+		for(int i=0;i<letter2.length();i++) {
+			Character c = letter2.charAt(i);
+			String cs = c.toString();
+			writeLetter.setLetter(cs);
+			//System.out.println("letter ______________________"+cs);
+			writeLetter.setL(img2);
+			writeLetter.write();
+			img2=writeLetter.getL();
+			cs=writeLetter.getLetter();
+			hightScore1Img = t.createWord(hightScore1Img,img2);
+			
+		}
+		hightScore1Img = t.createWord(hightScore1Img,t.getTileNumber(352));
+		letter2 =score[1];
+		for(int i=0;i<letter2.length();i++) {
+			Character c = letter2.charAt(i);
+			String cs = c.toString();
+			writeLetter.setLetter(cs);
+			//System.out.println("letter ______________________"+cs);
+			writeLetter.setL(img2);
+			writeLetter.write();
+			img2=writeLetter.getL();
+			cs=writeLetter.getLetter();
+			hightScore1Img = t.createWord(hightScore1Img,img2);
+			
+		}
+		hightScore1Img = t.resize(hightScore1Img, new Dimension(300, 50));
+		hightScore2.setIcon(new ImageIcon(hightScore1Img));
+		hightScore2.setBounds(100, 270, 500, 50);
 		
 		hightScore3 = new JLabel();
-		hightScore3.setFont(new Font("Tw Cen MT", Font.BOLD, 40));
-		hightScore3.setForeground(Color.WHITE);
-		hightScore3.setText(position[2]+" - "+name[2]+" : "+score[2]);
-		hightScore3.setBounds(180, 320, 250, 50);
+		img = t.getTileNumber(39);
+		letter =position[2];
+		writeLetter.setLetter(letter);
+		writeLetter.setL(img);
+		writeLetter.write();
+		img=writeLetter.getL();
+		letter=writeLetter.getLetter();
+		hightScore1Img = t.createWord(img,t.getTileNumber(352));
+		img2 = t.getTileNumber(39);
+		letter2 =Name[2];
+		for(int i=0;i<letter2.length();i++) {
+			Character c = letter2.charAt(i);
+			String cs = c.toString();
+			writeLetter.setLetter(cs);
+			//System.out.println("letter ______________________"+cs);
+			writeLetter.setL(img2);
+			writeLetter.write();
+			img2=writeLetter.getL();
+			cs=writeLetter.getLetter();
+			hightScore1Img = t.createWord(hightScore1Img,img2);
+			
+		}
+		hightScore1Img = t.createWord(hightScore1Img,t.getTileNumber(352));
+		letter2 =score[2];
+		for(int i=0;i<letter2.length();i++) {
+			Character c = letter2.charAt(i);
+			String cs = c.toString();
+			writeLetter.setLetter(cs);
+			//System.out.println("letter ______________________"+cs);
+			writeLetter.setL(img2);
+			writeLetter.write();
+			img2=writeLetter.getL();
+			cs=writeLetter.getLetter();
+			hightScore1Img = t.createWord(hightScore1Img,img2);
+			
+		}
+		hightScore1Img = t.resize(hightScore1Img, new Dimension(300, 50));
+		hightScore3.setIcon(new ImageIcon(hightScore1Img));
+		hightScore3.setBounds(100, 320, 500, 50);
 		
 		hightScore4 = new JLabel();
-		hightScore4.setFont(new Font("Tw Cen MT", Font.BOLD, 40));
-		hightScore4.setForeground(Color.WHITE);
-		hightScore4.setText(position[3]+" - "+name[3]+" : "+score[3]);
-		hightScore4.setBounds(180, 370, 250, 50);
+		img = t.getTileNumber(39);
+		letter =position[3];
+		writeLetter.setLetter(letter);
+		writeLetter.setL(img);
+		writeLetter.write();
+		img=writeLetter.getL();
+		letter=writeLetter.getLetter();
+		hightScore1Img = t.createWord(img,t.getTileNumber(352));
+		img2 = t.getTileNumber(39);
+		letter2 =Name[3];
+		for(int i=0;i<letter2.length();i++) {
+			Character c = letter2.charAt(i);
+			String cs = c.toString();
+			writeLetter.setLetter(cs);
+			//System.out.println("letter ______________________"+cs);
+			writeLetter.setL(img2);
+			writeLetter.write();
+			img2=writeLetter.getL();
+			cs=writeLetter.getLetter();
+			hightScore1Img = t.createWord(hightScore1Img,img2);
+			
+		}
+		hightScore1Img = t.createWord(hightScore1Img,t.getTileNumber(352));
+		letter2 =score[3];
+		for(int i=0;i<letter2.length();i++) {
+			Character c = letter2.charAt(i);
+			String cs = c.toString();
+			writeLetter.setLetter(cs);
+			//System.out.println("letter ______________________"+cs);
+			writeLetter.setL(img2);
+			writeLetter.write();
+			img2=writeLetter.getL();
+			cs=writeLetter.getLetter();
+			hightScore1Img = t.createWord(hightScore1Img,img2);
+			
+		}
+		hightScore1Img = t.resize(hightScore1Img, new Dimension(300, 50));
+		hightScore4.setIcon(new ImageIcon(hightScore1Img));
+		hightScore4.setBounds(100, 370, 500, 50);
 	
 		hightScore5 = new JLabel();
-		hightScore5.setFont(new Font("Tw Cen MT", Font.BOLD, 40));
-		hightScore5.setForeground(Color.WHITE);
-		hightScore5.setText(position[4]+" - "+name[4]+" : "+score[4]);
-		hightScore5.setBounds(180, 420, 250, 50);
+		img = t.getTileNumber(39);
+		letter =position[4];
+		writeLetter.setLetter(letter);
+		writeLetter.setL(img);
+		writeLetter.write();
+		img=writeLetter.getL();
+		letter=writeLetter.getLetter();
+		hightScore1Img = t.createWord(img,t.getTileNumber(352));
+		img2 = t.getTileNumber(39);
+		letter2 =Name[4];
+		for(int i=0;i<letter2.length();i++) {
+			Character c = letter2.charAt(i);
+			String cs = c.toString();
+			writeLetter.setLetter(cs);
+			//System.out.println("letter ______________________"+cs);
+			writeLetter.setL(img2);
+			writeLetter.write();
+			img2=writeLetter.getL();
+			cs=writeLetter.getLetter();
+			hightScore1Img = t.createWord(hightScore1Img,img2);
+			
+		}
+		hightScore1Img = t.createWord(hightScore1Img,t.getTileNumber(352));
+		letter2 =score[4];
+		for(int i=0;i<letter2.length();i++) {
+			Character c = letter2.charAt(i);
+			String cs = c.toString();
+			writeLetter.setLetter(cs);
+			writeLetter.setL(img2);
+			writeLetter.write();
+			img2=writeLetter.getL();
+			cs=writeLetter.getLetter();
+			hightScore1Img = t.createWord(hightScore1Img,img2);
+			
+		}
+		hightScore1Img = t.resize(hightScore1Img, new Dimension(300, 50));
+		hightScore5.setIcon(new ImageIcon(hightScore1Img));
+		hightScore5.setBounds(100, 420, 500, 50);
 		
 		pacManIcon= new JLabel();
 		BufferedImage pacManImage = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
@@ -128,15 +319,15 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 	}
 	
 	//this methode reads the values of the file hightScores and puts them in the array hightScors 
-		public void readHightScoresFile() throws IOException {
+		public void readHightScoresFile(String path) throws IOException {
 			hightScors = new String[16];
 			position = new String[5];
-			name = new String[5];
-			score = new String[5];
+			Name = new String[5];
+			score = new String[5]; 
 			Scanner s = null; 
 			try { 
-				s = new Scanner(new BufferedReader(new FileReader("src/resources/hightScores/hightScores.txt")));
-				s.useDelimiter(":");
+				s = new Scanner(new BufferedReader(new FileReader("src/resources/highScores/"+path)));
+				s.useDelimiter(":"); 
 				int i =0;
 				while (s.hasNext()) {
 					hightScors[i]=s.next();
@@ -144,9 +335,8 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 				}
 				} finally { 
 					if (s != null) s.close(); 
-				} 
-			
-		}
+				}
+		} 
 		//this methodes fills the arrays name , score and position 
 		public void fillArrays() {
 			int j=0;
@@ -158,7 +348,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 				}
 				//fill the array names
 				if(i==1||i==4||i==7||i==10||i==13) {
-					name[j] = hightScors[i];
+					Name[j] = hightScors[i];
 					j++;
 				}
 				//fill the array score
@@ -182,15 +372,32 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
+
+
+	public String[] getPosition() {
+		return position;
+	}
+
+	public String[] getHightScors() {
+		return hightScors;
+	}
+
+	public static String[] getScore() {
+		return score;
+	}
+	
+//	public String[] getName() {
+//		return Name;
+//	}
+	
+
 	
 
 }

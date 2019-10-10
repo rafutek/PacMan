@@ -25,13 +25,13 @@ public class CheckPageThread extends ThreadPerso{
 		super(threadName);
 		setName("CheckPageThread");
 		try {
-			t = new Tiles();
+			t = new Tiles(); 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		gameFrame = Main.getGlobalFrame();
-		if(gameFrame.getPage()=="PrincipalMenu") {
+		if(gameFrame.getPage()=="PrincipalMenu") { 
 			System.out.println("..................................."+gameFrame.getStatutMenu());
 			gameFrame.renderTh.pauseThread();
 			gameFrame.removeKeyListener(gameFrame.getControlsMenuPanel());
@@ -60,7 +60,7 @@ public class CheckPageThread extends ThreadPerso{
 			gameFrame.removeKeyListener(gameFrame.getAudioMenuPanel());
 			gameFrame.removeKeyListener(gameFrame.getHightScoresPanel());
 			//gameFrame.readyForArrowsEvents();
-			renderThread = new RenderThread(period,gameFrame.getGamePanel() , gameFrame.getStatusBarPanel());
+			renderThread = new RenderThread(period,gameFrame.getGamePanel() , gameFrame.getStatusBarPanel(), gameFrame.getMusicTh(), gameFrame.getSoundTh());
 			renderThread.startThread();
 			layoutManagerThread = new LayoutManagerThread(gameFrame);
 			layoutManagerThread.startThread();
@@ -80,6 +80,8 @@ public class CheckPageThread extends ThreadPerso{
 			gameFrame.removeKeyListener(gameFrame.getPrincipalMenuPanel());
 			gameFrame.renderTh.pauseThread();
 			gameFrame.getPrincipalMenuPanel().setVisible(false);
+			gameFrame.getHightScoresPanel().setVisible(false);
+			gameFrame.getAudioMenuPanel().setVisible(false);
 			System.out.println("......................... menu controls is Visible.................");
 			gameFrame.getControlsMenuPanel().setVisible(true);
 			System.out.println("......................... menu controls is added.................");
@@ -89,18 +91,40 @@ public class CheckPageThread extends ThreadPerso{
 			gameFrame.removeKeyListener(gameFrame.getPrincipalMenuPanel());
 			gameFrame.renderTh.pauseThread();
 			gameFrame.getPrincipalMenuPanel().setVisible(false);
-			System.out.println("......................... menu controls is Visible.................");
+			gameFrame.getControlsMenuPanel().setVisible(false);
+			gameFrame.getHightScoresPanel().setVisible(false);
+			System.out.println("......................... menu audio is Visible.................");
 			gameFrame.getAudioMenuPanel().setVisible(true);
-			System.out.println("......................... menu controls is added.................");
+			System.out.println("......................... menu audio is added.................");
 			gameFrame.addKeyListener(gameFrame.getAudioMenuPanel());
 		}else if(gameFrame.getPage()=="HighScores") {
 			gameFrame.removeKeyListener(gameFrame.getPrincipalMenuPanel());
+			gameFrame.removeKeyListener(gameFrame.getAudioMenuPanel());
+			gameFrame.removeKeyListener(gameFrame.getControlsMenuPanel());
+			gameFrame.removeKeyListener(gameFrame.getNewHighScorePanel());
 			gameFrame.renderTh.pauseThread();
 			gameFrame.getPrincipalMenuPanel().setVisible(false);
-			System.out.println("......................... menu controls is Visible.................");
+			gameFrame.getControlsMenuPanel().setVisible(false);
+			gameFrame.getAudioMenuPanel().setVisible(false);
+			System.out.println("......................... menu HighScores is Visible.................");
 			gameFrame.getHightScoresPanel().setVisible(true);
-			System.out.println("......................... menu controls is added.................");
+			System.out.println("......................... menu HighScores is added.................");
 			gameFrame.addKeyListener(gameFrame.getHightScoresPanel());
+		}else if(gameFrame.getPage()=="NewHighScore") {
+			gameFrame.removeKeyListener(gameFrame.getPrincipalMenuPanel());
+			gameFrame.renderTh.pauseThread();
+			gameFrame.getPrincipalMenuPanel().setVisible(false);
+			gameFrame.getControlsMenuPanel().setVisible(false);
+			gameFrame.getAudioMenuPanel().setVisible(false);
+			gameFrame.getHightScoresPanel().setVisible(false);
+			gameFrame.getGamePanel().setVisible(false);
+			gameFrame.getStatusBarPanel().setVisible(false);
+			gameFrame.getLeftPanel().setVisible(false);
+			gameFrame.getRightPanel().setVisible(false);
+			System.out.println("......................... menu NewHighScore is Visible.................");
+			gameFrame.getNewHighScorePanel().setVisible(true);
+			System.out.println("......................... menu NewHighScore is added.................");
+			gameFrame.addKeyListener(gameFrame.getNewHighScorePanel());
 		}
 		
 	}

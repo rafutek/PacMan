@@ -36,10 +36,11 @@ public class StatusBarPanel extends JPanel {
 	JLabel valueDirection;
 	JLabel valueStatut;
 	public static JLabel valueScore;
-	JLabel valueLevel;
+	public static JLabel valueLevel;
 	public static BufferedImage Lives;
 	public JPanel panelGameOver;
 	public static BufferedImage gameOver;
+	private int vie = 4;
 	
 	public StatusBarPanel() {
 		setLayout(new GridLayout(2,0));

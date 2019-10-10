@@ -3,7 +3,7 @@ package threads;
 public abstract class ThreadPerso extends Thread {
 	
 	private int wait_time = 8; //ms
-	protected volatile boolean running = false;
+	protected volatile static boolean running = false;
 	protected boolean paused = false;
 	
 	public ThreadPerso(String threadName) {
@@ -59,16 +59,6 @@ public abstract class ThreadPerso extends Thread {
 	protected abstract void doThatAtStop();  
 	
 	
-	private void verifyThreadIsStopped() {
-		stopThread();
-		try {
-			join(100);
-			if(isRunning()) {
-				interrupt();
-			}
-		} catch (InterruptedException e) {}
-	}
-	
 	/**
 	 * Method that starts the thread.
 	 */
@@ -76,7 +66,7 @@ public abstract class ThreadPerso extends Thread {
 		if(!running) {
 			start();
 		}
-	}
+	} 
 	
 	
 	/**
@@ -98,6 +88,20 @@ public abstract class ThreadPerso extends Thread {
 	 */
 	public void stopThread() {
 		running = false;
+	}
+	
+	/**
+	 * Called at the very end of the thread,
+	 * make sure that the thread is no more alive.
+	 */
+	private void verifyThreadIsStopped() {
+		stopThread();
+		try {
+			join(100);
+			if(isAlive()) {
+				interrupt();
+			}
+		} catch (InterruptedException e) {}
 	}
 	
 	/**

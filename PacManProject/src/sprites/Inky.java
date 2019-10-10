@@ -7,22 +7,22 @@ import javax.swing.JPanel;
 
 import resources.Tiles;
 import threads.GhostBehaviorThread;
-import threads.PhysicsThread;
 
 public class Inky extends Ghost {
 
-	public Inky(Position start_position, Tiles tiles, JPanel gamePanel,  List<List<Integer>> mazeValues, MovingSprite pacMan) {
+	public Inky(Position start_position, Tiles tiles, JPanel gamePanel,  List<List<Integer>> mazeValues, PacMan pacMan) {
 		super(start_position, tiles, gamePanel, mazeValues, pacMan);
 	}
 	
 
+
 	@Override
-	public void chooseTilesNumbers() {
+	protected void chooseSpecificGhostTiles() {
 		for (int tile_nb = 289; tile_nb < 321; tile_nb++) {
 			tilesNumbers.add(tile_nb); // add inky tiles numbers
 		}
-
 	}
+
 	
 	@Override
 	protected void chooseInitialAnimation() {
@@ -31,13 +31,13 @@ public class Inky extends Ghost {
 	
 	
 	@Override
-	public void startDirectionThread() {
-		behaviorTh = new GhostBehaviorThread(this);
+	public void startBehaviorThread() {
+		behaviorTh = new GhostBehaviorThread(this,pacMan);
 		behaviorTh.setName("Inky behavior");
 		behaviorTh.startThread();
 	}
 	@Override
-	public  void stopDirectionThread() {
+	public  void stopBehaviorThread() {
 		behaviorTh.stopThread();
 	}
 
@@ -64,14 +64,18 @@ public class Inky extends Ghost {
 		if(ThreadLocalRandom.current().nextInt(0, 100 + 1) < 50)
 		{
 			System.out.println("inky choose to follow pac-man");
-			chooseDirectionToGoTo(lastSeenPacManMatrixPos);
+			chooseDirectionToGoTo(lastSeenPacManMatrixPos());
 			goingToLastSeenPos = true;
 		}
 		else {
 			System.out.println("inky choose to go in the opposite direction");
-			chooseDirectionToEscapeFrom(lastSeenPacManMatrixPos);
+			chooseDirectionToEscapeFrom(lastSeenPacManMatrixPos());
 			escaping = true;
 		}
 	}
+
+
+
+
 
 }
