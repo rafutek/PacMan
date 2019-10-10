@@ -40,7 +40,7 @@ public class GameFrame extends JFrame implements WindowListener
 		
 		makeGUI();
 		addWindowListener(this);
-
+		this.setBackground(Color.black);
 		pack();
 		setResizable(true);
 		setLocationRelativeTo(null); // center the window

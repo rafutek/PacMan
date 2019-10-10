@@ -31,13 +31,17 @@ public class PhysicsThread extends ThreadPerso {
 	
 	private Ghost inky;
 	private MovingSpriteState inkyWantedState;	
-	private Sprites pacDots; 
-	private Sprites energizer;
+	public  Sprites pacDots; 
+	public  Sprites energizer;
 	private int score=0;
 	private boolean ScoreBonus=false;
 	private boolean collisionDone=true;
 	public static boolean timerstarted=false;
 	public static boolean gameOver=false;
+	public static  int scoreLevelI=1;
+	public static boolean nextLevel=false;
+	private int scoreLevel=0;
+	public boolean Level=false;
 	/**
 	 * The class needs the maze number matrix, the game panel size and of course the moving sprites,
 	 * in order to locate them in the matrix.
@@ -380,7 +384,32 @@ public class PhysicsThread extends ThreadPerso {
 				}
 			}
 		}
-		pacDotsCollision(); 
+		if(pacDotsCollision()) {
+			scoreLevel++;
+			if(scoreLevel==20*scoreLevelI) {
+				Level=true;
+				pacMan.setCurrentPosition(new Position(273, 405));
+				blinky.setCurrentPosition(new Position(272, 202));
+				pinky.setCurrentPosition(new Position(242, 253));
+				clyde.setCurrentPosition(new Position(273, 253));
+				inky.setCurrentPosition(new Position(301, 253));
+				pinky.setInTheBox(true);
+				clyde.setInTheBox(true);
+				inky.setInTheBox(true);
+				GhostsExitBoxThread.clydeCanGoOut=true;
+				GhostsExitBoxThread.pinkyCanGoOut=true;
+				GhostsExitBoxThread.inkyCanGoOut=true;
+				clyde.setState(MovingSpriteState.STOP);
+				pinky.setState(MovingSpriteState.STOP);
+				inky.setState(MovingSpriteState.STOP);
+				clyde.stopDirectionThread();
+				inky.stopDirectionThread();
+				nextLevel=true;
+				scoreLevelI++;
+				StatusBarPanel.valueLevel.setText(""+scoreLevelI);
+				}
+		}
+		 
 		if(energizerCollision()) {
 			
 		}

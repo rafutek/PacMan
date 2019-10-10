@@ -72,7 +72,7 @@ public class RenderThread extends ThreadPerso{
 	// off screen rendering
 	private Graphics dbg; 
 	private Image dbImage = null;
-	
+	private LevelThread levelThread;
 	
 	// window panels to render content into
 	private GamePanel gamePanel;
@@ -128,8 +128,6 @@ public class RenderThread extends ThreadPerso{
 		} catch (IOException e) {e.printStackTrace();}
 		
 		//get sprites
-		energizers = maze.getEnergizers();
-		pacDots = maze.getPacDots();
 		pacMan = maze.getPacMan();
 		blinky = maze.getBlinky();
 		pinky = maze.getPinky();
@@ -137,11 +135,21 @@ public class RenderThread extends ThreadPerso{
 		inky = maze.getInky();
 		
 		statusBarPanel.setPacman(pacMan);
-		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
-		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers );
+		animationTh = new AnimationThread(setEnergizers(), pacMan, blinky, pinky, clyde, inky);
+		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, setPacDots(), setEnergizers() );
 		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze);
 		this.paused = true;
 	}
+	 public Sprites setPacDots() {
+		 pacDots = maze.getPacDots();
+		 return pacDots;
+	 }
+	 
+	 public  Sprites setEnergizers() {
+		 energizers = maze.getEnergizers();
+		 return energizers;
+	 }
+	
 	
 	private void checkResize() {
 		// resize all elements if panel size changed
@@ -365,9 +373,17 @@ public class RenderThread extends ThreadPerso{
 			//draw all the sprites at their respective position, 
 			//with their respective dimension
 			synchronized (pacDots) {
+				if(physicsTh.Level) {
+					pacDots=setPacDots();
+					physicsTh.pacDots= setPacDots();
+					energizers=setEnergizers();
+					physicsTh.energizer=setEnergizers();
+					physicsTh.Level=false;
+				}
 				pacDots.draw(dbg); 
 			}
 			synchronized (energizers) {
+				
 				energizers.draw(dbg); 
 			}
 			synchronized (pacMan) {
@@ -385,6 +401,24 @@ public class RenderThread extends ThreadPerso{
 			synchronized (inky) {
 				inky.draw(dbg);		
 			}
+			if(physicsTh.nextLevel) {
+				levelThread = new LevelThread(maze.getTiles(), gamePanel);
+				System.out.println("congrats next level");
+				levelThread.startThread();
+				this.pauseThread();
+				do {
+					try {
+					Thread.sleep(100);
+					} catch (InterruptedException e) {}
+				}while(levelThread.isRunning());
+				
+				physicsTh.gameOver=false;
+				this.resumeThread();
+				physicsTh.nextLevel=false;
+			}
+			
+		
+			
 			if(physicsTh.gameOver) {
 				gameOverTh = new GameOverThread(maze.getTiles(), gamePanel);
 				gameOverTh.startThread();
