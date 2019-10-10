@@ -28,7 +28,6 @@ public class GhostBehaviorThread extends TimerThread {
 	
 	@Override
 	protected void doThatWhileWaiting() {
-		
 		if (ghost.escaping()) {
 			// change direction only when ghost is in the same corridor and its actual direction go to pac-man
 			if (ghost.sameCorridor() && ghost.directionToPacMan() == ghost.getState()) {
@@ -43,12 +42,14 @@ public class GhostBehaviorThread extends TimerThread {
 		else if (ghost.specificAvailable()) {
 			counterWaits=0; //reset the timer so the direction will not be randomized
   			ghost.launchSpecific();
-		}
+		}			
 	}
 
 	@Override
 	protected void finallyDoThat() {
-		ghost.setRandomDirection(); // change direction at a random time
+		synchronized(ghost) {
+			ghost.setRandomDirection(); // change direction at a random time		
+		}
 		setRandomNbWaits();
 	}
 
@@ -61,10 +62,12 @@ public class GhostBehaviorThread extends TimerThread {
 
 	
 	public void changeDirection() {
-		ghost.setRandomDirection(); // change direction at a random time
-		setRandomNbWaits();
-		if(ghost.goingToLastSeenPosition()) {
-			ghost.notGoingToLastSeenPosition();
+		synchronized(ghost) {
+			ghost.setRandomDirection(); // change direction at a random time			
+			setRandomNbWaits();
+			if(ghost.goingToLastSeenPosition()) {
+				ghost.notGoingToLastSeenPosition();
+			}
 		}
 	}
 	

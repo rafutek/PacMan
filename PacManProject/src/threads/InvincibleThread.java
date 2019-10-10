@@ -45,7 +45,5 @@ public class InvincibleThread extends TimerThread {
 	}
 
 	@Override
-	protected void doThatAtStart() {
-		// TODO Auto-generated method stub
-	}
+	protected void doThatAtStart() {}
 }

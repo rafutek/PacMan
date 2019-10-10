@@ -138,7 +138,7 @@ public abstract class Ghost extends MovingSprite {
 	/**
 	 * Set ghost state to a random wanted direction state.
 	 */
-	public void setRandomDirection() {
+	public synchronized void setRandomDirection() {
 		if(possibleDirections != null && !possibleDirections.isEmpty()) {
 			int randomIndex = ThreadLocalRandom.current().nextInt(0, possibleDirections.size());	
 			MovingSpriteState direction = possibleDirections.get(randomIndex);
@@ -196,7 +196,7 @@ public abstract class Ghost extends MovingSprite {
 		return false;
 	}
 	
-	public boolean sameCorridor() {
+	public synchronized boolean sameCorridor() {
 		Position posGhost = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
 		Position posPacMan = PhysicsThread.mazeToMatrixPosition(pacMan.currentPosition, gamePanel, mazeValues);
 		
@@ -219,7 +219,7 @@ public abstract class Ghost extends MovingSprite {
 		return false;
 	}
 	
-	public MovingSpriteState directionToPacMan() {
+	public synchronized MovingSpriteState directionToPacMan() {
 		Position posGhost = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
 		Position posPacMan = PhysicsThread.mazeToMatrixPosition(pacMan.currentPosition, gamePanel, mazeValues);
 		
@@ -273,7 +273,7 @@ public abstract class Ghost extends MovingSprite {
 	 * the ghost state is changed to escape from the matrix position.
 	 * @param matrixPos is the point in the matrix to escape from.
 	 */
-	public void chooseDirectionToEscapeFrom(Position matrixPos) {
+	public synchronized void chooseDirectionToEscapeFrom(Position matrixPos) {
 		Position ghostMatrixPos = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
 		
 		if (ghostMatrixPos.getY() == matrixPos.getY()) {
@@ -305,15 +305,15 @@ public abstract class Ghost extends MovingSprite {
 		}
 	}
 	
-	public boolean goingToLastSeenPosition() {
+	public synchronized boolean goingToLastSeenPosition() {
 		return goingToLastSeenPos;
 	}
 	
-	public void notGoingToLastSeenPosition() {
+	public synchronized void notGoingToLastSeenPosition() {
 		goingToLastSeenPos = false;
 	}
 	
-	public boolean escaping() {
+	public synchronized boolean escaping() {
 		if (pacMan.invincible()){
 			this.escaping = true;
 		}
@@ -323,7 +323,7 @@ public abstract class Ghost extends MovingSprite {
 		return escaping;
 	}	
 	
-	public void notEscape() {
+	public synchronized void notEscape() {
 		escaping = false;
 	}
 	
@@ -331,7 +331,7 @@ public abstract class Ghost extends MovingSprite {
 	 * Check, if ghost is going to the last seen position,
 	 * if its current matrix position is the same as the last seen position of pac-man.
 	 */
-	public void checkAtLastSeenPosition() {
+	public synchronized void checkAtLastSeenPosition() {
 		if(goingToLastSeenPos) {
 			Position currentMatrixPos = PhysicsThread.mazeToMatrixPosition(currentPosition, gamePanel, mazeValues);
 			if(currentMatrixPos.getX() == lastSeenPacManMatrixPos().getX() && currentMatrixPos.getY() == lastSeenPacManMatrixPos().getY()) {
@@ -340,15 +340,15 @@ public abstract class Ghost extends MovingSprite {
 		}
 	}
 
-	public Position lastSeenPacManMatrixPos() {
+	public synchronized Position lastSeenPacManMatrixPos() {
 		return lastSeenPacManMatrixPos;
 	}
 
-	public void setLastSeenPacManMatrixPos(Position lastSeenPacManMatrixPos) {
+	public synchronized void setLastSeenPacManMatrixPos(Position lastSeenPacManMatrixPos) {
 		this.lastSeenPacManMatrixPos = lastSeenPacManMatrixPos;
 	}
 	
-	public void createListDirections() {
+	public synchronized void createListDirections() {
 		if(possibleDirections.size() < NUM_DIR) {
 			possibleDirections = new ArrayList<MovingSpriteState>();
 			possibleDirections.add(MovingSpriteState.LEFT);
@@ -358,7 +358,7 @@ public abstract class Ghost extends MovingSprite {
 		}
 	}
 	
-	public void removeDirection(MovingSpriteState direction) {
+	public synchronized void removeDirection(MovingSpriteState direction) {
 		if(possibleDirections != null && !possibleDirections.isEmpty()) {
 			possibleDirections.remove(direction);
 		}
