@@ -217,7 +217,7 @@ public class Tiles {
 	 * @param cornerBottomRight
 	 * @return the combined image
 	 */
-	public BufferedImage createFullSpriteImage(BufferedImage cornerTopLeft, BufferedImage cornerTopRight,
+	public static BufferedImage createFullSpriteImage(BufferedImage cornerTopLeft, BufferedImage cornerTopRight,
 			BufferedImage cornerBottomLeft, BufferedImage cornerBottomRight) {
 		
 		BufferedImage imgTop = Tiles.joinToRight(cornerTopLeft, cornerTopRight);

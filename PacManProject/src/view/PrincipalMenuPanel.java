@@ -137,7 +137,7 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 				System.out.println("start game");	
 				Main.getGlobalFrame().setPage("Game");
 				System.out.println(Main.getGlobalFrame().getPage());
-				checkPageThread= new CheckPageThread("CheckPageThread");
+				//checkPageThread= new CheckPageThread("CheckPageThread");
 
 			}
 			if(getCoordY()==280) {
@@ -146,7 +146,7 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 				Main.getGlobalFrame().setPage("Audio");
 				System.out.println("page audio ................"+Main.getGlobalFrame().getPage());
 				System.out.println(Main.getGlobalFrame().getPage());
-				checkPageThread= new CheckPageThread("CheckPageThread");
+				//checkPageThread= new CheckPageThread("CheckPageThread");
 			}
 			if(getCoordY()==360) {
 				System.out.println("Control");
@@ -154,7 +154,7 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 				Main.getGlobalFrame().setPage("Controls");
 				System.out.println("page audio ................"+Main.getGlobalFrame().getPage());
 				System.out.println(Main.getGlobalFrame().getPage());
-				checkPageThread= new CheckPageThread("CheckPageThread");
+				//checkPageThread= new CheckPageThread("CheckPageThread");
 			}
 			if(getCoordY()==440) {
 				System.out.println("hightScores");
@@ -162,7 +162,7 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 				Main.getGlobalFrame().setPage("HighScores");
 				System.out.println("page audio ................"+Main.getGlobalFrame().getPage());
 				System.out.println(Main.getGlobalFrame().getPage());
-				checkPageThread= new CheckPageThread("CheckPageThread");
+				//checkPageThread= new CheckPageThread("CheckPageThread");
 				
 				
 			}if(getCoordY()==520) {

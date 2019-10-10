@@ -438,7 +438,7 @@ public class RenderThread extends ThreadPerso{
 				Main.getGlobalFrame().setStatutMenu(0);
 				Main.getGlobalFrame().setPage("PrincipalMenu");
 				System.out.println(Main.getGlobalFrame().getPage()+"...........");
-				checkPageThread = new CheckPageThread("CheckPageThread");
+				//checkPageThread = new CheckPageThread("CheckPageThread");
 				System.out.println("Score ..................."+finalScore);
 				}else {
 					this.stopThread();
@@ -470,7 +470,7 @@ public class RenderThread extends ThreadPerso{
 					hightScore1Img = maze.getTiles().resize(hightScore1Img, new Dimension(150, 50));
 					h.getNewScore().setIcon(new ImageIcon(hightScore1Img));
 					h.setVisible(true);
-					checkPageThread = new CheckPageThread("CheckPageThread");
+					//checkPageThread = new CheckPageThread("CheckPageThread");
 					System.out.println("Score ..................."+finalScore);
 					
 				}

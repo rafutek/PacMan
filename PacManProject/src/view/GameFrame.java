@@ -55,6 +55,8 @@ public class GameFrame extends JFrame implements WindowListener
 	private boolean gamePaused = false;
 	private boolean gameMute = false;
 	private int n =1;
+	
+	private CheckPageThread checkPageTh;
 
 	public GameFrame(int period)
 	{ 
@@ -255,7 +257,8 @@ public class GameFrame extends JFrame implements WindowListener
 		layoutTh.startThread();
 		renderTh.startThread();
 		//musicTh.startThread();
-		//checkPageThread.startThread();
+		checkPageTh = new CheckPageThread(this);
+		checkPageTh.startThread();
 	}
 	
 	/**
@@ -306,7 +309,7 @@ public class GameFrame extends JFrame implements WindowListener
 				}if(keyCode == KeyEvent.VK_ESCAPE) {
 						page="PrincipalMenu";
 						statutMenu = 1;
-						new CheckPageThread("CheckPageThread");	
+						//new CheckPageThread("CheckPageThread");	
 					}
 				
 			}
@@ -341,31 +344,30 @@ public class GameFrame extends JFrame implements WindowListener
 			public void keyPressed(KeyEvent e)
 			{ 
 				if(page=="Game") {
-				int keyCode = e.getKeyCode();
-				
-				// listen for arrows events
-				if (keyCode == KeyEvent.VK_LEFT) {
-					synchronized(renderTh) {
-						renderTh.getPacMan().wantToGoLeft();						
+					int keyCode = e.getKeyCode();
+					
+					// listen for arrows events
+					if (keyCode == KeyEvent.VK_LEFT) {
+						synchronized(renderTh) {
+							renderTh.getPacMan().wantToGoLeft();						
+						}
+					}
+					else if(keyCode == KeyEvent.VK_RIGHT){
+						synchronized(renderTh) {
+							renderTh.getPacMan().wantToGoRight();
+						}
+					}
+					else if(keyCode == KeyEvent.VK_UP){
+						synchronized(renderTh) {
+							renderTh.getPacMan().wantToGoUp();
+						}
+					}
+					else if(keyCode == KeyEvent.VK_DOWN){
+						synchronized(renderTh) {
+							renderTh.getPacMan().wantToGoDown();
+						}
 					}
 				}
-				else if(keyCode == KeyEvent.VK_RIGHT){
-					synchronized(renderTh) {
-						renderTh.getPacMan().wantToGoRight();
-					}
-				}
-				else if(keyCode == KeyEvent.VK_UP){
-					synchronized(renderTh) {
-						renderTh.getPacMan().wantToGoUp();
-					}
-				}
-				else if(keyCode == KeyEvent.VK_DOWN){
-					synchronized(renderTh) {
-						renderTh.getPacMan().wantToGoDown();
-					}
-				}
-				}
-				
 			}
 		});
 	}
@@ -432,6 +434,7 @@ public class GameFrame extends JFrame implements WindowListener
 
 	public void closeGame() {
 		
+		checkPageTh.stopThread();
 		layoutTh.stopThread();		
 		renderTh.stopThread(); 
 		synchronized(renderTh) {
@@ -458,6 +461,9 @@ public class GameFrame extends JFrame implements WindowListener
 		synchronized (layoutTh){
 			layoutTh.resumeThread();
 		}
+		synchronized (checkPageTh){
+			checkPageTh.resumeThread();
+		}
 		setAllSoundsMute(false);
 		}
 	}
@@ -471,6 +477,9 @@ public class GameFrame extends JFrame implements WindowListener
 		}
 		synchronized (layoutTh){
 			layoutTh.pauseThread();
+		}
+		synchronized (checkPageTh){
+			checkPageTh.pauseThread();
 		}
 		setAllSoundsMute(true);
 		}

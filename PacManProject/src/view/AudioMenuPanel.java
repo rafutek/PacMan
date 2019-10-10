@@ -306,7 +306,7 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 				System.out.println("start principal menu");	
 				Main.getGlobalFrame().setPage("PrincipalMenu");
 				System.out.println(Main.getGlobalFrame().getPage());
-				checkPageThread= new CheckPageThread("CheckPageThread");
+				//checkPageThread= new CheckPageThread("CheckPageThread");
 			}
 		}
 		
