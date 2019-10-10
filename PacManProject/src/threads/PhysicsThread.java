@@ -61,6 +61,8 @@ public class PhysicsThread extends ThreadPerso {
 	private boolean nextLevel=false;
 	private static boolean collPacManGhostInv=false;
 	
+	private DeathAnimationThread deathTh;
+	
 	
 	/**
 	 * The class needs the maze number matrix, the game panel size and of course the moving sprites,
@@ -694,12 +696,26 @@ public class PhysicsThread extends ThreadPerso {
 							soundTh.addDeath();
 						}
 					}
+				/*	clyde.setState(MovingSpriteState.STOP);
+					blinky.setState(MovingSpriteState.STOP);
+					inky.setState(MovingSpriteState.STOP);
+					pinky.setState(MovingSpriteState.STOP);
+					int count = 0;
+					deathTh= new DeathAnimationThread(this,pacMan);
+					deathTh.startThread();
+					do {
+						count+=1;
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {}
+					}
+					while(count<100);	*/				
 					resetAllSprites();
 					return true;
 				}
 				
 				
-				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky) && pacMan.invincible()) {
+				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky) && pacMan.invincible()) {
 					System.out.println("collision with pinky!");
 					if (!soundMute) {
 						synchronized(soundTh) {
@@ -722,11 +738,26 @@ public class PhysicsThread extends ThreadPerso {
 							soundTh.addDeath();
 						}
 					}
+				
+					/*clyde.setState(MovingSpriteState.STOP);
+					blinky.setState(MovingSpriteState.STOP);
+					inky.setState(MovingSpriteState.STOP);
+					pinky.setState(MovingSpriteState.STOP);
+					int count = 0;
+					deathTh= new DeathAnimationThread(this,pacMan);
+					deathTh.startThread();
+					do {
+						count+=1;
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {}
+					}
+					while(count<100);*/					
 					resetAllSprites();
 					return true;
 				}
 				
-				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde) && pacMan.invincible()) {
+				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde) && pacMan.invincible()) {
 					System.out.println("collision with clyde!");
 					if (!soundMute) {
 						synchronized(soundTh) {
@@ -749,11 +780,25 @@ public class PhysicsThread extends ThreadPerso {
 							soundTh.addDeath();
 						}
 					}
+					/*clyde.setState(MovingSpriteState.STOP);
+					blinky.setState(MovingSpriteState.STOP);
+					inky.setState(MovingSpriteState.STOP);
+					pinky.setState(MovingSpriteState.STOP);
+					int count = 0;
+					deathTh= new DeathAnimationThread(this,pacMan);
+					deathTh.startThread();
+					do {
+						count+=1;
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {}
+					}
+					while(count<100);*/					
 					resetAllSprites();
 					return true;
 				}
 				
-				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky) && pacMan.invincible()) {
+				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky) && pacMan.invincible()) {
 					System.out.println("collision with inky!");
 					if (!soundMute) {
 						synchronized(soundTh) {
@@ -776,6 +821,20 @@ public class PhysicsThread extends ThreadPerso {
 							soundTh.addDeath();
 						}
 					}
+					/*clyde.setState(MovingSpriteState.STOP);
+					blinky.setState(MovingSpriteState.STOP);
+					inky.setState(MovingSpriteState.STOP);
+					pinky.setState(MovingSpriteState.STOP);
+					int count = 0;
+					deathTh= new DeathAnimationThread(this,pacMan);
+					deathTh.startThread();
+					do {
+						count+=1;
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {}
+					}
+					while(count<100);*/
 					resetAllSprites();
 					return true;
 				}
@@ -876,7 +935,6 @@ public class PhysicsThread extends ThreadPerso {
 					try {
 						soundTh.playAudio(sound);
 					} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} // play sound
 			}

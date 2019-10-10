@@ -97,13 +97,13 @@ public class ScoreInvicibiltyGhostThread extends TimerThread{
 					if(pic200!=null && PhysicsThread.getScoreInvGhost()==200) {
 						g.drawImage(pic200,posX, posY, 50, 30, null);
 					}
-					if(pic400!=null && PhysicsThread.getScoreInvGhost()==400) {
+					else if(pic400!=null && PhysicsThread.getScoreInvGhost()==400) {
 						g.drawImage(pic400,posX, posY, 50, 30, null);
 					}
-					if(pic800!=null && PhysicsThread.getScoreInvGhost()==800) {
+					else if(pic800!=null && PhysicsThread.getScoreInvGhost()==800) {
 						g.drawImage(pic800,posX, posY,50, 30, null);
 					}
-					if(pic1600!=null && PhysicsThread.getScoreInvGhost()==1600) {
+					else if(pic1600!=null && PhysicsThread.getScoreInvGhost()==1600) {
 						g.drawImage(pic1600,posX, posY, 50, 30, null);
 					}
 				}
