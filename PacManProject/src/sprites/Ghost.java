@@ -219,6 +219,25 @@ public abstract class Ghost extends MovingSprite {
 		return false;
 	}
 	
+	public MovingSpriteState directionToPacMan() {
+		Position posGhost = PhysicsThread.mazeToMatrixPosition(this.currentPosition, gamePanel, mazeValues);
+		Position posPacMan = PhysicsThread.mazeToMatrixPosition(pacMan.currentPosition, gamePanel, mazeValues);
+		
+		if(posGhost.getX() > posPacMan.getX()) {
+			return MovingSpriteState.LEFT;
+		}
+		else if(posGhost.getX() < posPacMan.getX()) {
+			return MovingSpriteState.RIGHT;
+		}
+		else if(posGhost.getY() < posPacMan.getY()) {
+			return MovingSpriteState.DOWN;
+		}
+		else if(posGhost.getY() > posPacMan.getY()) {
+			return MovingSpriteState.UP;
+		}
+		else return MovingSpriteState.STOP; // same position
+	}
+	
 	/**
 	 * If the ghost and the matrix position are on the same row or column, 
 	 * the ghost state is changed to the direction of the matrix position.
