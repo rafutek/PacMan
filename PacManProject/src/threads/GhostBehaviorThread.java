@@ -66,9 +66,9 @@ public class GhostBehaviorThread extends TimerThread {
 		if(ghost.goingToLastSeenPosition()) {
 			ghost.notGoingToLastSeenPosition();
 		}
-		if(ghost.escaping()) {
-			ghost.notEscape();
-		}
+//		if(ghost.escaping()) {
+//			ghost.notEscape();
+//		}
 	}
 	
 }

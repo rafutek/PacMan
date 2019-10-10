@@ -15,8 +15,8 @@ import threads.GhostBehaviorThread;
 public abstract class Ghost extends MovingSprite {
 	
 	public static List<Integer> acceptedMazeValues;
-	
-	
+	public List<MovingSpriteState> possibleDirections = new ArrayList<MovingSpriteState>();;
+	private final int NUM_DIR = 4;
 	
 
 	public  boolean isInTheBox = true;
@@ -38,6 +38,7 @@ public abstract class Ghost extends MovingSprite {
 		this.mazeValues = mazeValues;
 		this.pacMan = pacMan;
 		createEscapingAnimation();
+		createListDirections();
 	}
 	
 	@Override
@@ -58,24 +59,26 @@ public abstract class Ghost extends MovingSprite {
 		spriteFullImages = new ListImages();
 		BufferedImage cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight, img;
 
-		for (int i = 0; i < 16; i+=2) {
-			cornerTopLeft = spriteImages.getImagesList().get(i);
-			cornerTopRight = spriteImages.getImagesList().get(i+1);
-			cornerBottomLeft = spriteImages.getImagesList().get(i+16);
-			cornerBottomRight = spriteImages.getImagesList().get(i+16+1);
-			img = createFullSpriteImage(cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight);
-			img = tiles.resize(img, new Dimension(50, 50));
-			spriteFullImages.add(img);			
+		if(spriteImages != null && spriteImages.getImagesList() != null && !spriteImages.getImagesList().isEmpty()) {
+			for (int i = 0; i < 16; i+=2) {
+				cornerTopLeft = spriteImages.getImagesList().get(i);
+				cornerTopRight = spriteImages.getImagesList().get(i+1);
+				cornerBottomLeft = spriteImages.getImagesList().get(i+16);
+				cornerBottomRight = spriteImages.getImagesList().get(i+16+1);
+				img = createFullSpriteImage(cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight);
+				img = Tiles.resize(img, new Dimension(50, 50));
+				spriteFullImages.add(img);			
+			}
+			for (int i = spriteImages.getImagesList().size()-16; i < spriteImages.getImagesList().size()-3; i+=4) {
+				cornerTopLeft = spriteImages.getImagesList().get(i);
+				cornerTopRight = spriteImages.getImagesList().get(i+1);
+				cornerBottomLeft = spriteImages.getImagesList().get(i+2);
+				cornerBottomRight = spriteImages.getImagesList().get(i+3);
+				img = createFullSpriteImage(cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight);
+				img = Tiles.resize(img, new Dimension(50, 50));
+				spriteFullImages.add(img);	
+			} 			
 		}
-		for (int i = spriteImages.getImagesList().size()-16; i < spriteImages.getImagesList().size()-3; i+=4) {
-			cornerTopLeft = spriteImages.getImagesList().get(i);
-			cornerTopRight = spriteImages.getImagesList().get(i+1);
-			cornerBottomLeft = spriteImages.getImagesList().get(i+2);
-			cornerBottomRight = spriteImages.getImagesList().get(i+3);
-			img = createFullSpriteImage(cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight);
-			img = tiles.resize(img, new Dimension(50, 50));
-			spriteFullImages.add(img);	
-		} 
 	}
 
 	@Override
@@ -112,9 +115,6 @@ public abstract class Ghost extends MovingSprite {
 		escapingAnimation.add(9);
 		escapingAnimation.add(10);
 		escapingAnimation.add(11);
-		for (Integer integer : escapingAnimation) {
-			System.out.println(integer);
-		}
 	}
 	
 	public synchronized void setEscapingAnimation() {
@@ -139,26 +139,21 @@ public abstract class Ghost extends MovingSprite {
 	 * Set ghost state to a random wanted direction state.
 	 */
 	public void setRandomDirection() {
-		int randomNum = ThreadLocalRandom.current().nextInt(0, 3 + 1);		
-		if(randomNum == 0) {
-//			setWantedState(MovingSpriteState.LEFT);
-//			//setState();
-			wantToGoLeft();
-		}
-		else if(randomNum == 1) {
-//			setWantedState(MovingSpriteState.RIGHT);
-//			//setState(MovingSpriteState.RIGHT);
-			wantToGoRight();
-		}
-		else if(randomNum == 2) {
-//			setWantedState(MovingSpriteState.UP);
-//			//setState(MovingSpriteState.UP);
-			wantToGoUp();
-		}
-		else if(randomNum == 3) {
-//			setWantedState(MovingSpriteState.DOWN);
-//			//
-			wantToGoDown();
+		if(possibleDirections != null && !possibleDirections.isEmpty()) {
+			int randomIndex = ThreadLocalRandom.current().nextInt(0, possibleDirections.size());	
+			MovingSpriteState direction = possibleDirections.get(randomIndex);
+			if(direction == MovingSpriteState.LEFT) {
+				wantToGoLeft();
+			}
+			else if(direction == MovingSpriteState.RIGHT) {
+				wantToGoRight();
+			}
+			else if(direction == MovingSpriteState.UP) {
+				wantToGoUp();
+			}
+			else if(direction == MovingSpriteState.DOWN) {
+				wantToGoDown();
+			}			
 		}
 	}
 	
@@ -264,19 +259,30 @@ public abstract class Ghost extends MovingSprite {
 		
 		if (ghostMatrixPos.getY() == matrixPos.getY()) {
 			if(ghostMatrixPos.getX() < matrixPos.getX()) {
-				wantToGoLeft();
+				if(possibleDirections.contains(MovingSpriteState.LEFT)) {
+					wantToGoLeft();					
+				}
 			}
 			else {
-				wantToGoRight();
+				if(possibleDirections.contains(MovingSpriteState.RIGHT)) {
+					wantToGoRight();
+				}
 			}
 		}
 		else if(ghostMatrixPos.getX() == matrixPos.getX()) {
 			if(ghostMatrixPos.getY() < matrixPos.getY()) {
-				wantToGoUp();
+				if(possibleDirections.contains(MovingSpriteState.UP)){
+					wantToGoUp();
+				}
 			}
 			else {
-				wantToGoDown();
+				if(possibleDirections.contains(MovingSpriteState.DOWN)) {
+					wantToGoDown();
+				}
 			}
+		}
+		else {
+			createListDirections();
 		}
 	}
 	
@@ -321,5 +327,21 @@ public abstract class Ghost extends MovingSprite {
 
 	public void setLastSeenPacManMatrixPos(Position lastSeenPacManMatrixPos) {
 		this.lastSeenPacManMatrixPos = lastSeenPacManMatrixPos;
+	}
+	
+	public void createListDirections() {
+		if(possibleDirections.size() < NUM_DIR) {
+			possibleDirections = new ArrayList<MovingSpriteState>();
+			possibleDirections.add(MovingSpriteState.LEFT);
+			possibleDirections.add(MovingSpriteState.RIGHT);
+			possibleDirections.add(MovingSpriteState.UP);
+			possibleDirections.add(MovingSpriteState.DOWN);	
+		}
+	}
+	
+	public void removeDirection(MovingSpriteState direction) {
+		if(possibleDirections != null && !possibleDirections.isEmpty()) {
+			possibleDirections.remove(direction);
+		}
 	}
 }
