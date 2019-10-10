@@ -1,10 +1,9 @@
 package threads;
 
-import java.awt.Dimension;
+
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-
 import javax.swing.JPanel;
 
 import resources.Tiles;
@@ -20,15 +19,16 @@ public class ScoreInvicibiltyGhostThread extends TimerThread{
 	private JPanel gamePanel;
 	Graphics dbg;
 	
-	private Dimension dim = new Dimension();
-	
 	private int draw_nb = 0;
+	
+	private int scoreToDisplay;
 
-	public ScoreInvicibiltyGhostThread(Tiles tiles, JPanel gamePanel) {
+	public ScoreInvicibiltyGhostThread(Tiles tiles, JPanel gamePanel, int score) {
 		super(WAIT_TIME, NB_WAITS);
 		setName("ScoreInvicibiltyGhostThread");
 		this.tiles = tiles;
 		this.gamePanel = gamePanel;	
+		this.scoreToDisplay = score;
 	}
 	
 	public int getPosX() {
@@ -59,24 +59,24 @@ public class ScoreInvicibiltyGhostThread extends TimerThread{
 
 	public BufferedImage picture200() {
 		
-		BufferedImage P200 = tiles.createFullSpriteImage(tiles.getTileNumber(65), tiles.getTileNumber(66), tiles.getTileNumber(81), tiles.getTileNumber(82));
+		BufferedImage P200 = Tiles.createFullSpriteImage(tiles.getTileNumber(65), tiles.getTileNumber(66), tiles.getTileNumber(81), tiles.getTileNumber(82));
 		return P200;
 
 	}
 	public BufferedImage picture400() {
 		
-		BufferedImage P400 = tiles.createFullSpriteImage(tiles.getTileNumber(67), tiles.getTileNumber(68), tiles.getTileNumber(83), tiles.getTileNumber(84));
+		BufferedImage P400 = Tiles.createFullSpriteImage(tiles.getTileNumber(67), tiles.getTileNumber(68), tiles.getTileNumber(83), tiles.getTileNumber(84));
 		return P400;
 
 	}
 	public BufferedImage picture800() {
 		
-		BufferedImage P800 = tiles.createFullSpriteImage(tiles.getTileNumber(69), tiles.getTileNumber(70), tiles.getTileNumber(85), tiles.getTileNumber(86));
+		BufferedImage P800 = Tiles.createFullSpriteImage(tiles.getTileNumber(69), tiles.getTileNumber(70), tiles.getTileNumber(85), tiles.getTileNumber(86));
 		return P800;
 	}
 	public BufferedImage picture1600() {
 	
-		BufferedImage P1600 = tiles.createFullSpriteImage(tiles.getTileNumber(71), tiles.getTileNumber(72), tiles.getTileNumber(87), tiles.getTileNumber(88));
+		BufferedImage P1600 = Tiles.createFullSpriteImage(tiles.getTileNumber(71), tiles.getTileNumber(72), tiles.getTileNumber(87), tiles.getTileNumber(88));
 		return P1600;
 
 	}
@@ -94,16 +94,16 @@ public class ScoreInvicibiltyGhostThread extends TimerThread{
 			try {
 				g = gamePanel.getGraphics();
 				if ((g != null) ) {
-					if(pic200!=null && PhysicsThread.getScoreInvGhost()==200) {
+					if(pic200!=null && scoreToDisplay==200) {
 						g.drawImage(pic200,posX, posY, 50, 30, null);
 					}
-					if(pic400!=null && PhysicsThread.getScoreInvGhost()==400) {
+					if(pic400!=null && scoreToDisplay==400) {
 						g.drawImage(pic400,posX, posY, 50, 30, null);
 					}
-					if(pic800!=null && PhysicsThread.getScoreInvGhost()==800) {
+					if(pic800!=null && scoreToDisplay==800) {
 						g.drawImage(pic800,posX, posY,50, 30, null);
 					}
-					if(pic1600!=null && PhysicsThread.getScoreInvGhost()==1600) {
+					if(pic1600!=null && scoreToDisplay==1600) {
 						g.drawImage(pic1600,posX, posY, 50, 30, null);
 					}
 				}

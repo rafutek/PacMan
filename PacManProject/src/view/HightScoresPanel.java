@@ -8,34 +8,25 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.text.ChangedCharSetException;
 
 import main.Main;
-import resources.ChangeLetter;
 import resources.Tiles;
 import resources.WriteLetter;
-import threads.CheckPageThread;
 
 public class HightScoresPanel extends JPanel implements KeyListener{
 	private static final long serialVersionUID = 1L;
 	
-	private String strLine;
 	private String position[];
 	private String name[]; 
 	private String score[];
 	private String[] hightScors;
-	private FileInputStream fstream ;
-	private BufferedReader br ;
-
 	private Tiles t;
 	public JLabel pacManTitle;
 	public JLabel pacManIcon;
@@ -48,8 +39,6 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 	public JLabel goBack;
 	
 	private WriteLetter writeLetter;
-	
-	private CheckPageThread checkPageThread;
 	
 	public HightScoresPanel() throws IOException {
 		readHightScoresFile();
@@ -66,16 +55,16 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		}
 		writeLetter = new WriteLetter();
 		pacManTitle = new JLabel("");		
-		BufferedImage p1 = t.createWord(t.getTileNumber(73), t.getTileNumber(74),t.getTileNumber(75),t.getTileNumber(76),t.getTileNumber(77),t.getTileNumber(78),t.getTileNumber(79),t.getTileNumber(80));
-		BufferedImage p2 = t.createWord(t.getTileNumber(89),t.getTileNumber(90),t.getTileNumber(91), t.getTileNumber(92), t.getTileNumber(93), t.getTileNumber(94),t.getTileNumber(95), t.getTileNumber(96));
-		BufferedImage PACMAN = t.joinBelow(p1, p2);
-		PACMAN = t.resize(PACMAN, new Dimension(400,100));
+		BufferedImage p1 = Tiles.createWord(t.getTileNumber(73), t.getTileNumber(74),t.getTileNumber(75),t.getTileNumber(76),t.getTileNumber(77),t.getTileNumber(78),t.getTileNumber(79),t.getTileNumber(80));
+		BufferedImage p2 = Tiles.createWord(t.getTileNumber(89),t.getTileNumber(90),t.getTileNumber(91), t.getTileNumber(92), t.getTileNumber(93), t.getTileNumber(94),t.getTileNumber(95), t.getTileNumber(96));
+		BufferedImage PACMAN = Tiles.joinBelow(p1, p2);
+		PACMAN = Tiles.resize(PACMAN, new Dimension(400,100));
 		pacManTitle.setIcon(new ImageIcon(PACMAN));
 		pacManTitle.setBounds(100, 0, 400, 100);
 		
 		HightScores = new JLabel();
-		BufferedImage hightScores = t.createWord(t.getTileNumber(46),t.getTileNumber(47),t.getTileNumber(45),t.getTileNumber(46),t.getTileNumber(352),t.getTileNumber(57),t.getTileNumber(41),t.getTileNumber(53),t.getTileNumber(56),t.getTileNumber(43),t.getTileNumber(57));
-		hightScores = t.resize(hightScores, new Dimension(300,50));
+		BufferedImage hightScores = Tiles.createWord(t.getTileNumber(46),t.getTileNumber(47),t.getTileNumber(45),t.getTileNumber(46),t.getTileNumber(352),t.getTileNumber(57),t.getTileNumber(41),t.getTileNumber(53),t.getTileNumber(56),t.getTileNumber(43),t.getTileNumber(57));
+		hightScores = Tiles.resize(hightScores, new Dimension(300,50));
 		HightScores.setIcon(new ImageIcon(hightScores));
 		HightScores.setBounds(160, 120, 300, 50);
 		
@@ -89,7 +78,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		writeLetter.write();
 		img=writeLetter.getL();
 		letter=writeLetter.getLetter();
-		BufferedImage hightScore1Img = t.createWord(img,t.getTileNumber(352));
+		BufferedImage hightScore1Img = Tiles.createWord(img,t.getTileNumber(352));
 		BufferedImage img2 = t.getTileNumber(39);
 		String letter2 =name[0];
 		for(int i=0;i<letter2.length();i++) {
@@ -101,10 +90,10 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			writeLetter.write();
 			img2=writeLetter.getL();
 			cs=writeLetter.getLetter();
-			hightScore1Img = t.createWord(hightScore1Img,img2);
+			hightScore1Img = Tiles.createWord(hightScore1Img,img2);
 			
 		}
-		hightScore1Img = t.createWord(hightScore1Img,t.getTileNumber(352));
+		hightScore1Img = Tiles.createWord(hightScore1Img,t.getTileNumber(352));
 		letter2 =score[0];
 		for(int i=0;i<letter2.length();i++) {
 			Character c = letter2.charAt(i);
@@ -115,7 +104,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			writeLetter.write();
 			img2=writeLetter.getL();
 			cs=writeLetter.getLetter();
-			hightScore1Img = t.createWord(hightScore1Img,img2);
+			hightScore1Img = Tiles.createWord(hightScore1Img,img2);
 			
 		}
 		
@@ -128,7 +117,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		writeLetter.write();
 		BufferedImage hightScore1Img3 = writeLetter.getL();*/
 		
-		hightScore1Img = t.resize(hightScore1Img, new Dimension(300, 50));
+		hightScore1Img = Tiles.resize(hightScore1Img, new Dimension(300, 50));
 		hightScore1.setIcon(new ImageIcon(hightScore1Img));
 		hightScore1.setBounds(100, 220, 500, 50);
 		
@@ -140,7 +129,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		writeLetter.write();
 		img=writeLetter.getL();
 		letter=writeLetter.getLetter();
-		hightScore1Img = t.createWord(img,t.getTileNumber(352));
+		hightScore1Img = Tiles.createWord(img,t.getTileNumber(352));
 		img2 = t.getTileNumber(39);
 		letter2 =name[1];
 		for(int i=0;i<letter2.length();i++) {
@@ -152,10 +141,10 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			writeLetter.write();
 			img2=writeLetter.getL();
 			cs=writeLetter.getLetter();
-			hightScore1Img = t.createWord(hightScore1Img,img2);
+			hightScore1Img = Tiles.createWord(hightScore1Img,img2);
 			
 		}
-		hightScore1Img = t.createWord(hightScore1Img,t.getTileNumber(352));
+		hightScore1Img = Tiles.createWord(hightScore1Img,t.getTileNumber(352));
 		letter2 =score[1];
 		for(int i=0;i<letter2.length();i++) {
 			Character c = letter2.charAt(i);
@@ -166,10 +155,10 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			writeLetter.write();
 			img2=writeLetter.getL();
 			cs=writeLetter.getLetter();
-			hightScore1Img = t.createWord(hightScore1Img,img2);
+			hightScore1Img = Tiles.createWord(hightScore1Img,img2);
 			
 		}
-		hightScore1Img = t.resize(hightScore1Img, new Dimension(300, 50));
+		hightScore1Img = Tiles.resize(hightScore1Img, new Dimension(300, 50));
 		hightScore2.setIcon(new ImageIcon(hightScore1Img));
 		hightScore2.setBounds(100, 270, 500, 50);
 		
@@ -181,7 +170,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		writeLetter.write();
 		img=writeLetter.getL();
 		letter=writeLetter.getLetter();
-		hightScore1Img = t.createWord(img,t.getTileNumber(352));
+		hightScore1Img = Tiles.createWord(img,t.getTileNumber(352));
 		img2 = t.getTileNumber(39);
 		letter2 =name[2];
 		for(int i=0;i<letter2.length();i++) {
@@ -193,10 +182,10 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			writeLetter.write();
 			img2=writeLetter.getL();
 			cs=writeLetter.getLetter();
-			hightScore1Img = t.createWord(hightScore1Img,img2);
+			hightScore1Img = Tiles.createWord(hightScore1Img,img2);
 			
 		}
-		hightScore1Img = t.createWord(hightScore1Img,t.getTileNumber(352));
+		hightScore1Img = Tiles.createWord(hightScore1Img,t.getTileNumber(352));
 		letter2 =score[2];
 		for(int i=0;i<letter2.length();i++) {
 			Character c = letter2.charAt(i);
@@ -207,10 +196,10 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			writeLetter.write();
 			img2=writeLetter.getL();
 			cs=writeLetter.getLetter();
-			hightScore1Img = t.createWord(hightScore1Img,img2);
+			hightScore1Img = Tiles.createWord(hightScore1Img,img2);
 			
 		}
-		hightScore1Img = t.resize(hightScore1Img, new Dimension(300, 50));
+		hightScore1Img = Tiles.resize(hightScore1Img, new Dimension(300, 50));
 		hightScore3.setIcon(new ImageIcon(hightScore1Img));
 		hightScore3.setBounds(100, 320, 500, 50);
 		
@@ -222,7 +211,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		writeLetter.write();
 		img=writeLetter.getL();
 		letter=writeLetter.getLetter();
-		hightScore1Img = t.createWord(img,t.getTileNumber(352));
+		hightScore1Img = Tiles.createWord(img,t.getTileNumber(352));
 		img2 = t.getTileNumber(39);
 		letter2 =name[3];
 		for(int i=0;i<letter2.length();i++) {
@@ -234,10 +223,10 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			writeLetter.write();
 			img2=writeLetter.getL();
 			cs=writeLetter.getLetter();
-			hightScore1Img = t.createWord(hightScore1Img,img2);
+			hightScore1Img = Tiles.createWord(hightScore1Img,img2);
 			
 		}
-		hightScore1Img = t.createWord(hightScore1Img,t.getTileNumber(352));
+		hightScore1Img = Tiles.createWord(hightScore1Img,t.getTileNumber(352));
 		letter2 =score[3];
 		for(int i=0;i<letter2.length();i++) {
 			Character c = letter2.charAt(i);
@@ -248,10 +237,10 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			writeLetter.write();
 			img2=writeLetter.getL();
 			cs=writeLetter.getLetter();
-			hightScore1Img = t.createWord(hightScore1Img,img2);
+			hightScore1Img = Tiles.createWord(hightScore1Img,img2);
 			
 		}
-		hightScore1Img = t.resize(hightScore1Img, new Dimension(300, 50));
+		hightScore1Img = Tiles.resize(hightScore1Img, new Dimension(300, 50));
 		hightScore4.setIcon(new ImageIcon(hightScore1Img));
 		hightScore4.setBounds(100, 370, 500, 50);
 	
@@ -263,7 +252,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		writeLetter.write();
 		img=writeLetter.getL();
 		letter=writeLetter.getLetter();
-		hightScore1Img = t.createWord(img,t.getTileNumber(352));
+		hightScore1Img = Tiles.createWord(img,t.getTileNumber(352));
 		img2 = t.getTileNumber(39);
 		letter2 =name[4];
 		for(int i=0;i<letter2.length();i++) {
@@ -275,10 +264,10 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			writeLetter.write();
 			img2=writeLetter.getL();
 			cs=writeLetter.getLetter();
-			hightScore1Img = t.createWord(hightScore1Img,img2);
+			hightScore1Img = Tiles.createWord(hightScore1Img,img2);
 			
 		}
-		hightScore1Img = t.createWord(hightScore1Img,t.getTileNumber(352));
+		hightScore1Img = Tiles.createWord(hightScore1Img,t.getTileNumber(352));
 		letter2 =score[4];
 		for(int i=0;i<letter2.length();i++) {
 			Character c = letter2.charAt(i);
@@ -289,23 +278,23 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			writeLetter.write();
 			img2=writeLetter.getL();
 			cs=writeLetter.getLetter();
-			hightScore1Img = t.createWord(hightScore1Img,img2);
+			hightScore1Img = Tiles.createWord(hightScore1Img,img2);
 			
 		}
-		hightScore1Img = t.resize(hightScore1Img, new Dimension(300, 50));
+		hightScore1Img = Tiles.resize(hightScore1Img, new Dimension(300, 50));
 		hightScore5.setIcon(new ImageIcon(hightScore1Img));
 		hightScore5.setBounds(100, 420, 500, 50);
 		
 		pacManIcon= new JLabel();
-		BufferedImage pacManImage = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
-		pacManImage = t.resize(pacManImage, new Dimension(30,30));
+		BufferedImage pacManImage = Tiles.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
+		pacManImage = Tiles.resize(pacManImage, new Dimension(30,30));
 		pacManIcon.setIcon(new ImageIcon(pacManImage));
 		pacManIcon.setBounds(120, 500, 50, 50);
 		
 		
 		goBack = new JLabel();
-		BufferedImage goBackImg = t.createWord(t.getTileNumber(45),t.getTileNumber(53),t.getTileNumber(352),t.getTileNumber(40),t.getTileNumber(39),t.getTileNumber(41),t.getTileNumber(49));
-		goBackImg = t.resize(goBackImg, new Dimension(250,30));
+		BufferedImage goBackImg = Tiles.createWord(t.getTileNumber(45),t.getTileNumber(53),t.getTileNumber(352),t.getTileNumber(40),t.getTileNumber(39),t.getTileNumber(41),t.getTileNumber(49));
+		goBackImg = Tiles.resize(goBackImg, new Dimension(250,30));
 		goBack.setIcon(new ImageIcon(goBackImg));
 		goBack.setBounds(160, 500, 550, 50);
 		
@@ -370,20 +359,14 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		System.out.println("start principal menu");	
 		Main.getGlobalFrame().setPage("PrincipalMenu");
 		System.out.println(Main.getGlobalFrame().getPage());
-		//checkPageThread= new CheckPageThread("CheckPageThread");
 	}
 
 	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyReleased(KeyEvent arg0) {}
 
 	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyTyped(KeyEvent arg0) {}
+	
 	public String[] getScore() {
 		return score;
 	}

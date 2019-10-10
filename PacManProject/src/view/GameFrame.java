@@ -1,14 +1,10 @@
 package view; 
 
-
 import javax.swing.*;
 
-
-import main.Main;
 import threads.CheckPageThread;
 import threads.LayoutManagerThread;
 import threads.MusicThread;
-import threads.PhysicsThread;
 import threads.RenderThread;
 import threads.SoundThread;
 
@@ -27,23 +23,22 @@ public class GameFrame extends JFrame implements WindowListener
 	private int windowWidth = 620;   
 	private int windowHeight = 700; 
 	
-	private static GridBagLayout gridbag;
-	private static GamePanel gamePanel;
-	private static PrincipalMenuPanel principalMenuPanel;
-	private static ControlsMenuPanel controlsMenuPanel;
-	private static AudioMenuPanel audioMenuPanel;
-	private static HightScoresPanel hightScoresPanel;
-	private static NewHighScorePanel newHighScorePanel;
+	private  GridBagLayout gridbag;
+	private  GamePanel gamePanel;
+	private  PrincipalMenuPanel principalMenuPanel;
+	private  ControlsMenuPanel controlsMenuPanel;
+	private  AudioMenuPanel audioMenuPanel;
+	private  HightScoresPanel hightScoresPanel;
+	private  NewHighScorePanel newHighScorePanel;
 	private StatusBarPanel statusBarPanel;
 	private JPanel leftPanel, rightPanel;
 	private JLabel statut;
 	
-	private static String page = "PrincipalMenu";
+	private String page = "PrincipalMenu";
 	
 	private boolean fullScreen = false;
 	public RenderThread renderTh;
 	private LayoutManagerThread layoutTh;
-	//private MusicThread musicTh;
 	
 	private int statutMenu = 0;
 	
@@ -54,8 +49,6 @@ public class GameFrame extends JFrame implements WindowListener
 	private MusicThread musicTh;
 	private boolean gamePaused = false;
 	private boolean gameMute = false;
-	private int n =1;
-	
 	private CheckPageThread checkPageTh;
 
 	public GameFrame(int period)
@@ -79,94 +72,7 @@ public class GameFrame extends JFrame implements WindowListener
 		readyForPause();
 		readyForMute();
 	}  
-	
-	
-	
-	public synchronized GridBagLayout getGridbag() {
-		return gridbag;
-	}
-
-
-	public synchronized static GamePanel getGamePanel() {
-		return gamePanel;
-	}
-
-
-	public synchronized StatusBarPanel getStatusBarPanel() {
-		return statusBarPanel;
-	}
-
-
-	public synchronized JPanel getLeftPanel() {
-		return leftPanel;
-	}
-
-
-	public synchronized JPanel getRightPanel() {
-		return rightPanel;
-	}
-	
-	public static PrincipalMenuPanel getPrincipalMenuPanel() {
-		return principalMenuPanel;
-	}
-
-
-	public static ControlsMenuPanel getControlsMenuPanel() {
-		return controlsMenuPanel;
-	}
-
-
-	public static void setControlsMenuPanel(ControlsMenuPanel controlsMenuPanel) {
-		GameFrame.controlsMenuPanel = controlsMenuPanel;
-	}
-	
-	public static HightScoresPanel getHightScoresPanel() {
-		return hightScoresPanel;
-	}
-
-
-	public static void setHightScoresPanel(HightScoresPanel hightScoresPanel) {
-		GameFrame.hightScoresPanel = hightScoresPanel;
-	}
-
-
-	public static NewHighScorePanel getNewHighScorePanel() {
-		return newHighScorePanel;
-	}
-
-
-	public static void setNewHighScorePanel(NewHighScorePanel newHighScorePanel) {
-		GameFrame.newHighScorePanel = newHighScorePanel;
-	}
-
-
-	public static AudioMenuPanel getAudioMenuPanel() {
-		return audioMenuPanel;
-	}
-
-
-	public static void setAudioMenuPanel(AudioMenuPanel audioMenuPanel) {
-		GameFrame.audioMenuPanel = audioMenuPanel;
-	}
-
-
-	public void setPrincipalMenuPanel(PrincipalMenuPanel principalMenuPanel) {
-		this.principalMenuPanel = principalMenuPanel;
-	}
-	
-
-	public static String getPage() {
-		return page;
-	}
-
-
-	public static void setPage(String page4) {
-		page = page4;
-	}
-
-
-
-	
+		
 
 	/**
 	 * Create game and status bar panels, and the rendering thread
@@ -176,8 +82,8 @@ public class GameFrame extends JFrame implements WindowListener
 	{
 		gridbag = new GridBagLayout();
 		setLayout(gridbag);
-		musicTh = new MusicThread("musicTh");
-		soundTh = new SoundThread("soundTh");
+		musicTh = new MusicThread("Music");
+		soundTh = new SoundThread("Sound");
 		musicTh.startThread();
 		soundTh.startThread();
 		principalMenuPanel = new PrincipalMenuPanel();
@@ -187,7 +93,6 @@ public class GameFrame extends JFrame implements WindowListener
 			hightScoresPanel = new HightScoresPanel();
 			newHighScorePanel = new NewHighScorePanel();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		gamePanel = new GamePanel();
@@ -199,45 +104,30 @@ public class GameFrame extends JFrame implements WindowListener
 		rightPanel.setBackground(Color.BLACK);	
 		
 
-		
-			if(Main.getGlobalFrame().getPage()=="PrincipalMenu") {
-				principalMenuPanel.setVisible(true);
-				System.out.println("......................... menu is Visible.................");
-				add(principalMenuPanel);
-				addKeyListener(principalMenuPanel);
-			} else {
-				Main.getGlobalFrame();
-				if(GameFrame.getPage()=="Game"){
-				principalMenuPanel.setVisible(false);
-				add(gamePanel);
-				gamePanel.setVisible(true);
-				add(statusBarPanel);
-				statusBarPanel.setVisible(true);
-				add(leftPanel);
-				leftPanel.setVisible(true);
-				add(rightPanel);
-				rightPanel.setVisible(true);
-				//addKeyListener(arg0);
-				}
-			}
-			add(controlsMenuPanel);
-			controlsMenuPanel.setVisible(false);
-			add(audioMenuPanel);
-			audioMenuPanel.setVisible(false);
-			add(hightScoresPanel);
-			hightScoresPanel.setVisible(false);
-			add(newHighScorePanel);
-			newHighScorePanel.setVisible(false);
-			add(gamePanel);
-			gamePanel.setVisible(false);
-			add(statusBarPanel);
-			statusBarPanel.setVisible(false);
-			add(leftPanel);
-			leftPanel.setVisible(false);
-			add(rightPanel);
-			rightPanel.setVisible(false);
+		setPage("Principal Menu");
+		principalMenuPanel.setVisible(true);
+		System.out.println("......................... principal menu is Visible.................");
+		add(principalMenuPanel);
+		addKeyListener(principalMenuPanel);
+
+		add(controlsMenuPanel);
+		controlsMenuPanel.setVisible(false);
+		add(audioMenuPanel);
+		audioMenuPanel.setVisible(false);
+		add(hightScoresPanel);
+		hightScoresPanel.setVisible(false);
+		add(newHighScorePanel);
+		newHighScorePanel.setVisible(false);
+		add(gamePanel);
+		gamePanel.setVisible(false);
+		add(statusBarPanel);
+		statusBarPanel.setVisible(false);
+		add(leftPanel);
+		leftPanel.setVisible(false);
+		add(rightPanel);
+		rightPanel.setVisible(false);
 		setPreferredSize(new Dimension(windowWidth, windowHeight)); // set window size
-		
+
 	} 
 	
 	
@@ -251,12 +141,9 @@ public class GameFrame extends JFrame implements WindowListener
 		super.addNotify();   // creates the peer
 		layoutTh = new LayoutManagerThread(this);
 		renderTh = new RenderThread(period, gamePanel, statusBarPanel, musicTh, soundTh);
-		//musicTh = new MusicThread("musicTh");
-		//checkPageThread = new CheckPageThread("CheckPageThread");
-
 		layoutTh.startThread();
 		renderTh.startThread();
-		//musicTh.startThread();
+		
 		checkPageTh = new CheckPageThread(this);
 		checkPageTh.startThread();
 	}
@@ -299,19 +186,19 @@ public class GameFrame extends JFrame implements WindowListener
 			public void keyPressed(KeyEvent e)
 			{ 
 				int keyCode = e.getKeyCode();
-				
+
 				// listen for esc, q, end, ctrl-c on the canvas to
 				// allow a convenient exit from the full screen configuration
 				if ((keyCode == KeyEvent.VK_Q) ||
 						(keyCode == KeyEvent.VK_END) ||
 						((keyCode == KeyEvent.VK_C) && e.isControlDown()) ) {
 					closeGame();
-				}if(keyCode == KeyEvent.VK_ESCAPE) {
-						page="PrincipalMenu";
-						statutMenu = 1;
-						//new CheckPageThread("CheckPageThread");	
-					}
-				
+				}
+
+				if(keyCode == KeyEvent.VK_ESCAPE) {
+					page="PrincipalMenu";
+					statutMenu = 1;
+				}
 			}
 		});
 	} 
@@ -516,8 +403,90 @@ public class GameFrame extends JFrame implements WindowListener
 	}
 
 
+	// ------------- getters and setters for frame elements ------------
 	
+	public synchronized GridBagLayout getGridbag() {
+		return gridbag;
+	}
+
+
+	public synchronized  GamePanel getGamePanel() {
+		return gamePanel;
+	}
+
+
+	public synchronized StatusBarPanel getStatusBarPanel() {
+		return statusBarPanel;
+	}
+
+
+	public synchronized JPanel getLeftPanel() {
+		return leftPanel;
+	}
+
+
+	public synchronized JPanel getRightPanel() {
+		return rightPanel;
+	}
 	
+	public synchronized PrincipalMenuPanel getPrincipalMenuPanel() {
+		return principalMenuPanel;
+	}
+
+
+	public synchronized ControlsMenuPanel getControlsMenuPanel() {
+		return controlsMenuPanel;
+	}
+
+
+	public synchronized void setControlsMenuPanel(ControlsMenuPanel controlsMenuPanel) {
+		this.controlsMenuPanel = controlsMenuPanel;
+	}
+	
+	public synchronized HightScoresPanel getHightScoresPanel() {
+		return hightScoresPanel;
+	}
+
+
+	public synchronized void setHightScoresPanel(HightScoresPanel hightScoresPanel) {
+		this.hightScoresPanel = hightScoresPanel;
+	}
+
+
+	public synchronized NewHighScorePanel getNewHighScorePanel() {
+		return newHighScorePanel;
+	}
+
+
+	public synchronized void setNewHighScorePanel(NewHighScorePanel newHighScorePanel) {
+		this.newHighScorePanel = newHighScorePanel;
+	}
+
+
+	public synchronized AudioMenuPanel getAudioMenuPanel() {
+		return audioMenuPanel;
+	}
+
+
+	public synchronized void setAudioMenuPanel(AudioMenuPanel audioMenuPanel) {
+		this.audioMenuPanel = audioMenuPanel;
+	}
+
+
+	public synchronized void setPrincipalMenuPanel(PrincipalMenuPanel principalMenuPanel) {
+		this.principalMenuPanel = principalMenuPanel;
+	}
+	
+
+	public synchronized String getPage() {
+		return page;
+	}
+
+
+	public synchronized void setPage(String page) {
+		this.page = page;
+	}
+
 	
 
 

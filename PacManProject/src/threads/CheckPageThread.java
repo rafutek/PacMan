@@ -12,13 +12,8 @@ import resources.Tiles;
 import view.GameFrame;
 
 public class CheckPageThread extends ThreadPerso{
-	private static int DEFAULT_FPS = 50;
-	int fps = DEFAULT_FPS;
-	int period = (int) 1000.0/fps;
 	
 	private GameFrame gameFrame;
-	private RenderThread renderThread;
-	private LayoutManagerThread layoutManagerThread;
 	private Tiles tiles;
 	private String lastPage;
 	
@@ -74,22 +69,13 @@ public class CheckPageThread extends ThreadPerso{
 					gameFrame.removeKeyListener(gameFrame.getControlsMenuPanel());
 					gameFrame.removeKeyListener(gameFrame.getAudioMenuPanel());
 					gameFrame.removeKeyListener(gameFrame.getHightScoresPanel());
-					//gameFrame.readyForArrowsEvents();
-					renderThread = new RenderThread(period,gameFrame.getGamePanel() , gameFrame.getStatusBarPanel(), gameFrame.getMusicTh(), gameFrame.getSoundTh());
-					renderThread.startThread();
-					layoutManagerThread = new LayoutManagerThread(gameFrame);
-					layoutManagerThread.startThread();
 					gameFrame.getPrincipalMenuPanel().setVisible(false);
 					gameFrame.getControlsMenuPanel().setVisible(false);
 					gameFrame.getAudioMenuPanel().setVisible(false);
 					gameFrame.getHightScoresPanel().setVisible(false);
-					//gameFrame.add(gameFrame.getGamePanel());
 					gameFrame.getGamePanel().setVisible(true);
-					//gameFrame.add(gameFrame.getStatusBarPanel());
 					gameFrame.getStatusBarPanel().setVisible(true);
-					//gameFrame.add(gameFrame.getLeftPanel());
 					gameFrame.getLeftPanel().setVisible(true);
-					//gameFrame.add(gameFrame.getRightPanel());
 					gameFrame.getRightPanel().setVisible(true);
 				}
 				

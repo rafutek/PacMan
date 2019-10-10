@@ -10,7 +10,6 @@ import java.text.DecimalFormat;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import main.Main;
 import resources.Maze;
 import resources.Tiles;
@@ -22,11 +21,9 @@ import sprites.MovingSprite;
 import sprites.PacMan;
 import sprites.Pinky;
 import sprites.Sprites;
-import view.GameFrame;
 import view.GamePanel;
 import view.HightScoresPanel;
 import view.NewHighScorePanel;
-import view.PrincipalMenuPanel;
 import view.StatusBarPanel;
 
 public class RenderThread extends ThreadPerso{
@@ -88,7 +85,6 @@ public class RenderThread extends ThreadPerso{
 	private HightScoresPanel hightScoresPanel;
 	private WriteLetter writeLetter;
 	private int finalScore=0;
-	private int newhightScore=0;
 	private int newPosition=0;
 	
 	//maze
@@ -112,7 +108,7 @@ public class RenderThread extends ThreadPerso{
 
 	//physics
 	private PhysicsThread physicsTh;
-	private CheckPageThread checkPageThread ;
+	
 	//exit the ghost of the box
 	private GhostsExitBoxThread ghostExitThread;
 	private GameOverThread gameOverTh;
@@ -126,7 +122,7 @@ public class RenderThread extends ThreadPerso{
 	
 	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel, MusicThread musicTh, SoundThread soundTh) {
 		super("Render");
-				
+		
 		this.gamePanel = gamePanel;
 		this.statusBarPanel = statusBarPanel;
 		try {
@@ -290,8 +286,6 @@ public class RenderThread extends ThreadPerso{
 	 */
 	public synchronized void resumeThread() {
 		if(paused) {
-
-			if(GameFrame.getPage()=="Game") {
 			initStats = false;
 			paused = false;			
 			if(!animationTh.isRunning()) {
@@ -299,21 +293,19 @@ public class RenderThread extends ThreadPerso{
 			}else {
 				animationTh.resumeThread();
 			}
-			
+
 			if(!physicsTh.isRunning()) {
 				physicsTh.startThread();
 			}else {
 				physicsTh.resumeThread();
 			}
-			
+
 			if(!ghostExitThread.isRunning()) {
 				ghostExitThread.startThread();
 			}else {
 				ghostExitThread.resumeThread();
 			}	
-			}
 		}
-
 	}
 	
 	/**
@@ -400,7 +392,7 @@ public class RenderThread extends ThreadPerso{
 			}
 			
 			if(physicsTh.isCollPacManGhostInv()) {
-				scoreInvicibiltyGhostThread= new ScoreInvicibiltyGhostThread( maze.getTiles(), gamePanel);
+				scoreInvicibiltyGhostThread= new ScoreInvicibiltyGhostThread( maze.getTiles(), gamePanel, physicsTh.getScoreInvGhost());
 				scoreInvicibiltyGhostThread.setPosX(pacMan.getCurrentPosition().getX()-20);
 				scoreInvicibiltyGhostThread.setPosY(pacMan.getCurrentPosition().getY()-20);
 				scoreInvicibiltyGhostThread.startThread();
@@ -428,7 +420,7 @@ public class RenderThread extends ThreadPerso{
 				
 				physicsTh.setGameOver(false);
 				
-				finalScore = PhysicsThread.getScore();
+				finalScore = physicsTh.getScore();
 				compareWithHightScores();
 				
 
@@ -438,7 +430,6 @@ public class RenderThread extends ThreadPerso{
 				Main.getGlobalFrame().setStatutMenu(0);
 				Main.getGlobalFrame().setPage("PrincipalMenu");
 				System.out.println(Main.getGlobalFrame().getPage()+"...........");
-				//checkPageThread = new CheckPageThread("CheckPageThread");
 				System.out.println("Score ..................."+finalScore);
 				}else {
 					this.stopThread();
@@ -453,7 +444,7 @@ public class RenderThread extends ThreadPerso{
 					BufferedImage img = maze.getTiles().getTileNumber(352);
 					String letter ="0";
 					
-					BufferedImage hightScore1Img = maze.getTiles().createWord(img);
+					BufferedImage hightScore1Img = Tiles.createWord(img);
 					letter =h.getNewHightScore()+"";
 					for(int i=0;i<letter.length();i++) {
 						Character c = letter.charAt(i);
@@ -464,10 +455,10 @@ public class RenderThread extends ThreadPerso{
 						writeLetter.write();
 						img=writeLetter.getL();
 						cs=writeLetter.getLetter();
-						hightScore1Img = maze.getTiles().createWord(hightScore1Img,img);
+						hightScore1Img = Tiles.createWord(hightScore1Img,img);
 						
 					}
-					hightScore1Img = maze.getTiles().resize(hightScore1Img, new Dimension(150, 50));
+					hightScore1Img = Tiles.resize(hightScore1Img, new Dimension(150, 50));
 					h.getNewScore().setIcon(new ImageIcon(hightScore1Img));
 					h.setVisible(true);
 					//checkPageThread = new CheckPageThread("CheckPageThread");
@@ -499,19 +490,20 @@ public class RenderThread extends ThreadPerso{
 	 */
 	private void paintScreen()
 	// use active rendering to put the buffered image on-screen
-	{ if(GameFrame.getPage()=="Game") {
-		Graphics g;
-		try {
-			g = gamePanel.getGraphics();
-			if ((g != null) && (dbImage != null))
-				g.drawImage(dbImage, 0, 0, null);
-			Toolkit.getDefaultToolkit().sync();  // sync the display on some systems
-			g.dispose();
-		}
-		
-		catch (Exception e)
-		{ System.out.println("Graphics error: " + e);  }
-	}
+	{ 
+		//if(GameFrame.getPage()=="Game") {
+			Graphics g;
+			try {
+				g = gamePanel.getGraphics();
+				if ((g != null) && (dbImage != null))
+					g.drawImage(dbImage, 0, 0, null);
+				Toolkit.getDefaultToolkit().sync();  // sync the display on some systems
+				g.dispose();
+			}
+
+			catch (Exception e)
+			{ System.out.println("Graphics error: " + e);  }
+		//}
 	}
 
 
@@ -599,23 +591,18 @@ public class RenderThread extends ThreadPerso{
 			hightScores[i]= Integer.parseInt(h[i]);
 		}
 		if(finalScore>hightScores[0] || finalScore==hightScores[0]) {
-			newhightScore = finalScore;
 			newPosition =1;
 			System.out.println("position 1.......................");
 		}else if((finalScore<hightScores[0] && finalScore>hightScores[1])|| finalScore==hightScores[1]) {
-			newhightScore = finalScore;
 			newPosition =2;
 			System.out.println("position 2.......................");
 		}else if((finalScore<hightScores[1] && finalScore>hightScores[2])|| finalScore==hightScores[2]) {
-			newhightScore = finalScore;
 			newPosition =3;
 			System.out.println("position 3.......................");
 		}else if((finalScore<hightScores[2] && finalScore>hightScores[3])|| finalScore==hightScores[3]) {
-			newhightScore = finalScore;
 			newPosition =4;
 			System.out.println("position 4.......................");
 		}else if((finalScore<hightScores[3] && finalScore>hightScores[4])|| finalScore==hightScores[4]) {
-			newhightScore = finalScore;
 			newPosition =5;
 			System.out.println("position 5.......................");
 		}

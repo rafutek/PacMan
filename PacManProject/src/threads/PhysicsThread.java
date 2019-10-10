@@ -1,12 +1,7 @@
 package threads;
 
-import java.io.IOException;
 import java.util.List;
-
 import javax.swing.ImageIcon;
-
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JPanel;
 
 import sprites.Ghost;
@@ -40,26 +35,22 @@ public class PhysicsThread extends ThreadPerso {
 	
 	private Sprites pacDots; 
 	private Sprites energizer;
-	private static int score=0;
+	private int score=0;
 	private boolean ScoreBonus=false;
-	public static boolean timerstarted=false;
-	private static int scoreInvGhost;
+	public boolean timerstarted=false;
+	private int scoreInvGhost;
+	
 	/**
 	 * Management of the sounds
 	 */
 	private SoundThread soundTh;
 	private MusicThread musicTh;
-	private static boolean soundMute = false;
-	private static boolean soundUp = false;
-	private static boolean soundDown = false;
-	private static int n = 1;
+	private boolean soundMute = false;
 	private boolean gameOver=false;
 	
-	private static  int scoreLevelI=1;
-	private int scoreLevel=0;
+	private int scoreLevelI=1;
 	private boolean Level=false;
-	private boolean nextLevel=false;
-	private static boolean collPacManGhostInv=false;
+	private boolean collPacManGhostInv=false;
 	
 	
 	/**
@@ -85,7 +76,7 @@ public class PhysicsThread extends ThreadPerso {
 		this.soundTh = soundTh;
 		
 	}
-	public static boolean isCollPacManGhostInv() {
+	public boolean isCollPacManGhostInv() {
 		return collPacManGhostInv;
 	}
 	public void setCollPacManGhostInv(boolean collPacManGhostInv) {
@@ -123,7 +114,7 @@ public class PhysicsThread extends ThreadPerso {
 
 
 
-	public static int getScore() {
+	public int getScore() {
 		return score;
 	}
 
@@ -135,7 +126,7 @@ public class PhysicsThread extends ThreadPerso {
 
 
 
-	public static int getScoreLevelI() {
+	public int getScoreLevelI() {
 		return scoreLevelI;
 	}
 
@@ -145,11 +136,11 @@ public class PhysicsThread extends ThreadPerso {
 		this.scoreLevelI = scoreLevelI;
 	}
 
-	public static int getScoreInvGhost() {
+	public int getScoreInvGhost() {
 		return scoreInvGhost;
 	}
-	public static void setScoreInvGhost(int scoreInvGhost) {
-		PhysicsThread.scoreInvGhost = scoreInvGhost;
+	public void setScoreInvGhost(int scoreInvGhost) {
+		this.scoreInvGhost = scoreInvGhost;
 	}
 	public boolean isGameOver() {
 		return gameOver;
@@ -886,19 +877,6 @@ public class PhysicsThread extends ThreadPerso {
 		return false;
 	}
 	
-	private void playSound(String sound) {
-		soundTh = new SoundThread("soundTh");
-		if(soundTh != null) {
-			synchronized(soundTh) {
-					try {
-						soundTh.playAudio(sound);
-					} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} // play sound
-			}
-		}
-	}
 	
 	public synchronized void setSoundMute(boolean Mute) {
 		soundMute = Mute;
