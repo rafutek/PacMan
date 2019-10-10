@@ -693,6 +693,8 @@ public class PhysicsThread extends ThreadPerso {
 						synchronized(soundTh) {
 							soundTh.addDeath();
 						}
+						soundTh.setPacmanIsDead(true);
+
 					}
 					resetAllSprites();
 					return true;
@@ -705,6 +707,7 @@ public class PhysicsThread extends ThreadPerso {
 						synchronized(soundTh) {
 							soundTh.addEatGhost();
 						}
+						
 					}
 					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
 					StatusBarPanel.valueScore.setText(""+score);
@@ -721,6 +724,8 @@ public class PhysicsThread extends ThreadPerso {
 						synchronized(soundTh) {
 							soundTh.addDeath();
 						}
+						soundTh.setPacmanIsDead(true);
+
 					}
 					resetAllSprites();
 					return true;
@@ -748,6 +753,8 @@ public class PhysicsThread extends ThreadPerso {
 						synchronized(soundTh) {
 							soundTh.addDeath();
 						}
+						soundTh.setPacmanIsDead(true);
+
 					}
 					resetAllSprites();
 					return true;
@@ -775,6 +782,7 @@ public class PhysicsThread extends ThreadPerso {
 						synchronized(soundTh) {
 							soundTh.addDeath();
 						}
+						soundTh.setPacmanIsDead(true);
 					}
 					resetAllSprites();
 					return true;
