@@ -40,7 +40,6 @@ public class StatusBarPanel extends JPanel {
 	public static BufferedImage Lives;
 	public JPanel panelGameOver;
 	public static BufferedImage gameOver;
-	private int vie = 4;
 	
 	public StatusBarPanel() {
 		setLayout(new GridLayout(2,0));
@@ -52,15 +51,15 @@ public class StatusBarPanel extends JPanel {
 	public void chargerPanelGameOver() {
 		gameover= new JLabel();
 		BufferedImage g = t.getTileNumber(45);
-		BufferedImage ga = t.joinToRight(g , t.getTileNumber(39));
-		BufferedImage gam = t.joinToRight(ga , t.getTileNumber(51));
-		BufferedImage game= t.joinToRight(gam , t.getTileNumber(43));
-		BufferedImage game_ = t.joinToRight(game ,t.getTileNumber(352));
-		BufferedImage game_o = t.joinToRight(game_ ,t.getTileNumber(53));
-		BufferedImage game_ov = t.joinToRight(game_o ,t.getTileNumber(60));
-		BufferedImage game_ove = t.joinToRight(game_ov ,t.getTileNumber(43));
-		gameOver = t.joinToRight(game_ove ,t.getTileNumber(56));
-		gameOver = t.resize(Lives, new Dimension(72,18));
+		BufferedImage ga = Tiles.joinToRight(g , t.getTileNumber(39));
+		BufferedImage gam = Tiles.joinToRight(ga , t.getTileNumber(51));
+		BufferedImage game= Tiles.joinToRight(gam , t.getTileNumber(43));
+		BufferedImage game_ = Tiles.joinToRight(game ,t.getTileNumber(352));
+		BufferedImage game_o = Tiles.joinToRight(game_ ,t.getTileNumber(53));
+		BufferedImage game_ov = Tiles.joinToRight(game_o ,t.getTileNumber(60));
+		BufferedImage game_ove = Tiles.joinToRight(game_ov ,t.getTileNumber(43));
+		gameOver = Tiles.joinToRight(game_ove ,t.getTileNumber(56));
+		gameOver = Tiles.resize(Lives, new Dimension(72,18));
 		gameover.setIcon(new ImageIcon(gameOver));
 	}
 	
@@ -76,7 +75,6 @@ public class StatusBarPanel extends JPanel {
 		try {
 			t = new Tiles();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -84,11 +82,11 @@ public class StatusBarPanel extends JPanel {
 		score.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		score.setForeground(Color.WHITE);
 		BufferedImage s = t.getTileNumber(57);
-		BufferedImage sc = t.joinToRight(s , t.getTileNumber(41));
-		BufferedImage sco = t.joinToRight(sc , t.getTileNumber(53));
-		BufferedImage scor = t.joinToRight(sco , t.getTileNumber(56));
-		BufferedImage scoref = t.joinToRight(scor , t.getTileNumber(43));
-		scoref = t.resize(scoref, new Dimension(50,18));
+		BufferedImage sc = Tiles.joinToRight(s , t.getTileNumber(41));
+		BufferedImage sco = Tiles.joinToRight(sc , t.getTileNumber(53));
+		BufferedImage scor = Tiles.joinToRight(sco , t.getTileNumber(56));
+		BufferedImage scoref = Tiles.joinToRight(scor , t.getTileNumber(43));
+		scoref = Tiles.resize(scoref, new Dimension(50,18));
 		score.setIcon(new ImageIcon(scoref));
 		
 		valueScore = new JLabel("000000");
@@ -98,11 +96,11 @@ public class StatusBarPanel extends JPanel {
 		
 		lives = new JLabel();
 		BufferedImage L = t.getTileNumber(50);
-		BufferedImage LI = t.joinToRight(L , t.getTileNumber(47));
-		BufferedImage LIV = t.joinToRight(LI , t.getTileNumber(60));
-		BufferedImage LIVE = t.joinToRight(LIV , t.getTileNumber(43));
-		BufferedImage LIVES = t.joinToRight(LIVE , t.getTileNumber(57));
-		LIVES = t.resize(LIVES, new Dimension(50,18));
+		BufferedImage LI = Tiles.joinToRight(L , t.getTileNumber(47));
+		BufferedImage LIV = Tiles.joinToRight(LI , t.getTileNumber(60));
+		BufferedImage LIVE = Tiles.joinToRight(LIV , t.getTileNumber(43));
+		BufferedImage LIVES = Tiles.joinToRight(LIVE , t.getTileNumber(57));
+		LIVES = Tiles.resize(LIVES, new Dimension(50,18));
 		lives.setIcon(new ImageIcon(LIVES));
 		
 		livesImg = new JLabel();
@@ -119,11 +117,11 @@ public class StatusBarPanel extends JPanel {
 		level.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		level.setForeground(Color.WHITE);
 		BufferedImage L2 = t.getTileNumber(50);
-		BufferedImage LE = t.joinToRight(L2 , t.getTileNumber(43));
-		BufferedImage LEV = t.joinToRight(LE , t.getTileNumber(60));
-		BufferedImage LEVE = t.joinToRight(LEV , t.getTileNumber(43));
-		BufferedImage LEVEL = t.joinToRight(LEVE , t.getTileNumber(50));
-		LEVEL = t.resize(LEVEL, new Dimension(50,18));
+		BufferedImage LE = Tiles.joinToRight(L2 , t.getTileNumber(43));
+		BufferedImage LEV = Tiles.joinToRight(LE , t.getTileNumber(60));
+		BufferedImage LEVE = Tiles.joinToRight(LEV , t.getTileNumber(43));
+		BufferedImage LEVEL = Tiles.joinToRight(LEVE , t.getTileNumber(50));
+		LEVEL = Tiles.resize(LEVEL, new Dimension(50,18));
 		level.setIcon(new ImageIcon(LEVEL));
 		
 		valueLevel = new JLabel("1");
@@ -201,39 +199,39 @@ public class StatusBarPanel extends JPanel {
 	
 	public static void setImageLives(int vie) {
 		if(vie == 1) {
-			Lives = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
-			Lives = t.resize(Lives, new Dimension(18,18));
+			Lives = Tiles.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
+			Lives = Tiles.resize(Lives, new Dimension(18,18));
 			
 		} else if (vie == 2) {
-			BufferedImage L1 = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
-			Lives = t.joinToRight(L1, L1);
-			Lives = t.resize(Lives, new Dimension(36,18));
+			BufferedImage L1 = Tiles.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
+			Lives = Tiles.joinToRight(L1, L1);
+			Lives = Tiles.resize(Lives, new Dimension(36,18));
 			
 		}else if (vie == 3) {
-			BufferedImage L1 = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
-			BufferedImage L2 = t.joinToRight(L1, L1);
-			Lives = t.joinToRight(L2, L1);
-			Lives = t.resize(Lives, new Dimension(54,18));
+			BufferedImage L1 = Tiles.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
+			BufferedImage L2 = Tiles.joinToRight(L1, L1);
+			Lives = Tiles.joinToRight(L2, L1);
+			Lives = Tiles.resize(Lives, new Dimension(54,18));
 		}
 		
 		else if(vie==4){
-			BufferedImage L1 = t.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
-			BufferedImage L2 = t.joinToRight(L1, L1);
-			BufferedImage L3 = t.joinToRight(L2, L1);
-			Lives = t.joinToRight(L3, L1);
-			Lives = t.resize(Lives, new Dimension(72,18));
+			BufferedImage L1 = Tiles.createFullSpriteImage(t.getTileNumber(105), t.getTileNumber(106), t.getTileNumber(121), t.getTileNumber(122));
+			BufferedImage L2 = Tiles.joinToRight(L1, L1);
+			BufferedImage L3 = Tiles.joinToRight(L2, L1);
+			Lives = Tiles.joinToRight(L3, L1);
+			Lives = Tiles.resize(Lives, new Dimension(72,18));
 		}
 		else if(vie==0)  {
 			BufferedImage g = t.getTileNumber(45);
-			BufferedImage ga = t.joinToRight(g , t.getTileNumber(39));
-			BufferedImage gam = t.joinToRight(ga , t.getTileNumber(51));
-			BufferedImage game= t.joinToRight(gam , t.getTileNumber(43));
-			BufferedImage game_ = t.joinToRight(game ,t.getTileNumber(352));
-			BufferedImage game_o = t.joinToRight(game_ ,t.getTileNumber(53));
-			BufferedImage game_ov = t.joinToRight(game_o ,t.getTileNumber(60));
-			BufferedImage game_ove = t.joinToRight(game_ov ,t.getTileNumber(43));
-			Lives = t.joinToRight(game_ove ,t.getTileNumber(56));
-			Lives = t.resize(Lives, new Dimension(72,18));
+			BufferedImage ga = Tiles.joinToRight(g , t.getTileNumber(39));
+			BufferedImage gam = Tiles.joinToRight(ga , t.getTileNumber(51));
+			BufferedImage game= Tiles.joinToRight(gam , t.getTileNumber(43));
+			BufferedImage game_ = Tiles.joinToRight(game ,t.getTileNumber(352));
+			BufferedImage game_o = Tiles.joinToRight(game_ ,t.getTileNumber(53));
+			BufferedImage game_ov = Tiles.joinToRight(game_o ,t.getTileNumber(60));
+			BufferedImage game_ove = Tiles.joinToRight(game_ov ,t.getTileNumber(43));
+			Lives = Tiles.joinToRight(game_ove ,t.getTileNumber(56));
+			Lives = Tiles.resize(Lives, new Dimension(72,18));
 			
 			 
 		}

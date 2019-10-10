@@ -13,10 +13,6 @@ public class LayoutManagerThread extends ThreadPerso {
 	
 	private Double gamePanelScale = null;
 	private Double menuPanelScale = null;
-	private Double controlsmenuPanelScale = null;
-	private Double audioMenuPanelScale = null;
-	private Double hightScoresMenuPanelScale = null;
-	private Double newHighScorePanelScale = null;
 	private double gamePanelWeightX = 1; //initial weight (percentage) of game panel width in the window
 	private double gamePanelWeightY;
 	private double menuPanelWeightX = 1; //initial weight (percentage) of game panel width in the window
@@ -63,12 +59,7 @@ public class LayoutManagerThread extends ThreadPerso {
 		if(gamePanelScale == null) {
 			synchronized(window) {
 				gamePanelScale = getPanelScale(window.getGamePanel()); // get the original panel scale
-				menuPanelScale = getPanelScale(window.getPrincipalMenuPanel()); // get the original panel scale
-				controlsmenuPanelScale = getPanelScale(window.getControlsMenuPanel()); // get the original panel scale
-				audioMenuPanelScale = getPanelScale(window.getAudioMenuPanel()); // get the original panel scale
-				hightScoresMenuPanelScale = getPanelScale(window.getHightScoresPanel()); // get the original panel scale
-				newHighScorePanelScale = getPanelScale(window.getNewHighScorePanel()); // get the original panel scale
-			
+				menuPanelScale = getPanelScale(window.getPrincipalMenuPanel()); // get the original panel scale			
 			}
 		}else {
 			adaptPanels(); // adapt the panels in the window to maintain the game panel scale

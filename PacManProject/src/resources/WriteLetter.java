@@ -2,10 +2,7 @@ package resources;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.nio.BufferUnderflowException;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 
 public class WriteLetter {
 	

@@ -17,14 +17,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import main.Main;
 import resources.ChangeLetter;
 import resources.Tiles;
-import threads.CheckPageThread;
 
 public class NewHighScorePanel extends JPanel implements KeyListener{
 	
@@ -49,9 +47,7 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 	private String name=null;
 	private int newPosition=0;
 	private int newHightScore=0;
-	
-	private CheckPageThread checkPageThread;
-	
+		
 	
 	public NewHighScorePanel() throws IOException {
 		setBackground(Color.black);	
@@ -61,16 +57,16 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 		
 		changeLetter = new ChangeLetter();
 		pacManTitle = new JLabel("");		
-		BufferedImage p1 = t.createWord(t.getTileNumber(73), t.getTileNumber(74),t.getTileNumber(75),t.getTileNumber(76),t.getTileNumber(77),t.getTileNumber(78),t.getTileNumber(79),t.getTileNumber(80));
-		BufferedImage p2 = t.createWord(t.getTileNumber(89),t.getTileNumber(90),t.getTileNumber(91), t.getTileNumber(92), t.getTileNumber(93), t.getTileNumber(94),t.getTileNumber(95), t.getTileNumber(96));
-		BufferedImage PACMAN = t.joinBelow(p1, p2);
-		PACMAN = t.resize(PACMAN, new Dimension(400,100));
+		BufferedImage p1 = Tiles.createWord(t.getTileNumber(73), t.getTileNumber(74),t.getTileNumber(75),t.getTileNumber(76),t.getTileNumber(77),t.getTileNumber(78),t.getTileNumber(79),t.getTileNumber(80));
+		BufferedImage p2 = Tiles.createWord(t.getTileNumber(89),t.getTileNumber(90),t.getTileNumber(91), t.getTileNumber(92), t.getTileNumber(93), t.getTileNumber(94),t.getTileNumber(95), t.getTileNumber(96));
+		BufferedImage PACMAN = Tiles.joinBelow(p1, p2);
+		PACMAN = Tiles.resize(PACMAN, new Dimension(400,100));
 		pacManTitle.setIcon(new ImageIcon(PACMAN));
 		pacManTitle.setBounds(100, 0, 400, 100);
 		
 		newHighScore = new JLabel();
-		BufferedImage hightScores = t.createWord(t.getTileNumber(52),t.getTileNumber(43),t.getTileNumber(61),t.getTileNumber(352),t.getTileNumber(46),t.getTileNumber(47),t.getTileNumber(45),t.getTileNumber(46),t.getTileNumber(352),t.getTileNumber(57),t.getTileNumber(41),t.getTileNumber(53),t.getTileNumber(56),t.getTileNumber(43));
-		hightScores = t.resize(hightScores, new Dimension(350,50));
+		BufferedImage hightScores = Tiles.createWord(t.getTileNumber(52),t.getTileNumber(43),t.getTileNumber(61),t.getTileNumber(352),t.getTileNumber(46),t.getTileNumber(47),t.getTileNumber(45),t.getTileNumber(46),t.getTileNumber(352),t.getTileNumber(57),t.getTileNumber(41),t.getTileNumber(53),t.getTileNumber(56),t.getTileNumber(43));
+		hightScores = Tiles.resize(hightScores, new Dimension(350,50));
 		newHighScore.setIcon(new ImageIcon(hightScores));
 		newHighScore.setBounds(130, 120, 350, 50);
 		
@@ -80,8 +76,8 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 		newScore.setBounds(160, 220, 350, 50);
 		
 		save = new JLabel();
-		BufferedImage saveImg = t.createWord(t.getTileNumber(57),t.getTileNumber(39),t.getTileNumber(60),t.getTileNumber(43));
-		saveImg = t.resize(saveImg, new Dimension(150,50));
+		BufferedImage saveImg = Tiles.createWord(t.getTileNumber(57),t.getTileNumber(39),t.getTileNumber(60),t.getTileNumber(43));
+		saveImg = Tiles.resize(saveImg, new Dimension(150,50));
 		save.setIcon(new ImageIcon(saveImg));
 		save.setBounds(250, 325, 350, 50);
 		
@@ -210,16 +206,11 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 	}
 
 	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyReleased(KeyEvent arg0) {}
 
 	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyTyped(KeyEvent arg0) {}
+	
 	public void updateHightScoreFile() {
 		 try {
 		        String searchText = Integer.toString(newPosition);

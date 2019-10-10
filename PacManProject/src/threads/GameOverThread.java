@@ -1,23 +1,12 @@
 package threads;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import resources.ListImages;
 import resources.Tiles;
-import sprites.PacMan;
-import view.StatusBarPanel;
+
 
 public class GameOverThread extends TimerThread {
 	private static final int WAIT_TIME = 10;
@@ -27,9 +16,7 @@ public class GameOverThread extends TimerThread {
 	
 	private JPanel gamePanel;
 	Graphics dbg;
-	
-	private Dimension dim = new Dimension();
-	
+		
 	private int draw_nb = 0;
 
 	public GameOverThread(Tiles tiles, JPanel gamePanel) {
@@ -55,14 +42,14 @@ public class GameOverThread extends TimerThread {
 	public BufferedImage chargerPanelGameOver() {
 		
 		BufferedImage g = tiles.getTileNumber(45);
-		BufferedImage ga = tiles.joinToRight(g , tiles.getTileNumber(39));
+		BufferedImage ga = Tiles.joinToRight(g , tiles.getTileNumber(39));
 		BufferedImage gam = Tiles.joinToRight(ga , tiles.getTileNumber(51));
-		BufferedImage game= tiles.joinToRight(gam , tiles.getTileNumber(43));
-		BufferedImage game_ = tiles.joinToRight(game ,tiles.getTileNumber(352));
-		BufferedImage game_o = tiles.joinToRight(game_ ,tiles.getTileNumber(53));
-		BufferedImage game_ov = tiles.joinToRight(game_o ,tiles.getTileNumber(60));
-		BufferedImage game_ove = tiles.joinToRight(game_ov ,tiles.getTileNumber(43));
-		BufferedImage gameOver = tiles.joinToRight(game_ove ,tiles.getTileNumber(56));
+		BufferedImage game= Tiles.joinToRight(gam , tiles.getTileNumber(43));
+		BufferedImage game_ = Tiles.joinToRight(game ,tiles.getTileNumber(352));
+		BufferedImage game_o = Tiles.joinToRight(game_ ,tiles.getTileNumber(53));
+		BufferedImage game_ov = Tiles.joinToRight(game_o ,tiles.getTileNumber(60));
+		BufferedImage game_ove = Tiles.joinToRight(game_ov ,tiles.getTileNumber(43));
+		BufferedImage gameOver = Tiles.joinToRight(game_ove ,tiles.getTileNumber(56));
 				
 		return gameOver;
 	}

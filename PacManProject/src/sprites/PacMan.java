@@ -2,7 +2,6 @@ package sprites;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +78,7 @@ public class PacMan extends MovingSprite {
 			cornerBottomLeft = spriteImages.getImagesList().get(i+interval);
 			cornerBottomRight = spriteImages.getImagesList().get(i+interval+1);
 			img = createFullSpriteImage(cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight);
-			img = tiles.resize(img, new Dimension(60, 60));
+			img = Tiles.resize(img, new Dimension(60, 60));
 			spriteFullImages.add(img);
 			
 			tile_nb+=2;

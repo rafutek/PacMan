@@ -4,7 +4,6 @@ package threads;
 import java.util.concurrent.ThreadLocalRandom;
 
 import sprites.Ghost;
-import sprites.MovingSpriteState;
 import sprites.PacMan;
 
 public class GhostBehaviorThread extends TimerThread {

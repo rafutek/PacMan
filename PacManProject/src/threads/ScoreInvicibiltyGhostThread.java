@@ -23,12 +23,12 @@ public class ScoreInvicibiltyGhostThread extends TimerThread{
 	
 	private int scoreToDisplay;
 
-	public ScoreInvicibiltyGhostThread(Tiles tiles, JPanel gamePanel, int score) {
+	public ScoreInvicibiltyGhostThread(Tiles tiles, JPanel gamePanel, int scoreToDisplay) {
 		super(WAIT_TIME, NB_WAITS);
 		setName("ScoreInvicibiltyGhostThread");
 		this.tiles = tiles;
 		this.gamePanel = gamePanel;	
-		this.scoreToDisplay = score;
+		this.scoreToDisplay = scoreToDisplay;
 	}
 	
 	public int getPosX() {
