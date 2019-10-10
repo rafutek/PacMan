@@ -4,6 +4,7 @@ package threads;
 import java.util.concurrent.ThreadLocalRandom;
 
 import sprites.Ghost;
+import sprites.MovingSpriteState;
 import sprites.PacMan;
 
 public class GhostBehaviorThread extends TimerThread {
@@ -30,7 +31,8 @@ public class GhostBehaviorThread extends TimerThread {
 	protected void doThatWhileWaiting() {
 		
 		if (ghost.escaping()) {
-			if (ghost.sameCorridor()) {
+			// change direction only when ghost is in the same corridor and its actual direction go to pac-man
+			if (ghost.sameCorridor() && ghost.directionToPacMan() == ghost.getState()) {
 				ghost.chooseDirectionToEscapeFrom(ghost.lastSeenPacManMatrixPos());
 				counterWaits=0;
 			}			
@@ -66,9 +68,9 @@ public class GhostBehaviorThread extends TimerThread {
 		if(ghost.goingToLastSeenPosition()) {
 			ghost.notGoingToLastSeenPosition();
 		}
-		if(ghost.escaping()) {
-			ghost.notEscape();
-		}
+//		if(ghost.escaping()) {
+//			ghost.notEscape();
+//		}
 	}
 	
 }

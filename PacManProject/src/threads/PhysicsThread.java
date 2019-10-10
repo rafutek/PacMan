@@ -295,17 +295,19 @@ public class PhysicsThread extends ThreadPerso {
 									wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 								}
 							}
+							
 
-
-							if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || blinky.isInTheBox()) {
+							if(Ghost.acceptedMazeValues.contains(wantedBoxValue) || blinky.isInTheBox()) {
 								blinky.setState(blinkyWantedState);
+								blinky.createListDirections(); // reset all possible directions
 							}else {					
 								if(blinky.getBehaviorThread() == null || !blinky.getBehaviorThread().isRunning()) {
 									blinky.startBehaviorThread();
 								}
 								// blinky set another possible direction
+								blinky.removeDirection(blinkyWantedState);
 								blinky.getBehaviorThread().changeDirection();
-							}
+							}													
 						}			
 					}							
 				}
@@ -355,11 +357,13 @@ public class PhysicsThread extends ThreadPerso {
 
 							if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || pinky.isInTheBox()) {
 								pinky.setState(pinkyWantedState);
+								pinky.createListDirections();
 							}else {					
 								if(pinky.getBehaviorThread() == null || !pinky.getBehaviorThread().isRunning()) {
 									pinky.startBehaviorThread();
 								}
 								// pinky set another possible direction
+								pinky.removeDirection(pinkyWantedState);
 								pinky.getBehaviorThread().changeDirection();
 							}
 						}			
@@ -408,14 +412,25 @@ public class PhysicsThread extends ThreadPerso {
 								wantedBoxValue = mazeValues.get(currentMatrixPos.getY()+1).get(currentMatrixPos.getX());
 							}
 
-							if( Ghost.acceptedMazeValues.contains(wantedBoxValue)) {
+							if( Ghost.acceptedMazeValues.contains(wantedBoxValue)) { // can go to that direction
+								System.out.println("clyde accepted state: "+clydeWantedState);
 								clyde.setState(clydeWantedState);
-							}else {					
+								
+								System.out.println("create dir list");
+								clyde.createListDirections();									
+								
+							}else { // cannot go to that direction
 								if(clyde.getBehaviorThread() == null || !clyde.getBehaviorThread().isRunning()) {
 									clyde.startBehaviorThread();
 								}
 								// clyde set another possible direction
+								System.out.println("clyde wanted dir: "+clydeWantedState+" but cannot so remove");
+								clyde.removeDirection(clydeWantedState);
+								for (MovingSpriteState dir : clyde.possibleDirections) {
+									System.out.println(dir);
+								}
 								clyde.getBehaviorThread().changeDirection();
+								System.out.println("clyde new wanted dir: "+clyde.getWantedState()+"\n");
 							}
 						}			
 					}				
@@ -466,11 +481,13 @@ public class PhysicsThread extends ThreadPerso {
 
 							if( Ghost.acceptedMazeValues.contains(wantedBoxValue) || inky.isInTheBox()) {
 								inky.setState(inkyWantedState); // pac-man can be in that state
+								inky.createListDirections();
 							}else {					
 								if(inky.getBehaviorThread() == null || !inky.getBehaviorThread().isRunning()) {
 									inky.startBehaviorThread();
 								}
 								// inky set another possible direction
+								inky.removeDirection(inkyWantedState);
 								inky.getBehaviorThread().changeDirection();
 							}
 						}			
