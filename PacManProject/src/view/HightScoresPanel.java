@@ -50,7 +50,6 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 		try {
 			t = new Tiles();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		writeLetter = new WriteLetter();
@@ -85,7 +84,6 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
 			writeLetter.setLetter(cs);
-			System.out.println("letter ______________________"+cs);
 			writeLetter.setL(img2);
 			writeLetter.write();
 			img2=writeLetter.getL();
@@ -99,7 +97,6 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
 			writeLetter.setLetter(cs);
-			System.out.println("letter ______________________"+cs);
 			writeLetter.setL(img2);
 			writeLetter.write();
 			img2=writeLetter.getL();
@@ -108,14 +105,6 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			
 		}
 		
-		
-		/*BufferedImage hightScore1Img1 = writeLetter.getL();
-		writeLetter.setLetter(name[0]);
-		writeLetter.write();
-		BufferedImage hightScore1Img2 = writeLetter.getL();
-		writeLetter.setLetter(score[0]);
-		writeLetter.write();
-		BufferedImage hightScore1Img3 = writeLetter.getL();*/
 		
 		hightScore1Img = Tiles.resize(hightScore1Img, new Dimension(300, 50));
 		hightScore1.setIcon(new ImageIcon(hightScore1Img));
@@ -136,7 +125,6 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
 			writeLetter.setLetter(cs);
-			System.out.println("letter ______________________"+cs);
 			writeLetter.setL(img2);
 			writeLetter.write();
 			img2=writeLetter.getL();
@@ -150,7 +138,6 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
 			writeLetter.setLetter(cs);
-			System.out.println("letter ______________________"+cs);
 			writeLetter.setL(img2);
 			writeLetter.write();
 			img2=writeLetter.getL();
@@ -177,7 +164,6 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
 			writeLetter.setLetter(cs);
-			System.out.println("letter ______________________"+cs);
 			writeLetter.setL(img2);
 			writeLetter.write();
 			img2=writeLetter.getL();
@@ -191,7 +177,6 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
 			writeLetter.setLetter(cs);
-			System.out.println("letter ______________________"+cs);
 			writeLetter.setL(img2);
 			writeLetter.write();
 			img2=writeLetter.getL();
@@ -218,7 +203,6 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
 			writeLetter.setLetter(cs);
-			System.out.println("letter ______________________"+cs);
 			writeLetter.setL(img2);
 			writeLetter.write();
 			img2=writeLetter.getL();
@@ -232,7 +216,6 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
 			writeLetter.setLetter(cs);
-			System.out.println("letter ______________________"+cs);
 			writeLetter.setL(img2);
 			writeLetter.write();
 			img2=writeLetter.getL();
@@ -259,7 +242,6 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
 			writeLetter.setLetter(cs);
-			System.out.println("letter ______________________"+cs);
 			writeLetter.setL(img2);
 			writeLetter.write();
 			img2=writeLetter.getL();
@@ -273,7 +255,6 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 			Character c = letter2.charAt(i);
 			String cs = c.toString();
 			writeLetter.setLetter(cs);
-			System.out.println("letter ______________________"+cs);
 			writeLetter.setL(img2);
 			writeLetter.write();
 			img2=writeLetter.getL();

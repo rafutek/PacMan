@@ -404,10 +404,7 @@ public class PhysicsThread extends ThreadPerso {
 							}
 
 							if( Ghost.acceptedMazeValues.contains(wantedBoxValue)) { // can go to that direction
-								System.out.println("clyde accepted state: "+clydeWantedState);
 								clyde.setState(clydeWantedState);
-								
-								System.out.println("create dir list");
 								clyde.createListDirections();									
 								
 							}else { // cannot go to that direction
@@ -415,13 +412,8 @@ public class PhysicsThread extends ThreadPerso {
 									clyde.startBehaviorThread();
 								}
 								// clyde set another possible direction
-								System.out.println("clyde wanted dir: "+clydeWantedState+" but cannot so remove");
 								clyde.removeDirection(clydeWantedState);
-								for (MovingSpriteState dir : clyde.possibleDirections) {
-									System.out.println(dir);
-								}
 								clyde.getBehaviorThread().changeDirection();
-								System.out.println("clyde new wanted dir: "+clyde.getWantedState()+"\n");
 							}
 						}			
 					}				
@@ -679,7 +671,6 @@ public class PhysicsThread extends ThreadPerso {
 				
 				
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky) && pacMan.invincible()) {
-					System.out.println("collision with blinky!");
 					if (!soundMute) {
 						synchronized(soundTh) {
 							soundTh.addEatGhost();
@@ -690,13 +681,12 @@ public class PhysicsThread extends ThreadPerso {
 					StatusBarPanel.valueScore.setText(""+score);
 					pacMan.setEatenFantom(pacMan.eatenFantom()+1);
 					setCollPacManGhostInv(true);
-					resetOneSprite(blinky);
+					replaceGhost(blinky);
 					return false;
 				}
 				
 				
 				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, blinky)) {
-					System.out.println("collision with blinky!");
 					if (!soundMute) {
 						synchronized(soundTh) {
 							soundTh.addDeath();
@@ -708,7 +698,6 @@ public class PhysicsThread extends ThreadPerso {
 				
 				
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky) && pacMan.invincible()) {
-					System.out.println("collision with pinky!");
 					if (!soundMute) {
 						synchronized(soundTh) {
 							soundTh.addEatGhost();
@@ -719,12 +708,11 @@ public class PhysicsThread extends ThreadPerso {
 					setScoreInvGhost(200*(int)Math.pow(2,pacMan.eatenFantom()));
 					pacMan.setEatenFantom(pacMan.eatenFantom()+1);
 					setCollPacManGhostInv(true);
-					resetOneSprite(pinky);
+					replaceGhost(pinky);
 					return false;
 				}		
 				
 				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, pinky)) {
-					System.out.println("collision with pinky!");
 					if (!soundMute) {
 						synchronized(soundTh) {
 							soundTh.addDeath();
@@ -735,7 +723,6 @@ public class PhysicsThread extends ThreadPerso {
 				}
 				
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde) && pacMan.invincible()) {
-					System.out.println("collision with clyde!");
 					if (!soundMute) {
 						synchronized(soundTh) {
 							soundTh.addEatGhost();
@@ -746,12 +733,11 @@ public class PhysicsThread extends ThreadPerso {
 					setScoreInvGhost(200*(int)Math.pow(2,pacMan.eatenFantom()));
 					pacMan.setEatenFantom(pacMan.eatenFantom()+1);
 					setCollPacManGhostInv(true);
-					resetOneSprite(clyde);
+					replaceGhost(clyde);
 					return false;
 				}
 				
 				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, clyde)) {
-					System.out.println("collision with clyde!");
 					if (!soundMute) {
 						synchronized(soundTh) {
 							soundTh.addDeath();
@@ -762,7 +748,6 @@ public class PhysicsThread extends ThreadPerso {
 				}
 				
 				if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky) && pacMan.invincible()) {
-					System.out.println("collision with inky!");
 					if (!soundMute) {
 						synchronized(soundTh) {
 							soundTh.addEatGhost();
@@ -773,12 +758,11 @@ public class PhysicsThread extends ThreadPerso {
 					setScoreInvGhost(200*(int)Math.pow(2,pacMan.eatenFantom()));
 					pacMan.setEatenFantom(pacMan.eatenFantom()+1);
 					setCollPacManGhostInv(true);
-					resetOneSprite(inky);
+					replaceGhost(inky);
 					return false;
 				}
 				
 				else if(collisionWith(pacman_left, pacman_right, pacman_up, pacman_down, inky)) {
-					System.out.println("collision with inky!");
 					if (!soundMute) {
 						synchronized(soundTh) {
 							soundTh.addDeath();
@@ -795,7 +779,6 @@ public class PhysicsThread extends ThreadPerso {
 	private boolean pacDotsCollision() {
 		synchronized(pacMan) {
 			if(collisionWith(pacDots)) {
-				System.out.println("collision pacDot ");
 				if (!soundMute) {
 					synchronized(soundTh) {
 						soundTh.addEatGomme();
@@ -813,7 +796,6 @@ public class PhysicsThread extends ThreadPerso {
 			if(collisionWithE(energizer)) {
 				score=score+50;
 				StatusBarPanel.valueScore.setText(""+score);
-				System.out.println("collision energizer, showX : "+energizer.showX+ " showY : "+energizer.showY);
 				if (!soundMute) {
 					synchronized(soundTh) {
 						soundTh.addEatGomme();
@@ -890,50 +872,24 @@ public class PhysicsThread extends ThreadPerso {
 		
 		// stop the ghost that are replaced in the box before replacing them
 		if(blinky != null) {
-			blinky.setState(MovingSpriteState.STOP);
+			replaceGhost(blinky);
 		}		
 		if(pinky != null) {
-			pinky.setState(MovingSpriteState.STOP);
+			replaceGhost(pinky);
 		}		
 		if(clyde != null) {
-			clyde.setState(MovingSpriteState.STOP);
+			replaceGhost(clyde);
 		}
 		if(inky != null) {
-			inky.setState(MovingSpriteState.STOP);
-		}
-		
-		if(blinky != null) {
-			blinky.setCurrentPosition(matrixToMazePosition(blinky.getMatrixPosition(), gamePanel, mazeValues));
-		}
-		if(pinky != null) {
-			pinky.setCurrentPosition(matrixToMazePosition(pinky.getMatrixPosition(), gamePanel, mazeValues));
-		}
-		if(clyde != null) {
-			clyde.setCurrentPosition(matrixToMazePosition(clyde.getMatrixPosition(), gamePanel, mazeValues));
-		}
-		if(inky != null) {
-			inky.setCurrentPosition(matrixToMazePosition(inky.getMatrixPosition(), gamePanel, mazeValues));
-		}
-		
-		//finally say that they are in the box, so that ghost exit box thread does its job
-		if(blinky != null) {
-			blinky.setInTheBox(true);
-		}
-		if(pinky != null) {
-			pinky.setInTheBox(true);
-		}
-		if(clyde != null) {
-			clyde.setInTheBox(true);
-		}
-		if(inky != null) {
-			inky.setInTheBox(true);
+			replaceGhost(inky);
 		}
 	}
 	
-	private void resetOneSprite(Ghost ghost) {
+	private void replaceGhost(Ghost ghost) {
 		ghost.setCurrentPosition(matrixToMazePosition(ghost.getMatrixPosition(), gamePanel, mazeValues));
 		ghost.setInTheBox(true);
 		ghost.setState(MovingSpriteState.STOP);
+		ghost.notGoingToLastSeenPosition();
 	}
 	
 }

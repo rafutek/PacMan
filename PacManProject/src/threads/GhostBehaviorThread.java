@@ -37,7 +37,6 @@ public class GhostBehaviorThread extends TimerThread {
 			}			
 		}
 		else if(ghost.goingToLastSeenPosition()) {
-			System.out.println("going to last seen position");
 			counterWaits=0;
 			ghost.checkAtLastSeenPosition();
 		}		
@@ -67,9 +66,6 @@ public class GhostBehaviorThread extends TimerThread {
 		if(ghost.goingToLastSeenPosition()) {
 			ghost.notGoingToLastSeenPosition();
 		}
-//		if(ghost.escaping()) {
-//			ghost.notEscape();
-//		}
 	}
 	
 }
