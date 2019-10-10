@@ -114,9 +114,6 @@ public class RenderThread extends ThreadPerso{
 	private GameOverThread gameOverTh;
 	private ScoreInvicibiltyGhostThread scoreInvicibiltyGhostThread;
 	
-	//sounds
-	private MusicThread musicTh;
-	private SoundThread soundTh;
 	
 	private int lastLife = 0;
 	
@@ -154,8 +151,7 @@ public class RenderThread extends ThreadPerso{
 		inky = maze.getInky();
 		
 		statusBarPanel.setPacman(pacMan);
-		this.musicTh = musicTh;
-		this.soundTh = soundTh;
+
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
 		physicsTh = new PhysicsThread(maze.getMazeValues(), gamePanel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers, musicTh , soundTh);
 		ghostExitThread = new GhostsExitBoxThread(blinky, pinky, clyde, inky, maze, pacMan);
@@ -164,7 +160,6 @@ public class RenderThread extends ThreadPerso{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.paused = true;
 	}
 	
 	private void checkResize() {
@@ -191,10 +186,7 @@ public class RenderThread extends ThreadPerso{
 
 	@Override
 	protected void doThatAtStart() {
-	//	do {		
-			checkResize();
-	//	}while(!animationDone);
-		
+		checkResize();		
 		initializeStats();
 	}
 
@@ -392,7 +384,7 @@ public class RenderThread extends ThreadPerso{
 			}
 			
 			if(physicsTh.isCollPacManGhostInv()) {
-				scoreInvicibiltyGhostThread= new ScoreInvicibiltyGhostThread( maze.getTiles(), gamePanel, physicsTh.getScoreInvGhost());
+				scoreInvicibiltyGhostThread = new ScoreInvicibiltyGhostThread( maze.getTiles(), gamePanel, physicsTh.getScoreInvGhost());
 				scoreInvicibiltyGhostThread.setPosX(pacMan.getCurrentPosition().getX()-20);
 				scoreInvicibiltyGhostThread.setPosY(pacMan.getCurrentPosition().getY()-20);
 				scoreInvicibiltyGhostThread.startThread();
@@ -450,7 +442,6 @@ public class RenderThread extends ThreadPerso{
 						Character c = letter.charAt(i);
 						String cs = c.toString();
 						writeLetter.setLetter(cs);
-						System.out.println("letter ______________________"+cs);
 						writeLetter.setL(img);
 						writeLetter.write();
 						img=writeLetter.getL();
@@ -609,75 +600,37 @@ public class RenderThread extends ThreadPerso{
 		
 	}
 	
-	public AnimationThread getAnimationTh() {
+	public synchronized AnimationThread getAnimationTh() {
 		return animationTh;
 	}
 
-	public void setAnimationTh(AnimationThread animationTh) {
+	public synchronized void setAnimationTh(AnimationThread animationTh) {
 		this.animationTh = animationTh;
 	}
 
-	public ThreeTwoOneThread getThreeTwoOneTh() {
+	public synchronized ThreeTwoOneThread getThreeTwoOneTh() {
 		return threeTwoOneTh;
 	}
 
-	public void setThreeTwoOneTh(ThreeTwoOneThread threeTwoOneTh) {
+	public synchronized void setThreeTwoOneTh(ThreeTwoOneThread threeTwoOneTh) {
 		this.threeTwoOneTh = threeTwoOneTh;
 	}
 
-	public PhysicsThread getPhysicsTh() {
+	public synchronized PhysicsThread getPhysicsTh() {
 		return physicsTh;
 	}
 
-	public void setPhysicsTh(PhysicsThread physicsTh) {
+	public synchronized void setPhysicsTh(PhysicsThread physicsTh) {
 		this.physicsTh = physicsTh;
 	}
 
-	public GhostsExitBoxThread getGhostExitThread() {
+	public synchronized GhostsExitBoxThread getGhostExitThread() {
 		return ghostExitThread;
 	}
 
-	public void setGhostExitThread(GhostsExitBoxThread ghostExitThread) {
+	public synchronized void setGhostExitThread(GhostsExitBoxThread ghostExitThread) {
 		this.ghostExitThread = ghostExitThread;
 	}
-
-	public synchronized void setMusicMute(boolean b) {
-		synchronized (musicTh){
-			musicTh.setMute(b);
-		}
-	}
-
-	public synchronized void setSoundMute(boolean b) {
-		synchronized(physicsTh) {
-			physicsTh.setSoundMute(b);
-		}
-	}
-	
-	public synchronized void setAudioUp() {
-		synchronized(soundTh) {
-			soundTh.volumeUp();
-		}
-	}
-	
-	public synchronized void setAudioDown() {
-		synchronized(soundTh) {
-			soundTh.volumeDown();
-		}
-		
-	}
-	
-	public synchronized void setMusicUp() {
-		synchronized (musicTh) {
-			musicTh.volumeUp();
-		}
-	}
-	
-	public synchronized void setMusicDown() {
-		synchronized (musicTh) {
-			musicTh.volumeDown();
-		}
-	}
-
 
 
 }

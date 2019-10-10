@@ -82,8 +82,8 @@ public class GameFrame extends JFrame implements WindowListener
 	{
 		gridbag = new GridBagLayout();
 		setLayout(gridbag);
-		musicTh = new MusicThread("Music");
-		soundTh = new SoundThread("Sound");
+		musicTh = new MusicThread();
+		soundTh = new SoundThread();
 		musicTh.startThread();
 		soundTh.startThread();
 		principalMenuPanel = new PrincipalMenuPanel();
@@ -398,8 +398,12 @@ public class GameFrame extends JFrame implements WindowListener
 
 	
 	public void setAllSoundsMute(boolean b) {
-		renderTh.setMusicMute(b);
-		renderTh.setSoundMute(b);
+		synchronized(musicTh) {
+			musicTh.setMute(b);
+		}
+		synchronized(soundTh) {
+			soundTh.setMute(b);
+		}
 	}
 
 

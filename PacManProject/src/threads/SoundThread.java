@@ -15,9 +15,8 @@ public class SoundThread extends AudioThread {
 
 	
 
-	public SoundThread(String threadName) {
-		super(threadName); 
-		// TODO Auto-generated constructor stub
+	public SoundThread() {
+		super("Sound"); 
 	}
 	
 	public synchronized void addEatGomme() {
@@ -37,73 +36,49 @@ public class SoundThread extends AudioThread {
 	}
 	
 	@Override
-	protected void settings() {
-		// TODO Auto-generated method stub
-		
-	}
+	protected void settings() {}
 
 
 	@Override
-	protected void doThatAtStart() {
-		// TODO Auto-generated method stub
-		
-	}
+	protected void doThatAtStart() {}
 
 
 	@Override
 	protected void doThat() {
-		// TODO Auto-generated method stub
-		if (eatGomme.size()>0) {
-			eatGomme.remove(0);
-			try {
+		try {
+			if (eatGomme.size()>0) {
+				eatGomme.remove(0);
 				isPlaying = false;
 				playAudio("chomp.wav");
 				setVolume(vol);
-			} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}else if(death.size()>0) {
-			try {
+
+			}else if(death.size()>0) {
 				isPlaying = false;
 				playAudio("death.wav");
 				setVolume(vol);
-			} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else if(eatGhost.size()>0) {
-			try {
+
+			} else if(eatGhost.size()>0) {
 				isPlaying = false;
 				playAudio("eatghost.wav");
 				setVolume(vol);
-			} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else if (life.size()>0) {
-			try {
+
+			} else if (life.size()>0) {
 				isPlaying = false;
 				playAudio("extrapac.wav");
 				setVolume(vol);
-			} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			e.printStackTrace();
 		}
 		try {
 			sleep(1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 
 	@Override
-	protected void doThatAtStop() {
-		// TODO Auto-generated method stub
-		
-	}
+	protected void doThatAtStop() {}
 
 }

@@ -107,7 +107,7 @@ public abstract class AudioThread extends ThreadPerso{
 		return mute;
 	}
 	
-	public void setMute(boolean mute) {
+	public synchronized void setMute(boolean mute) {
 		this.mute = mute;
 		if(audioClip != null) {
 			System.out.println("Mute: " + this.mute);

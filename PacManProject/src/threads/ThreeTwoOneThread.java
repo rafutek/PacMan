@@ -1,15 +1,12 @@
 package threads;
 
-import java.awt.Color;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import resources.ListImages;
@@ -115,28 +112,5 @@ public class ThreeTwoOneThread extends TimerThread {
 			this.stopThread(); // stop the thread if all images have been drawn
 		}
 	}
-	
-	//-------------------------------------------------------
-	
-	
-	public static void main(String[] args) throws IOException {
-		JFrame jf = new JFrame("resume animation test");
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		JPanel jp = new JPanel();
-		jp.setBackground(Color.BLUE);
-		
-		jf.add(jp);
-		jf.setPreferredSize(new Dimension(300, 300));
-		jf.pack();
-		jf.setResizable(true);
-		jf.setLocationRelativeTo(null);
-		jf.setVisible(true);
-		jf.setFocusable(true);
-		jf.requestFocus();   
-		
-		ThreeTwoOneThread animTh = new ThreeTwoOneThread(new Tiles(), jp);
-		animTh.startThread();
-		
-	}
+
 }

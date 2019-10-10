@@ -34,7 +34,7 @@ public class PhysicsThread extends ThreadPerso {
 	private InvincibleThread invTh; 
 	
 	private Sprites pacDots; 
-	private Sprites energizer;
+	private Sprites energizers;
 	private int score=0;
 	private boolean ScoreBonus=false;
 	public boolean timerstarted=false;
@@ -71,7 +71,7 @@ public class PhysicsThread extends ThreadPerso {
 		this.clyde = clyde;
 		this.inky = inky;
 		this.pacDots=pacDots;
-		this.energizer=energizer;
+		this.energizers=energizer;
 		this.musicTh = musicTh;
 		this.soundTh = soundTh;
 		
@@ -103,13 +103,13 @@ public class PhysicsThread extends ThreadPerso {
 
 
 	public Sprites getEnergizer() {
-		return energizer;
+		return energizers;
 	}
 
 
 
 	public void setEnergizer(Sprites energizer) {
-		this.energizer = energizer;
+		this.energizers = energizer;
 	}
 
 
@@ -479,18 +479,8 @@ public class PhysicsThread extends ThreadPerso {
 			}			
 		}
 		
-		
-		if(ghostCollision()) {
-			pinky.setInTheBox(true);
-			clyde.setInTheBox(true);
-			inky.setInTheBox(true);
-			GhostsExitBoxThread.clydeCanGoOut=true;
-			GhostsExitBoxThread.pinkyCanGoOut=true;
-			GhostsExitBoxThread.inkyCanGoOut=true;
-			clyde.setState(MovingSpriteState.STOP);
-			pinky.setState(MovingSpriteState.STOP);
-			inky.setState(MovingSpriteState.STOP);
-			
+		// ghost collisions
+		if(ghostCollision()) {			
 			timerstarted=true;
 			if(pacMan.getLife()!=0 && pacMan.getLife()<=4) {
 				int life=pacMan.getLife()-1;
@@ -501,13 +491,14 @@ public class PhysicsThread extends ThreadPerso {
 				}
 			}
 		}
-		if(pacDotsCollision()){
-			
-			
-		}
-		if(energizerCollision()) {
-			
-		}
+		
+		// pac-dots collisions
+		pacDotsCollision();
+		
+		// energizers collisions
+		energizerCollision();
+		
+		// manage lives
 		if(score>=10000 && !ScoreBonus ) {
 			pacMan.setLife(pacMan.getLife()+1);
 			StatusBarPanel.setImageLives(pacMan.getLife()+1);
@@ -772,10 +763,11 @@ public class PhysicsThread extends ThreadPerso {
 					return true;
 				}
 			}
-	
 			return false;			
 		}
 	}
+	
+	
 	private boolean pacDotsCollision() {
 		synchronized(pacMan) {
 			if(collisionWith(pacDots)) {
@@ -786,14 +778,15 @@ public class PhysicsThread extends ThreadPerso {
 				}
 				return true;
 			}
-			return false;
-				
+			return false;	
 		}
 	}
+	
+	
 	private boolean energizerCollision() {
 		synchronized(pacMan) {
 			
-			if(collisionWithE(energizer)) {
+			if(collisionWithE(energizers)) {
 				score=score+50;
 				StatusBarPanel.valueScore.setText(""+score);
 				if (!soundMute) {
@@ -803,37 +796,42 @@ public class PhysicsThread extends ThreadPerso {
 				}
 				pacMan.setInvincible(true);
 				invTh=new InvincibleThread(pacMan , musicTh);
-				invTh.start();
+				invTh.startThread();
 				return true;
 			}
 			return false;
-				
 		}
 	}
 	
 	private boolean collisionWith(Sprites pacDots) {
-		for(int i=0; i<pacDots.getSprites().size();i++){
-			int positionX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
-			int positionY= pacDots.getSpriteNb(i).getCurrentPosition().getY();
-			if(pacMan.getCurrentPosition().getX()<=positionX+(20/2) && pacMan.getCurrentPosition().getX()>= positionX-(20/2)  && pacMan.getCurrentPosition().getY()<=positionY+(20/2) && pacMan.getCurrentPosition().getY()>= positionY-(20/2) )  {
-				pacDots.showX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
-				pacDots.showY=pacDots.getSpriteNb(i).getCurrentPosition().getY();
-				pacDots.removeSpriteNb(i);
-				score=score+10;
-				StatusBarPanel.valueScore.setText(""+score);
-				return true;
-			}	
+		if(pacDots != null) {
+			synchronized(pacDots) {
+				for(int i=0; i<pacDots.getSprites().size();i++){
+					int positionX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
+					int positionY= pacDots.getSpriteNb(i).getCurrentPosition().getY();
+					if(pacMan.getCurrentPosition().getX()<=positionX+(20/2) && pacMan.getCurrentPosition().getX()>= positionX-(20/2)  && pacMan.getCurrentPosition().getY()<=positionY+(20/2) && pacMan.getCurrentPosition().getY()>= positionY-(20/2) )  {
+						pacDots.showX=pacDots.getSpriteNb(i).getCurrentPosition().getX();
+						pacDots.showY=pacDots.getSpriteNb(i).getCurrentPosition().getY();
+						pacDots.removeSpriteNb(i);
+						score=score+10;
+						StatusBarPanel.valueScore.setText(""+score);
+						return true;
+					}	
+				}			
+			}			
 		}
 		return false;
 	}
-	private boolean collisionWithE(Sprites energizer) {
-		for(int i=0; i<energizer.getSprites().size();i++){
-			int positionX=energizer.getSpriteNb(i).getCurrentPosition().getX();
-			int positionY= energizer.getSpriteNb(i).getCurrentPosition().getY();
+	
+	
+	private boolean collisionWithE(Sprites energizers) {
+		for(int i=0; i<energizers.getSprites().size();i++){
+			int positionX=energizers.getSpriteNb(i).getCurrentPosition().getX();
+			int positionY= energizers.getSpriteNb(i).getCurrentPosition().getY();
 			if(pacMan.getCurrentPosition().getX()<=positionX+(20/2) && pacMan.getCurrentPosition().getX()>= positionX-(20/2)  && pacMan.getCurrentPosition().getY()<=positionY+(20/2) && pacMan.getCurrentPosition().getY()>= positionY-(20/2) )  {
-				energizer.showX=energizer.getSpriteNb(i).getCurrentPosition().getX();
-				energizer.showY=energizer.getSpriteNb(i).getCurrentPosition().getY();
-				energizer.removeSpriteNb(i);
+				energizers.showX=energizers.getSpriteNb(i).getCurrentPosition().getX();
+				energizers.showY=energizers.getSpriteNb(i).getCurrentPosition().getY();
+				energizers.removeSpriteNb(i);
 				return true;
 			}	
 		}
@@ -867,7 +865,9 @@ public class PhysicsThread extends ThreadPerso {
 	private void resetAllSprites() {
 		
 		if(pacMan != null) {
-			pacMan.setCurrentPosition(matrixToMazePosition(pacMan.getMatrixPosition(), gamePanel, mazeValues));
+			synchronized(pacMan) {
+				pacMan.setCurrentPosition(matrixToMazePosition(pacMan.getMatrixPosition(), gamePanel, mazeValues));
+			}
 		}
 		
 		// stop the ghost that are replaced in the box before replacing them
@@ -886,10 +886,12 @@ public class PhysicsThread extends ThreadPerso {
 	}
 	
 	private void replaceGhost(Ghost ghost) {
-		ghost.setCurrentPosition(matrixToMazePosition(ghost.getMatrixPosition(), gamePanel, mazeValues));
-		ghost.setInTheBox(true);
-		ghost.setState(MovingSpriteState.STOP);
-		ghost.notGoingToLastSeenPosition();
+		synchronized(ghost) {
+			ghost.setCurrentPosition(matrixToMazePosition(ghost.getMatrixPosition(), gamePanel, mazeValues));
+			ghost.setInTheBox(true);
+			ghost.setState(MovingSpriteState.STOP);
+			ghost.notGoingToLastSeenPosition();			
+		}
 	}
 	
 }
