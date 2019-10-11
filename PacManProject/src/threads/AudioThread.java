@@ -157,5 +157,19 @@ public abstract class AudioThread extends ThreadPerso{
 	public synchronized Clip getClip() {
 		return audioClip;
 	}
+
+	/**
+	 * @return the vol
+	 */
+	public synchronized float getVol() {
+		return vol;
+	}
+
+	/**
+	 * @param vol the vol to set
+	 */
+	public synchronized void setVol(float vol) {
+		this.vol = vol;
+	}
 	
 }

@@ -46,7 +46,7 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 	public HightScoresPanel(GameFrame gameFrame) throws IOException {
 		this.gameFrame = gameFrame;
 		
-		readHightScoresFile("hightScores.txt");
+		readHightScoresFile("hightScores.txt");  
 		fillArrays();
 		
 		setBackground(Color.black);	

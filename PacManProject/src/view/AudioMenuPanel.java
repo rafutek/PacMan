@@ -37,13 +37,15 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 	private int coordX=70;
 	private int coordY= 200;
 	
+	private GameFrame gameFrame;
 	private MusicThread musicTh;
 	private SoundThread soundTh;
 	Tiles t;
 	
-	public  AudioMenuPanel(RenderThread renderTh, MusicThread musicTh, SoundThread soundTh) {
+	public  AudioMenuPanel(GameFrame gameFrame,RenderThread renderTh, MusicThread musicTh, SoundThread soundTh) {
 		this.musicTh = musicTh;
 		this.soundTh = soundTh;
+		this.gameFrame = gameFrame;
 		setBackground(Color.BLACK);
 		setLayout(null);
 		try {
@@ -301,8 +303,8 @@ public class AudioMenuPanel extends JPanel implements KeyListener{
 				}
 			}else{
 				System.out.println("start principal menu");	
-				Main.getGlobalFrame().setPage("PrincipalMenu");
-				System.out.println(Main.getGlobalFrame().getPage());
+				gameFrame.setPage("PrincipalMenu");
+				System.out.println(gameFrame.getPage());
 			}
 		}
 		

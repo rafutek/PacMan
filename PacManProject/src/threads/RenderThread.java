@@ -22,6 +22,7 @@ import sprites.PacMan;
 import sprites.Pinky;
 import sprites.Sprites;
 import view.GamePanel;
+import view.HightScoresPanel;
 import view.NewHighScorePanel;
 import view.StatusBarPanel;
 
@@ -81,6 +82,7 @@ public class RenderThread extends ThreadPerso{
 	// window panels to render content into
 	private GamePanel gamePanel;
 	private StatusBarPanel statusBarPanel;
+	private HightScoresPanel hightScoresPanel;
 	private WriteLetter writeLetter;
 	private int finalScore=0;
 	private int newPosition=0;
@@ -115,11 +117,12 @@ public class RenderThread extends ThreadPerso{
 	
 	private int lastLife = 0;
 	
-	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel, MusicThread musicTh, SoundThread soundTh) {
+	public RenderThread(int period, GamePanel gamePanel, StatusBarPanel statusBarPanel, HightScoresPanel hightScoresPanel,MusicThread musicTh, SoundThread soundTh) {
 		super("Render");
 		
 		this.gamePanel = gamePanel;
 		this.statusBarPanel = statusBarPanel;
+		this.hightScoresPanel = hightScoresPanel;
 
 		// initialize timing elements
 		this.period = period;
@@ -407,8 +410,8 @@ public class RenderThread extends ThreadPerso{
 				physicsTh.setGameOver(false);
 				
 				finalScore = physicsTh.getScore();
+				compareWithHightScores();
 				
-
 				if(newPosition == 0) {
 					
 				this.stopThread();
@@ -568,6 +571,30 @@ public class RenderThread extends ThreadPerso{
 		System.out.println("Time Spent: " + timeSpentInGame + " secs");
 	}  // end of printStats()
 	
+	public void compareWithHightScores(){
+		String[] h = hightScoresPanel.getScore() ;
+		Integer[] hightScores = new Integer[5];
+		for(int i =0; i<5;i++) {
+			hightScores[i]= Integer.parseInt(h[i]);
+		}
+		if(finalScore>hightScores[0] || finalScore==hightScores[0]) {
+			newPosition =1;
+			System.out.println("position 1.......................");
+		}else if((finalScore<hightScores[0] && finalScore>hightScores[1])|| finalScore==hightScores[1]) {
+			newPosition =2;
+			System.out.println("position 2.......................");
+		}else if((finalScore<hightScores[1] && finalScore>hightScores[2])|| finalScore==hightScores[2]) {
+			newPosition =3;
+			System.out.println("position 3.......................");
+		}else if((finalScore<hightScores[2] && finalScore>hightScores[3])|| finalScore==hightScores[3]) {
+			newPosition =4;
+			System.out.println("position 4.......................");
+		}else if((finalScore<hightScores[3] && finalScore>hightScores[4])|| finalScore==hightScores[4]) {
+			newPosition =5;
+			System.out.println("position 5.......................");
+		}
+		
+	}
 
 	
 	public synchronized AnimationThread getAnimationTh() {

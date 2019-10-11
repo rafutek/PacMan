@@ -86,7 +86,7 @@ public class GameFrame extends JFrame implements WindowListener
 		soundTh.startThread();
 		principalMenuPanel = new PrincipalMenuPanel(this);
 		controlsMenuPanel = new ControlsMenuPanel(this);
-		audioMenuPanel = new AudioMenuPanel(renderTh , musicTh ,soundTh);
+		audioMenuPanel = new AudioMenuPanel(this, renderTh , musicTh ,soundTh);
 		try {
 			hightScoresPanel = new HightScoresPanel(this);
 			newHighScorePanel = new NewHighScorePanel(this);
@@ -138,7 +138,7 @@ public class GameFrame extends JFrame implements WindowListener
 		
 		super.addNotify();   // creates the peer
 		layoutTh = new LayoutManagerThread(this);
-		renderTh = new RenderThread(period, gamePanel, statusBarPanel, musicTh, soundTh);
+		renderTh = new RenderThread(period, gamePanel, statusBarPanel, hightScoresPanel, musicTh, soundTh);
 		layoutTh.startThread();
 		renderTh.startThread();
 		
