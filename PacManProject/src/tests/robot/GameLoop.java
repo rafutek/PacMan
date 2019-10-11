@@ -20,6 +20,7 @@ import sprites.Pinky;
 import sprites.Sprites;
 import threads.AnimationThread;
 import threads.PhysicsThread;
+import threads.SoundThread;
 import threads.ThreadPerso;
 
 public class GameLoop extends ThreadPerso {
@@ -49,6 +50,9 @@ public class GameLoop extends ThreadPerso {
 	private Graphics dbg; 
 	private Image dbImage = null;
 	
+	//sounds
+	private SoundThread soundTh;
+	
 
 	public GameLoop(JPanel panel) {
 		super("Game Loop");
@@ -71,8 +75,9 @@ public class GameLoop extends ThreadPerso {
 		 clyde = maze.getClyde();
 		 inky = maze.getInky();
 		 
+		soundTh = new SoundThread()	;
 		animationTh = new AnimationThread(energizers, pacMan, blinky, pinky, clyde, inky);
-		physicsTh = new PhysicsThread(maze.getMazeValues(), panel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers, null, null);
+		physicsTh = new PhysicsThread(maze.getMazeValues(), panel, pacMan, blinky, pinky, clyde, inky, pacDots, energizers, null, soundTh);
 		animationTh.startThread();
 		physicsTh.startThread();
 	}

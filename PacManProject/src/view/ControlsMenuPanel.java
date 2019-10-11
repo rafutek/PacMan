@@ -30,9 +30,6 @@ public class ControlsMenuPanel extends JPanel implements KeyListener{
 	public JLabel escape;
 	public JLabel goBack;
 	
-	
-	CheckPageThread checkPageThread;
-
 	public ControlsMenuPanel() {
 		setBackground(Color.black);	
 		setLayout(null);
@@ -68,9 +65,9 @@ public class ControlsMenuPanel extends JPanel implements KeyListener{
 		pause.setBounds(70, 250, 400, 50);
 		
 		resume = new JLabel();
-		BufferedImage r_for_resume = Tiles.createWord(t.getTileNumber(56),t.getTileNumber(352),t.getTileNumber(44),t.getTileNumber(53), t.getTileNumber(56),t.getTileNumber(352),t.getTileNumber(56),t.getTileNumber(43),t.getTileNumber(57),t.getTileNumber(59),t.getTileNumber(51),t.getTileNumber(43));
-		r_for_resume = Tiles.resize(r_for_resume, new Dimension(335,30));
-		resume.setIcon(new ImageIcon(r_for_resume));
+		BufferedImage p_for_resume = Tiles.createWord(t.getTileNumber(54),t.getTileNumber(352),t.getTileNumber(44),t.getTileNumber(53), t.getTileNumber(56),t.getTileNumber(352),t.getTileNumber(56),t.getTileNumber(43),t.getTileNumber(57),t.getTileNumber(59),t.getTileNumber(51),t.getTileNumber(43));
+		p_for_resume = Tiles.resize(p_for_resume, new Dimension(335,30));
+		resume.setIcon(new ImageIcon(p_for_resume));
 		resume.setBounds(70, 300, 500, 50);
 		mute = new JLabel();
 		BufferedImage m_for_mute_and_unmute = Tiles.createWord(t.getTileNumber(51),t.getTileNumber(352),t.getTileNumber(44),t.getTileNumber(53), t.getTileNumber(56),t.getTileNumber(352),t.getTileNumber(51),t.getTileNumber(59),t.getTileNumber(58),t.getTileNumber(43),t.getTileNumber(352),t.getTileNumber(39),t.getTileNumber(52),t.getTileNumber(42),t.getTileNumber(352),t.getTileNumber(59),t.getTileNumber(52),t.getTileNumber(51),t.getTileNumber(59),t.getTileNumber(58),t.getTileNumber(43));

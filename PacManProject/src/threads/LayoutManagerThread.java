@@ -33,7 +33,6 @@ public class LayoutManagerThread extends ThreadPerso {
 	private static int DEFAULT_FPS = 50;
 	int fps = DEFAULT_FPS;
 	int period = (int) 1000.0/fps;
-	GameFrame gameFrame;
 
 	
 	

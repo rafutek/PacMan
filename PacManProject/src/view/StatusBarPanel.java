@@ -17,7 +17,6 @@ import sprites.PacMan;
 
 public class StatusBarPanel extends JPanel {
 	PacMan pacman;
-	Resources rsc = new Resources();
 	static Tiles t;
 	private static final long serialVersionUID = 1L;
 	public Integer s = 0;

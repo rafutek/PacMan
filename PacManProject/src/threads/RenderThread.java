@@ -122,11 +122,6 @@ public class RenderThread extends ThreadPerso{
 		
 		this.gamePanel = gamePanel;
 		this.statusBarPanel = statusBarPanel;
-		try {
-			hightScoresPanel = new HightScoresPanel();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 		// initialize timing elements
 		this.period = period;
 		fpsStore = new double[NUM_FPS];

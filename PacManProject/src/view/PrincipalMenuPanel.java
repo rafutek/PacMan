@@ -18,7 +18,6 @@ import resources.Tiles;
 import threads.CheckPageThread;
 
 public class PrincipalMenuPanel extends JPanel implements KeyListener{
-	Resources rsc = new Resources();
 	Tiles t;
 	private static final long serialVersionUID = 1L;
 
@@ -32,9 +31,7 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 	private int coordX=100;
 	private int coordY= 200;
 	public boolean CloseGame=false;
-	
-	CheckPageThread checkPageThread;
-	
+		
 	public PrincipalMenuPanel() {
 		setBackground(Color.black);	
 		setSize(620, 700);
