@@ -36,7 +36,6 @@ public class GameFrame extends JFrame implements WindowListener
 	
 	private String page = "PrincipalMenu";
 	
-	private boolean fullScreen = false;
 	public RenderThread renderTh;
 	private LayoutManagerThread layoutTh;
 	
@@ -61,13 +60,12 @@ public class GameFrame extends JFrame implements WindowListener
 		
 
 		pack();
-		setResizable(true);
+		setResizable(false);
 		setLocationRelativeTo(null); // center the window
 		setVisible(true);
 		setFocusable(true);
 		requestFocus();    // the window has now has focus, so receives key events
 		readyForTermination();		
-		readyForFullScreen();
 		readyForArrowsEvents();
 		readyForPause();
 		readyForMute();
@@ -203,28 +201,7 @@ public class GameFrame extends JFrame implements WindowListener
 		});
 	} 
 	
-	
-	private void readyForFullScreen() {
-		
-		addKeyListener( new KeyAdapter() {
-			public void keyPressed(KeyEvent e)
-			{ 
-				int keyCode = e.getKeyCode();
-				
-				// listen for f to go on full screen or normal sized window
-				if (keyCode == KeyEvent.VK_F) {
-					if(!fullScreen) {
-						fullScreen = true;
-						setExtendedState(JFrame.MAXIMIZED_BOTH);
-					}
-					else {
-						fullScreen = false;
-						setExtendedState(JFrame.NORMAL);
-					}
-				}
-			}
-		});
-	}
+
 	
 	public void readyForArrowsEvents() {
 		addKeyListener( new KeyAdapter() {
