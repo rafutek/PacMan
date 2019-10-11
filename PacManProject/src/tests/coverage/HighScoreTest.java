@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 
 import org.junit.jupiter.api.Test;
 
+import view.GameFrame;
 import view.HightScoresPanel;
 import view.NewHighScorePanel;
 
@@ -15,11 +16,12 @@ class HighScoreTest {
 
 	private NewHighScorePanel NH;
 	private HightScoresPanel H;
-
+	private GameFrame gf;
 	
 	public HighScoreTest() throws IOException {
-		NH = new NewHighScorePanel();
-		H = new HightScoresPanel();
+		gf = new GameFrame(15);
+		NH = new NewHighScorePanel(gf);
+		H = new HightScoresPanel(gf);
 		assertNotNull(H);
 		assertNotNull(NH);
 	}

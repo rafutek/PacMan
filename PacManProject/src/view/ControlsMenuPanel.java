@@ -11,9 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import main.Main;
 import resources.Tiles;
-import threads.CheckPageThread;
 
 public class ControlsMenuPanel extends JPanel implements KeyListener{
 	
@@ -31,9 +29,12 @@ public class ControlsMenuPanel extends JPanel implements KeyListener{
 	public JLabel goBack;
 	
 	
-	CheckPageThread checkPageThread;
+	private GameFrame gameFrame;
 
-	public ControlsMenuPanel() {
+
+	public ControlsMenuPanel(GameFrame gameFrame) {
+		this.gameFrame = gameFrame;
+		
 		setBackground(Color.black);	
 		setLayout(null);
 		try {
@@ -111,8 +112,8 @@ public class ControlsMenuPanel extends JPanel implements KeyListener{
 		int key = e.getKeyCode();
 		if(key==KeyEvent.VK_ENTER) {
 			System.out.println("start principal menu");	
-			Main.getGlobalFrame().setPage("PrincipalMenu");
-			System.out.println(Main.getGlobalFrame().getPage());
+			gameFrame.setPage("PrincipalMenu");
+			System.out.println(gameFrame.getPage());
 		}
 
 		

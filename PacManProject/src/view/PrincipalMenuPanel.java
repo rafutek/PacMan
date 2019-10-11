@@ -12,10 +12,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import main.Main;
 import resources.Resources;
 import resources.Tiles;
-import threads.CheckPageThread;
 
 public class PrincipalMenuPanel extends JPanel implements KeyListener{
 	Resources rsc = new Resources();
@@ -33,9 +31,12 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 	private int coordY= 200;
 	public boolean CloseGame=false;
 	
-	CheckPageThread checkPageThread;
 	
-	public PrincipalMenuPanel() {
+	private GameFrame gameFrame;
+	
+	public PrincipalMenuPanel(GameFrame gameFrame) {
+		this.gameFrame = gameFrame;
+		
 		setBackground(Color.black);	
 		setSize(620, 700);
 		setLayout(null);
@@ -100,7 +101,7 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 		add(controls);
 		add(pacManIcon);
 		add(audio);
-		
+				
 	}
 
 	
@@ -131,34 +132,35 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 		if(key== KeyEvent.VK_ENTER) {
 			if(getCoordY()==200) {
 				System.out.println("start game");	
-				Main.getGlobalFrame().setPage("Game");
-				System.out.println(Main.getGlobalFrame().getPage());
+				gameFrame.setPage("Game");
+				System.out.println(gameFrame.getPage());
 			}
 			if(getCoordY()==280) {
 				System.out.println("Audio");
 				System.out.println("start Audio");	
-				Main.getGlobalFrame().setPage("Audio");
-				System.out.println("page audio ................"+Main.getGlobalFrame().getPage());
-				System.out.println(Main.getGlobalFrame().getPage());
+				gameFrame.setPage("Audio");
+				System.out.println("page audio ................"+gameFrame.getPage());
+				System.out.println(gameFrame.getPage());
 			}
 			if(getCoordY()==360) {
 				System.out.println("Control");
 				System.out.println("start ControlsMenu");	
-				Main.getGlobalFrame().setPage("Controls");
-				System.out.println("page audio ................"+Main.getGlobalFrame().getPage());
-				System.out.println(Main.getGlobalFrame().getPage());
+				gameFrame.setPage("Controls");
+				System.out.println("page audio ................"+gameFrame.getPage());
+				System.out.println(gameFrame.getPage());
 			}
 			if(getCoordY()==440) {
 				System.out.println("hightScores");
 				System.out.println("start HighScoresMenu");	
-				Main.getGlobalFrame().setPage("HighScores");
-				System.out.println("page audio ................"+Main.getGlobalFrame().getPage());
-				System.out.println(Main.getGlobalFrame().getPage());				
+				gameFrame.setPage("HighScores");
+				System.out.println("page audio ................"+gameFrame.getPage());
+				System.out.println(gameFrame.getPage());				
 			}
 			if(getCoordY()==520) {
 				System.out.println("Quit Game");
-				Main.getGlobalFrame().closeGame();
-
+				if(gameFrame != null) {
+					gameFrame.closeGame();
+				}
 			}
 		}		
 	}

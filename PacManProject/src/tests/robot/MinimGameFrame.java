@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 
-public class GameFrame extends JFrame implements WindowListener{
+public class MinimGameFrame extends JFrame implements WindowListener{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -21,7 +21,7 @@ public class GameFrame extends JFrame implements WindowListener{
 	private GameLoop gameloopTh = new GameLoop(panel);
 	
 	
-	public GameFrame() throws IOException {
+	public MinimGameFrame() throws IOException {
 		super("Minimized maze");
 		addWindowListener(this);
 		
@@ -85,7 +85,7 @@ public class GameFrame extends JFrame implements WindowListener{
 //------------------------------------------------------------------------------------
 	
 	public static void main(String[] arg) throws InterruptedException, IOException {
-		GameFrame window = new GameFrame();
+		MinimGameFrame window = new MinimGameFrame();
 		window.startGame();
 	}
 
