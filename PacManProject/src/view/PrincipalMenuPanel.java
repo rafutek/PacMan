@@ -159,6 +159,8 @@ public class PrincipalMenuPanel extends JPanel implements KeyListener{
 				System.out.println("Quit Game");
 				if(gameFrame != null) {
 					gameFrame.closeGame();
+					System.exit(0);   // so window disappears	
+
 				}
 			}
 		}		

@@ -57,7 +57,7 @@ class TestMenuOptionSelection {
 		robot.keyRelease(KeyEvent.VK_ENTER);
 		
 		try {
-			Thread.sleep(500);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {}
 		
 		assertEquals("Controls", gameFrame.getPage(), "Menu appearing must be Controls");
@@ -289,6 +289,10 @@ class TestMenuOptionSelection {
 		} catch (InterruptedException e) {}
 		
 		assertEquals("Game", gameFrame.getPage(), "Menu appearing must be HighScores");
+		
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {}
 
 		robot.keyPress(KeyEvent.VK_P);
 		robot.keyRelease(KeyEvent.VK_P);		
