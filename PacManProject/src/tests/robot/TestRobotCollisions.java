@@ -15,7 +15,7 @@ import sprites.MovingSpriteState;
 
 class TestRobotCollisions {
 	
-	GameFrame window;
+	MinimGameFrame window;
 	Robot robot;
 
 	@BeforeAll
@@ -26,7 +26,7 @@ class TestRobotCollisions {
 	@BeforeEach
 	void setUp() throws Exception {
 		robot = new Robot();
-		window = new GameFrame();
+		window = new MinimGameFrame();
 		window.startGame();
 		sleepFor(500);
 	}
@@ -45,22 +45,26 @@ class TestRobotCollisions {
 	void testPacManMovement() {
 		int xPos1 = window.getGameLoop().getPacMan().getCurrentPosition().getX();
 		robot.keyPress(KeyEvent.VK_LEFT);
+		robot.keyRelease(KeyEvent.VK_LEFT);
 		sleepFor(1500);
 		int xPos2 = window.getGameLoop().getPacMan().getCurrentPosition().getX();
 		assertTrue(xPos2 < xPos1 , "pacman did not go to left");
 		
 		robot.keyPress(KeyEvent.VK_RIGHT);
+		robot.keyRelease(KeyEvent.VK_RIGHT);
 		sleepFor(1500);
 		int xPos3 = window.getGameLoop().getPacMan().getCurrentPosition().getX();
 		assertTrue(xPos3 > xPos2 , "pacman did not go to right");
 		
 		int yPos1 = window.getGameLoop().getPacMan().getCurrentPosition().getY();
 		robot.keyPress(KeyEvent.VK_UP);
+		robot.keyRelease(KeyEvent.VK_UP);
 		sleepFor(1500);
 		int yPos2 = window.getGameLoop().getPacMan().getCurrentPosition().getY();
 		assertTrue(yPos2 < yPos1 , "pacman did not go up");
 		
 		robot.keyPress(KeyEvent.VK_DOWN);
+		robot.keyRelease(KeyEvent.VK_DOWN);
 		sleepFor(1500);
 		int yPos3 = window.getGameLoop().getPacMan().getCurrentPosition().getY();
 		assertTrue(yPos3 > yPos2 , "pacman did not go down");
@@ -85,6 +89,7 @@ class TestRobotCollisions {
 		int nbLives = window.getGameLoop().getPacMan().getLife();
 		
 		robot.keyPress(KeyEvent.VK_RIGHT);	
+		robot.keyRelease(KeyEvent.VK_RIGHT);
 		sleepFor(3500);
 		
 		int newNbLives = window.getGameLoop().getPacMan().getLife();

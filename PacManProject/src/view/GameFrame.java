@@ -84,12 +84,12 @@ public class GameFrame extends JFrame implements WindowListener
 		soundTh = new SoundThread();
 		musicTh.startThread();
 		soundTh.startThread();
-		principalMenuPanel = new PrincipalMenuPanel();
-		controlsMenuPanel = new ControlsMenuPanel();
+		principalMenuPanel = new PrincipalMenuPanel(this);
+		controlsMenuPanel = new ControlsMenuPanel(this);
 		audioMenuPanel = new AudioMenuPanel(renderTh , musicTh ,soundTh);
 		try {
-			hightScoresPanel = new HightScoresPanel();
-			newHighScorePanel = new NewHighScorePanel();
+			hightScoresPanel = new HightScoresPanel(this);
+			newHighScorePanel = new NewHighScorePanel(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -102,7 +102,7 @@ public class GameFrame extends JFrame implements WindowListener
 		rightPanel.setBackground(Color.BLACK);	
 		
 
-		setPage("Principal Menu");
+		setPage("PrincipalMenu");
 		principalMenuPanel.setVisible(true);
 		System.out.println("......................... principal menu is Visible.................");
 		add(principalMenuPanel);
@@ -191,6 +191,7 @@ public class GameFrame extends JFrame implements WindowListener
 						(keyCode == KeyEvent.VK_END) ||
 						((keyCode == KeyEvent.VK_C) && e.isControlDown()) ) {
 					closeGame();
+					System.exit(0);   // so window disappears	
 				}
 
 				if(keyCode == KeyEvent.VK_ESCAPE) {
@@ -310,7 +311,6 @@ public class GameFrame extends JFrame implements WindowListener
 			} catch (InterruptedException e) {}
 		}
 		renderTh.printStats();
-		System.exit(0);   // so window disappears	
 	}
 
 // ----------------- window listener methods -------------
@@ -359,6 +359,7 @@ public class GameFrame extends JFrame implements WindowListener
 	public void windowClosing(WindowEvent e)
 	{  
 		closeGame();
+		System.exit(0);   // so window disappears	
 	}
 	
 	public void windowClosed(WindowEvent e) {}

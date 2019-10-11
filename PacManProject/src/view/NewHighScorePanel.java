@@ -20,7 +20,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import main.Main;
 import resources.ChangeLetter;
 import resources.Tiles;
 
@@ -48,8 +47,12 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 	private int newPosition=0;
 	private int newHightScore=0;
 		
+	private GameFrame gameFrame;
+
 	
-	public NewHighScorePanel() throws IOException {
+	public NewHighScorePanel(GameFrame gameFrame) throws IOException {
+		this.gameFrame = gameFrame;
+		
 		setBackground(Color.black);	
 		setLayout(null);
 		
@@ -194,12 +197,12 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 				updateHightScoreFile("hightScores.txt");
 				System.out.println("start principal menu");	
 				try {
-					Main.getGlobalFrame().getHightScoresPanel().readHightScoresFile("hightScores.txt");
+					gameFrame.getHightScoresPanel().readHightScoresFile("hightScores.txt");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				Main.getGlobalFrame().closeGame();
+				gameFrame.closeGame();
 			}
 		}
 		
@@ -242,7 +245,7 @@ public class NewHighScorePanel extends JPanel implements KeyListener{
 		        Files.copy(tempFile, p, StandardCopyOption.REPLACE_EXISTING);
 		        Files.delete(tempFile);
 		    } catch (IOException ex) {
-		        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+		        Logger.getLogger(gameFrame.getName()).log(Level.SEVERE, null, ex);
 		    }
 	}
 	

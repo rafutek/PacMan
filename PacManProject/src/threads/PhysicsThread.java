@@ -669,7 +669,9 @@ public class PhysicsThread extends ThreadPerso {
 					}
 					score+=200*(int)Math.pow(2,pacMan.eatenFantom());
 					setScoreInvGhost(200*(int)Math.pow(2,pacMan.eatenFantom()));
-					StatusBarPanel.valueScore.setText(""+score);
+					if(StatusBarPanel.valueScore != null) {
+						StatusBarPanel.valueScore.setText(""+score);
+					}
 					pacMan.setEatenFantom(pacMan.eatenFantom()+1);
 					setCollPacManGhostInv(true);
 					replaceGhost(blinky);

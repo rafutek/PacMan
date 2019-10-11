@@ -16,7 +16,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import main.Main;
 import resources.Tiles;
 import resources.WriteLetter;
 
@@ -41,7 +40,12 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 	
 	private WriteLetter writeLetter;
 	
-	public HightScoresPanel() throws IOException {
+	private GameFrame gameFrame;
+
+	
+	public HightScoresPanel(GameFrame gameFrame) throws IOException {
+		this.gameFrame = gameFrame;
+		
 		readHightScoresFile("hightScores.txt");
 		fillArrays();
 		
@@ -338,8 +342,8 @@ public class HightScoresPanel extends JPanel implements KeyListener{
 	@Override
 	public void keyPressed(KeyEvent e) {
 		System.out.println("start principal menu");	
-		Main.getGlobalFrame().setPage("PrincipalMenu");
-		System.out.println(Main.getGlobalFrame().getPage());
+		gameFrame.setPage("PrincipalMenu");
+		System.out.println(gameFrame.getPage());
 	}
 
 	@Override
